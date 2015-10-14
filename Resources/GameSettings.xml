@@ -1,0 +1,7 @@
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<GameSettings>
+	<Resolution DesignWidth="1024" DesignHeight="768"/>
+	<FramesPerSecond Value="60"/>
+	<InitialScenePath Value="Actors\InitialScene.xml"/>
+	<TextureListPath Value="Texture.plist"/>
+</GameSettings>

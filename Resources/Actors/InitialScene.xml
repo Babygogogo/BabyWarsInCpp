@@ -1,0 +1,8 @@
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<Actor Type="InitialScene" Resource="Actors\TitleScene.xml">
+	<Components>
+		<GeneralRenderComponent Type="Scene"/>
+	</Components>
+	<ChildrenActors>
+	</ChildrenActors>
+</Actor>
