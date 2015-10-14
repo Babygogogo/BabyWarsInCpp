@@ -10,6 +10,27 @@
     <Filter Include="src">
       <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Actor">
+      <UniqueIdentifier>{f9e9803e-5f47-458a-a3af-b77beea03279}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Event">
+      <UniqueIdentifier>{116807ac-e8f6-4a15-97d2-4f8c2ee36083}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\GameLogic">
+      <UniqueIdentifier>{9dc9bba8-f129-4eac-b27b-71e836f8488b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphic2D">
+      <UniqueIdentifier>{3f12408d-454b-4032-bc1f-0e2d05249480}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Process">
+      <UniqueIdentifier>{5256a001-f175-4c23-801e-116d96bdc276}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Script">
+      <UniqueIdentifier>{0c297649-88d8-4607-9845-df3df3e91f4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Utilities">
+      <UniqueIdentifier>{7b5e476a-9b3b-4f4e-9cb0-fcd28bf93b08}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -21,6 +42,48 @@
     <ClCompile Include="..\Classes\HelloWorldScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Actor\Actor.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Actor\ActorComponent.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Actor\ActorFactory.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Actor\BaseRenderComponent.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Actor\BaseScriptComponent.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Actor\FiniteTimeActionComponent.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Actor\GeneralRenderComponent.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Event\EventDispatcher.cpp">
+      <Filter>src\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\GameLogic\GameLogic.cpp">
+      <Filter>src\GameLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Graphic2D\SceneStack.cpp">
+      <Filter>src\Graphic2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Process\BaseProcess.cpp">
+      <Filter>src\Process</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Process\ProcessRunner.cpp">
+      <Filter>src\Process</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Utilities\RelativePosition.cpp">
+      <Filter>src\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Utilities\SingletonContainer.cpp">
+      <Filter>src\Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -31,6 +94,81 @@
     </ClInclude>
     <ClInclude Include="..\Classes\HelloWorldScene.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Actor\Actor.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Actor\ActorComponent.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Actor\ActorFactory.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Actor\ActorID.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Actor\BaseRenderComponent.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Actor\BaseScriptComponent.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Actor\FiniteTimeActionComponent.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Actor\GeneralRenderComponent.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Actor\SoundPlayer.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Event\BaseEventData.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Event\EventDispatcher.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Event\EventType.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Event\EvtDataGeneric.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Event\EvtDataRequestDestroyActor.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Event\IEventData.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Event\IEventDispatcher.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Event\IEventListener.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GameLogic\GameLogic.h">
+      <Filter>src\GameLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Graphic2D\SceneStack.h">
+      <Filter>src\Graphic2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Process\BaseProcess.h">
+      <Filter>src\Process</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Process\ProcessRunner.h">
+      <Filter>src\Process</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utilities\GenericFactory.h">
+      <Filter>src\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utilities\RelativePosition.h">
+      <Filter>src\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utilities\SingletonContainer.h">
+      <Filter>src\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utilities\StringToVector.h">
+      <Filter>src\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
