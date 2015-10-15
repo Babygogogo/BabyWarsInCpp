@@ -17,7 +17,7 @@ struct AppDelegate::AppDelegateImpl
 	AppDelegateImpl(){};
 	~AppDelegateImpl();
 
-	void readGameSettingsFromXML(const char * xmlFilePath);
+	void loadGameSettings(const char * xmlPath);
 
 	void initGame();
 
@@ -41,18 +41,18 @@ AppDelegate::AppDelegateImpl::~AppDelegateImpl()
 	cocos2d::Director::getInstance()->getScheduler()->unscheduleUpdate(this);
 }
 
-void AppDelegate::AppDelegateImpl::readGameSettingsFromXML(const char * xmlFilePath)
+void AppDelegate::AppDelegateImpl::loadGameSettings(const char * xmlPath)
 {
 	//Load the xml file.
 	tinyxml2::XMLDocument xmlDoc;
-	xmlDoc.LoadFile(xmlFilePath);
+	xmlDoc.LoadFile(xmlPath);
 	const auto rootElement = xmlDoc.RootElement();
 	assert(rootElement && "AppDelegateImpl::readDataFromXML() failed to load xml file.");
 
 	//Load the design resolution.
-	auto resolutionElement = rootElement->FirstChildElement("Resolution");
-	s_DesignResolution.width = resolutionElement->FloatAttribute("DesignWidth");
-	s_DesignResolution.height = resolutionElement->FloatAttribute("DesignHeight");
+	auto resolutionElement = rootElement->FirstChildElement("DesignResolution");
+	s_DesignResolution.width = resolutionElement->FloatAttribute("Width");
+	s_DesignResolution.height = resolutionElement->FloatAttribute("Height");
 
 	//Load other settings.
 	s_FramesPerSecnod = rootElement->FirstChildElement("FramesPerSecond")->FloatAttribute("Value");
@@ -126,7 +126,7 @@ static int register_all_packages()
 bool AppDelegate::applicationDidFinishLaunching()
 {
 	//Read game settings from xml.
-	pimpl->readGameSettingsFromXML("GameSettings.xml");
+	pimpl->loadGameSettings("GameSettings.xml");
 	const auto & designResolution = AppDelegateImpl::s_DesignResolution;
 
 	// initialize director
@@ -139,7 +139,7 @@ bool AppDelegate::applicationDidFinishLaunching()
 		glview = GLViewImpl::create("BabyWars");
 #endif
 		director->setOpenGLView(glview);
-}
+	}
 
 	// turn on display FPS
 	director->setDisplayStats(true);

@@ -13,7 +13,6 @@ public:
 
 	//The type name of this component. Must be the same as the class name.
 	static const std::string Type;
-
 	virtual const std::string & getType() const override;
 
 	//Getter for underlying object which automatically downcasts the pointer to the type you specified.

@@ -14,7 +14,6 @@ namespace tinyxml2
  * \brief The base class of every components and scripts.
  *
  * \details
- *	Refactor in progress...
  *
  * \author Babygogogo
  * \date 2015.3

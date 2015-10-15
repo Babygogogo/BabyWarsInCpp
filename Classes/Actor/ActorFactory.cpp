@@ -8,6 +8,7 @@
 #include "GeneralRenderComponent.h"
 #include "FiniteTimeActionComponent.h"
 
+#include "../Script/WorldScript.h"
 #include "../Utilities/GenericFactory.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -46,6 +47,8 @@ void ActorFactory::ActorFactoryImpl::registerComponents()
 	//#TODO: Register all of the concrete components here.
 	m_ComponentFactory.registerType<GeneralRenderComponent>();
 	m_ComponentFactory.registerType<FiniteTimeActionComponent>();
+
+	m_ComponentFactory.registerType<WorldScript>();
 }
 
 std::shared_ptr<ActorComponent> ActorFactory::ActorFactoryImpl::createComponent(tinyxml2::XMLElement * componentElement)

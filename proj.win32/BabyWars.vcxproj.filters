@@ -84,6 +84,9 @@
     <ClCompile Include="..\Classes\Utilities\SingletonContainer.cpp">
       <Filter>src\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Script\WorldScript.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -169,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\Utilities\StringToVector.h">
       <Filter>src\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Script\WorldScript.h">
+      <Filter>src\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

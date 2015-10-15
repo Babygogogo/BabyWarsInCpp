@@ -1,7 +1,8 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
-<Actor Type="InitialScene" Resource="Actors\InitialScene.xml">
+<Actor Type="WorldScene" Resource="Actors\WorldScene.xml">
 	<Components>
 		<GeneralRenderComponent Type="Scene"/>
+		<WorldScript/>
 	</Components>
 	<ChildrenActors>
 	</ChildrenActors>

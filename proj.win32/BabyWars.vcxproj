@@ -158,6 +158,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="..\Classes\Process\BaseProcess.cpp" />
     <ClCompile Include="..\Classes\Process\ProcessRunner.cpp" />
+    <ClCompile Include="..\Classes\Script\WorldScript.cpp" />
     <ClCompile Include="..\Classes\Utilities\RelativePosition.cpp" />
     <ClCompile Include="..\Classes\Utilities\SingletonContainer.cpp" />
     <ClCompile Include="main.cpp" />
@@ -186,6 +187,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
     <ClInclude Include="..\Classes\Process\BaseProcess.h" />
     <ClInclude Include="..\Classes\Process\ProcessRunner.h" />
+    <ClInclude Include="..\Classes\Script\WorldScript.h" />
     <ClInclude Include="..\Classes\Utilities\GenericFactory.h" />
     <ClInclude Include="..\Classes\Utilities\RelativePosition.h" />
     <ClInclude Include="..\Classes\Utilities\SingletonContainer.h" />
