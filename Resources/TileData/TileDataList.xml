@@ -6,5 +6,7 @@
 	<List>
 		<TileDataPath Value="TileData\TileData_01_Plain.xml"/>
 		<TileDataPath Value="TileData\TileData_02_Road.xml"/>
+		<TileDataPath Value="TileData\TileData_03_Forest.xml"/>
+		<TileDataPath Value="TileData\TileData_04_Sea.xml"/>
 	</List>
 </TileDataList>

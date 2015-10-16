@@ -1,0 +1,6 @@
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<UnitData ID="2" Type="Tank">
+	<Animation>
+		<Frame Name="Unit_Tank_01.png" DelaySec="99999"/>
+	</Animation>
+</UnitData>

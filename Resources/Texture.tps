@@ -174,8 +174,7 @@
         </struct>
         <key>fileList</key>
         <array>
-            <filename>RawTextures/Tile_Plain_01.png</filename>
-            <filename>RawTextures/Tile_Road_01.png</filename>
+            <filename>RawTextures</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

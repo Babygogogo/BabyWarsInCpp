@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>Tile_Plain_01.png</key>
+            <key>Tile_Forest_01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{3,3},{32,32}}</string>
@@ -17,7 +17,7 @@
                 <key>sourceSize</key>
                 <string>{32,32}</string>
             </dict>
-            <key>Tile_Road_01.png</key>
+            <key>Tile_Plain_01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{39,3},{32,32}}</string>
@@ -30,6 +30,84 @@
                 <key>sourceSize</key>
                 <string>{32,32}</string>
             </dict>
+            <key>Tile_Road_01.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{75,3},{32,32}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{32,32}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
+            <key>Tile_Sea_01.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{111,3},{32,32}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{32,32}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
+            <key>Unit_Battleship_01.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{147,3},{32,32}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{32,32}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
+            <key>Unit_Bomber_01.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{217,3},{32,30}}</string>
+                <key>offset</key>
+                <string>{0,1}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{32,30}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
+            <key>Unit_Infantry_01.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{183,3},{30,32}}</string>
+                <key>offset</key>
+                <string>{-1,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{30,32}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
+            <key>Unit_Tank_01.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{217,37},{24,24}}</string>
+                <key>offset</key>
+                <string>{0,-3}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{4,7},{24,24}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
         </dict>
         <key>metadata</key>
         <dict>
@@ -38,9 +116,9 @@
             <key>realTextureFileName</key>
             <string>Texture.png</string>
             <key>size</key>
-            <string>{74,38}</string>
+            <string>{252,64}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:56982718a7ae1870c7144c131dcd1b5c:720b21ad4c6ce528f767fe0118299123:f46617b9879efc77edf243fcb535d10c$</string>
+            <string>$TexturePacker:SmartUpdate:c68f0b7971dbaa2c45d319306fb5b1a3:be78744625bcf514bd652f1f19d6c458:f46617b9879efc77edf243fcb535d10c$</string>
             <key>textureFileName</key>
             <string>Texture.png</string>
         </dict>

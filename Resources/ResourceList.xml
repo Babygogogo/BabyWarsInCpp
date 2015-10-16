@@ -2,4 +2,5 @@
 <ResourceList>
 	<TextureListPath Value="Texture.plist"/>
 	<TileDataListPath Value="TileData\TileDataList.xml"/>
+	<UnitDataListPath Value="UnitData\UnitDataList.xml"/>
 </ResourceList>
