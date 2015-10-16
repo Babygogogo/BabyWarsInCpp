@@ -1,9 +1,9 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
-<Actor Type="WorldScene" Resource="Actors\WorldScene.xml">
+<Actor Type="WarScene" Resource="Actors\Actor_WarScene.xml">
 	<Components>
 		<GeneralRenderComponent Type="Scene"/>
-		<WorldScript/>
 	</Components>
 	<ChildrenActors>
+		<Resource File="Actors\Actor_World.xml"/>
 	</ChildrenActors>
 </Actor>

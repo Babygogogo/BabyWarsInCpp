@@ -15,13 +15,6 @@ public:
 	static const std::string Type;
 	virtual const std::string & getType() const override;
 
-	//Getter for underlying object which automatically downcasts the pointer to the type you specified.
-	template<typename T>
-	T* getAs() const
-	{
-		return static_cast<T*>(m_Node);
-	}
-
 	//Disable copy/move constructor and operator=.
 	GeneralRenderComponent(const GeneralRenderComponent&) = delete;
 	GeneralRenderComponent(GeneralRenderComponent&&) = delete;

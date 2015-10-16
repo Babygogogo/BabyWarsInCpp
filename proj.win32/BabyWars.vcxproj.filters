@@ -31,6 +31,9 @@
     <Filter Include="src\Utilities">
       <UniqueIdentifier>{7b5e476a-9b3b-4f4e-9cb0-fcd28bf93b08}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Resource">
+      <UniqueIdentifier>{70db2d60-0cd9-40b2-af29-66ff802fac5a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -85,6 +88,15 @@
       <Filter>src\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Script\WorldScript.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Resource\ResourceLoader.cpp">
+      <Filter>src\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Resource\TileData.cpp">
+      <Filter>src\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Script\TileScript.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
   </ItemGroup>
@@ -174,6 +186,18 @@
       <Filter>src\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Script\WorldScript.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Resource\ResourceLoader.h">
+      <Filter>src\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Resource\TileData.h">
+      <Filter>src\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Resource\TileDataID.h">
+      <Filter>src\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Script\TileScript.h">
       <Filter>src\Script</Filter>
     </ClInclude>
   </ItemGroup>

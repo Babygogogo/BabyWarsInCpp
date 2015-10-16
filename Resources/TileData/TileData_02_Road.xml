@@ -1,0 +1,6 @@
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<TileData ID="2" Type="Road">
+	<Animation>
+		<Frame Name="Tile_Road_01.png" DelaySec="99999"/>
+	</Animation>
+</TileData>

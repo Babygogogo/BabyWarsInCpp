@@ -2,6 +2,6 @@
 <GameSettings>
 	<DesignResolution Width="1024" Height="768"/>
 	<FramesPerSecond Value="60"/>
-	<InitialScenePath Value="Actors\WorldScene.xml"/>
-	<TextureListPath Value="Texture.plist"/>
+	<ResourceListPath Value="ResourceList.xml"/>
+	<InitialScenePath Value="Actors\Actor_WarScene.xml"/>
 </GameSettings>

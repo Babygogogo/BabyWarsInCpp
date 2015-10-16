@@ -5,6 +5,7 @@
 #include "Event/EventDispatcher.h"
 #include "GameLogic/GameLogic.h"
 #include "Graphic2D/SceneStack.h"
+#include "Resource/ResourceLoader.h"
 #include "Utilities/SingletonContainer.h"
 
 USING_NS_CC;
@@ -25,16 +26,16 @@ struct AppDelegate::AppDelegateImpl
 
 	static cocos2d::Size s_DesignResolution;
 	static float s_FramesPerSecnod;
+	static std::string s_ResourceListPath;
 	static std::string s_InitialScene;
-	static std::string s_TextureList;
 
 	std::chrono::steady_clock::time_point lastUpdateTimePoint{ std::chrono::steady_clock::now() };
 };
 
 cocos2d::Size AppDelegate::AppDelegateImpl::s_DesignResolution;
 float AppDelegate::AppDelegateImpl::s_FramesPerSecnod{};
+std::string AppDelegate::AppDelegateImpl::s_ResourceListPath;
 std::string AppDelegate::AppDelegateImpl::s_InitialScene;
-std::string AppDelegate::AppDelegateImpl::s_TextureList;
 
 AppDelegate::AppDelegateImpl::~AppDelegateImpl()
 {
@@ -47,7 +48,7 @@ void AppDelegate::AppDelegateImpl::loadGameSettings(const char * xmlPath)
 	tinyxml2::XMLDocument xmlDoc;
 	xmlDoc.LoadFile(xmlPath);
 	const auto rootElement = xmlDoc.RootElement();
-	assert(rootElement && "AppDelegateImpl::readDataFromXML() failed to load xml file.");
+	assert(rootElement && "AppDelegateImpl::loadGameSettings() failed to load xml file.");
 
 	//Load the design resolution.
 	auto resolutionElement = rootElement->FirstChildElement("DesignResolution");
@@ -56,8 +57,8 @@ void AppDelegate::AppDelegateImpl::loadGameSettings(const char * xmlPath)
 
 	//Load other settings.
 	s_FramesPerSecnod = rootElement->FirstChildElement("FramesPerSecond")->FloatAttribute("Value");
+	s_ResourceListPath = rootElement->FirstChildElement("ResourceListPath")->Attribute("Value");
 	s_InitialScene = rootElement->FirstChildElement("InitialScenePath")->Attribute("Value");
-	s_TextureList = rootElement->FirstChildElement("TextureListPath")->Attribute("Value");
 }
 
 void AppDelegate::AppDelegateImpl::initGame()
@@ -67,14 +68,14 @@ void AppDelegate::AppDelegateImpl::initGame()
 	singletonContainer->set<IEventDispatcher>(std::make_unique<::EventDispatcher>());
 	singletonContainer->set<GameLogic>(std::make_unique<GameLogic>());
 	singletonContainer->set<SceneStack>(std::make_unique<SceneStack>());
-
-	//Load textures, then run the initial scene.
-	cocos2d::SpriteFrameCache::getInstance()->addSpriteFramesWithFile(s_TextureList);
-	auto titleScene = singletonContainer->get<GameLogic>()->createActor(s_InitialScene.c_str());
-	singletonContainer->get<SceneStack>()->pushAndRun(*titleScene);
+	singletonContainer->set<ResourceLoader>(std::make_unique<ResourceLoader>())->loadResource(AppDelegateImpl::s_ResourceListPath.c_str());
 
 	//Schedule update self so that we can update components once per frame in update().
 	Director::getInstance()->getScheduler()->scheduleUpdate(this, 0, false);
+
+	//Create the initial scene and run it.
+	auto titleScene = singletonContainer->get<GameLogic>()->createActor(s_InitialScene.c_str());
+	singletonContainer->get<SceneStack>()->pushAndRun(*titleScene);
 }
 
 void AppDelegate::AppDelegateImpl::update(float deltaSec)

@@ -1,0 +1,5 @@
+
+p:..\cocos2d\external\recast\proj.win32\librecast.vcxproj
+p:..\cocos2d\cocos\2d\libcocos2d.vcxproj
+p:..\cocos2d\external\bullet\proj.win32\libbullet.vcxproj
+f:..\cocos2d\external\win32-specific\icon\include\iconv.h

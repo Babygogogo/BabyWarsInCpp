@@ -8,6 +8,7 @@
 #include "GeneralRenderComponent.h"
 #include "FiniteTimeActionComponent.h"
 
+#include "../Script/TileScript.h"
 #include "../Script/WorldScript.h"
 #include "../Utilities/GenericFactory.h"
 
@@ -48,6 +49,7 @@ void ActorFactory::ActorFactoryImpl::registerComponents()
 	m_ComponentFactory.registerType<GeneralRenderComponent>();
 	m_ComponentFactory.registerType<FiniteTimeActionComponent>();
 
+	m_ComponentFactory.registerType<TileScript>();
 	m_ComponentFactory.registerType<WorldScript>();
 }
 

@@ -1,0 +1,5 @@
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<ResourceList>
+	<TextureListPath Value="Texture.plist"/>
+	<TileDataListPath Value="TileData\TileDataList.xml"/>
+</ResourceList>

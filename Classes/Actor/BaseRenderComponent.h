@@ -31,7 +31,12 @@ class BaseRenderComponent : public ActorComponent
 public:
 	~BaseRenderComponent();
 
-	cocos2d::Node * getSceneNode() const;
+	//Getter for underlying object which automatically downcasts the pointer to the type you specified.
+	template <class T = cocos2d::Node>
+	T * getSceneNode() const
+	{
+		return static_cast<T*>(m_Node);
+	}
 
 	void setPosition(const RelativePosition & relativePosition);
 
