@@ -42,7 +42,7 @@ public:
 	~Actor();
 
 	const ActorID & getID() const;
-	const ActorID & getParentID() const;
+	const std::weak_ptr<Actor> & getParent() const;
 
 	//Get an attached component by its type name. Returns nullptr if no such component attached.
 	//Warning: You should not own the pointer returned by this method.
@@ -79,9 +79,9 @@ public:
 	Actor& operator=(Actor&&) = delete;
 
 private:
-	//Called by ActorFactory right after the actor is created.
+	//Called by ActorFactory right after the actor is created and before any component is attached.
 	//Loads the basic data of the actor from the xmlElement. Doesn't create or attach any component.
-	bool init(ActorID id, tinyxml2::XMLElement *xmlElement);
+	bool init(ActorID id, const std::shared_ptr<Actor> & selfPtr, tinyxml2::XMLElement *xmlElement);
 
 	//Called by ActorFactory after the actor is initialized and all its components are attached.
 	//Calls vPostInit() on every attached component.

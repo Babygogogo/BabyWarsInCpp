@@ -114,7 +114,7 @@ std::vector<std::shared_ptr<Actor>> ActorFactory::createActorAndChildren(const c
 
 	//Create and init the parent actor. If failed, log and return an empty vector.
 	auto parentActor = std::make_shared<Actor>();
-	if (!parentActor || !parentActor->init(pimpl->getNextID(), rootElement)){
+	if (!parentActor || !parentActor->init(pimpl->getNextID(), parentActor, rootElement)){
 		cocos2d::log("ActorFactory::createActor failed to create or init an actor.");
 		return{};
 	}

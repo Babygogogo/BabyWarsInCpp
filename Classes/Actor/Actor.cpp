@@ -9,7 +9,6 @@
 #include "BaseRenderComponent.h"
 #include "../Event/EvtDataRequestDestroyActor.h"
 #include "../Event/IEventDispatcher.h"
-#include "../GameLogic/GameLogic.h"
 #include "../Utilities/SingletonContainer.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -24,7 +23,8 @@ public:
 	bool m_IsUpdating{ false };
 
 	ActorID m_ID{ INVALID_ACTOR_ID };
-	ActorID m_ParentID{ INVALID_ACTOR_ID };
+	std::weak_ptr<Actor> m_Parent;
+	std::weak_ptr<Actor> m_Self;
 	std::set<ActorID> m_ChildrenID;
 
 	std::string m_Type;
@@ -69,9 +69,9 @@ const ActorID & Actor::getID() const
 	return pimpl->m_ID;
 }
 
-const ActorID & Actor::getParentID() const
+const std::weak_ptr<Actor> & Actor::getParent() const
 {
-	return pimpl->m_ParentID;
+	return pimpl->m_Parent;
 }
 
 ActorComponent * Actor::getComponent(const std::string & type) const
@@ -90,18 +90,18 @@ BaseRenderComponent * Actor::getRenderComponent() const
 
 bool Actor::hasParent() const
 {
-	return pimpl->m_ParentID != INVALID_ACTOR_ID;
+	return !pimpl->m_Parent.expired();
 }
 
 bool Actor::isAncestorOf(const Actor & child) const
 {
-	const auto & gameLogic = SingletonContainer::getInstance()->get<GameLogic>();
-	auto ancestor = gameLogic->getActor(child.pimpl->m_ParentID);
-	while (ancestor){
-		if (pimpl->m_ID == ancestor->pimpl->m_ID)
+	auto weakAncestor = child.pimpl->m_Parent;
+	while (!weakAncestor.expired()){
+		auto strongAncestor = weakAncestor.lock();
+		if (strongAncestor->pimpl->m_ID == pimpl->m_ID)
 			return true;
 
-		ancestor = gameLogic->getActor(ancestor->pimpl->m_ParentID);
+		weakAncestor = strongAncestor->pimpl->m_Parent;
 	}
 
 	return false;
@@ -113,7 +113,7 @@ void Actor::addChild(Actor & child)
 	if (child.hasParent())
 		return;
 
-	child.pimpl->m_ParentID = pimpl->m_ID;
+	child.pimpl->m_Parent = pimpl->m_Self;
 	pimpl->m_ChildrenID.emplace(child.getID());
 
 	//Deal with child's render component if present
@@ -126,19 +126,16 @@ void Actor::removeFromParent()
 	if (!hasParent())
 		return;
 
-	//If the parent is alive, remove this from the parent's children list.
-	if (auto & singletonContainer = SingletonContainer::getInstance())
-		if (auto parent = singletonContainer->get<GameLogic>()->getActor(pimpl->m_ParentID))
-			parent->pimpl->m_ChildrenID.erase(pimpl->m_ID);
-
-	pimpl->m_ParentID = INVALID_ACTOR_ID;
+	//Remove this from the parent's children list.
+	pimpl->m_Parent.lock()->pimpl->m_ChildrenID.erase(pimpl->m_ID);
+	pimpl->m_Parent.reset();
 
 	//Deal with child's render component if present.
 	if (pimpl->m_RenderComponent)
 		pimpl->m_RenderComponent->removeFromParent();
 }
 
-bool Actor::init(ActorID id, tinyxml2::XMLElement *xmlElement)
+bool Actor::init(ActorID id, const std::shared_ptr<Actor> & selfPtr, tinyxml2::XMLElement *xmlElement)
 {
 	if (id == 0 || !xmlElement)
 		return false;
@@ -156,6 +153,7 @@ bool Actor::init(ActorID id, tinyxml2::XMLElement *xmlElement)
 	}
 
 	pimpl->m_ID = std::move(id);
+	pimpl->m_Self = selfPtr;
 	pimpl->m_Type = actorType;
 	pimpl->m_ResourceFile = resourceFile;
 
