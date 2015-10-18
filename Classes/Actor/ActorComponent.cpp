@@ -10,7 +10,7 @@ void ActorComponent::setOwner(std::weak_ptr<Actor> && owner)
 {
 	assert(!owner.expired());
 
-	m_Actor = std::move(owner);
+	m_OwnerActor = std::move(owner);
 }
 
 bool ActorComponent::vInit(tinyxml2::XMLElement *xmlElement)

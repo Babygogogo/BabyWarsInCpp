@@ -22,7 +22,7 @@ struct FiniteTimeActionComponent::FiniteTimeActionComponentImpl
 	bool runNextAction(bool isCalledByLastAction);
 	bool isRunning() const;
 
-	std::weak_ptr<BaseRenderComponent> m_Target;
+	std::weak_ptr<Actor> m_OwnerActor;
 
 	cocos2d::Action *m_CurrentAction{ nullptr };
 	bool m_IsRunAutomatically{ false };
@@ -75,8 +75,7 @@ bool FiniteTimeActionComponent::FiniteTimeActionComponentImpl::runNextAction(boo
 	m_CurrentAction = m_ActionList.front();
 	m_ActionList.pop_front();
 
-	if (!m_Target.expired())
-		m_Target.lock()->getSceneNode()->runAction(m_CurrentAction);
+	m_OwnerActor.lock()->getRenderComponent()->getSceneNode()->runAction(m_CurrentAction);
 
 	return true;
 }
@@ -151,8 +150,7 @@ void FiniteTimeActionComponent::stopAndClearAllActions()
 	while (!pimpl->m_ActionList.empty())
 		pimpl->popFrontAction();
 
-	if (!pimpl->m_Target.expired())
-		pimpl->m_Target.lock()->getSceneNode()->stopAllActions();
+	m_OwnerActor.lock()->getRenderComponent()->getSceneNode()->stopAllActions();
 
 	pimpl->eraseCurrentAction();
 }
@@ -176,7 +174,7 @@ void FiniteTimeActionComponent::setRunAutomatically(bool automatically)
 
 void FiniteTimeActionComponent::vPostInit()
 {
-	pimpl->m_Target = m_Actor.lock()->getRenderComponent();
+	pimpl->m_OwnerActor = m_OwnerActor;
 }
 
 const std::string & FiniteTimeActionComponent::getType() const

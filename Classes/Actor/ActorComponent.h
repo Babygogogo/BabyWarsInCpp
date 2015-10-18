@@ -35,7 +35,7 @@ protected:
 	virtual void vPostInit();
 	virtual void vOnChanged();
 
-	std::weak_ptr<Actor> m_Actor;
+	std::weak_ptr<Actor> m_OwnerActor;
 
 private:
 	void setOwner(std::weak_ptr<Actor> && owner);

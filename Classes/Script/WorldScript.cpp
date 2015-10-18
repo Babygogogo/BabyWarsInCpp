@@ -114,12 +114,12 @@ void WorldScript::loadWorld(const char * xmlPath)
 	const auto rootElement = xmlDoc.RootElement();
 	assert(rootElement && "WorldScript::loadTileMap() failed to load xml file.");
 
-	pimpl->loadTileMap(rootElement, *m_Actor.lock());
+	pimpl->loadTileMap(rootElement, *m_OwnerActor.lock());
 }
+
+const std::string WorldScript::Type = "WorldScript";
 
 const std::string & WorldScript::getType() const
 {
 	return Type;
 }
-
-const std::string WorldScript::Type = "WorldScript";

@@ -30,8 +30,8 @@ public:
 	std::string m_Type;
 	std::string m_ResourceFile;
 
-	std::unordered_map<std::string, std::shared_ptr<ActorComponent>> m_Components;
-	std::shared_ptr<BaseRenderComponent> m_RenderComponent;
+	std::unordered_map<std::string, std::unique_ptr<ActorComponent>> m_Components;
+	BaseRenderComponent * m_RenderComponent{ nullptr };
 };
 
 Actor::ActorImpl::ActorImpl()
@@ -74,16 +74,16 @@ const ActorID & Actor::getParentID() const
 	return pimpl->m_ParentID;
 }
 
-std::shared_ptr<ActorComponent> Actor::getComponent(const std::string & type) const
+ActorComponent * Actor::getComponent(const std::string & type) const
 {
 	auto findIter = pimpl->m_Components.find(type);
 	if (findIter == pimpl->m_Components.end())
 		return nullptr;
 
-	return findIter->second;
+	return findIter->second.get();
 }
 
-std::shared_ptr<BaseRenderComponent> Actor::getRenderComponent() const
+BaseRenderComponent * Actor::getRenderComponent() const
 {
 	return pimpl->m_RenderComponent;
 }
@@ -168,13 +168,13 @@ void Actor::postInit()
 		componentIter.second->vPostInit();
 }
 
-void Actor::addComponent(std::shared_ptr<ActorComponent> && component)
+void Actor::addComponent(std::unique_ptr<ActorComponent> && component)
 {
 	//Ensure that the component is alive.
 	assert(component);
 
 	//Check if the component is an render component, and make sure that the actor can have no more than one render component.
-	if (auto renderComponent = std::dynamic_pointer_cast<BaseRenderComponent>(component)){
+	if (auto renderComponent = dynamic_cast<BaseRenderComponent*>(component.get())){
 		assert(!pimpl->m_RenderComponent && "Actor::addComponent() trying to add more than one render component.");
 		pimpl->m_RenderComponent = std::move(renderComponent);
 	}

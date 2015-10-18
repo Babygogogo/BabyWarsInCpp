@@ -14,8 +14,6 @@ struct TileScript::TileScriptImpl
 	TileScriptImpl(){};
 	~TileScriptImpl(){};
 
-	std::shared_ptr<BaseRenderComponent> m_RenderComponent;
-
 	int m_RowIndex{ 0 }, m_ColIndex{ 0 };
 	std::shared_ptr<TileData> m_TileData;
 };
@@ -38,14 +36,14 @@ bool TileScript::vInit(tinyxml2::XMLElement *xmlElement)
 
 void TileScript::vPostInit()
 {
-	pimpl->m_RenderComponent = m_Actor.lock()->getRenderComponent();
 }
 
 void TileScript::setTileData(std::shared_ptr<TileData> tileData)
 {
 	assert(tileData && "TileScript::setTileData() with nullptr.");
 
-	auto underlyingSprite = pimpl->m_RenderComponent->getSceneNode<cocos2d::Sprite>();
+	auto strongActor = m_OwnerActor.lock();
+	auto underlyingSprite = strongActor->getRenderComponent()->getSceneNode<cocos2d::Sprite>();
 	//#TODO: This only shows the first first frame of the animation. Update the code to show the whole animation.
 	underlyingSprite->setSpriteFrame(tileData->getAnimation()->getFrames().at(0)->getSpriteFrame());
 
@@ -69,7 +67,8 @@ void TileScript::setRowAndColIndex(int rowIndex, int colIndex)
 	pimpl->m_ColIndex = colIndex;
 
 	//Set the position of the node according to indexes.
-	auto underlyingNode = pimpl->m_RenderComponent->getSceneNode();
+	auto strongActor = m_OwnerActor.lock();
+	auto underlyingNode = strongActor->getRenderComponent()->getSceneNode();
 	auto tileHeight = TileData::getCommonHeight();
 	auto tileWidth = TileData::getCommonWidth();
 	underlyingNode->setPosition((static_cast<float>(colIndex)+0.5f) * tileWidth, (static_cast<float>(rowIndex)+0.5f) * tileHeight);

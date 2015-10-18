@@ -17,13 +17,18 @@ class BaseRenderComponent;
 
 /*!
  * \brief	Almost everything in the game is a Actor, such as an unit, a strategy map, an effect of an explosion, and so on.
- * \
+ *
  * \details
- *	Actors are organized in the form of trees. Methods like addChild, removeFromParent are provided for organizing.
+ *	Actors are organized in the form of trees. Methods like addChild(), removeFromParent() are provided for organizing actors.
  *	If a parent actor is destroyed, all of its children will be destroyed too.
- *	Roots of the trees are Actors that created as "scene". They should be push into SceneStack to take their effects.
+ *	Roots of the trees are Actors that created as "scene". They should be push into SceneStack to be actually running.
  *	Actor is a container of various components and/or scripts which implement most of the logics of the real game object.
- * \
+ *
+ * \warning
+ * All the component getters returns raw pointers. This implies that:
+ * - You should have a shared_ptr actor, which owns the components, to ensure that the returned pointer is alive.
+ * - You should not own the returned pointer.
+ *
  * \author	Babygogogo
  * \date	2015.03
  */
@@ -40,21 +45,22 @@ public:
 	const ActorID & getParentID() const;
 
 	//Get an attached component by its type name. Returns nullptr if no such component attached.
-	//Warning: You should not own the shared_ptr returned by this method. Instead, own weak_ptr.
-	std::shared_ptr<ActorComponent> getComponent(const std::string & type) const;
+	//Warning: You should not own the pointer returned by this method.
+	ActorComponent * getComponent(const std::string & type) const;
 
-	//Get the base of render component. An actor can have no more than one concrete render component.
-	//If there is no render component attached, nullptr is returned.
-	std::shared_ptr<BaseRenderComponent> getRenderComponent() const;
-
-	//The convenient function for getting component, which automatically downcast the pointer.
+	//Convenient function for getting component, which automatically downcast the pointer.
 	//Returns nullptr if no such component attached.
-	//Warning: You should not own the shared_ptr returned by this method. Instead, own weak_ptr.
+	//Warning: You should not own the pointer returned by this method.
 	template<typename T>
-	std::shared_ptr<T> getComponent() const	//T should derive from Component
+	T * getComponent() const	//T should derive from Component
 	{
-		return std::static_pointer_cast<T>(getComponent(T::Type));
+		return dynamic_cast<T*>(getComponent(T::Type));
 	}
+
+	//Convenient function for getting the base of render component. An actor can have no more than one concrete render component.
+	//If there is no render component attached, nullptr is returned.
+	//Warning: You should not own the pointer returned by this method.
+	BaseRenderComponent * getRenderComponent() const;
 
 	//Stuff for organizing the Actors as trees.
 	bool hasParent() const;
@@ -82,7 +88,7 @@ private:
 	void postInit();
 
 	//Called by ActorFactory during the creation of the actor.
-	void addComponent(std::shared_ptr<ActorComponent> && component);
+	void addComponent(std::unique_ptr<ActorComponent> && component);
 
 	//Called by GameLogic on every game loop.
 	//Calles vUpdate() on every attached component.

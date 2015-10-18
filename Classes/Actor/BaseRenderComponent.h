@@ -35,7 +35,7 @@ public:
 	template <class T = cocos2d::Node>
 	T * getSceneNode() const
 	{
-		return static_cast<T*>(m_Node);
+		return dynamic_cast<T*>(m_Node);
 	}
 
 	void setPosition(const RelativePosition & relativePosition);
