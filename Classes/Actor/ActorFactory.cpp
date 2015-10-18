@@ -24,7 +24,7 @@ struct ActorFactory::ActorFactoryImpl
 	//You must modify this function whenever the types of components are changed.
 	void registerComponents();
 
-	std::unique_ptr<ActorComponent> createComponent(tinyxml2::XMLElement * componentElement);
+	std::shared_ptr<ActorComponent> createComponent(tinyxml2::XMLElement * componentElement);
 	void postInitActor(std::shared_ptr<Actor> & actor);
 
 	ActorID getNextID() const;
@@ -53,10 +53,10 @@ void ActorFactory::ActorFactoryImpl::registerComponents()
 	m_ComponentFactory.registerType<WorldScript>();
 }
 
-std::unique_ptr<ActorComponent> ActorFactory::ActorFactoryImpl::createComponent(tinyxml2::XMLElement * componentElement)
+std::shared_ptr<ActorComponent> ActorFactory::ActorFactoryImpl::createComponent(tinyxml2::XMLElement * componentElement)
 {
 	auto componentType = componentElement->Value();
-	auto component = m_ComponentFactory.createUnique(componentType);
+	auto component = m_ComponentFactory.createShared(componentType);
 
 	//If can't create the component, log and return nullptr.
 	if (!component){

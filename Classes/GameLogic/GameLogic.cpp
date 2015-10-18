@@ -102,7 +102,7 @@ bool GameLogic::isActorAlive(const ActorID & id) const
 	return pimpl->m_Actors.find(id) != pimpl->m_Actors.end();
 }
 
-const std::shared_ptr<Actor> & GameLogic::getActor(const ActorID & id) const
+const std::shared_ptr<Actor> GameLogic::getActor(const ActorID & id) const
 {
 	//Try to find the actor corresponding to the id.
 	auto actorIter = pimpl->m_Actors.find(id);
@@ -117,7 +117,7 @@ const std::shared_ptr<Actor> & GameLogic::getActor(const ActorID & id) const
 	return actorIter->second;
 }
 
-std::shared_ptr<Actor> GameLogic::createActor(const char *resourceFile, tinyxml2::XMLElement *overrides /*= nullptr*/)
+const std::shared_ptr<Actor> GameLogic::createActor(const char *resourceFile, tinyxml2::XMLElement *overrides /*= nullptr*/)
 {
 	//Try to create the actor.
 	auto newActors = pimpl->m_ActorFactory->createActorAndChildren(resourceFile, overrides);
