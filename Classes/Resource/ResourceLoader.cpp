@@ -15,6 +15,12 @@ struct ResourceLoader::ResourceLoaderImpl
 	void loadTextures(const char * listPath);
 	void loadTileDatas(const char * xmlPath);
 
+	cocos2d::Size m_DesignResolution;
+	cocos2d::Size m_GridSize;
+	float m_FramesPerSecond{};
+	std::string m_ResourceListPath;
+	std::string m_InitialScenePath;
+
 	cocos2d::Size m_TileSize;
 	std::unordered_map<TileDataID, std::shared_ptr<TileData>> m_TileDatas;
 };
@@ -31,11 +37,6 @@ void ResourceLoader::ResourceLoaderImpl::loadTileDatas(const char * xmlPath)
 	xmlDoc.LoadFile(xmlPath);
 	const auto rootElement = xmlDoc.RootElement();
 	assert(rootElement && "ResourceLoaderImpl::loadTileDatas() failed to load xml file.");
-
-	//Load common settings.
-	const auto commonElement = rootElement->FirstChildElement("CommonSettings");
-	const auto sizeElement = commonElement->FirstChildElement("Size");
-	TileData::setCommonSize(sizeElement->FloatAttribute("Width"), sizeElement->FloatAttribute("Height"));
 
 	//Iterate through the list and load each TileData.
 	const auto listElement = rootElement->FirstChildElement("List");
@@ -60,11 +61,35 @@ ResourceLoader::~ResourceLoader()
 {
 }
 
-void ResourceLoader::loadResource(const char * xmlPath)
+void ResourceLoader::loadGameSettings(const char * xmlPath)
 {
 	//Load the xml file.
 	tinyxml2::XMLDocument xmlDoc;
 	xmlDoc.LoadFile(xmlPath);
+	const auto rootElement = xmlDoc.RootElement();
+	assert(rootElement && "ResourceLoader::loadGameSettings() failed to load xml file.");
+
+	//Load the design resolution.
+	auto resolutionElement = rootElement->FirstChildElement("DesignResolution");
+	pimpl->m_DesignResolution.width = resolutionElement->FloatAttribute("Width");
+	pimpl->m_DesignResolution.height = resolutionElement->FloatAttribute("Height");
+
+	//Load the grid size.
+	auto gridSizeElement = rootElement->FirstChildElement("GridSize");
+	pimpl->m_GridSize.width = gridSizeElement->FloatAttribute("Width");
+	pimpl->m_GridSize.height = gridSizeElement->FloatAttribute("Height");
+
+	//Load other settings.
+	pimpl->m_FramesPerSecond = rootElement->FirstChildElement("FramesPerSecond")->FloatAttribute("Value");
+	pimpl->m_ResourceListPath = rootElement->FirstChildElement("ResourceListPath")->Attribute("Value");
+	pimpl->m_InitialScenePath = rootElement->FirstChildElement("InitialScenePath")->Attribute("Value");
+}
+
+void ResourceLoader::loadResources()
+{
+	//Load the xml file.
+	tinyxml2::XMLDocument xmlDoc;
+	xmlDoc.LoadFile(pimpl->m_ResourceListPath.c_str());
 	const auto rootElement = xmlDoc.RootElement();
 	assert(rootElement && "ResourceLoader::loadResource() failed to load xml file.");
 
@@ -74,7 +99,27 @@ void ResourceLoader::loadResource(const char * xmlPath)
 	pimpl->loadTileDatas(rootElement->FirstChildElement("TileDataListPath")->Attribute("Value"));
 }
 
-const std::shared_ptr<TileData> & ResourceLoader::getTileData(TileDataID id) const
+cocos2d::Size ResourceLoader::getDesignResolution() const
+{
+	return pimpl->m_DesignResolution;
+}
+
+float ResourceLoader::getFramesPerSecond() const
+{
+	return pimpl->m_FramesPerSecond;
+}
+
+std::string ResourceLoader::getInitialScenePath() const
+{
+	return pimpl->m_InitialScenePath;
+}
+
+cocos2d::Size ResourceLoader::getGridSize() const
+{
+	return pimpl->m_GridSize;
+}
+
+std::shared_ptr<TileData> ResourceLoader::getTileData(TileDataID id) const
 {
 	assert(pimpl->m_TileDatas.find(id) != pimpl->m_TileDatas.end() && "ResourceLoader::getTileData() with an invalid ID.");
 

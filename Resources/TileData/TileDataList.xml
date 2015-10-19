@@ -1,8 +1,5 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
 <TileDataList>
-	<CommonSettings>
-		<Size Width="32" Height="32"/>
-	</CommonSettings>
 	<List>
 		<TileDataPath Value="TileData\TileData_01_Plain.xml"/>
 		<TileDataPath Value="TileData\TileData_02_Road.xml"/>

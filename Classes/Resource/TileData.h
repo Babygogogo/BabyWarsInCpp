@@ -9,6 +9,7 @@
 //Forward declarations.
 namespace cocos2d{
 	class Animation;
+	class Size;
 }
 
 class TileData
@@ -17,17 +18,13 @@ public:
 	TileData();
 	~TileData();
 
-	//Getter/setter for common size for each tile.
-	static void setCommonSize(float width, float height);
-	static float getCommonWidth();
-	static float getCommonHeight();
-
 	//Warning: You must finish loading textures before calling this function.
 	void initialize(const char * xmlPath);
 
 	TileDataID getID() const;
 	std::string getType() const;
 	cocos2d::Animation * getAnimation() const;
+	cocos2d::Size getSize() const;
 
 private:
 	//Implementation stuff.

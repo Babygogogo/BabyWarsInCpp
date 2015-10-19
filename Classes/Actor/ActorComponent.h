@@ -38,7 +38,7 @@ protected:
 	std::weak_ptr<Actor> m_OwnerActor;
 
 private:
-	void setOwner(std::weak_ptr<Actor> && owner);
+	void setOwner(const std::shared_ptr<Actor> & owner);
 };
 
 #endif // !__ACTOR_COMPONENT__

@@ -69,12 +69,15 @@ ActorID Actor::getID() const
 	return pimpl->m_ID;
 }
 
-std::weak_ptr<Actor> Actor::getParent() const
+std::shared_ptr<Actor> Actor::getParent() const
 {
-	return pimpl->m_Parent;
+	if (pimpl->m_Parent.expired())
+		return nullptr;
+
+	return pimpl->m_Parent.lock();
 }
 
-const std::shared_ptr<ActorComponent> Actor::getComponent(const std::string & type) const
+std::shared_ptr<ActorComponent> Actor::getComponent(const std::string & type) const
 {
 	auto findIter = pimpl->m_Components.find(type);
 	if (findIter == pimpl->m_Components.end())
@@ -83,7 +86,7 @@ const std::shared_ptr<ActorComponent> Actor::getComponent(const std::string & ty
 	return findIter->second;
 }
 
-const std::shared_ptr<BaseRenderComponent> Actor::getRenderComponent() const
+std::shared_ptr<BaseRenderComponent> Actor::getRenderComponent() const
 {
 	return pimpl->m_RenderComponent;
 }
@@ -160,12 +163,6 @@ bool Actor::init(ActorID id, const std::shared_ptr<Actor> & selfPtr, tinyxml2::X
 	return true;
 }
 
-void Actor::postInit()
-{
-	for (auto & componentIter : pimpl->m_Components)
-		componentIter.second->vPostInit();
-}
-
 void Actor::addComponent(std::shared_ptr<ActorComponent> && component)
 {
 	//Ensure that the component is alive.
@@ -179,6 +176,12 @@ void Actor::addComponent(std::shared_ptr<ActorComponent> && component)
 
 	auto emplaceResult = pimpl->m_Components.emplace(std::make_pair(component->getType(), std::move(component)));
 	assert(emplaceResult.second && "Actor::addComponent() can't emplace the component due to some unknown reasons.");
+}
+
+void Actor::postInit()
+{
+	for (auto & componentIter : pimpl->m_Components)
+		componentIter.second->vPostInit();
 }
 
 void Actor::update(const std::chrono::milliseconds & delteTimeMs)

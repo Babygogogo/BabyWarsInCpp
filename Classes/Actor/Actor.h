@@ -25,12 +25,11 @@ class BaseRenderComponent;
  *	Actor is a container of various components and/or scripts which implement most of the logics of the real game object.
  *	Actor should be created by GameLogic using std::shared_ptr and destroyed by dispatching EvtDataRequestDestroyActor.
  *
- * \warning
- *	All the component getters returns const std::shared_ptr only for convinience, but not for ownership.
+ * \note
+ *	All the component getters returns std::shared_ptr only for convinience, but not for ownership.
  *	If you need an ownership outside the actor, prefer using std::weak_ptr. But if you have to own an std::shared_ptr, be careful:
  *	- Avoid circular ownership.
  *	- Release the ownership on EvtDataRequestDestroyActor, otherwise you may use the component while the owner actor is destroyed.
- *	- Do not modify (release, reset and so on) the pointer.
  *
  * \author	Babygogogo
  * \date	2015.03
@@ -47,17 +46,17 @@ public:
 	~Actor();
 
 	ActorID getID() const;
-	std::weak_ptr<Actor> getParent() const;
+	std::shared_ptr<Actor> getParent() const;
 
 	//Get an attached component by its type name. Returns nullptr if no such component attached.
 	//Warning: Prefer using std::weak_ptr if you need ownership. See the comment for Actor class for details.
-	const std::shared_ptr<ActorComponent> getComponent(const std::string & type) const;
+	std::shared_ptr<ActorComponent> getComponent(const std::string & type) const;
 
 	//Convenient function for getting component, which automatically downcast the pointer.
 	//Returns nullptr if no such component attached.
 	//Warning: Prefer using std::weak_ptr if you need ownership. See the comment for Actor class for details.
 	template<typename T>
-	const std::shared_ptr<T> getComponent() const	//T should derive from Component
+	std::shared_ptr<T> getComponent() const	//T should derive from Component
 	{
 		return std::dynamic_pointer_cast<T>(getComponent(T::Type));
 	}
@@ -65,7 +64,7 @@ public:
 	//Convenient function for getting the base of render component. An actor can have no more than one concrete render component.
 	//If there is no render component attached, nullptr is returned.
 	//Warning: Prefer using std::weak_ptr if you need ownership. See the comment for Actor class for details.
-	const std::shared_ptr<BaseRenderComponent> getRenderComponent() const;
+	std::shared_ptr<BaseRenderComponent> getRenderComponent() const;
 
 	//Stuff for organizing the Actors as trees.
 	bool hasParent() const;

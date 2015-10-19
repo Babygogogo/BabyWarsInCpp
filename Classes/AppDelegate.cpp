@@ -18,47 +18,16 @@ struct AppDelegate::AppDelegateImpl
 	AppDelegateImpl(){};
 	~AppDelegateImpl();
 
-	void loadGameSettings(const char * xmlPath);
-
 	void initGame();
 
 	void update(float deltaSec);
 
-	static cocos2d::Size s_DesignResolution;
-	static float s_FramesPerSecnod;
-	static std::string s_ResourceListPath;
-	static std::string s_InitialScene;
-
 	std::chrono::steady_clock::time_point lastUpdateTimePoint{ std::chrono::steady_clock::now() };
 };
-
-cocos2d::Size AppDelegate::AppDelegateImpl::s_DesignResolution;
-float AppDelegate::AppDelegateImpl::s_FramesPerSecnod{};
-std::string AppDelegate::AppDelegateImpl::s_ResourceListPath;
-std::string AppDelegate::AppDelegateImpl::s_InitialScene;
 
 AppDelegate::AppDelegateImpl::~AppDelegateImpl()
 {
 	cocos2d::Director::getInstance()->getScheduler()->unscheduleUpdate(this);
-}
-
-void AppDelegate::AppDelegateImpl::loadGameSettings(const char * xmlPath)
-{
-	//Load the xml file.
-	tinyxml2::XMLDocument xmlDoc;
-	xmlDoc.LoadFile(xmlPath);
-	const auto rootElement = xmlDoc.RootElement();
-	assert(rootElement && "AppDelegateImpl::loadGameSettings() failed to load xml file.");
-
-	//Load the design resolution.
-	auto resolutionElement = rootElement->FirstChildElement("DesignResolution");
-	s_DesignResolution.width = resolutionElement->FloatAttribute("Width");
-	s_DesignResolution.height = resolutionElement->FloatAttribute("Height");
-
-	//Load other settings.
-	s_FramesPerSecnod = rootElement->FirstChildElement("FramesPerSecond")->FloatAttribute("Value");
-	s_ResourceListPath = rootElement->FirstChildElement("ResourceListPath")->Attribute("Value");
-	s_InitialScene = rootElement->FirstChildElement("InitialScenePath")->Attribute("Value");
 }
 
 void AppDelegate::AppDelegateImpl::initGame()
@@ -68,13 +37,16 @@ void AppDelegate::AppDelegateImpl::initGame()
 	singletonContainer->set<IEventDispatcher>(std::make_unique<::EventDispatcher>());
 	singletonContainer->set<GameLogic>(std::make_unique<GameLogic>());
 	singletonContainer->set<SceneStack>(std::make_unique<SceneStack>());
-	singletonContainer->set<ResourceLoader>(std::make_unique<ResourceLoader>())->loadResource(AppDelegateImpl::s_ResourceListPath.c_str());
+
+	//Load resources.
+	auto resourceLoader = singletonContainer->get<ResourceLoader>();
+	resourceLoader->loadResources();
 
 	//Schedule update self so that we can update components once per frame in update().
 	Director::getInstance()->getScheduler()->scheduleUpdate(this, 0, false);
 
 	//Create the initial scene and run it.
-	auto titleScene = singletonContainer->get<GameLogic>()->createActor(s_InitialScene.c_str());
+	auto titleScene = singletonContainer->get<GameLogic>()->createActor(resourceLoader->getInitialScenePath().c_str());
 	singletonContainer->get<SceneStack>()->pushAndRun(*titleScene);
 }
 
@@ -127,8 +99,9 @@ static int register_all_packages()
 bool AppDelegate::applicationDidFinishLaunching()
 {
 	//Read game settings from xml.
-	pimpl->loadGameSettings("GameSettings.xml");
-	const auto & designResolution = AppDelegateImpl::s_DesignResolution;
+	auto resourceLoader = SingletonContainer::getInstance()->set<ResourceLoader>(std::make_unique<ResourceLoader>());
+	resourceLoader->loadGameSettings("GameSettings.xml");
+	const auto designResolution = resourceLoader->getDesignResolution();
 
 	// initialize director
 	auto director = Director::getInstance();
@@ -146,7 +119,7 @@ bool AppDelegate::applicationDidFinishLaunching()
 	director->setDisplayStats(true);
 
 	// set FPS. the default value is 1.0/60 if you don't call this
-	director->setAnimationInterval(1.0 / AppDelegateImpl::s_FramesPerSecnod);
+	director->setAnimationInterval(1.0 / resourceLoader->getFramesPerSecond());
 
 	// Set the design resolution
 	glview->setDesignResolutionSize(designResolution.width, designResolution.height, ResolutionPolicy::NO_BORDER);

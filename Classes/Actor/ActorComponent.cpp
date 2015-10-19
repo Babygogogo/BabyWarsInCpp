@@ -6,11 +6,9 @@ ActorComponent::~ActorComponent()
 {
 }
 
-void ActorComponent::setOwner(std::weak_ptr<Actor> && owner)
+void ActorComponent::setOwner(const std::shared_ptr<Actor> & owner)
 {
-	assert(!owner.expired());
-
-	m_OwnerActor = std::move(owner);
+	m_OwnerActor = owner;
 }
 
 bool ActorComponent::vInit(tinyxml2::XMLElement *xmlElement)

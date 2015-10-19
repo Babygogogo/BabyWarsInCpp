@@ -2,21 +2,43 @@
 #define __RESOURCE_LOADER__
 
 #include <memory>
+#include <string>
 
 #include "TileDataID.h"
 
 //Forward declaration.
+namespace cocos2d{
+	class Size;
+}
 class TileData;
 
+/*!
+ * \class ResourceLoader
+ *
+ * \brief Loads settings and resources of the game.
+ *
+ * \details
+ *	loadGameSettings() and loadResources() should have been called once before you call any getters of this class.
+ *
+ * \author Babygogogo
+ * \date 2015.10
+ */
 class ResourceLoader
 {
 public:
 	ResourceLoader();
 	~ResourceLoader();
 
-	void loadResource(const char * xmlPath);
+	void loadGameSettings(const char * xmlPath);
+	//Warning: You must call loadGameSettings() before calling loadResource(), otherwise nothing will be loaded.
+	void loadResources();
 
-	const std::shared_ptr<TileData> & getTileData(TileDataID id) const;
+	cocos2d::Size getDesignResolution() const;
+	float getFramesPerSecond() const;
+	std::string getInitialScenePath() const;
+	cocos2d::Size getGridSize() const;
+
+	std::shared_ptr<TileData> getTileData(TileDataID id) const;
 
 	//Disable copy/move constructor and operator=.
 	ResourceLoader(const ResourceLoader &) = delete;

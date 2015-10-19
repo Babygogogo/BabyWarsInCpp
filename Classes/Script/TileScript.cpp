@@ -5,6 +5,8 @@
 #include "../Actor/Actor.h"
 #include "../Actor/BaseRenderComponent.h"
 #include "../Resource/TileData.h"
+#include "../Resource/ResourceLoader.h"
+#include "../Utilities/SingletonContainer.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of TileScriptImpl.
@@ -49,8 +51,9 @@ void TileScript::setTileData(std::shared_ptr<TileData> tileData)
 
 	//Scale the sprite so that it meets the common size of tile data.
 	auto spriteSize = underlyingSprite->getSpriteFrame()->getOriginalSize();
-	underlyingSprite->setScaleX(TileData::getCommonWidth() / spriteSize.width);
-	underlyingSprite->setScaleY(TileData::getCommonHeight() / spriteSize.height);
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getGridSize();
+	underlyingSprite->setScaleX(gridSize.width / spriteSize.width);
+	underlyingSprite->setScaleY(gridSize.height / spriteSize.height);
 
 	pimpl->m_TileData = std::move(tileData);
 }
@@ -69,9 +72,8 @@ void TileScript::setRowAndColIndex(int rowIndex, int colIndex)
 	//Set the position of the node according to indexes.
 	auto strongActor = m_OwnerActor.lock();
 	auto underlyingNode = strongActor->getRenderComponent()->getSceneNode();
-	auto tileHeight = TileData::getCommonHeight();
-	auto tileWidth = TileData::getCommonWidth();
-	underlyingNode->setPosition((static_cast<float>(colIndex)+0.5f) * tileWidth, (static_cast<float>(rowIndex)+0.5f) * tileHeight);
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getGridSize();
+	underlyingNode->setPosition((static_cast<float>(colIndex)+0.5f) * gridSize.width, (static_cast<float>(rowIndex)+0.5f) * gridSize.height);
 }
 
 int TileScript::getRowIndex() const

@@ -11,15 +11,10 @@ struct TileData::TileDataImpl
 	TileDataImpl();
 	~TileDataImpl();
 
-	static float s_CommonWidth, s_CommonHeight;
-
 	TileDataID m_ID{ 0 };
 	std::string m_Type;
 	cocos2d::Animation * m_Animation{ cocos2d::Animation::create() };
 };
-
-float TileData::TileDataImpl::s_CommonWidth;
-float TileData::TileDataImpl::s_CommonHeight;
 
 TileData::TileDataImpl::TileDataImpl()
 {
@@ -41,23 +36,6 @@ TileData::TileData() : pimpl{ std::make_unique<TileDataImpl>() }
 
 TileData::~TileData()
 {
-}
-
-void TileData::setCommonSize(float width, float height)
-{
-	assert(width > 0. && height > 0. && "TileData::setCommonSize() with non-positive width or height.");
-	TileDataImpl::s_CommonWidth = width;
-	TileDataImpl::s_CommonHeight = height;
-}
-
-float TileData::getCommonWidth()
-{
-	return TileDataImpl::s_CommonWidth;
-}
-
-float TileData::getCommonHeight()
-{
-	return TileDataImpl::s_CommonHeight;
 }
 
 void TileData::initialize(const char * xmlPath)
@@ -98,4 +76,9 @@ std::string TileData::getType() const
 cocos2d::Animation * TileData::getAnimation() const
 {
 	return pimpl->m_Animation;
+}
+
+cocos2d::Size TileData::getSize() const
+{
+	return{ 30, 32 };
 }

@@ -5,7 +5,7 @@
 #include <typeindex>
 
 /*!
- * \brief Container of the singleton objects of the game. 
+ * \brief Container of the singleton objects of the game.
  *
  * \details
  *	Singleton objects can be added dynamically.
@@ -22,6 +22,7 @@ public:
 	static const std::unique_ptr<SingletonContainer> & getInstance();
 
 	//Get an object of a given type. nullptr is returned if the object doesn't exist.
+	//Warning: Don't own the returned pointer.
 	template <typename T>
 	std::shared_ptr<T> get() const{
 		return std::static_pointer_cast<T>(getHelper(typeid(T)));
@@ -30,13 +31,13 @@ public:
 	//Set an object of a given type (will replace the old one of the same type if exists).
 	template <typename Base, typename Derived,
 		typename std::enable_if_t<std::is_base_of<Base, Derived>::value>* = nullptr>
-	std::shared_ptr<Base> set(std::shared_ptr<Derived> && derived){
+		std::shared_ptr<Base> set(std::shared_ptr<Derived> && derived){
 		return std::static_pointer_cast<Base>(setHelper(typeid(Base), std::move(derived)));
 	}
 
 	template <typename Base, typename Derived,
 		typename std::enable_if_t<std::is_base_of<Base, Derived>::value>* = nullptr>
-	std::shared_ptr<Base> set(std::unique_ptr<Derived> && derived){
+		std::shared_ptr<Base> set(std::unique_ptr<Derived> && derived){
 		return std::static_pointer_cast<Base>(setHelper(typeid(Base), std::move(derived)));
 	}
 

@@ -1,10 +1,12 @@
 #include <vector>
 
+#include "cocos2d.h"
 #include "../../cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "WorldScript.h"
 #include "TileScript.h"
 #include "../Actor/Actor.h"
+#include "../Actor/BaseRenderComponent.h"
 #include "../GameLogic/GameLogic.h"
 #include "../Resource/TileDataID.h"
 #include "../Resource/ResourceLoader.h"
@@ -19,6 +21,8 @@ struct WorldScript::WorldScriptImpl
 	WorldScriptImpl(){};
 	~WorldScriptImpl(){};
 
+	void onTouchMoved(cocos2d::Touch * touch, cocos2d::Event * event);
+
 	void loadTileMap(tinyxml2::XMLElement * xmlElement, Actor & worldActor);
 
 	static std::string s_TileActorPath;
@@ -26,9 +30,25 @@ struct WorldScript::WorldScriptImpl
 	std::string m_WorldDataPath;
 	int m_RowCount{}, m_ColCount{};
 	std::vector<std::vector<std::shared_ptr<TileScript>>> m_TileMap;
+
+	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
 };
 
 std::string WorldScript::WorldScriptImpl::s_TileActorPath;
+
+void WorldScript::WorldScriptImpl::onTouchMoved(cocos2d::Touch * touch, cocos2d::Event * event)
+{
+	assert(!m_RenderComponent.expired() && "WorldScriptImpl::onTouchMoved() the render component is expired.");
+	auto strongRenderComponent = m_RenderComponent.lock();
+	auto underlyingNode = strongRenderComponent->getSceneNode();
+
+	//Calculate the delta of the touch move.
+	auto deltaPosition = touch->getLocation() - touch->getPreviousLocation();
+	auto newPosition = touch->getLocation() - touch->getPreviousLocation() + underlyingNode->getPosition();
+
+	underlyingNode->setPosition(underlyingNode->getPosition() + deltaPosition);
+	//	this->panForTranslation(deltaPosition);
+}
 
 void WorldScript::WorldScriptImpl::loadTileMap(tinyxml2::XMLElement * xmlElement, Actor & worldActor)
 {
@@ -100,6 +120,8 @@ bool WorldScript::vInit(tinyxml2::XMLElement *xmlElement)
 
 void WorldScript::vPostInit()
 {
+	pimpl->m_RenderComponent = m_OwnerActor.lock()->getRenderComponent();
+
 	//Load the test world.
 	//#TODO: Only for testing and should be removed.
 	if (!pimpl->m_WorldDataPath.empty())
@@ -114,7 +136,17 @@ void WorldScript::loadWorld(const char * xmlPath)
 	const auto rootElement = xmlDoc.RootElement();
 	assert(rootElement && "WorldScript::loadTileMap() failed to load xml file.");
 
+	//Load tile map and units and so on.
 	pimpl->loadTileMap(rootElement, *m_OwnerActor.lock());
+
+	//Enable dragging the world.
+	auto touchListener = cocos2d::EventListenerTouchOneByOne::create();
+	touchListener->onTouchBegan = [](cocos2d::Touch * touch, cocos2d::Event * event){return true; };
+	touchListener->onTouchMoved = [this](cocos2d::Touch * touch, cocos2d::Event * event){
+		pimpl->onTouchMoved(touch, event);
+	};
+	auto underlyingNode = pimpl->m_RenderComponent.lock()->getSceneNode();
+	cocos2d::Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touchListener, underlyingNode);
 }
 
 const std::string WorldScript::Type = "WorldScript";
