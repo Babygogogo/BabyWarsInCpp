@@ -24,7 +24,7 @@ public:
 	TileDataID getID() const;
 	std::string getType() const;
 	cocos2d::Animation * getAnimation() const;
-	cocos2d::Size getSize() const;
+	float getDesignScaleFactor() const;
 
 private:
 	//Implementation stuff.

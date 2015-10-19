@@ -2,6 +2,8 @@
 #include "../cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "TileData.h"
+#include "ResourceLoader.h"
+#include "../Utilities/SingletonContainer.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of TileDataImpl.
@@ -14,6 +16,7 @@ struct TileData::TileDataImpl
 	TileDataID m_ID{ 0 };
 	std::string m_Type;
 	cocos2d::Animation * m_Animation{ cocos2d::Animation::create() };
+	float m_DesignScaleFactor{};
 };
 
 TileData::TileDataImpl::TileDataImpl()
@@ -60,7 +63,13 @@ void TileData::initialize(const char * xmlPath)
 		auto delaySec = frameElement->FloatAttribute("DelaySec");
 		animationFrames.pushBack(cocos2d::AnimationFrame::create(spriteFrame, delaySec, cocos2d::ValueMap()));
 	}
+	assert(animationFrames.size() > 0 && "TileData::initialize() the animation is empty.");
 	pimpl->m_Animation->setFrames(animationFrames);
+
+	//Calculate the design scale factor.
+	auto spriteFrameSize = animationFrames.at(0)->getSpriteFrame()->getOriginalSize();
+	auto designGridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
+	pimpl->m_DesignScaleFactor = std::max(designGridSize.width / spriteFrameSize.width, designGridSize.height / spriteFrameSize.height);
 }
 
 TileDataID TileData::getID() const
@@ -78,7 +87,7 @@ cocos2d::Animation * TileData::getAnimation() const
 	return pimpl->m_Animation;
 }
 
-cocos2d::Size TileData::getSize() const
+float TileData::getDesignScaleFactor() const
 {
-	return{ 30, 32 };
+	return pimpl->m_DesignScaleFactor;
 }

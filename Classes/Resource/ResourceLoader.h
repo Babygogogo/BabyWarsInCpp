@@ -36,7 +36,9 @@ public:
 	cocos2d::Size getDesignResolution() const;
 	float getFramesPerSecond() const;
 	std::string getInitialScenePath() const;
-	cocos2d::Size getGridSize() const;
+
+	cocos2d::Size getDesignGridSize() const;
+	cocos2d::Size getRealGameGridSize() const;
 
 	std::shared_ptr<TileData> getTileData(TileDataID id) const;
 

@@ -49,11 +49,13 @@ void TileScript::setTileData(std::shared_ptr<TileData> tileData)
 	//#TODO: This only shows the first first frame of the animation. Update the code to show the whole animation.
 	underlyingSprite->setSpriteFrame(tileData->getAnimation()->getFrames().at(0)->getSpriteFrame());
 
-	//Scale the sprite so that it meets the common size of tile data.
-	auto spriteSize = underlyingSprite->getSpriteFrame()->getOriginalSize();
-	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getGridSize();
-	underlyingSprite->setScaleX(gridSize.width / spriteSize.width);
-	underlyingSprite->setScaleY(gridSize.height / spriteSize.height);
+	//Scale the sprite so that it meets the real game grid size.
+	auto resourceLoader = SingletonContainer::getInstance()->get<ResourceLoader>();
+	auto designGridSize = resourceLoader->getDesignGridSize();
+	auto realGameGridSize = resourceLoader->getRealGameGridSize();
+	auto designScaleFactor = tileData->getDesignScaleFactor();
+	underlyingSprite->setScaleX(realGameGridSize.width / designGridSize.width * designScaleFactor);
+	underlyingSprite->setScaleY(realGameGridSize.height / designGridSize.height * designScaleFactor);
 
 	pimpl->m_TileData = std::move(tileData);
 }
@@ -72,7 +74,7 @@ void TileScript::setRowAndColIndex(int rowIndex, int colIndex)
 	//Set the position of the node according to indexes.
 	auto strongActor = m_OwnerActor.lock();
 	auto underlyingNode = strongActor->getRenderComponent()->getSceneNode();
-	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getGridSize();
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
 	underlyingNode->setPosition((static_cast<float>(colIndex)+0.5f) * gridSize.width, (static_cast<float>(rowIndex)+0.5f) * gridSize.height);
 }
 
