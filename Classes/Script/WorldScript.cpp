@@ -29,6 +29,7 @@ struct WorldScript::WorldScriptImpl
 
 	std::string m_WorldDataPath;
 	int m_RowCount{}, m_ColCount{};
+	cocos2d::Size m_UntransformedWorldSize;
 	std::vector<std::vector<std::shared_ptr<TileScript>>> m_TileMap;
 
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
@@ -42,12 +43,38 @@ void WorldScript::WorldScriptImpl::onTouchMoved(cocos2d::Touch * touch, cocos2d:
 	auto strongRenderComponent = m_RenderComponent.lock();
 	auto underlyingNode = strongRenderComponent->getSceneNode();
 
-	//Calculate the delta of the touch move.
-	auto deltaPosition = touch->getLocation() - touch->getPreviousLocation();
+	//Calculate the new position.
 	auto newPosition = touch->getLocation() - touch->getPreviousLocation() + underlyingNode->getPosition();
 
-	underlyingNode->setPosition(underlyingNode->getPosition() + deltaPosition);
-	//	this->panForTranslation(deltaPosition);
+	//Modify the new position so that the player can't drag the map too far away.
+	//Firstly, get the size of window, boundary and world.
+	auto windowSize = cocos2d::Director::getInstance()->getOpenGLView()->getFrameSize();
+	auto extraBoundarySize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
+	auto worldSize = m_UntransformedWorldSize;
+	worldSize.width *= underlyingNode->getScaleX();
+	worldSize.height *= underlyingNode->getScaleY();
+	//Secondly, use the sizes to calculate the possible min and max of the drag-to position.
+	auto minX = -(worldSize.width - windowSize.width + extraBoundarySize.width);
+	auto minY = -(worldSize.height - windowSize.height + extraBoundarySize.height);
+	auto maxX = extraBoundarySize.width;
+	auto maxY = extraBoundarySize.height;
+	//Finally, modify the newPosition using the mins and maxs if needed.
+	if (maxX > minX){
+		if (newPosition.x > maxX)	newPosition.x = maxX;
+		if (newPosition.x < minX)	newPosition.x = minX;
+	}
+	else //This means that the width of the map is less than the window. Just ignore horizontal part of the drag.
+		newPosition.x = underlyingNode->getPosition().x;
+
+	if (maxY > minY){
+		if (newPosition.y > maxY)	newPosition.y = maxY;
+		if (newPosition.y < minY)	newPosition.y = minY;
+	}
+	else //This means that the height of the map is less than the window. Just ignore vertical part of the drag.
+		newPosition.y = underlyingNode->getPosition().y;
+
+	//Make use of the newPosition.
+	underlyingNode->setPosition(newPosition);
 }
 
 void WorldScript::WorldScriptImpl::loadTileMap(tinyxml2::XMLElement * xmlElement, Actor & worldActor)
@@ -70,7 +97,7 @@ void WorldScript::WorldScriptImpl::loadTileMap(tinyxml2::XMLElement * xmlElement
 
 		//Load the TileDataIDs of the row.
 		auto rowIDs = utilities::toVector<TileDataID>(rowElement->Attribute("TileDataIDs"));
-		assert(rowIDs.size() == m_ColCount && "WorldScript::loadWorld() the rows count is less than the width of the world.");
+		assert(rowIDs.size() == m_ColCount && "WorldScript::loadWorld() the columns count is less than the width of the world.");
 
 		//For each ID in the row, create an tile actor add the scripts into the tile map.
 		for (auto colIndex = 0; colIndex < rowIDs.size(); ++colIndex){
@@ -88,6 +115,17 @@ void WorldScript::WorldScriptImpl::loadTileMap(tinyxml2::XMLElement * xmlElement
 		//Load the next row of the tile map.
 		rowElement = rowElement->NextSiblingElement();
 	}
+
+	//Calculate the untransformed world size. Useful when the world is dragged.
+	auto realGridSize = resourceLoader->getRealGameGridSize();
+	m_UntransformedWorldSize.width = realGridSize.width * m_ColCount;
+	m_UntransformedWorldSize.height = realGridSize.height * m_RowCount;
+
+	//Set the position of the map so that the map is displayed in the middle of the window.
+	auto windowSize = cocos2d::Director::getInstance()->getOpenGLView()->getFrameSize();
+	auto posX = -(m_UntransformedWorldSize.width - windowSize.width) / 2;
+	auto posY = -(m_UntransformedWorldSize.height - windowSize.height) / 2;
+	m_RenderComponent.lock()->getSceneNode()->setPosition(posX, posY);
 }
 
 //////////////////////////////////////////////////////////////////////////
