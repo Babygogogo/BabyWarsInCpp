@@ -160,7 +160,10 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Process\ProcessRunner.cpp" />
     <ClCompile Include="..\Classes\Resource\ResourceLoader.cpp" />
     <ClCompile Include="..\Classes\Resource\TileData.cpp" />
+    <ClCompile Include="..\Classes\Resource\UnitData.cpp" />
     <ClCompile Include="..\Classes\Script\TileScript.cpp" />
+    <ClCompile Include="..\Classes\Script\UnitMapScript.cpp" />
+    <ClCompile Include="..\Classes\Script\UnitScript.cpp" />
     <ClCompile Include="..\Classes\Script\WarSceneScript.cpp" />
     <ClCompile Include="..\Classes\Script\TileMapScript.cpp" />
     <ClCompile Include="..\Classes\Utilities\RelativePosition.cpp" />
@@ -194,7 +197,11 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Resource\ResourceLoader.h" />
     <ClInclude Include="..\Classes\Resource\TileData.h" />
     <ClInclude Include="..\Classes\Resource\TileDataID.h" />
+    <ClInclude Include="..\Classes\Resource\UnitData.h" />
+    <ClInclude Include="..\Classes\Resource\UnitDataID.h" />
     <ClInclude Include="..\Classes\Script\TileScript.h" />
+    <ClInclude Include="..\Classes\Script\UnitMapScript.h" />
+    <ClInclude Include="..\Classes\Script\UnitScript.h" />
     <ClInclude Include="..\Classes\Script\WarSceneScript.h" />
     <ClInclude Include="..\Classes\Script\TileMapScript.h" />
     <ClInclude Include="..\Classes\Utilities\GenericFactory.h" />

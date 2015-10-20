@@ -102,6 +102,15 @@
     <ClCompile Include="..\Classes\Script\TileMapScript.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Resource\UnitData.cpp">
+      <Filter>src\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Script\UnitScript.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Script\UnitMapScript.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -204,6 +213,18 @@
       <Filter>src\Script</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Script\TileMapScript.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Resource\UnitData.h">
+      <Filter>src\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Resource\UnitDataID.h">
+      <Filter>src\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Script\UnitScript.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Script\UnitMapScript.h">
       <Filter>src\Script</Filter>
     </ClInclude>
   </ItemGroup>

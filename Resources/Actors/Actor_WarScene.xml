@@ -2,8 +2,8 @@
 <Actor Type="WarScene" Resource="Actors\Actor_WarScene.xml">
 	<Components>
 		<GeneralRenderComponent Type="Scene"/>
-		<WarSceneScript TestTileMap="Data\TileMap\TileMapData_TestTileMap.xml">
-			<RelatedActorsPath TileMap="Actors\Actor_TileMap.xml"/>
+		<WarSceneScript TestTileMap="Data\TileMap\TileMapData_TestTileMap.xml" TestUnitMap="Data\UnitMap\UnitMapData_TestUnitMap.xml">
+			<RelatedActorsPath TileMap="Actors\Actor_TileMap.xml" UnitMap="Actors\Actor_UnitMap.xml"/>
 		</WarSceneScript>
 	</Components>
 	<ChildrenActors>

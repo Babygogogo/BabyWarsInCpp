@@ -1,71 +1,71 @@
 #include "cocos2d.h"
 #include "../../cocos2d/external/tinyxml2/tinyxml2.h"
 
-#include "TileScript.h"
+#include "UnitScript.h"
 #include "../Actor/Actor.h"
 #include "../Actor/BaseRenderComponent.h"
-#include "../Resource/TileData.h"
 #include "../Resource/ResourceLoader.h"
+#include "../Resource/UnitData.h"
 #include "../Utilities/SingletonContainer.h"
 
 //////////////////////////////////////////////////////////////////////////
-//Definition of TileScriptImpl.
+//Definition of UnitScriptImpl.
 //////////////////////////////////////////////////////////////////////////
-struct TileScript::TileScriptImpl
+struct UnitScript::UnitScriptImpl
 {
-	TileScriptImpl(){};
-	~TileScriptImpl(){};
+	UnitScriptImpl(){};
+	~UnitScriptImpl(){};
 
 	int m_RowIndex{ 0 }, m_ColIndex{ 0 };
-	std::shared_ptr<TileData> m_TileData;
+	std::shared_ptr<UnitData> m_UnitData;
 };
 
 //////////////////////////////////////////////////////////////////////////
 //Implementation of WorldScript.
 //////////////////////////////////////////////////////////////////////////
-TileScript::TileScript() : pimpl{ std::make_unique<TileScriptImpl>() }
+UnitScript::UnitScript() : pimpl{ std::make_unique<UnitScriptImpl>() }
 {
 }
 
-TileScript::~TileScript()
+UnitScript::~UnitScript()
 {
 }
 
-bool TileScript::vInit(tinyxml2::XMLElement *xmlElement)
+bool UnitScript::vInit(tinyxml2::XMLElement *xmlElement)
 {
 	return true;
 }
 
-void TileScript::vPostInit()
+void UnitScript::vPostInit()
 {
 }
 
-void TileScript::setTileData(std::shared_ptr<TileData> tileData)
+void UnitScript::setUnitData(std::shared_ptr<UnitData> unitData)
 {
-	assert(tileData && "TileScript::setTileData() with nullptr.");
+	assert(unitData && "UnitScript::setUnitData() with nullptr.");
 
 	auto ownerActor = m_OwnerActor.lock();
 	auto underlyingSprite = ownerActor->getRenderComponent()->getSceneNode<cocos2d::Sprite>();
 	//#TODO: This only shows the first first frame of the animation. Update the code to show the whole animation.
-	underlyingSprite->setSpriteFrame(tileData->getAnimation()->getFrames().at(0)->getSpriteFrame());
+	underlyingSprite->setSpriteFrame(unitData->getAnimation()->getFrames().at(0)->getSpriteFrame());
 
 	//Scale the sprite so that it meets the real game grid size.
 	auto resourceLoader = SingletonContainer::getInstance()->get<ResourceLoader>();
 	auto designGridSize = resourceLoader->getDesignGridSize();
 	auto realGameGridSize = resourceLoader->getRealGameGridSize();
-	auto designScaleFactor = tileData->getDesignScaleFactor();
+	auto designScaleFactor = unitData->getDesignScaleFactor();
 	underlyingSprite->setScaleX(realGameGridSize.width / designGridSize.width * designScaleFactor);
 	underlyingSprite->setScaleY(realGameGridSize.height / designGridSize.height * designScaleFactor);
 
-	pimpl->m_TileData = std::move(tileData);
+	pimpl->m_UnitData = std::move(unitData);
 }
 
-const std::shared_ptr<TileData> & TileScript::getTileData() const
+const std::shared_ptr<UnitData> & UnitScript::getUnitData() const
 {
-	return pimpl->m_TileData;
+	return pimpl->m_UnitData;
 }
 
-void TileScript::setRowAndColIndex(int rowIndex, int colIndex)
+void UnitScript::setRowAndColIndex(int rowIndex, int colIndex)
 {
 	//Set the indexes.
 	pimpl->m_RowIndex = rowIndex;
@@ -78,19 +78,19 @@ void TileScript::setRowAndColIndex(int rowIndex, int colIndex)
 	underlyingNode->setPosition((static_cast<float>(colIndex)+0.5f) * gridSize.width, (static_cast<float>(rowIndex)+0.5f) * gridSize.height);
 }
 
-int TileScript::getRowIndex() const
+int UnitScript::getRowIndex() const
 {
 	return pimpl->m_RowIndex;
 }
 
-int TileScript::getColIndex() const
+int UnitScript::getColIndex() const
 {
 	return pimpl->m_ColIndex;
 }
 
-const std::string TileScript::Type = "TileScript";
+const std::string UnitScript::Type = "UnitScript";
 
-const std::string & TileScript::getType() const
+const std::string & UnitScript::getType() const
 {
 	return Type;
 }

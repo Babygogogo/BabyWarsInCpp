@@ -23,6 +23,9 @@ public:
 
 	cocos2d::Size getUntransformedMapSize() const;
 
+	int getRowCount() const;
+	int getColumnCount() const;
+
 	//Disable copy/move constructor and operator=.
 	TileMapScript(const TileMapScript &) = delete;
 	TileMapScript(TileMapScript &&) = delete;

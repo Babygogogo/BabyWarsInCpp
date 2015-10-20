@@ -3,6 +3,7 @@
 
 #include "WarSceneScript.h"
 #include "TileMapScript.h"
+#include "UnitMapScript.h"
 #include "../Actor/Actor.h"
 #include "../Actor/BaseRenderComponent.h"
 #include "../GameLogic/GameLogic.h"
@@ -20,14 +21,18 @@ struct WarSceneScript::WarSceneScriptImpl
 	void onTouchMoved(cocos2d::Touch * touch, cocos2d::Event * event);
 
 	static std::string s_TileMapActorPath;
+	static std::string s_UnitMapActorPath;
 
 	std::string m_TileMapDataPath;
+	std::string m_UnitMapDataPath;
 
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
 	std::weak_ptr<TileMapScript> m_ChildTileMapScript;
+	std::weak_ptr<UnitMapScript> m_ChildUnitMapScript;
 };
 
 std::string WarSceneScript::WarSceneScriptImpl::s_TileMapActorPath;
+std::string WarSceneScript::WarSceneScriptImpl::s_UnitMapActorPath;
 
 void WarSceneScript::WarSceneScriptImpl::onTouchMoved(cocos2d::Touch * touch, cocos2d::Event * event)
 {
@@ -85,6 +90,7 @@ bool WarSceneScript::vInit(tinyxml2::XMLElement *xmlElement)
 	//Get the world file path.
 	//#TODO: Only for testing and should be removed.
 	pimpl->m_TileMapDataPath = xmlElement->Attribute("TestTileMap");
+	pimpl->m_UnitMapDataPath = xmlElement->Attribute("TestUnitMap");
 
 	static auto isStaticInitialized = false;
 	if (isStaticInitialized)
@@ -92,6 +98,7 @@ bool WarSceneScript::vInit(tinyxml2::XMLElement *xmlElement)
 
 	auto relatedActorElement = xmlElement->FirstChildElement("RelatedActorsPath");
 	WarSceneScriptImpl::s_TileMapActorPath = relatedActorElement->Attribute("TileMap");
+	WarSceneScriptImpl::s_UnitMapActorPath = relatedActorElement->Attribute("UnitMap");
 
 	isStaticInitialized = true;
 	return true;
@@ -105,16 +112,28 @@ void WarSceneScript::vPostInit()
 
 	//Create and add child actors.
 	auto gameLogic = SingletonContainer::getInstance()->get<GameLogic>();
-	//Firstly, the tile map.
+	//Firstly, create and add the tile map.
 	auto tileMapActor = gameLogic->createActor(WarSceneScriptImpl::s_TileMapActorPath.c_str());
 	pimpl->m_ChildTileMapScript = tileMapActor->getComponent<TileMapScript>();
 	ownerActor->addChild(*tileMapActor);
+	//Secondly, create and add the unit map.
+	auto unitMapActor = gameLogic->createActor(WarSceneScriptImpl::s_UnitMapActorPath.c_str());
+	pimpl->m_ChildUnitMapScript = unitMapActor->getComponent<UnitMapScript>();
+	ownerActor->addChild(*unitMapActor);
 	//#TODO: create and add unit map, commander, weather and so on...
 
 	//Load the test world.
 	//#TODO: Only for testing and should be removed.
 	if (!pimpl->m_TileMapDataPath.empty())
 		pimpl->m_ChildTileMapScript.lock()->loadTileMap(pimpl->m_TileMapDataPath.c_str());
+	if (!pimpl->m_UnitMapDataPath.empty())
+		pimpl->m_ChildUnitMapScript.lock()->loadUnitMap(pimpl->m_UnitMapDataPath.c_str());
+
+	//Check if the units are in valid positions.
+	auto unitMapScript = pimpl->m_ChildUnitMapScript.lock();
+	auto tileMapScript = pimpl->m_ChildTileMapScript.lock();
+	assert(unitMapScript->getRowCount() == tileMapScript->getRowCount() && unitMapScript->getColumnCount() == tileMapScript->getColumnCount()
+		&& "WarSceneScript::vPostInit() the size of the unit map is not the same as the tile map.");
 
 	//Set the position of the map so that the map is displayed in the middle of the window.
 	auto windowSize = cocos2d::Director::getInstance()->getOpenGLView()->getFrameSize();

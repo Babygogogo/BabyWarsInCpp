@@ -8,9 +8,11 @@
 #include "GeneralRenderComponent.h"
 #include "FiniteTimeActionComponent.h"
 
-#include "../Script/TileScript.h"
-#include "../Script/WarSceneScript.h"
 #include "../Script/TileMapScript.h"
+#include "../Script/TileScript.h"
+#include "../Script/UnitMapScript.h"
+#include "../Script/UnitScript.h"
+#include "../Script/WarSceneScript.h"
 #include "../Utilities/GenericFactory.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -50,9 +52,11 @@ void ActorFactory::ActorFactoryImpl::registerComponents()
 	m_ComponentFactory.registerType<GeneralRenderComponent>();
 	m_ComponentFactory.registerType<FiniteTimeActionComponent>();
 
-	m_ComponentFactory.registerType<TileScript>();
-	m_ComponentFactory.registerType<WarSceneScript>();
 	m_ComponentFactory.registerType<TileMapScript>();
+	m_ComponentFactory.registerType<TileScript>();
+	m_ComponentFactory.registerType<UnitMapScript>();
+	m_ComponentFactory.registerType<UnitScript>();
+	m_ComponentFactory.registerType<WarSceneScript>();
 }
 
 std::shared_ptr<ActorComponent> ActorFactory::ActorFactoryImpl::createComponent(tinyxml2::XMLElement * componentElement)

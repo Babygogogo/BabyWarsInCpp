@@ -1,34 +1,34 @@
-#ifndef __TILE_DATA__
-#define __TILE_DATA__
+#ifndef __UNIT_DATA__
+#define __UNIT_DATA__
 
 #include <memory>
 #include <string>
 
-#include "TileDataID.h"
+#include "UnitDataID.h"
 
 //Forward declarations.
 namespace cocos2d{
 	class Animation;
 }
 
-class TileData
+class UnitData
 {
 public:
-	TileData();
-	~TileData();
+	UnitData();
+	~UnitData();
 
 	//Warning: You must finish loading textures before calling this function.
 	void initialize(const char * xmlPath);
 
-	TileDataID getID() const;
+	UnitDataID getID() const;
 	std::string getType() const;
 	cocos2d::Animation * getAnimation() const;
 	float getDesignScaleFactor() const;
 
 private:
 	//Implementation stuff.
-	struct TileDataImpl;
-	std::unique_ptr<TileDataImpl> pimpl;
+	struct UnitDataImpl;
+	std::unique_ptr<UnitDataImpl> pimpl;
 };
 
-#endif // !__TILE_DATA__
+#endif // !__UNIT_DATA__

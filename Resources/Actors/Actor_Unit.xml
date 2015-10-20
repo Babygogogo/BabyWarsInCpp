@@ -1,0 +1,9 @@
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<Actor Type="Unit" Resource="Actors\Actor_Unit.xml">
+	<Components>
+		<GeneralRenderComponent Type="Sprite"/>
+		<UnitScript/>
+	</Components>
+	<ChildrenActors>
+	</ChildrenActors>
+</Actor>

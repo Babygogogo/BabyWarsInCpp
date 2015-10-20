@@ -3,6 +3,7 @@
 
 #include "ResourceLoader.h"
 #include "TileData.h"
+#include "UnitData.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of ResourceLoadImpl.
@@ -14,6 +15,7 @@ struct ResourceLoader::ResourceLoaderImpl
 
 	void loadTextures(const char * listPath);
 	void loadTileDatas(const char * xmlPath);
+	void loadUnitDatas(const char * xmlPath);
 
 	cocos2d::Size m_DesignResolution;
 	cocos2d::Size m_DesignGridSize;
@@ -24,6 +26,7 @@ struct ResourceLoader::ResourceLoaderImpl
 
 	cocos2d::Size m_TileSize;
 	std::unordered_map<TileDataID, std::shared_ptr<TileData>> m_TileDatas;
+	std::unordered_map<UnitDataID, std::shared_ptr<UnitData>> m_UnitDatas;
 };
 
 void ResourceLoader::ResourceLoaderImpl::loadTextures(const char * listPath)
@@ -48,6 +51,26 @@ void ResourceLoader::ResourceLoaderImpl::loadTileDatas(const char * xmlPath)
 		assert(m_TileDatas.find(tileData->getID()) == m_TileDatas.end() && "ResourceLoaderImpl::loadTileDatas() load two TileData with a same ID.");
 
 		m_TileDatas.emplace(tileData->getID(), std::move(tileData));
+	}
+}
+
+void ResourceLoader::ResourceLoaderImpl::loadUnitDatas(const char * xmlPath)
+{
+	//Load the xml file.
+	tinyxml2::XMLDocument xmlDoc;
+	xmlDoc.LoadFile(xmlPath);
+	const auto rootElement = xmlDoc.RootElement();
+	assert(rootElement && "ResourceLoaderImpl::loadUnitDatas() failed to load xml file.");
+
+	//Iterate through the list and load each UnitData.
+	const auto listElement = rootElement->FirstChildElement("List");
+	for (auto tileDataElement = listElement->FirstChildElement("UnitDataPath"); tileDataElement; tileDataElement = tileDataElement->NextSiblingElement()){
+		auto unitData = std::make_shared<UnitData>();
+		unitData->initialize(tileDataElement->Attribute("Value"));
+
+		assert(m_UnitDatas.find(unitData->getID()) == m_UnitDatas.end() && "ResourceLoaderImpl::loadUnitDatas() load two UnitData with a same ID.");
+
+		m_UnitDatas.emplace(unitData->getID(), std::move(unitData));
 	}
 }
 
@@ -102,6 +125,7 @@ void ResourceLoader::loadResources()
 	//Textures and sounds must be loaded firstly because other resources may rely on them.
 	pimpl->loadTextures(rootElement->FirstChildElement("TextureListPath")->Attribute("Value"));
 	pimpl->loadTileDatas(rootElement->FirstChildElement("TileDataListPath")->Attribute("Value"));
+	pimpl->loadUnitDatas(rootElement->FirstChildElement("UnitDataListPath")->Attribute("Value"));
 }
 
 cocos2d::Size ResourceLoader::getDesignResolution() const
@@ -134,4 +158,11 @@ std::shared_ptr<TileData> ResourceLoader::getTileData(TileDataID id) const
 	assert(pimpl->m_TileDatas.find(id) != pimpl->m_TileDatas.end() && "ResourceLoader::getTileData() with an invalid ID.");
 
 	return pimpl->m_TileDatas[id];
+}
+
+std::shared_ptr<UnitData> ResourceLoader::getUnitData(UnitDataID id) const
+{
+	assert(pimpl->m_UnitDatas.find(id) != pimpl->m_UnitDatas.end() && "ResourceLoader::getUnitData() with an invalid ID.");
+
+	return pimpl->m_UnitDatas[id];
 }
