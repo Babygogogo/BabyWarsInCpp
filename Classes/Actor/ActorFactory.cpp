@@ -9,7 +9,8 @@
 #include "FiniteTimeActionComponent.h"
 
 #include "../Script/TileScript.h"
-#include "../Script/WorldScript.h"
+#include "../Script/WarSceneScript.h"
+#include "../Script/TileMapScript.h"
 #include "../Utilities/GenericFactory.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -50,7 +51,8 @@ void ActorFactory::ActorFactoryImpl::registerComponents()
 	m_ComponentFactory.registerType<FiniteTimeActionComponent>();
 
 	m_ComponentFactory.registerType<TileScript>();
-	m_ComponentFactory.registerType<WorldScript>();
+	m_ComponentFactory.registerType<WarSceneScript>();
+	m_ComponentFactory.registerType<TileMapScript>();
 }
 
 std::shared_ptr<ActorComponent> ActorFactory::ActorFactoryImpl::createComponent(tinyxml2::XMLElement * componentElement)

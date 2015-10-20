@@ -1,10 +1,10 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
-<Actor Type="World" Resource="Actors\Actor_World.xml">
+<Actor Type="TileMap" Resource="Actors\Actor_TileMap.xml">
 	<Components>
 		<GeneralRenderComponent Type="Node"/>
-		<WorldScript TestWorld="Worlds\World_TestWorld.xml">
+		<TileMapScript>
 			<RelatedActorsPath Tile="Actors\Actor_Tile.xml"/>
-		</WorldScript>
+		</TileMapScript>
 	</Components>
 	<ChildrenActors>
 	</ChildrenActors>

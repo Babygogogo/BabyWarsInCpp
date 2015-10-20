@@ -2,8 +2,10 @@
 <Actor Type="WarScene" Resource="Actors\Actor_WarScene.xml">
 	<Components>
 		<GeneralRenderComponent Type="Scene"/>
+		<WarSceneScript TestTileMap="Data\TileMap\TileMapData_TestTileMap.xml">
+			<RelatedActorsPath TileMap="Actors\Actor_TileMap.xml"/>
+		</WarSceneScript>
 	</Components>
 	<ChildrenActors>
-		<Resource File="Actors\Actor_World.xml"/>
 	</ChildrenActors>
 </Actor>

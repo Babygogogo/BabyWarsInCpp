@@ -1,6 +1,6 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
 <ResourceList>
 	<TextureListPath Value="Texture.plist"/>
-	<TileDataListPath Value="TileData\TileDataList.xml"/>
-	<UnitDataListPath Value="UnitData\UnitDataList.xml"/>
+	<TileDataListPath Value="Data\Tile\TileDataList.xml"/>
+	<UnitDataListPath Value="Data\Unit\UnitDataList.xml"/>
 </ResourceList>

@@ -87,9 +87,6 @@
     <ClCompile Include="..\Classes\Utilities\SingletonContainer.cpp">
       <Filter>src\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Script\WorldScript.cpp">
-      <Filter>src\Script</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\Resource\ResourceLoader.cpp">
       <Filter>src\Resource</Filter>
     </ClCompile>
@@ -97,6 +94,12 @@
       <Filter>src\Resource</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Script\TileScript.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Script\WarSceneScript.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Script\TileMapScript.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
   </ItemGroup>
@@ -185,9 +188,6 @@
     <ClInclude Include="..\Classes\Utilities\StringToVector.h">
       <Filter>src\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Script\WorldScript.h">
-      <Filter>src\Script</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\Resource\ResourceLoader.h">
       <Filter>src\Resource</Filter>
     </ClInclude>
@@ -198,6 +198,12 @@
       <Filter>src\Resource</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Script\TileScript.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Script\WarSceneScript.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Script\TileMapScript.h">
       <Filter>src\Script</Filter>
     </ClInclude>
   </ItemGroup>

@@ -161,7 +161,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Resource\ResourceLoader.cpp" />
     <ClCompile Include="..\Classes\Resource\TileData.cpp" />
     <ClCompile Include="..\Classes\Script\TileScript.cpp" />
-    <ClCompile Include="..\Classes\Script\WorldScript.cpp" />
+    <ClCompile Include="..\Classes\Script\WarSceneScript.cpp" />
+    <ClCompile Include="..\Classes\Script\TileMapScript.cpp" />
     <ClCompile Include="..\Classes\Utilities\RelativePosition.cpp" />
     <ClCompile Include="..\Classes\Utilities\SingletonContainer.cpp" />
     <ClCompile Include="main.cpp" />
@@ -194,7 +195,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Resource\TileData.h" />
     <ClInclude Include="..\Classes\Resource\TileDataID.h" />
     <ClInclude Include="..\Classes\Script\TileScript.h" />
-    <ClInclude Include="..\Classes\Script\WorldScript.h" />
+    <ClInclude Include="..\Classes\Script\WarSceneScript.h" />
+    <ClInclude Include="..\Classes\Script\TileMapScript.h" />
     <ClInclude Include="..\Classes\Utilities\GenericFactory.h" />
     <ClInclude Include="..\Classes\Utilities\RelativePosition.h" />
     <ClInclude Include="..\Classes\Utilities\SingletonContainer.h" />
