@@ -14,7 +14,7 @@
 #include "../Utilities/SingletonContainer.h"
 
 //////////////////////////////////////////////////////////////////////////
-//Definition of WorldScriptImpl.
+//Definition of UnitMapScriptImpl.
 //////////////////////////////////////////////////////////////////////////
 struct UnitMapScript::UnitMapScriptImpl
 {
@@ -32,7 +32,7 @@ struct UnitMapScript::UnitMapScriptImpl
 std::string UnitMapScript::UnitMapScriptImpl::s_UnitActorPath;
 
 //////////////////////////////////////////////////////////////////////////
-//Implementation of WorldScript.
+//Implementation of UnitMapScript.
 //////////////////////////////////////////////////////////////////////////
 UnitMapScript::UnitMapScript() : pimpl{ std::make_unique<UnitMapScriptImpl>() }
 {
@@ -62,6 +62,7 @@ void UnitMapScript::vPostInit()
 
 void UnitMapScript::loadUnitMap(const char * xmlPath)
 {
+	//////////////////////////////////////////////////////////////////////////
 	//Load the xml file.
 	tinyxml2::XMLDocument xmlDoc;
 	xmlDoc.LoadFile(xmlPath);
@@ -73,34 +74,40 @@ void UnitMapScript::loadUnitMap(const char * xmlPath)
 	pimpl->m_ColCount = rootElement->IntAttribute("Width");
 	pimpl->m_UnitMap.resize(pimpl->m_RowCount);
 
-	//Some object to ease the following steps.
+	//////////////////////////////////////////////////////////////////////////
+	//Load the map.
+	//Some variables to make the job easier.
 	const auto resourceLoader = SingletonContainer::getInstance()->get<ResourceLoader>();
 	auto gameLogic = SingletonContainer::getInstance()->get<GameLogic>();
 	auto ownerActor = m_OwnerActor.lock();
+	const auto unitsElement = rootElement->FirstChildElement("Unit");
+	const auto mapElement = rootElement->FirstChildElement("Map");
 
-	//Load the unit data ids of the unit map.
+	//Start loading the unit indexes of the unit map.
 	//Because the code regards the bottom row as the first row while the xml regards the up most row as the first row, we must read the rows in reverse order.
-	auto rowElement = rootElement->FirstChildElement("Row");
+	auto rowElement = mapElement->FirstChildElement("Row");
 	for (auto rowIndex = pimpl->m_RowCount - 1; rowIndex >= 0; --rowIndex){
-		assert(rowElement && "WorldScript::loadWorld() the rows count is less than the height of the world.");
+		assert(rowElement && "UnitMapScript::loadUnitMap() the rows count is less than the height of the UnitMap.");
 
-		//Load the UnitDataIDs of the row.
-		auto rowIDs = utilities::toVector<UnitDataID>(rowElement->Attribute("UnitDataIDs"));
-		assert(rowIDs.size() == pimpl->m_ColCount && "WorldScript::loadWorld() the columns count is less than the width of the world.");
+		//Load the unit indexes of the row.
+		auto rowIndexes = utilities::toVector<std::string>(rowElement->Attribute("UnitIndexes"));
+		assert(rowIndexes.size() == pimpl->m_ColCount && "UnitMapScript::loadUnitMap() the columns count is less than the width of the UnitMap.");
 
 		//For each ID in the row, create an unit actor add the scripts into the unit map.
-		for (auto colIndex = rowIDs.size() * 0; colIndex < rowIDs.size(); ++colIndex){
-			//There is no unit in [rowIndex, colIndex] if the id is 0. Do nothing and continue.
-			if (rowIDs[colIndex] == 0)
+		for (auto colIndex = rowIndexes.size() * 0; colIndex < rowIndexes.size(); ++colIndex){
+			//There is no unit in [rowIndex, colIndex] if the unit index is 0. Emplace a nullptr in the map and continue.
+			if (std::stoi(rowIndexes[colIndex]) == 0){
+				pimpl->m_UnitMap[rowIndex].emplace_back();
 				continue;
+			}
 
 			//Create a new unit actor and initialize it with the id and indexes.
 			auto unitActor = gameLogic->createActor(UnitMapScriptImpl::s_UnitActorPath.c_str());
 			auto unitScript = unitActor->getComponent<UnitScript>();
-			unitScript->setUnitData(resourceLoader->getUnitData(rowIDs[colIndex]));
+			unitScript->loadUnit(unitsElement->FirstChildElement((std::string("Index") + rowIndexes[colIndex]).c_str()));
 			unitScript->setRowAndColIndex(rowIndex, colIndex);
 
-			//Add the unit actor and script to world.
+			//Add the unit actor and script to UnitMap.
 			ownerActor->addChild(*unitActor);
 			pimpl->m_UnitMap[rowIndex].emplace_back(std::move(unitScript));
 		}

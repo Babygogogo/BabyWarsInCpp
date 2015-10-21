@@ -15,8 +15,8 @@ public:
 	static const std::string Type;
 	virtual const std::string & getType() const override;
 
-	//Getter/setter for UnitData.
-	void setUnitData(std::shared_ptr<UnitData> unitData);
+	void loadUnit(tinyxml2::XMLElement * xmlElement);
+
 	const std::shared_ptr<UnitData> & getUnitData() const;
 
 	//The setter also sets the position of the Unit according to the indexes.

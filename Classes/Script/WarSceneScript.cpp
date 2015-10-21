@@ -110,18 +110,23 @@ void WarSceneScript::vPostInit()
 	auto renderComponent = ownerActor->getRenderComponent();
 	pimpl->m_RenderComponent = ownerActor->getRenderComponent();
 
+	//////////////////////////////////////////////////////////////////////////
 	//Create and add child actors.
 	auto gameLogic = SingletonContainer::getInstance()->get<GameLogic>();
+
 	//Firstly, create and add the tile map.
 	auto tileMapActor = gameLogic->createActor(WarSceneScriptImpl::s_TileMapActorPath.c_str());
 	pimpl->m_ChildTileMapScript = tileMapActor->getComponent<TileMapScript>();
 	ownerActor->addChild(*tileMapActor);
+
 	//Secondly, create and add the unit map.
 	auto unitMapActor = gameLogic->createActor(WarSceneScriptImpl::s_UnitMapActorPath.c_str());
 	pimpl->m_ChildUnitMapScript = unitMapActor->getComponent<UnitMapScript>();
 	ownerActor->addChild(*unitMapActor);
-	//#TODO: create and add unit map, commander, weather and so on...
 
+	//#TODO: create and add, commander, weather and so on...
+
+	//////////////////////////////////////////////////////////////////////////
 	//Load the test world.
 	//#TODO: Only for testing and should be removed.
 	if (!pimpl->m_TileMapDataPath.empty())

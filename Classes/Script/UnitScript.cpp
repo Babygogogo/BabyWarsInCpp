@@ -40,8 +40,13 @@ void UnitScript::vPostInit()
 {
 }
 
-void UnitScript::setUnitData(std::shared_ptr<UnitData> unitData)
+void UnitScript::loadUnit(tinyxml2::XMLElement * xmlElement)
 {
+	//////////////////////////////////////////////////////////////////////////
+	//Load and set the unit data.
+	auto unitDataID = xmlElement->IntAttribute("UnitDataID");
+	const auto resourceLoader = SingletonContainer::getInstance()->get<ResourceLoader>();
+	auto unitData = resourceLoader->getUnitData(unitDataID);
 	assert(unitData && "UnitScript::setUnitData() with nullptr.");
 
 	auto ownerActor = m_OwnerActor.lock();
@@ -50,7 +55,6 @@ void UnitScript::setUnitData(std::shared_ptr<UnitData> unitData)
 	underlyingSprite->setSpriteFrame(unitData->getAnimation()->getFrames().at(0)->getSpriteFrame());
 
 	//Scale the sprite so that it meets the real game grid size.
-	auto resourceLoader = SingletonContainer::getInstance()->get<ResourceLoader>();
 	auto designGridSize = resourceLoader->getDesignGridSize();
 	auto realGameGridSize = resourceLoader->getRealGameGridSize();
 	auto designScaleFactor = unitData->getDesignScaleFactor();
@@ -58,6 +62,9 @@ void UnitScript::setUnitData(std::shared_ptr<UnitData> unitData)
 	underlyingSprite->setScaleY(realGameGridSize.height / designGridSize.height * designScaleFactor);
 
 	pimpl->m_UnitData = std::move(unitData);
+
+	//////////////////////////////////////////////////////////////////////////
+	//#TODO: Load more data, such as the hp, level and so on, from the xml.
 }
 
 const std::shared_ptr<UnitData> & UnitScript::getUnitData() const

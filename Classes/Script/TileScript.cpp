@@ -40,8 +40,13 @@ void TileScript::vPostInit()
 {
 }
 
-void TileScript::setTileData(std::shared_ptr<TileData> tileData)
+void TileScript::LoadTile(tinyxml2::XMLElement * xmlElement)
 {
+	//////////////////////////////////////////////////////////////////////////
+	//Load and set the tile data.
+	auto tileDataID = xmlElement->IntAttribute("TileDataID");
+	const auto resourceLoader = SingletonContainer::getInstance()->get<ResourceLoader>();
+	auto tileData = resourceLoader->getTileData(tileDataID);
 	assert(tileData && "TileScript::setTileData() with nullptr.");
 
 	auto ownerActor = m_OwnerActor.lock();
@@ -50,7 +55,6 @@ void TileScript::setTileData(std::shared_ptr<TileData> tileData)
 	underlyingSprite->setSpriteFrame(tileData->getAnimation()->getFrames().at(0)->getSpriteFrame());
 
 	//Scale the sprite so that it meets the real game grid size.
-	auto resourceLoader = SingletonContainer::getInstance()->get<ResourceLoader>();
 	auto designGridSize = resourceLoader->getDesignGridSize();
 	auto realGameGridSize = resourceLoader->getRealGameGridSize();
 	auto designScaleFactor = tileData->getDesignScaleFactor();
@@ -58,6 +62,9 @@ void TileScript::setTileData(std::shared_ptr<TileData> tileData)
 	underlyingSprite->setScaleY(realGameGridSize.height / designGridSize.height * designScaleFactor);
 
 	pimpl->m_TileData = std::move(tileData);
+
+	//////////////////////////////////////////////////////////////////////////
+	//#TODO: Load more data, such as the hp, level and so on, from the xml.
 }
 
 const std::shared_ptr<TileData> & TileScript::getTileData() const

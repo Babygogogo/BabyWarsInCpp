@@ -16,8 +16,8 @@ public:
 	static const std::string Type;
 	virtual const std::string & getType() const override;
 
-	//Getter/setter for TileData.
-	void setTileData(std::shared_ptr<TileData> tileData);
+	void LoadTile(tinyxml2::XMLElement * xmlElement);
+
 	const std::shared_ptr<TileData> & getTileData() const;
 
 	//The setter also sets the position of the tile according to the indexes.

@@ -14,7 +14,7 @@
 #include "../Utilities/SingletonContainer.h"
 
 //////////////////////////////////////////////////////////////////////////
-//Definition of WorldScriptImpl.
+//Definition of TileMapScriptImpl.
 //////////////////////////////////////////////////////////////////////////
 struct TileMapScript::TileMapScriptImpl
 {
@@ -33,7 +33,7 @@ struct TileMapScript::TileMapScriptImpl
 std::string TileMapScript::TileMapScriptImpl::s_TileActorPath;
 
 //////////////////////////////////////////////////////////////////////////
-//Implementation of WorldScript.
+//Implementation of TileMapScript.
 //////////////////////////////////////////////////////////////////////////
 TileMapScript::TileMapScript() : pimpl{ std::make_unique<TileMapScriptImpl>() }
 {
@@ -63,6 +63,7 @@ void TileMapScript::vPostInit()
 
 void TileMapScript::loadTileMap(const char * xmlPath)
 {
+	//////////////////////////////////////////////////////////////////////////
 	//Load the xml file.
 	tinyxml2::XMLDocument xmlDoc;
 	xmlDoc.LoadFile(xmlPath);
@@ -74,30 +75,34 @@ void TileMapScript::loadTileMap(const char * xmlPath)
 	pimpl->m_ColCount = rootElement->IntAttribute("Width");
 	pimpl->m_TileMap.resize(pimpl->m_RowCount);
 
-	//Some object to ease the following steps.
+	//////////////////////////////////////////////////////////////////////////
+	//Load the map.
+	//Some variables to make the job easier.
 	const auto resourceLoader = SingletonContainer::getInstance()->get<ResourceLoader>();
 	auto gameLogic = SingletonContainer::getInstance()->get<GameLogic>();
 	auto ownerActor = m_OwnerActor.lock();
+	const auto tilesElement = rootElement->FirstChildElement("Tile");
+	const auto mapElement = rootElement->FirstChildElement("Map");
 
-	//Load the tile data ids of the tile map.
+	//Start loading the tile indexes of the tile map.
 	//Because the code regards the bottom row as the first row while the xml regards the up most row as the first row, we must read the rows in reverse order.
-	auto rowElement = rootElement->FirstChildElement("Row");
+	auto rowElement = mapElement->FirstChildElement("Row");
 	for (auto rowIndex = pimpl->m_RowCount - 1; rowIndex >= 0; --rowIndex){
-		assert(rowElement && "WorldScript::loadWorld() the rows count is less than the height of the world.");
+		assert(rowElement && "TileMapScript::loadTileMap() the rows count is less than the height of the TileMap.");
 
-		//Load the TileDataIDs of the row.
-		auto rowIDs = utilities::toVector<TileDataID>(rowElement->Attribute("TileDataIDs"));
-		assert(rowIDs.size() == pimpl->m_ColCount && "WorldScript::loadWorld() the columns count is less than the width of the world.");
+		//Load the tile indexes of the row.
+		auto rowIndexes = utilities::toVector<std::string>(rowElement->Attribute("TileIndexes"));
+		assert(rowIndexes.size() == pimpl->m_ColCount && "TileMapScript::loadTileMap() the columns count is less than the width of the TileMap.");
 
 		//For each ID in the row, create an tile actor add the scripts into the tile map.
-		for (auto colIndex = rowIDs.size() * 0; colIndex < rowIDs.size(); ++colIndex){
+		for (auto colIndex = rowIndexes.size() * 0; colIndex < rowIndexes.size(); ++colIndex){
 			//Create a new tile actor and initialize it with the id and indexes.
 			auto tileActor = gameLogic->createActor(TileMapScriptImpl::s_TileActorPath.c_str());
 			auto tileScript = tileActor->getComponent<TileScript>();
-			tileScript->setTileData(resourceLoader->getTileData(rowIDs[colIndex]));
+			tileScript->LoadTile(tilesElement->FirstChildElement((std::string("Index") + rowIndexes[colIndex]).c_str()));
 			tileScript->setRowAndColIndex(rowIndex, colIndex);
 
-			//Add the tile actor and script to world.
+			//Add the tile actor and script to TileMap.
 			ownerActor->addChild(*tileActor);
 			pimpl->m_TileMap[rowIndex].emplace_back(std::move(tileScript));
 		}
@@ -106,7 +111,7 @@ void TileMapScript::loadTileMap(const char * xmlPath)
 		rowElement = rowElement->NextSiblingElement();
 	}
 
-	//Calculate the untransformed world size. Useful when the world is dragged.
+	//Calculate the untransformed TileMap size. Useful when the TileMap is dragged.
 	auto realGridSize = resourceLoader->getRealGameGridSize();
 	pimpl->m_UntransformedMapSize.width = realGridSize.width * pimpl->m_ColCount;
 	pimpl->m_UntransformedMapSize.height = realGridSize.height * pimpl->m_RowCount;
