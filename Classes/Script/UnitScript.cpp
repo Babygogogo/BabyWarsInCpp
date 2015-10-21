@@ -18,6 +18,8 @@ struct UnitScript::UnitScriptImpl
 
 	int m_RowIndex{ 0 }, m_ColIndex{ 0 };
 	std::shared_ptr<UnitData> m_UnitData;
+
+	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -38,6 +40,7 @@ bool UnitScript::vInit(tinyxml2::XMLElement *xmlElement)
 
 void UnitScript::vPostInit()
 {
+	pimpl->m_RenderComponent = m_OwnerActor.lock()->getRenderComponent();
 }
 
 void UnitScript::loadUnit(tinyxml2::XMLElement * xmlElement)
@@ -93,6 +96,15 @@ int UnitScript::getRowIndex() const
 int UnitScript::getColIndex() const
 {
 	return pimpl->m_ColIndex;
+}
+
+void UnitScript::onSingleTouch()
+{
+	auto renderComponent = pimpl->m_RenderComponent.lock();
+	auto underlyingNode = renderComponent->getSceneNode();
+
+	auto rotateAction = cocos2d::RotateBy::create(0.2, 45, 45);
+	underlyingNode->runAction(rotateAction);
 }
 
 const std::string UnitScript::Type = "UnitScript";

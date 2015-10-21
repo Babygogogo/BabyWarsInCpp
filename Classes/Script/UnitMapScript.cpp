@@ -21,6 +21,11 @@ struct UnitMapScript::UnitMapScriptImpl
 	UnitMapScriptImpl(){};
 	~UnitMapScriptImpl(){};
 
+	bool isRowIndexValid(int rowIndex) const;
+	bool isColIndexValid(int colIndex) const;
+
+	std::shared_ptr<UnitScript> getUnit(const cocos2d::Vec2 & position) const;
+
 	static std::string s_UnitActorPath;
 
 	int m_RowCount{}, m_ColCount{};
@@ -30,6 +35,37 @@ struct UnitMapScript::UnitMapScriptImpl
 };
 
 std::string UnitMapScript::UnitMapScriptImpl::s_UnitActorPath;
+
+bool UnitMapScript::UnitMapScriptImpl::isRowIndexValid(int rowIndex) const
+{
+	return rowIndex >= 0 && rowIndex < m_RowCount;
+}
+
+bool UnitMapScript::UnitMapScriptImpl::isColIndexValid(int colIndex) const
+{
+	return colIndex >= 0 && colIndex < m_ColCount;
+}
+
+std::shared_ptr<UnitScript> UnitMapScript::UnitMapScriptImpl::getUnit(const cocos2d::Vec2 & position) const
+{
+	if (position.x < 0. || position.y < 0.)
+		return nullptr;
+
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
+	auto rowIndex = static_cast<int>(position.y / gridSize.height);
+	auto colIndex = static_cast<int>(position.x / gridSize.width);
+
+	cocos2d::log("UnitMapScript::getUnit() rowIndex: %d colIndex: %d", rowIndex, colIndex);
+
+	if (!isRowIndexValid(rowIndex) || !isColIndexValid(colIndex))
+		return nullptr;
+
+	auto unitScript = m_UnitMap[rowIndex][colIndex];
+	if (unitScript.expired())
+		return nullptr;
+
+	return unitScript.lock();
+}
 
 //////////////////////////////////////////////////////////////////////////
 //Implementation of UnitMapScript.
@@ -92,6 +128,7 @@ void UnitMapScript::loadUnitMap(const char * xmlPath)
 		//Load the unit indexes of the row.
 		auto rowIndexes = utilities::toVector<std::string>(rowElement->Attribute("UnitIndexes"));
 		assert(rowIndexes.size() == pimpl->m_ColCount && "UnitMapScript::loadUnitMap() the columns count is less than the width of the UnitMap.");
+		pimpl->m_UnitMap[rowIndex].clear();
 
 		//For each ID in the row, create an unit actor add the scripts into the unit map.
 		for (auto colIndex = rowIndexes.size() * 0; colIndex < rowIndexes.size(); ++colIndex){
@@ -125,6 +162,15 @@ int UnitMapScript::getRowCount() const
 int UnitMapScript::getColumnCount() const
 {
 	return pimpl->m_ColCount;
+}
+
+void UnitMapScript::onSingleTouch(const cocos2d::Vec2 & position)
+{
+	auto touchedUnit = pimpl->getUnit(position);
+	if (!touchedUnit)
+		return;
+
+	touchedUnit->onSingleTouch();
 }
 
 const std::string UnitMapScript::Type = "UnitMapScript";

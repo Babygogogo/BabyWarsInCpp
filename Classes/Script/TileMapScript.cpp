@@ -93,6 +93,7 @@ void TileMapScript::loadTileMap(const char * xmlPath)
 		//Load the tile indexes of the row.
 		auto rowIndexes = utilities::toVector<std::string>(rowElement->Attribute("TileIndexes"));
 		assert(rowIndexes.size() == pimpl->m_ColCount && "TileMapScript::loadTileMap() the columns count is less than the width of the TileMap.");
+		pimpl->m_TileMap[rowIndex].clear();
 
 		//For each ID in the row, create an tile actor add the scripts into the tile map.
 		for (auto colIndex = rowIndexes.size() * 0; colIndex < rowIndexes.size(); ++colIndex){

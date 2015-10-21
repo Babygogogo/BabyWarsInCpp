@@ -6,7 +6,9 @@
 //Forward declaration.
 namespace cocos2d{
 	class Size;
+	class Vec2;
 }
+class UnitScript;
 
 class UnitMapScript : public BaseScriptComponent
 {
@@ -24,6 +26,8 @@ public:
 	//Getter of the size of the unit map.
 	int getRowCount() const;
 	int getColumnCount() const;
+
+	void onSingleTouch(const cocos2d::Vec2 & position);
 
 	//Disable copy/move constructor and operator=.
 	UnitMapScript(const UnitMapScript &) = delete;
