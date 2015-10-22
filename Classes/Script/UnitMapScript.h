@@ -27,7 +27,11 @@ public:
 	int getRowCount() const;
 	int getColumnCount() const;
 
-	void onSingleTouch(const cocos2d::Vec2 & position);
+	std::shared_ptr<UnitScript> getUnit(const cocos2d::Vec2 & position) const;
+	std::shared_ptr<UnitScript> getActiveUnit() const;
+	bool isActiveUnitAtPosition(const cocos2d::Vec2 & position) const;
+	bool setActiveUnitAtPosition(bool active, const cocos2d::Vec2 & position);
+	bool moveAndDeactivateUnit(const cocos2d::Vec2 & fromPos, const cocos2d::Vec2 & toPos);
 
 	//Disable copy/move constructor and operator=.
 	UnitMapScript(const UnitMapScript &) = delete;

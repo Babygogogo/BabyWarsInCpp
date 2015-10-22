@@ -21,20 +21,38 @@ struct UnitMapScript::UnitMapScriptImpl
 	UnitMapScriptImpl(){};
 	~UnitMapScriptImpl(){};
 
+	using RowColIndex = std::pair<int, int>;
+
+	RowColIndex getRowColIndex(const cocos2d::Vec2 & position) const;
+
+	bool isRowColIndexValid(const RowColIndex & index) const;
 	bool isRowIndexValid(int rowIndex) const;
 	bool isColIndexValid(int colIndex) const;
-
-	std::shared_ptr<UnitScript> getUnit(const cocos2d::Vec2 & position) const;
 
 	static std::string s_UnitActorPath;
 
 	int m_RowCount{}, m_ColCount{};
 	std::vector<std::vector<std::weak_ptr<UnitScript>>> m_UnitMap;
+	std::weak_ptr<UnitScript> m_ActiveUnit;
 
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
 };
 
 std::string UnitMapScript::UnitMapScriptImpl::s_UnitActorPath;
+
+std::pair<int, int> UnitMapScript::UnitMapScriptImpl::getRowColIndex(const cocos2d::Vec2 & position) const
+{
+	if (position.x < 0. || position.y < 0.)
+		return{ -1, -1 };
+
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
+	return{ static_cast<int>(position.y / gridSize.height), static_cast<int>(position.x / gridSize.width) };
+}
+
+bool UnitMapScript::UnitMapScriptImpl::isRowColIndexValid(const RowColIndex & index) const
+{
+	return isRowIndexValid(index.first) && isColIndexValid(index.second);
+}
 
 bool UnitMapScript::UnitMapScriptImpl::isRowIndexValid(int rowIndex) const
 {
@@ -44,27 +62,6 @@ bool UnitMapScript::UnitMapScriptImpl::isRowIndexValid(int rowIndex) const
 bool UnitMapScript::UnitMapScriptImpl::isColIndexValid(int colIndex) const
 {
 	return colIndex >= 0 && colIndex < m_ColCount;
-}
-
-std::shared_ptr<UnitScript> UnitMapScript::UnitMapScriptImpl::getUnit(const cocos2d::Vec2 & position) const
-{
-	if (position.x < 0. || position.y < 0.)
-		return nullptr;
-
-	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
-	auto rowIndex = static_cast<int>(position.y / gridSize.height);
-	auto colIndex = static_cast<int>(position.x / gridSize.width);
-
-	cocos2d::log("UnitMapScript::getUnit() rowIndex: %d colIndex: %d", rowIndex, colIndex);
-
-	if (!isRowIndexValid(rowIndex) || !isColIndexValid(colIndex))
-		return nullptr;
-
-	auto unitScript = m_UnitMap[rowIndex][colIndex];
-	if (unitScript.expired())
-		return nullptr;
-
-	return unitScript.lock();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -164,13 +161,82 @@ int UnitMapScript::getColumnCount() const
 	return pimpl->m_ColCount;
 }
 
-void UnitMapScript::onSingleTouch(const cocos2d::Vec2 & position)
+std::shared_ptr<UnitScript> UnitMapScript::getUnit(const cocos2d::Vec2 & position) const
 {
-	auto touchedUnit = pimpl->getUnit(position);
-	if (!touchedUnit)
-		return;
+	auto rowColIndex = pimpl->getRowColIndex(position);
+	//cocos2d::log("UnitMapScript::getUnit() rowIndex: %d colIndex: %d", rowIndex, colIndex);
+	if (!pimpl->isRowColIndexValid(rowColIndex))
+		return nullptr;
 
-	touchedUnit->onSingleTouch();
+	auto unitScript = pimpl->m_UnitMap[rowColIndex.first][rowColIndex.second];
+	if (unitScript.expired())
+		return nullptr;
+
+	return unitScript.lock();
+}
+
+std::shared_ptr<UnitScript> UnitMapScript::getActiveUnit() const
+{
+	if (!pimpl->m_ActiveUnit.expired())
+		return pimpl->m_ActiveUnit.lock();
+
+	return nullptr;
+}
+
+bool UnitMapScript::isActiveUnitAtPosition(const cocos2d::Vec2 & position) const
+{
+	if (pimpl->m_ActiveUnit.expired())
+		return false;
+
+	auto unitAtPosition = getUnit(position);
+	if (!unitAtPosition)
+		return false;
+
+	return unitAtPosition == pimpl->m_ActiveUnit.lock();
+}
+
+bool UnitMapScript::setActiveUnitAtPosition(bool active, const cocos2d::Vec2 & position)
+{
+	auto targetUnit = getUnit(position);
+	if (!targetUnit)
+		return false;
+
+	if (!pimpl->m_ActiveUnit.expired())
+		pimpl->m_ActiveUnit.lock()->setActive(false);
+
+	targetUnit->setActive(active);
+	if (active)
+		pimpl->m_ActiveUnit = targetUnit;
+	else
+		pimpl->m_ActiveUnit.reset();
+
+	return true;
+}
+
+bool UnitMapScript::moveAndDeactivateUnit(const cocos2d::Vec2 & fromPos, const cocos2d::Vec2 & toPos)
+{
+	//#TODO: This function should take something like MovePath as parameter and do the job.
+	auto fromIndex = pimpl->getRowColIndex(fromPos);
+	auto toIndex = pimpl->getRowColIndex(toPos);
+
+	if (fromIndex == toIndex || !pimpl->isRowColIndexValid(fromIndex) || !pimpl->isRowColIndexValid(toIndex))
+		return false;
+
+	auto targetUnit = getUnit(fromPos);
+	if (!targetUnit)
+		return false;
+
+	targetUnit->setActive(false);
+	pimpl->m_ActiveUnit.reset();
+
+	if (auto existingUnit = getUnit(toPos))
+		return false;
+
+	targetUnit->moveToRowColIndex(toIndex.first, toIndex.second);
+	pimpl->m_UnitMap[fromIndex.first][fromIndex.second].reset();
+	pimpl->m_UnitMap[toIndex.first][toIndex.second] = std::move(targetUnit);
+
+	return true;
 }
 
 const std::string UnitMapScript::Type = "UnitMapScript";

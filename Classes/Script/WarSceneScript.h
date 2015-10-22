@@ -13,6 +13,8 @@ public:
 	static const std::string Type;
 	virtual const std::string & getType() const override;
 
+	void loadWarScene(const char * xmlPath);
+
 	//Disable copy/move constructor and operator=.
 	WarSceneScript(const WarSceneScript &) = delete;
 	WarSceneScript(WarSceneScript &&) = delete;

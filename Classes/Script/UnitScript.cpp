@@ -16,11 +16,19 @@ struct UnitScript::UnitScriptImpl
 	UnitScriptImpl(){};
 	~UnitScriptImpl(){};
 
+	cocos2d::Vec2 getPosition(int rowIndex, int colIndex) const;
+
 	int m_RowIndex{ 0 }, m_ColIndex{ 0 };
 	std::shared_ptr<UnitData> m_UnitData;
 
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
 };
+
+cocos2d::Vec2 UnitScript::UnitScriptImpl::getPosition(int rowIndex, int colIndex) const
+{
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
+	return{ (static_cast<float>(colIndex)+0.5f) * gridSize.width, (static_cast<float>(rowIndex)+0.5f) * gridSize.height };
+}
 
 //////////////////////////////////////////////////////////////////////////
 //Implementation of WorldScript.
@@ -85,7 +93,7 @@ void UnitScript::setRowAndColIndex(int rowIndex, int colIndex)
 	auto strongActor = m_OwnerActor.lock();
 	auto underlyingNode = strongActor->getRenderComponent()->getSceneNode();
 	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
-	underlyingNode->setPosition((static_cast<float>(colIndex)+0.5f) * gridSize.width, (static_cast<float>(rowIndex)+0.5f) * gridSize.height);
+	underlyingNode->setPosition(pimpl->getPosition(rowIndex, colIndex));
 }
 
 int UnitScript::getRowIndex() const
@@ -98,13 +106,29 @@ int UnitScript::getColIndex() const
 	return pimpl->m_ColIndex;
 }
 
-void UnitScript::onSingleTouch()
+void UnitScript::setActive(bool active)
+{
+	auto underlyingNode = pimpl->m_RenderComponent.lock()->getSceneNode();
+	if (!active){
+		underlyingNode->stopAllActions();
+		underlyingNode->setRotation(0);
+		return;
+	}
+
+	auto sequence = cocos2d::Sequence::create(cocos2d::RotateTo::create(0.2, 30, 30), cocos2d::RotateTo::create(0.4, -30, -30), cocos2d::RotateTo::create(0.2, 0, 0), nullptr);
+	underlyingNode->runAction(cocos2d::RepeatForever::create(sequence));
+}
+
+void UnitScript::moveToRowColIndex(int rowIndex, int colIndex)
 {
 	auto renderComponent = pimpl->m_RenderComponent.lock();
 	auto underlyingNode = renderComponent->getSceneNode();
 
-	auto rotateAction = cocos2d::RotateBy::create(0.2, 45, 45);
-	underlyingNode->runAction(rotateAction);
+	pimpl->m_RowIndex = rowIndex;
+	pimpl->m_ColIndex = colIndex;
+
+	auto moveTo = cocos2d::MoveTo::create(0.5, pimpl->getPosition(rowIndex, colIndex));
+	underlyingNode->runAction(moveTo);
 }
 
 const std::string UnitScript::Type = "UnitScript";

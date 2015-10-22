@@ -24,7 +24,9 @@ public:
 	int getRowIndex() const;
 	int getColIndex() const;
 
-	void onSingleTouch();
+	void setActive(bool active);
+
+	void moveToRowColIndex(int rowIndex, int colIndex);
 
 	//Disable copy/move constructor and operator=.
 	UnitScript(const UnitScript &) = delete;

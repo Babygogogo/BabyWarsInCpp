@@ -1,0 +1,7 @@
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<WarScene Name="TestWarScene">
+	<DataPath>
+		<TileMap Value="Data\TileMap\TileMapData_TestTileMap.xml"/>
+		<UnitMap Value="Data\UnitMap\UnitMapData_TestUnitMap.xml"/>
+	</DataPath>
+</WarScene>
