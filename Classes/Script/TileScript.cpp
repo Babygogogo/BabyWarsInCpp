@@ -7,6 +7,7 @@
 #include "../Resource/TileData.h"
 #include "../Resource/ResourceLoader.h"
 #include "../Utilities/SingletonContainer.h"
+#include "../Utilities/GridIndex.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of TileScriptImpl.
@@ -16,8 +17,10 @@ struct TileScript::TileScriptImpl
 	TileScriptImpl(){};
 	~TileScriptImpl(){};
 
-	int m_RowIndex{ 0 }, m_ColIndex{ 0 };
+	GridIndex m_GridIndex;
 	std::shared_ptr<TileData> m_TileData;
+
+	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -38,6 +41,7 @@ bool TileScript::vInit(tinyxml2::XMLElement *xmlElement)
 
 void TileScript::vPostInit()
 {
+	pimpl->m_RenderComponent = m_OwnerActor.lock()->getRenderComponent();
 }
 
 void TileScript::LoadTile(tinyxml2::XMLElement * xmlElement)
@@ -72,27 +76,18 @@ const std::shared_ptr<TileData> & TileScript::getTileData() const
 	return pimpl->m_TileData;
 }
 
-void TileScript::setRowAndColIndex(int rowIndex, int colIndex)
+void TileScript::setGridIndexAndPosition(const GridIndex & gridIndex)
 {
 	//Set the indexes.
-	pimpl->m_RowIndex = rowIndex;
-	pimpl->m_ColIndex = colIndex;
+	pimpl->m_GridIndex = gridIndex;
 
 	//Set the position of the node according to indexes.
-	auto strongActor = m_OwnerActor.lock();
-	auto underlyingNode = strongActor->getRenderComponent()->getSceneNode();
-	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
-	underlyingNode->setPosition((static_cast<float>(colIndex)+0.5f) * gridSize.width, (static_cast<float>(rowIndex)+0.5f) * gridSize.height);
+	pimpl->m_RenderComponent.lock()->getSceneNode()->setPosition(gridIndex.toPosition());
 }
 
-int TileScript::getRowIndex() const
+GridIndex TileScript::getGridIndex() const
 {
-	return pimpl->m_RowIndex;
-}
-
-int TileScript::getColIndex() const
-{
-	return pimpl->m_ColIndex;
+	return pimpl->m_GridIndex;
 }
 
 const std::string TileScript::Type = "TileScript";

@@ -12,6 +12,7 @@
 #include "../Resource/ResourceLoader.h"
 #include "../Utilities/StringToVector.h"
 #include "../Utilities/SingletonContainer.h"
+#include "../Utilities/GridIndex.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of TileMapScriptImpl.
@@ -101,7 +102,7 @@ void TileMapScript::loadTileMap(const char * xmlPath)
 			auto tileActor = gameLogic->createActor(TileMapScriptImpl::s_TileActorPath.c_str());
 			auto tileScript = tileActor->getComponent<TileScript>();
 			tileScript->LoadTile(tilesElement->FirstChildElement((std::string("Index") + rowIndexes[colIndex]).c_str()));
-			tileScript->setRowAndColIndex(rowIndex, colIndex);
+			tileScript->setGridIndexAndPosition(GridIndex(rowIndex, colIndex));
 
 			//Add the tile actor and script to TileMap.
 			ownerActor->addChild(*tileActor);

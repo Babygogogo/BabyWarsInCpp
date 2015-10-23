@@ -5,6 +5,7 @@
 
 //Forward declaration.
 class TileData;
+struct GridIndex;
 
 class TileScript : public BaseScriptComponent
 {
@@ -21,9 +22,8 @@ public:
 	const std::shared_ptr<TileData> & getTileData() const;
 
 	//The setter also sets the position of the tile according to the indexes.
-	void setRowAndColIndex(int rowIndex, int colIndex);
-	int getRowIndex() const;
-	int getColIndex() const;
+	void setGridIndexAndPosition(const GridIndex & gridIndex);
+	GridIndex getGridIndex() const;
 
 	//Disable copy/move constructor and operator=.
 	TileScript(const TileScript &) = delete;

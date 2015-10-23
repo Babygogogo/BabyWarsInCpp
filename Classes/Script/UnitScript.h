@@ -3,7 +3,9 @@
 
 #include "../Actor/BaseScriptComponent.h"
 
+//Forward declaration.
 class UnitData;
+struct GridIndex;
 
 class UnitScript : public BaseScriptComponent
 {
@@ -20,13 +22,12 @@ public:
 	const std::shared_ptr<UnitData> & getUnitData() const;
 
 	//The setter also sets the position of the Unit according to the indexes.
-	void setRowAndColIndex(int rowIndex, int colIndex);
-	int getRowIndex() const;
-	int getColIndex() const;
+	void setGridIndexAndPosition(const GridIndex & gridIndex);
+	GridIndex getGridIndex() const;
 
 	void setActive(bool active);
 
-	void moveToRowColIndex(int rowIndex, int colIndex);
+	void moveTo(const GridIndex & gridIndex);
 
 	//Disable copy/move constructor and operator=.
 	UnitScript(const UnitScript &) = delete;

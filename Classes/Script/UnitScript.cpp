@@ -7,6 +7,7 @@
 #include "../Resource/ResourceLoader.h"
 #include "../Resource/UnitData.h"
 #include "../Utilities/SingletonContainer.h"
+#include "../Utilities/GridIndex.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of UnitScriptImpl.
@@ -16,19 +17,11 @@ struct UnitScript::UnitScriptImpl
 	UnitScriptImpl(){};
 	~UnitScriptImpl(){};
 
-	cocos2d::Vec2 getPosition(int rowIndex, int colIndex) const;
-
-	int m_RowIndex{ 0 }, m_ColIndex{ 0 };
+	GridIndex m_GridIndex;
 	std::shared_ptr<UnitData> m_UnitData;
 
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
 };
-
-cocos2d::Vec2 UnitScript::UnitScriptImpl::getPosition(int rowIndex, int colIndex) const
-{
-	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
-	return{ (static_cast<float>(colIndex)+0.5f) * gridSize.width, (static_cast<float>(rowIndex)+0.5f) * gridSize.height };
-}
 
 //////////////////////////////////////////////////////////////////////////
 //Implementation of WorldScript.
@@ -83,27 +76,18 @@ const std::shared_ptr<UnitData> & UnitScript::getUnitData() const
 	return pimpl->m_UnitData;
 }
 
-void UnitScript::setRowAndColIndex(int rowIndex, int colIndex)
+void UnitScript::setGridIndexAndPosition(const GridIndex & gridIndex)
 {
 	//Set the indexes.
-	pimpl->m_RowIndex = rowIndex;
-	pimpl->m_ColIndex = colIndex;
+	pimpl->m_GridIndex = gridIndex;
 
 	//Set the position of the node according to indexes.
-	auto strongActor = m_OwnerActor.lock();
-	auto underlyingNode = strongActor->getRenderComponent()->getSceneNode();
-	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
-	underlyingNode->setPosition(pimpl->getPosition(rowIndex, colIndex));
+	pimpl->m_RenderComponent.lock()->getSceneNode()->setPosition(gridIndex.toPosition());
 }
 
-int UnitScript::getRowIndex() const
+GridIndex UnitScript::getGridIndex() const
 {
-	return pimpl->m_RowIndex;
-}
-
-int UnitScript::getColIndex() const
-{
-	return pimpl->m_ColIndex;
+	return pimpl->m_GridIndex;
 }
 
 void UnitScript::setActive(bool active)
@@ -119,16 +103,12 @@ void UnitScript::setActive(bool active)
 	underlyingNode->runAction(cocos2d::RepeatForever::create(sequence));
 }
 
-void UnitScript::moveToRowColIndex(int rowIndex, int colIndex)
+void UnitScript::moveTo(const GridIndex & gridIndex)
 {
-	auto renderComponent = pimpl->m_RenderComponent.lock();
-	auto underlyingNode = renderComponent->getSceneNode();
+	pimpl->m_GridIndex = gridIndex;
 
-	pimpl->m_RowIndex = rowIndex;
-	pimpl->m_ColIndex = colIndex;
-
-	auto moveTo = cocos2d::MoveTo::create(0.5, pimpl->getPosition(rowIndex, colIndex));
-	underlyingNode->runAction(moveTo);
+	auto moveTo = cocos2d::MoveTo::create(0.5, gridIndex.toPosition());
+	pimpl->m_RenderComponent.lock()->getSceneNode()->runAction(moveTo);
 }
 
 const std::string UnitScript::Type = "UnitScript";

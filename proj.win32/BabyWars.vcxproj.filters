@@ -111,6 +111,9 @@
     <ClCompile Include="..\Classes\Script\UnitMapScript.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Utilities\GridIndex.cpp">
+      <Filter>src\Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -226,6 +229,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\Script\UnitMapScript.h">
       <Filter>src\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utilities\GridIndex.h">
+      <Filter>src\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
