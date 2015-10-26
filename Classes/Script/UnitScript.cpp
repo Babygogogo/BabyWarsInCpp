@@ -82,7 +82,8 @@ void UnitScript::setGridIndexAndPosition(const GridIndex & gridIndex)
 	pimpl->m_GridIndex = gridIndex;
 
 	//Set the position of the node according to indexes.
-	pimpl->m_RenderComponent.lock()->getSceneNode()->setPosition(gridIndex.toPosition());
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
+	pimpl->m_RenderComponent.lock()->getSceneNode()->setPosition(gridIndex.toPosition(gridSize));
 }
 
 GridIndex UnitScript::getGridIndex() const
@@ -99,7 +100,7 @@ void UnitScript::setActive(bool active)
 		return;
 	}
 
-	auto sequence = cocos2d::Sequence::create(cocos2d::RotateTo::create(0.2, 30, 30), cocos2d::RotateTo::create(0.4, -30, -30), cocos2d::RotateTo::create(0.2, 0, 0), nullptr);
+	auto sequence = cocos2d::Sequence::create(cocos2d::RotateTo::create(0.2f, 30, 30), cocos2d::RotateTo::create(0.4f, -30, -30), cocos2d::RotateTo::create(0.2f, 0, 0), nullptr);
 	underlyingNode->runAction(cocos2d::RepeatForever::create(sequence));
 }
 
@@ -107,7 +108,8 @@ void UnitScript::moveTo(const GridIndex & gridIndex)
 {
 	pimpl->m_GridIndex = gridIndex;
 
-	auto moveTo = cocos2d::MoveTo::create(0.5, gridIndex.toPosition());
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
+	auto moveTo = cocos2d::MoveTo::create(0.5, gridIndex.toPosition(gridSize));
 	pimpl->m_RenderComponent.lock()->getSceneNode()->runAction(moveTo);
 }
 

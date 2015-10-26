@@ -82,7 +82,8 @@ void TileScript::setGridIndexAndPosition(const GridIndex & gridIndex)
 	pimpl->m_GridIndex = gridIndex;
 
 	//Set the position of the node according to indexes.
-	pimpl->m_RenderComponent.lock()->getSceneNode()->setPosition(gridIndex.toPosition());
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
+	pimpl->m_RenderComponent.lock()->getSceneNode()->setPosition(gridIndex.toPosition(gridSize));
 }
 
 GridIndex TileScript::getGridIndex() const

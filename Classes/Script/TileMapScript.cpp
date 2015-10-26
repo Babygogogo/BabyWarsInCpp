@@ -97,7 +97,7 @@ void TileMapScript::loadTileMap(const char * xmlPath)
 		pimpl->m_TileMap[rowIndex].clear();
 
 		//For each ID in the row, create an tile actor add the scripts into the tile map.
-		for (auto colIndex = rowIndexes.size() * 0; colIndex < rowIndexes.size(); ++colIndex){
+		for (auto colIndex = 0; colIndex < rowIndexes.size(); ++colIndex){
 			//Create a new tile actor and initialize it with the id and indexes.
 			auto tileActor = gameLogic->createActor(TileMapScriptImpl::s_TileActorPath.c_str());
 			auto tileScript = tileActor->getComponent<TileScript>();
