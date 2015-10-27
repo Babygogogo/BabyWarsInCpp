@@ -13,6 +13,7 @@
 #include "../Utilities/StringToVector.h"
 #include "../Utilities/SingletonContainer.h"
 #include "../Utilities/GridIndex.h"
+#include "../Utilities/Matrix2D.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of UnitMapScriptImpl.
@@ -22,35 +23,15 @@ struct UnitMapScript::UnitMapScriptImpl
 	UnitMapScriptImpl(){};
 	~UnitMapScriptImpl(){};
 
-	bool isGridIndexValid(const GridIndex & index) const;
-	bool isRowIndexValid(int rowIndex) const;
-	bool isColIndexValid(int colIndex) const;
-
 	static std::string s_UnitActorPath;
 
-	int m_RowCount{}, m_ColCount{};
-	std::vector<std::vector<std::weak_ptr<UnitScript>>> m_UnitMap;
+	Matrix2D<std::weak_ptr<UnitScript>> m_UnitMap;
 	std::weak_ptr<UnitScript> m_ActiveUnit;
 
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
 };
 
 std::string UnitMapScript::UnitMapScriptImpl::s_UnitActorPath;
-
-bool UnitMapScript::UnitMapScriptImpl::isGridIndexValid(const GridIndex & index) const
-{
-	return isRowIndexValid(index.rowIndex) && isColIndexValid(index.colIndex);
-}
-
-bool UnitMapScript::UnitMapScriptImpl::isRowIndexValid(int rowIndex) const
-{
-	return rowIndex >= 0 && rowIndex < m_RowCount;
-}
-
-bool UnitMapScript::UnitMapScriptImpl::isColIndexValid(int colIndex) const
-{
-	return colIndex >= 0 && colIndex < m_ColCount;
-}
 
 //////////////////////////////////////////////////////////////////////////
 //Implementation of UnitMapScript.
@@ -91,9 +72,8 @@ void UnitMapScript::loadUnitMap(const char * xmlPath)
 	assert(rootElement && "UnitMapScript::loadUnitMap() failed to load xml file.");
 
 	//Load the unit map size.
-	pimpl->m_RowCount = rootElement->IntAttribute("Height");
-	pimpl->m_ColCount = rootElement->IntAttribute("Width");
-	pimpl->m_UnitMap.resize(pimpl->m_RowCount);
+	auto dimension = Matrix2DDimension(rootElement->IntAttribute("Height"), rootElement->IntAttribute("Width"));
+	pimpl->m_UnitMap.setDimension(dimension);
 
 	//////////////////////////////////////////////////////////////////////////
 	//Load the map.
@@ -107,31 +87,29 @@ void UnitMapScript::loadUnitMap(const char * xmlPath)
 	//Start loading the unit indexes of the unit map.
 	//Because the code regards the bottom row as the first row while the xml regards the up most row as the first row, we must read the rows in reverse order.
 	auto rowElement = mapElement->FirstChildElement("Row");
-	for (auto rowIndex = pimpl->m_RowCount - 1; rowIndex >= 0; --rowIndex){
+	for (auto rowIndex = dimension.rowCount - 1; rowIndex < dimension.rowCount; --rowIndex){
 		assert(rowElement && "UnitMapScript::loadUnitMap() the rows count is less than the height of the UnitMap.");
 
 		//Load the unit indexes of the row.
 		auto rowIndexes = utilities::toVector<std::string>(rowElement->Attribute("UnitIndexes"));
-		assert(rowIndexes.size() == pimpl->m_ColCount && "UnitMapScript::loadUnitMap() the columns count is less than the width of the UnitMap.");
-		pimpl->m_UnitMap[rowIndex].clear();
+		assert(rowIndexes.size() == dimension.colCount && "UnitMapScript::loadUnitMap() the columns count is less than the width of the UnitMap.");
 
 		//For each ID in the row, create an unit actor add the scripts into the unit map.
 		for (auto colIndex = rowIndexes.size() * 0; colIndex < rowIndexes.size(); ++colIndex){
-			//There is no unit in [rowIndex, colIndex] if the unit index is 0. Emplace a nullptr in the map and continue.
-			if (std::stoi(rowIndexes[colIndex]) == 0){
-				pimpl->m_UnitMap[rowIndex].emplace_back();
+			auto unitElement = unitsElement->FirstChildElement((std::string("Index") + rowIndexes[colIndex]).c_str());
+			if (!unitElement)
 				continue;
-			}
 
 			//Create a new unit actor and initialize it with the id and indexes.
 			auto unitActor = gameLogic->createActor(UnitMapScriptImpl::s_UnitActorPath.c_str());
 			auto unitScript = unitActor->getComponent<UnitScript>();
-			unitScript->loadUnit(unitsElement->FirstChildElement((std::string("Index") + rowIndexes[colIndex]).c_str()));
-			unitScript->setGridIndexAndPosition(GridIndex(rowIndex, colIndex));
+			unitScript->loadUnit(unitElement);
+			auto gridIndex = GridIndex(rowIndex, colIndex);
+			unitScript->setGridIndexAndPosition(gridIndex);
 
 			//Add the unit actor and script to UnitMap.
 			ownerActor->addChild(*unitActor);
-			pimpl->m_UnitMap[rowIndex].emplace_back(std::move(unitScript));
+			pimpl->m_UnitMap[gridIndex] = unitScript;
 		}
 
 		//Load the next row of the unit map.
@@ -139,14 +117,9 @@ void UnitMapScript::loadUnitMap(const char * xmlPath)
 	}
 }
 
-int UnitMapScript::getRowCount() const
+Matrix2DDimension UnitMapScript::getMapDimension() const
 {
-	return pimpl->m_RowCount;
-}
-
-int UnitMapScript::getColumnCount() const
-{
-	return pimpl->m_ColCount;
+	return pimpl->m_UnitMap.getDimension();
 }
 
 std::shared_ptr<UnitScript> UnitMapScript::getUnit(const cocos2d::Vec2 & position) const
@@ -154,10 +127,10 @@ std::shared_ptr<UnitScript> UnitMapScript::getUnit(const cocos2d::Vec2 & positio
 	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
 	auto gridIndex = GridIndex(position, gridSize);
 	//cocos2d::log("UnitMapScript::getUnit() rowIndex: %d colIndex: %d", rowIndex, colIndex);
-	if (!pimpl->isGridIndexValid(gridIndex))
+	if (!pimpl->m_UnitMap.isIndexValid(gridIndex))
 		return nullptr;
 
-	auto unitScript = pimpl->m_UnitMap[gridIndex.rowIndex][gridIndex.colIndex];
+	auto unitScript = pimpl->m_UnitMap[gridIndex];
 	if (unitScript.expired())
 		return nullptr;
 
@@ -218,15 +191,15 @@ bool UnitMapScript::moveAndDeactivateUnit(const cocos2d::Vec2 & fromPos, const c
 	auto fromIndex = GridIndex(fromPos, gridSize);
 	auto toIndex = GridIndex(toPos, gridSize);
 
-	if (fromIndex == toIndex || !pimpl->isGridIndexValid(fromIndex) || !pimpl->isGridIndexValid(toIndex))
+	if (fromIndex == toIndex || !pimpl->m_UnitMap.isIndexValid(fromIndex) || !pimpl->m_UnitMap.isIndexValid(toIndex))
 		return false;
 
 	if (auto existingUnit = getUnit(toPos))
 		return false;
 
 	targetUnit->moveTo(toIndex);
-	pimpl->m_UnitMap[fromIndex.rowIndex][fromIndex.colIndex].reset();
-	pimpl->m_UnitMap[toIndex.rowIndex][toIndex.colIndex] = std::move(targetUnit);
+	pimpl->m_UnitMap[fromIndex].reset();
+	pimpl->m_UnitMap[toIndex] = targetUnit;
 
 	return true;
 }

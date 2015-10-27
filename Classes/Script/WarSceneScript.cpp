@@ -9,6 +9,7 @@
 #include "../GameLogic/GameLogic.h"
 #include "../Resource/ResourceLoader.h"
 #include "../Utilities/SingletonContainer.h"
+#include "../Utilities/Matrix2DDimension.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of WarSceneScriptImpl.
@@ -329,8 +330,7 @@ void WarSceneScript::loadWarScene(const char * xmlPath)
 	//Check if the size of unit map and tile map is the same.
 	auto tileMapScript = pimpl->m_ChildTileMapScript.lock();
 	auto unitMapScript = pimpl->m_ChildUnitMapScript.lock();
-	assert(unitMapScript->getRowCount() == tileMapScript->getRowCount() && unitMapScript->getColumnCount() == tileMapScript->getColumnCount()
-		&& "WarSceneScript::vPostInit() the size of the unit map is not the same as the tile map.");
+	assert(unitMapScript->getMapDimension() == tileMapScript->getMapDimension() && "WarSceneScript::vPostInit() the size of the unit map is not the same as the tile map.");
 
 	//Set the position of the map so that the map is displayed in the middle of the window.
 	auto windowSize = cocos2d::Director::getInstance()->getOpenGLView()->getFrameSize();

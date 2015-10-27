@@ -7,6 +7,7 @@
 namespace cocos2d{
 	class Size;
 }
+struct Matrix2DDimension;
 
 class TileMapScript : public BaseScriptComponent
 {
@@ -23,8 +24,7 @@ public:
 
 	cocos2d::Size getUntransformedMapSize() const;
 
-	int getRowCount() const;
-	int getColumnCount() const;
+	Matrix2DDimension getMapDimension() const;
 
 	//Disable copy/move constructor and operator=.
 	TileMapScript(const TileMapScript &) = delete;

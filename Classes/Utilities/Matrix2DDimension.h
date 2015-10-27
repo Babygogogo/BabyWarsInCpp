@@ -11,6 +11,8 @@ struct Matrix2DDimension
 	Matrix2DDimension(SizeType rowCount, SizeType colCount) : rowCount{ rowCount }, colCount{ colCount }{}
 	~Matrix2DDimension() = default;
 
+	bool operator==(const Matrix2DDimension & rhs){ return rowCount == rhs.rowCount && colCount == rhs.colCount; }
+
 	SizeType rowCount{}, colCount{};
 };
 

@@ -9,6 +9,7 @@ namespace cocos2d{
 	class Vec2;
 }
 class UnitScript;
+struct Matrix2DDimension;
 
 class UnitMapScript : public BaseScriptComponent
 {
@@ -24,8 +25,7 @@ public:
 	void loadUnitMap(const char * xmlPath);
 
 	//Getter of the size of the unit map.
-	int getRowCount() const;
-	int getColumnCount() const;
+	Matrix2DDimension getMapDimension() const;
 
 	std::shared_ptr<UnitScript> getUnit(const cocos2d::Vec2 & position) const;
 	std::shared_ptr<UnitScript> getActiveUnit() const;
