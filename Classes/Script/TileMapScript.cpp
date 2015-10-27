@@ -13,6 +13,7 @@
 #include "../Utilities/StringToVector.h"
 #include "../Utilities/SingletonContainer.h"
 #include "../Utilities/GridIndex.h"
+#include "../Utilities/Matrix2D.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of TileMapScriptImpl.
@@ -24,9 +25,10 @@ struct TileMapScript::TileMapScriptImpl
 
 	static std::string s_TileActorPath;
 
-	int m_RowCount{}, m_ColCount{};
+	//	int m_RowCount{}, m_ColCount{};
 	cocos2d::Size m_UntransformedMapSize;
-	std::vector<std::vector<std::weak_ptr<TileScript>>> m_TileMap;
+	//	std::vector<std::vector<std::weak_ptr<TileScript>>> m_TileMap;
+	Matrix2D<std::weak_ptr<TileScript>> m_Matrix;
 
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
 };
@@ -72,9 +74,11 @@ void TileMapScript::loadTileMap(const char * xmlPath)
 	assert(rootElement && "TileMapScript::loadTileMap() failed to load xml file.");
 
 	//Load the tile map size.
-	pimpl->m_RowCount = rootElement->IntAttribute("Height");
-	pimpl->m_ColCount = rootElement->IntAttribute("Width");
-	pimpl->m_TileMap.resize(pimpl->m_RowCount);
+	const auto dimension = Matrix2DDimension(rootElement->IntAttribute("Height"), rootElement->IntAttribute("Width"));
+	//pimpl->m_RowCount = rootElement->IntAttribute("Height");
+	//pimpl->m_ColCount = rootElement->IntAttribute("Width");
+	//	pimpl->m_TileMap.resize(pimpl->m_RowCount);
+	pimpl->m_Matrix.setDimension(dimension);
 
 	//////////////////////////////////////////////////////////////////////////
 	//Load the map.
@@ -88,13 +92,15 @@ void TileMapScript::loadTileMap(const char * xmlPath)
 	//Start loading the tile indexes of the tile map.
 	//Because the code regards the bottom row as the first row while the xml regards the up most row as the first row, we must read the rows in reverse order.
 	auto rowElement = mapElement->FirstChildElement("Row");
-	for (auto rowIndex = pimpl->m_RowCount - 1; rowIndex >= 0; --rowIndex){
+	//	for (auto rowIndex = pimpl->m_RowCount - 1; rowIndex >= 0; --rowIndex){
+	for (auto rowIndex = dimension.rowCount - 1; rowIndex < dimension.rowCount; --rowIndex){
 		assert(rowElement && "TileMapScript::loadTileMap() the rows count is less than the height of the TileMap.");
 
 		//Load the tile indexes of the row.
 		auto rowIndexes = utilities::toVector<std::string>(rowElement->Attribute("TileIndexes"));
-		assert(rowIndexes.size() == pimpl->m_ColCount && "TileMapScript::loadTileMap() the columns count is less than the width of the TileMap.");
-		pimpl->m_TileMap[rowIndex].clear();
+		//		assert(rowIndexes.size() == pimpl->m_ColCount && "TileMapScript::loadTileMap() the columns count is less than the width of the TileMap.");
+		assert(rowIndexes.size() == dimension.colCount && "TileMapScript::loadTileMap() the columns count is less than the width of the TileMap.");
+		//		pimpl->m_TileMap[rowIndex].clear();
 
 		//For each ID in the row, create an tile actor add the scripts into the tile map.
 		for (auto colIndex = 0; colIndex < rowIndexes.size(); ++colIndex){
@@ -102,11 +108,13 @@ void TileMapScript::loadTileMap(const char * xmlPath)
 			auto tileActor = gameLogic->createActor(TileMapScriptImpl::s_TileActorPath.c_str());
 			auto tileScript = tileActor->getComponent<TileScript>();
 			tileScript->LoadTile(tilesElement->FirstChildElement((std::string("Index") + rowIndexes[colIndex]).c_str()));
-			tileScript->setGridIndexAndPosition(GridIndex(rowIndex, colIndex));
+			const auto gridIndex = GridIndex(rowIndex, colIndex);
+			tileScript->setGridIndexAndPosition(gridIndex);
 
 			//Add the tile actor and script to TileMap.
 			ownerActor->addChild(*tileActor);
-			pimpl->m_TileMap[rowIndex].emplace_back(std::move(tileScript));
+			//			pimpl->m_TileMap[rowIndex].emplace_back(std::move(tileScript));
+			pimpl->m_Matrix[gridIndex] = tileScript;
 		}
 
 		//Load the next row of the tile map.
@@ -115,8 +123,10 @@ void TileMapScript::loadTileMap(const char * xmlPath)
 
 	//Calculate the untransformed TileMap size. Useful when the TileMap is dragged.
 	auto realGridSize = resourceLoader->getRealGameGridSize();
-	pimpl->m_UntransformedMapSize.width = realGridSize.width * pimpl->m_ColCount;
-	pimpl->m_UntransformedMapSize.height = realGridSize.height * pimpl->m_RowCount;
+	//pimpl->m_UntransformedMapSize.width = realGridSize.width * pimpl->m_ColCount;
+	//pimpl->m_UntransformedMapSize.height = realGridSize.height * pimpl->m_RowCount;
+	pimpl->m_UntransformedMapSize.width = realGridSize.width * dimension.colCount;
+	pimpl->m_UntransformedMapSize.height = realGridSize.height * dimension.rowCount;
 }
 
 cocos2d::Size TileMapScript::getUntransformedMapSize() const
@@ -126,12 +136,12 @@ cocos2d::Size TileMapScript::getUntransformedMapSize() const
 
 int TileMapScript::getRowCount() const
 {
-	return pimpl->m_RowCount;
+	return pimpl->m_Matrix.getDimension().rowCount;
 }
 
 int TileMapScript::getColumnCount() const
 {
-	return pimpl->m_ColCount;
+	return pimpl->m_Matrix.getDimension().colCount;
 }
 
 const std::string TileMapScript::Type = "TileMapScript";

@@ -207,6 +207,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Script\TileMapScript.h" />
     <ClInclude Include="..\Classes\Utilities\GenericFactory.h" />
     <ClInclude Include="..\Classes\Utilities\GridIndex.h" />
+    <ClInclude Include="..\Classes\Utilities\Matrix2D.h" />
+    <ClInclude Include="..\Classes\Utilities\Matrix2DDimension.h" />
     <ClInclude Include="..\Classes\Utilities\RelativePosition.h" />
     <ClInclude Include="..\Classes\Utilities\SingletonContainer.h" />
     <ClInclude Include="..\Classes\Utilities\StringToVector.h" />

@@ -233,6 +233,12 @@
     <ClInclude Include="..\Classes\Utilities\GridIndex.h">
       <Filter>src\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\Utilities\Matrix2D.h">
+      <Filter>src\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utilities\Matrix2DDimension.h">
+      <Filter>src\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
