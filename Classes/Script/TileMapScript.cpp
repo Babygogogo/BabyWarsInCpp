@@ -25,7 +25,6 @@ struct TileMapScript::TileMapScriptImpl
 
 	static std::string s_TileActorPath;
 
-	cocos2d::Size m_UntransformedMapSize;
 	Matrix2D<std::weak_ptr<TileScript>> m_TileMap;
 
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
@@ -114,16 +113,6 @@ void TileMapScript::loadTileMap(const char * xmlPath)
 		//Load the next row of the tile map.
 		rowElement = rowElement->NextSiblingElement();
 	}
-
-	//Calculate the untransformed TileMap size. Useful when the TileMap is dragged.
-	const auto realGridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
-	pimpl->m_UntransformedMapSize.width = realGridSize.width * dimension.colCount;
-	pimpl->m_UntransformedMapSize.height = realGridSize.height * dimension.rowCount;
-}
-
-cocos2d::Size TileMapScript::getUntransformedMapSize() const
-{
-	return pimpl->m_UntransformedMapSize;
 }
 
 Matrix2DDimension TileMapScript::getMapDimension() const

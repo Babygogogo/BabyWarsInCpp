@@ -28,7 +28,7 @@ private:
 
 	//Implementation stuff.
 	struct WarSceneScriptImpl;
-	std::unique_ptr<WarSceneScriptImpl> pimpl;
+	std::shared_ptr<WarSceneScriptImpl> pimpl;
 };
 
 #endif // !__WAR_SCENE_SCRIPT__

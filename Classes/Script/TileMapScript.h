@@ -22,8 +22,6 @@ public:
 	//Load a tile map with a xml file. Create tile and unit actors if needed.
 	void loadTileMap(const char * xmlPath);
 
-	cocos2d::Size getUntransformedMapSize() const;
-
 	Matrix2DDimension getMapDimension() const;
 
 	//Disable copy/move constructor and operator=.
