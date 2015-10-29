@@ -78,7 +78,6 @@ void UnitMapScript::loadUnitMap(const char * xmlPath)
 	//////////////////////////////////////////////////////////////////////////
 	//Load the map.
 	//Some variables to make the job easier.
-	const auto resourceLoader = SingletonContainer::getInstance()->get<ResourceLoader>();
 	auto gameLogic = SingletonContainer::getInstance()->get<GameLogic>();
 	auto ownerActor = m_OwnerActor.lock();
 	const auto unitsElement = rootElement->FirstChildElement("Unit");
@@ -122,11 +121,8 @@ Matrix2DDimension UnitMapScript::getMapDimension() const
 	return pimpl->m_UnitMap.getDimension();
 }
 
-std::shared_ptr<UnitScript> UnitMapScript::getUnit(const cocos2d::Vec2 & position) const
+std::shared_ptr<UnitScript> UnitMapScript::getUnit(const GridIndex & gridIndex) const
 {
-	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
-	auto gridIndex = GridIndex(position, gridSize);
-	//cocos2d::log("UnitMapScript::getUnit() rowIndex: %d colIndex: %d", rowIndex, colIndex);
 	if (!pimpl->m_UnitMap.isIndexValid(gridIndex))
 		return nullptr;
 
@@ -145,63 +141,75 @@ std::shared_ptr<UnitScript> UnitMapScript::getActiveUnit() const
 	return nullptr;
 }
 
-bool UnitMapScript::isActiveUnitAtPosition(const cocos2d::Vec2 & position) const
+void UnitMapScript::deactivateActiveUnit()
+{
+	if (pimpl->m_ActiveUnit.expired())
+		return;
+
+	pimpl->m_ActiveUnit.lock()->setActive(false);
+	pimpl->m_ActiveUnit.reset();
+}
+
+bool UnitMapScript::isUnitActiveAtIndex(const GridIndex & gridIndex) const
 {
 	if (pimpl->m_ActiveUnit.expired())
 		return false;
 
-	auto unitAtPosition = getUnit(position);
-	if (!unitAtPosition)
+	auto unitAtIndex = getUnit(gridIndex);
+	if (!unitAtIndex)
 		return false;
 
-	return unitAtPosition == pimpl->m_ActiveUnit.lock();
+	return unitAtIndex == pimpl->m_ActiveUnit.lock();
 }
 
-bool UnitMapScript::setActiveUnitAtPosition(bool active, const cocos2d::Vec2 & position)
+bool UnitMapScript::activateUnitAtIndex(const GridIndex & gridIndex)
 {
-	if (!pimpl->m_ActiveUnit.expired()){
-		pimpl->m_ActiveUnit.lock()->setActive(false);
-		pimpl->m_ActiveUnit.reset();
+	//Check if there is an currently active unit.
+	if (auto currentlyActiveUnit = getActiveUnit()){
+		//If the currently active unit is the same unit as the one that the caller wants to activate, just do nothing and return true.
+		if (currentlyActiveUnit->getGridIndex() == gridIndex)
+			return true;
+
+		//Otherwise, deactivate the currently active unit.
+		deactivateActiveUnit();
 	}
 
-	auto targetUnit = getUnit(position);
-	if (!targetUnit)
+	//If there is no unit at the index, return false.
+	auto unitAtIndex = getUnit(gridIndex);
+	if (!unitAtIndex)
 		return false;
 
-	targetUnit->setActive(active);
-	if (active)
-		pimpl->m_ActiveUnit = targetUnit;
-	else
-		pimpl->m_ActiveUnit.reset();
-
+	//Activate the unit at the index.
+	unitAtIndex->setActive(true);
+	pimpl->m_ActiveUnit = unitAtIndex;
 	return true;
 }
 
-bool UnitMapScript::moveAndDeactivateUnit(const cocos2d::Vec2 & fromPos, const cocos2d::Vec2 & toPos)
+void UnitMapScript::deactivateAndMoveUnit(const GridIndex & fromIndex, const GridIndex & toIndex)
 {
 	//#TODO: This function should take something like MovePath as parameter and do the job.
-	auto targetUnit = getUnit(fromPos);
+
+	//If there's no unit at fromIndex, return.
+	auto targetUnit = getUnit(fromIndex);
 	if (!targetUnit)
-		return false;
+		return;
 
+	//Deactivate the unit.
 	targetUnit->setActive(false);
-	pimpl->m_ActiveUnit.reset();
+	if (getActiveUnit() == targetUnit)
+		pimpl->m_ActiveUnit.reset();
 
-	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
-	auto fromIndex = GridIndex(fromPos, gridSize);
-	auto toIndex = GridIndex(toPos, gridSize);
-
+	//Check if the path is valid.
+	//#TODO: Extract this check into a method.
 	if (fromIndex == toIndex || !pimpl->m_UnitMap.isIndexValid(fromIndex) || !pimpl->m_UnitMap.isIndexValid(toIndex))
-		return false;
+		return;
+	if (auto existingUnit = getUnit(toIndex))
+		return;
 
-	if (auto existingUnit = getUnit(toPos))
-		return false;
-
+	//Make the move and update the map.
 	targetUnit->moveTo(toIndex);
 	pimpl->m_UnitMap[fromIndex].reset();
 	pimpl->m_UnitMap[toIndex] = targetUnit;
-
-	return true;
 }
 
 const std::string UnitMapScript::Type = "UnitMapScript";

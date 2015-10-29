@@ -20,7 +20,7 @@ struct GridIndex
 	GridIndex(int rowIndex, int colIndex) : rowIndex{ rowIndex }, colIndex{ colIndex }{}
 	GridIndex(const cocos2d::Vec2 & position, const cocos2d::Size & gridSize);
 
-	bool operator==(const GridIndex & rhs){ return rowIndex == rhs.rowIndex && colIndex == rhs.colIndex; }
+	bool operator==(const GridIndex & rhs) const{ return rowIndex == rhs.rowIndex && colIndex == rhs.colIndex; }
 
 	cocos2d::Vec2 toPosition(const cocos2d::Size & gridSize) const;
 

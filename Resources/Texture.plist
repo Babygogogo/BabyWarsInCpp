@@ -4,10 +4,23 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>Tile_Forest_01.png</key>
+            <key>MoveArea_01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{3,3},{32,32}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{32,32}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
+            <key>Tile_Forest_01.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{3,39},{32,32}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -46,7 +59,7 @@
             <key>Tile_Sea_01.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{111,3},{32,32}}</string>
+                <string>{{39,39},{32,32}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -59,7 +72,7 @@
             <key>Unit_Battleship_01.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{147,3},{32,32}}</string>
+                <string>{{75,39},{32,32}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -72,7 +85,7 @@
             <key>Unit_Bomber_01.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{217,3},{32,30}}</string>
+                <string>{{3,75},{32,30}}</string>
                 <key>offset</key>
                 <string>{0,1}</string>
                 <key>rotated</key>
@@ -85,11 +98,11 @@
             <key>Unit_Infantry_01.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{183,3},{30,32}}</string>
+                <string>{{39,75},{30,32}}</string>
                 <key>offset</key>
                 <string>{-1,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{30,32}}</string>
                 <key>sourceSize</key>
@@ -98,7 +111,7 @@
             <key>Unit_Tank_01.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{217,37},{24,24}}</string>
+                <string>{{75,75},{24,24}}</string>
                 <key>offset</key>
                 <string>{0,-3}</string>
                 <key>rotated</key>
@@ -116,9 +129,9 @@
             <key>realTextureFileName</key>
             <string>Texture.png</string>
             <key>size</key>
-            <string>{252,64}</string>
+            <string>{110,108}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:c68f0b7971dbaa2c45d319306fb5b1a3:be78744625bcf514bd652f1f19d6c458:f46617b9879efc77edf243fcb535d10c$</string>
+            <string>$TexturePacker:SmartUpdate:b4072c26511b3c5c97e676124c0ecbae:781c7a155bcbcb22bcfc7c16ebc6a665:f46617b9879efc77edf243fcb535d10c$</string>
             <key>textureFileName</key>
             <string>Texture.png</string>
         </dict>

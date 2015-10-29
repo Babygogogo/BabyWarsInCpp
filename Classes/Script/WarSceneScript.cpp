@@ -24,10 +24,12 @@ struct WarSceneScript::WarSceneScriptImpl
 	void initialize(std::weak_ptr<WarSceneScriptImpl> selfPtr);
 
 	cocos2d::Size getMapSize() const;
-	cocos2d::Vec2 convertToSceneSpace(const cocos2d::Vec2 & position) const;
+	cocos2d::Vec2 toPositionInScene(const cocos2d::Vec2 & position) const;
+	GridIndex toGridIndex(const cocos2d::Vec2 & positionInWindow) const;
+
 	void setPositionWithOffsetAndBoundary(const cocos2d::Vec2 & offset);
 
-	void makeMovePath(const cocos2d::Vec2 & convertedPosition);
+	void makeMovePath(const GridIndex & gridIndex);
 	void clearMovePath();
 	bool isMovePathValid() const;
 
@@ -127,8 +129,8 @@ protected:
 		//The player just touch something without moving.
 		//If he touches an unit, activate it and set the touch state to UnitActivated. Do nothing otherwise.
 		auto manager = m_Manager.lock();
-		auto script = manager->getScriptImpl();
-		if (script->m_ChildUnitMapScript.lock()->setActiveUnitAtPosition(true, script->convertToSceneSpace(manager->m_TouchOneByOneBeganPosition)))
+		auto scriptImpl = manager->getScriptImpl();
+		if (scriptImpl->m_ChildUnitMapScript.lock()->activateUnitAtIndex(scriptImpl->toGridIndex(manager->m_TouchOneByOneBeganPosition)))
 			manager->setCurrentState<TouchStateActivatedUnit>();
 	}
 };
@@ -182,10 +184,10 @@ protected:
 		auto manager = m_Manager.lock();
 		auto scriptImpl = manager->getScriptImpl();
 		auto unitMapScript = scriptImpl->m_ChildUnitMapScript.lock();
-		auto convertedPosition = scriptImpl->convertToSceneSpace(manager->m_TouchOneByOneBeganPosition);
+		auto gridIndex = scriptImpl->toGridIndex(manager->m_TouchOneByOneBeganPosition);
 
 		//1. The player doesn't touch any units, or the unit he touches is not the activated unit. It means that he's dragging the scene.
-		if (!unitMapScript->isActiveUnitAtPosition(convertedPosition)){
+		if (!unitMapScript->isUnitActiveAtIndex(gridIndex)){
 			//Just set the touch state to DraggingScene and set the position of the scene.
 			manager->saveCurrentStateToPrevious();
 			manager->setCurrentState<TouchStateDraggingScene>();
@@ -197,7 +199,7 @@ protected:
 			//Set the touch state to DrawingMovePath and show the path as player touch.
 			manager->setCurrentState<TouchStateMakingMovePath>();
 
-			scriptImpl->makeMovePath(scriptImpl->convertToSceneSpace(touch->getLocation()));
+			scriptImpl->makeMovePath(scriptImpl->toGridIndex(touch->getLocation()));
 		}
 	}
 
@@ -209,17 +211,17 @@ protected:
 		auto manager = m_Manager.lock();
 		auto script = manager->getScriptImpl();
 		auto unitMapScript = script->m_ChildUnitMapScript.lock();
-		auto convertedPosition = script->convertToSceneSpace(touch->getLocation());
+		auto gridIndex = script->toGridIndex(touch->getLocation());
 
-		if (unitMapScript->isActiveUnitAtPosition(convertedPosition)){
+		if (unitMapScript->isUnitActiveAtIndex(gridIndex)){
 			//The player touched the active unit. It means that he'll deactivate it.
-			unitMapScript->setActiveUnitAtPosition(false, convertedPosition);
+			unitMapScript->deactivateActiveUnit();
 			manager->setCurrentState<TouchStateIdle>();
 		}
 		else{
 			//The player touched an inactive unit or an empty grid.
 			//Activate the unit (if it exist) and set the touch state corresponding to the activate result.
-			if (!unitMapScript->setActiveUnitAtPosition(true, convertedPosition))
+			if (!unitMapScript->activateUnitAtIndex(gridIndex))
 				manager->setCurrentState<TouchStateIdle>();
 		}
 	}
@@ -243,7 +245,7 @@ protected:
 		//The player is continuing making move path for the active unit.
 		//Show the path as he touch.
 		auto scriptImpl = m_Manager.lock()->getScriptImpl();
-		scriptImpl->makeMovePath(scriptImpl->convertToSceneSpace(touch->getLocation()));
+		scriptImpl->makeMovePath(scriptImpl->toGridIndex(touch->getLocation()));
 	}
 
 	virtual void onTouchOneByOneEnded(cocos2d::Touch * touch, cocos2d::Event * event) override
@@ -252,18 +254,18 @@ protected:
 
 		auto manager = m_Manager.lock();
 		auto script = manager->getScriptImpl();
-		auto convertedTouchBeganPosition = script->convertToSceneSpace(manager->m_TouchOneByOneBeganPosition);
+		auto touchBeganGridIndex = script->toGridIndex(manager->m_TouchOneByOneBeganPosition);
 
 		if (script->isMovePathValid()){
-			auto convertedTouchCurrentPosition = script->convertToSceneSpace(touch->getLocation());
+			auto destination = script->toGridIndex(touch->getLocation());
 
-			script->m_ChildUnitMapScript.lock()->moveAndDeactivateUnit(convertedTouchBeganPosition, convertedTouchCurrentPosition);
+			script->m_ChildUnitMapScript.lock()->deactivateAndMoveUnit(touchBeganGridIndex, destination);
 
 			manager->setCurrentState<TouchStateIdle>();
 		}
 		else{
 			script->clearMovePath();
-			script->m_ChildUnitMapScript.lock()->setActiveUnitAtPosition(false, convertedTouchBeganPosition);
+			script->m_ChildUnitMapScript.lock()->activateUnitAtIndex(touchBeganGridIndex);
 
 			manager->setCurrentState<TouchStateIdle>();
 		}
@@ -298,9 +300,16 @@ cocos2d::Size WarSceneScript::WarSceneScriptImpl::getMapSize() const
 	return{ gridSize.width * tileMapDimension.colCount, gridSize.height * tileMapDimension.rowCount };
 }
 
-cocos2d::Vec2 WarSceneScript::WarSceneScriptImpl::convertToSceneSpace(const cocos2d::Vec2 & position) const
+cocos2d::Vec2 WarSceneScript::WarSceneScriptImpl::toPositionInScene(const cocos2d::Vec2 & position) const
 {
 	return m_RenderComponent.lock()->getSceneNode()->convertToNodeSpace(position);
+}
+
+GridIndex WarSceneScript::WarSceneScriptImpl::toGridIndex(const cocos2d::Vec2 & positionInWindow) const
+{
+	auto positionInScene = toPositionInScene(positionInWindow);
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
+	return GridIndex(positionInScene, gridSize);
 }
 
 void WarSceneScript::WarSceneScriptImpl::setPositionWithOffsetAndBoundary(const cocos2d::Vec2 & offset)
@@ -346,15 +355,15 @@ void WarSceneScript::WarSceneScriptImpl::setPositionWithOffsetAndBoundary(const 
 	underlyingNode->setPosition(newPosition);
 }
 
-void WarSceneScript::WarSceneScriptImpl::makeMovePath(const cocos2d::Vec2 & convertedPosition)
+void WarSceneScript::WarSceneScriptImpl::makeMovePath(const GridIndex & gridIndex)
 {
 	//#TODO: Complete this function.
-	auto destination = GridIndex(convertedPosition, SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize());
-	auto unitMap = m_ChildUnitMapScript.lock();
-	auto tileMap = m_ChildTileMapScript.lock();
-	auto movingUnit = unitMap->getActiveUnit();
+	//auto destination = GridIndex(convertedPosition, SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize());
+	//auto unitMap = m_ChildUnitMapScript.lock();
+	//auto tileMap = m_ChildTileMapScript.lock();
+	//auto movingUnit = unitMap->getActiveUnit();
 
-	m_ChildMovePathScript.lock()->updatePath(destination, movingUnit, *tileMap, *unitMap);
+	//m_ChildMovePathScript.lock()->updatePath(destination, movingUnit, *tileMap, *unitMap);
 }
 
 void WarSceneScript::WarSceneScriptImpl::clearMovePath()

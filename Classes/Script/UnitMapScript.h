@@ -10,6 +10,7 @@ namespace cocos2d{
 }
 class UnitScript;
 struct Matrix2DDimension;
+struct GridIndex;
 
 class UnitMapScript : public BaseScriptComponent
 {
@@ -27,11 +28,19 @@ public:
 	//Getter of the size of the unit map.
 	Matrix2DDimension getMapDimension() const;
 
-	std::shared_ptr<UnitScript> getUnit(const cocos2d::Vec2 & position) const;
+	std::shared_ptr<UnitScript> getUnit(const GridIndex & gridIndex) const;
 	std::shared_ptr<UnitScript> getActiveUnit() const;
-	bool isActiveUnitAtPosition(const cocos2d::Vec2 & position) const;
-	bool setActiveUnitAtPosition(bool active, const cocos2d::Vec2 & position);
-	bool moveAndDeactivateUnit(const cocos2d::Vec2 & fromPos, const cocos2d::Vec2 & toPos);
+
+	void deactivateActiveUnit();
+	bool isUnitActiveAtIndex(const GridIndex & gridIndex) const;
+
+	//This function deactivates the currently active unit, even if there is no unit at the grid index.
+	//Return value indicates that if the unit at the index is successfully activated (if there's no unit, false is returned).
+	bool activateUnitAtIndex(const GridIndex & gridIndex);
+
+	//Deactivate the unit at the fromIndex. Then move it to toIndex if the path is valid.
+	//Nothing happens if there's no unit at fromIndex.
+	void deactivateAndMoveUnit(const GridIndex & fromIndex, const GridIndex & toIndex);
 
 	//Disable copy/move constructor and operator=.
 	UnitMapScript(const UnitMapScript &) = delete;
