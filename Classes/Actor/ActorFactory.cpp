@@ -13,6 +13,7 @@
 #include "../Script/UnitMapScript.h"
 #include "../Script/UnitScript.h"
 #include "../Script/WarSceneScript.h"
+#include "../Script/MovePathScript.h"
 #include "../Utilities/GenericFactory.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -52,6 +53,7 @@ void ActorFactory::ActorFactoryImpl::registerComponents()
 	m_ComponentFactory.registerType<GeneralRenderComponent>();
 	m_ComponentFactory.registerType<FiniteTimeActionComponent>();
 
+	m_ComponentFactory.registerType<MovePathScript>();
 	m_ComponentFactory.registerType<TileMapScript>();
 	m_ComponentFactory.registerType<TileScript>();
 	m_ComponentFactory.registerType<UnitMapScript>();

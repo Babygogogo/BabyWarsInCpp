@@ -161,6 +161,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Resource\ResourceLoader.cpp" />
     <ClCompile Include="..\Classes\Resource\TileData.cpp" />
     <ClCompile Include="..\Classes\Resource\UnitData.cpp" />
+    <ClCompile Include="..\Classes\Script\MovePathScript.cpp" />
     <ClCompile Include="..\Classes\Script\TileScript.cpp" />
     <ClCompile Include="..\Classes\Script\UnitMapScript.cpp" />
     <ClCompile Include="..\Classes\Script\UnitScript.cpp" />
@@ -200,6 +201,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Resource\TileDataID.h" />
     <ClInclude Include="..\Classes\Resource\UnitData.h" />
     <ClInclude Include="..\Classes\Resource\UnitDataID.h" />
+    <ClInclude Include="..\Classes\Script\MovePathScript.h" />
     <ClInclude Include="..\Classes\Script\TileScript.h" />
     <ClInclude Include="..\Classes\Script\UnitMapScript.h" />
     <ClInclude Include="..\Classes\Script\UnitScript.h" />
@@ -207,6 +209,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Script\TileMapScript.h" />
     <ClInclude Include="..\Classes\Utilities\GenericFactory.h" />
     <ClInclude Include="..\Classes\Utilities\GridIndex.h" />
+    <ClInclude Include="..\Classes\Utilities\GridIndexPath.h" />
     <ClInclude Include="..\Classes\Utilities\Matrix2D.h" />
     <ClInclude Include="..\Classes\Utilities\Matrix2DDimension.h" />
     <ClInclude Include="..\Classes\Utilities\RelativePosition.h" />

@@ -114,6 +114,9 @@
     <ClCompile Include="..\Classes\Utilities\GridIndex.cpp">
       <Filter>src\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Script\MovePathScript.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -237,6 +240,12 @@
       <Filter>src\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Utilities\Matrix2DDimension.h">
+      <Filter>src\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Script\MovePathScript.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utilities\GridIndexPath.h">
       <Filter>src\Utilities</Filter>
     </ClInclude>
   </ItemGroup>

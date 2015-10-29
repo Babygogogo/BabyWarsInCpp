@@ -4,12 +4,14 @@
 #include "WarSceneScript.h"
 #include "TileMapScript.h"
 #include "UnitMapScript.h"
+#include "MovePathScript.h"
 #include "../Actor/Actor.h"
 #include "../Actor/BaseRenderComponent.h"
 #include "../GameLogic/GameLogic.h"
 #include "../Resource/ResourceLoader.h"
 #include "../Utilities/SingletonContainer.h"
 #include "../Utilities/Matrix2DDimension.h"
+#include "../Utilities/GridIndex.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of WarSceneScriptImpl and the touch state classes.
@@ -25,24 +27,23 @@ struct WarSceneScript::WarSceneScriptImpl
 	cocos2d::Vec2 convertToSceneSpace(const cocos2d::Vec2 & position) const;
 	void setPositionWithOffsetAndBoundary(const cocos2d::Vec2 & offset);
 
-	void makeMovePath();
+	void makeMovePath(const cocos2d::Vec2 & convertedPosition);
 	void clearMovePath();
 	bool isMovePathValid() const;
 
 	static std::string s_TileMapActorPath;
 	static std::string s_UnitMapActorPath;
+	static std::string s_MovePathActorPath;
 
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
 	std::weak_ptr<TileMapScript> m_ChildTileMapScript;
 	std::weak_ptr<UnitMapScript> m_ChildUnitMapScript;
+	std::weak_ptr<MovePathScript> m_ChildMovePathScript;
 
 	//Members for touch.
 	class TouchManager;
 	std::shared_ptr<TouchManager> m_TouchManager;
 };
-
-std::string WarSceneScript::WarSceneScriptImpl::s_TileMapActorPath;
-std::string WarSceneScript::WarSceneScriptImpl::s_UnitMapActorPath;
 
 class WarSceneScript::WarSceneScriptImpl::TouchManager
 {
@@ -60,7 +61,7 @@ public:
 	template <typename TouchState>
 	void setCurrentState();
 
-	std::shared_ptr<WarSceneScriptImpl> getScript() const;
+	std::shared_ptr<WarSceneScriptImpl> getScriptImpl() const;
 
 	cocos2d::Vec2 m_TouchOneByOneBeganPosition;
 
@@ -76,7 +77,7 @@ private:
 
 	std::unordered_map<std::type_index, std::shared_ptr<BaseTouchState>> m_States;
 
-	std::weak_ptr<WarSceneScriptImpl> m_Script;
+	std::weak_ptr<WarSceneScriptImpl> m_ScriptImpl;
 
 	bool m_IsTouchInitialized{ false };
 	cocos2d::EventListenerTouchOneByOne * m_TouchOneByOne{ cocos2d::EventListenerTouchOneByOne::create() };
@@ -118,7 +119,7 @@ protected:
 		manager->saveCurrentStateToPrevious();
 		manager->setCurrentState<TouchStateDraggingScene>();
 
-		manager->getScript()->setPositionWithOffsetAndBoundary(touch->getLocation() - touch->getPreviousLocation());
+		manager->getScriptImpl()->setPositionWithOffsetAndBoundary(touch->getLocation() - touch->getPreviousLocation());
 	}
 
 	virtual void onTouchOneByOneEnded(cocos2d::Touch * touch, cocos2d::Event * event) override
@@ -126,7 +127,7 @@ protected:
 		//The player just touch something without moving.
 		//If he touches an unit, activate it and set the touch state to UnitActivated. Do nothing otherwise.
 		auto manager = m_Manager.lock();
-		auto script = manager->getScript();
+		auto script = manager->getScriptImpl();
 		if (script->m_ChildUnitMapScript.lock()->setActiveUnitAtPosition(true, script->convertToSceneSpace(manager->m_TouchOneByOneBeganPosition)))
 			manager->setCurrentState<TouchStateActivatedUnit>();
 	}
@@ -149,7 +150,7 @@ protected:
 	{
 		//The player continues dragging the scene, without doing any other things.
 		//Just set the position of the scene.
-		m_Manager.lock()->getScript()->setPositionWithOffsetAndBoundary(touch->getLocation() - touch->getPreviousLocation());
+		m_Manager.lock()->getScriptImpl()->setPositionWithOffsetAndBoundary(touch->getLocation() - touch->getPreviousLocation());
 	}
 
 	virtual void onTouchOneByOneEnded(cocos2d::Touch * touch, cocos2d::Event * event) override
@@ -179,9 +180,9 @@ protected:
 
 		//Some variables to make the job easier.
 		auto manager = m_Manager.lock();
-		auto script = manager->getScript();
-		auto unitMapScript = script->m_ChildUnitMapScript.lock();
-		auto convertedPosition = script->convertToSceneSpace(manager->m_TouchOneByOneBeganPosition);
+		auto scriptImpl = manager->getScriptImpl();
+		auto unitMapScript = scriptImpl->m_ChildUnitMapScript.lock();
+		auto convertedPosition = scriptImpl->convertToSceneSpace(manager->m_TouchOneByOneBeganPosition);
 
 		//1. The player doesn't touch any units, or the unit he touches is not the activated unit. It means that he's dragging the scene.
 		if (!unitMapScript->isActiveUnitAtPosition(convertedPosition)){
@@ -189,14 +190,14 @@ protected:
 			manager->saveCurrentStateToPrevious();
 			manager->setCurrentState<TouchStateDraggingScene>();
 
-			script->setPositionWithOffsetAndBoundary(touch->getLocation() - touch->getPreviousLocation());
+			scriptImpl->setPositionWithOffsetAndBoundary(touch->getLocation() - touch->getPreviousLocation());
 		}
 		else{
 			//2. The player is dragging the activated unit. It means that he's making a move path for the unit.
 			//Set the touch state to DrawingMovePath and show the path as player touch.
 			manager->setCurrentState<TouchStateMakingMovePath>();
 
-			script->makeMovePath();
+			scriptImpl->makeMovePath(scriptImpl->convertToSceneSpace(touch->getLocation()));
 		}
 	}
 
@@ -206,7 +207,7 @@ protected:
 		//There will be much more conditions here. For now, we just assumes that the player is to activate another unit or deactivate the active unit.
 		//#TODO: Add more conditions, such as the player touched a command and so on.
 		auto manager = m_Manager.lock();
-		auto script = manager->getScript();
+		auto script = manager->getScriptImpl();
 		auto unitMapScript = script->m_ChildUnitMapScript.lock();
 		auto convertedPosition = script->convertToSceneSpace(touch->getLocation());
 
@@ -241,7 +242,8 @@ protected:
 	{
 		//The player is continuing making move path for the active unit.
 		//Show the path as he touch.
-		m_Manager.lock()->getScript()->makeMovePath();
+		auto scriptImpl = m_Manager.lock()->getScriptImpl();
+		scriptImpl->makeMovePath(scriptImpl->convertToSceneSpace(touch->getLocation()));
 	}
 
 	virtual void onTouchOneByOneEnded(cocos2d::Touch * touch, cocos2d::Event * event) override
@@ -249,7 +251,7 @@ protected:
 		//The player finishes making the move path.
 
 		auto manager = m_Manager.lock();
-		auto script = manager->getScript();
+		auto script = manager->getScriptImpl();
 		auto convertedTouchBeganPosition = script->convertToSceneSpace(manager->m_TouchOneByOneBeganPosition);
 
 		if (script->isMovePathValid()){
@@ -271,6 +273,10 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 //Implementation of SarSceneScriptImpl and TouchManager.
 //////////////////////////////////////////////////////////////////////////
+std::string WarSceneScript::WarSceneScriptImpl::s_TileMapActorPath;
+std::string WarSceneScript::WarSceneScriptImpl::s_UnitMapActorPath;
+std::string WarSceneScript::WarSceneScriptImpl::s_MovePathActorPath;
+
 WarSceneScript::WarSceneScriptImpl::WarSceneScriptImpl() : m_TouchManager{ std::make_shared<TouchManager>() }
 {
 }
@@ -340,9 +346,15 @@ void WarSceneScript::WarSceneScriptImpl::setPositionWithOffsetAndBoundary(const 
 	underlyingNode->setPosition(newPosition);
 }
 
-void WarSceneScript::WarSceneScriptImpl::makeMovePath()
+void WarSceneScript::WarSceneScriptImpl::makeMovePath(const cocos2d::Vec2 & convertedPosition)
 {
 	//#TODO: Complete this function.
+	auto destination = GridIndex(convertedPosition, SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize());
+	auto unitMap = m_ChildUnitMapScript.lock();
+	auto tileMap = m_ChildTileMapScript.lock();
+	auto movingUnit = unitMap->getActiveUnit();
+
+	m_ChildMovePathScript.lock()->updatePath(destination, movingUnit, *tileMap, *unitMap);
 }
 
 void WarSceneScript::WarSceneScriptImpl::clearMovePath()
@@ -358,7 +370,7 @@ bool WarSceneScript::WarSceneScriptImpl::isMovePathValid() const
 
 void WarSceneScript::WarSceneScriptImpl::TouchManager::initialize(std::weak_ptr<TouchManager> selfPtr, std::weak_ptr<WarSceneScriptImpl> script)
 {
-	m_Script = std::move(script);
+	m_ScriptImpl = std::move(script);
 
 	m_States.emplace(typeid(TouchStateIdle), std::make_shared<TouchStateIdle>(selfPtr));
 	m_States.emplace(typeid(TouchStateDraggingScene), std::make_shared<TouchStateDraggingScene>(selfPtr));
@@ -387,7 +399,7 @@ void WarSceneScript::WarSceneScriptImpl::TouchManager::enableTouch(bool enable)
 		return;
 	}
 
-	auto renderComponent = m_Script.lock()->m_RenderComponent.lock();
+	auto renderComponent = m_ScriptImpl.lock()->m_RenderComponent.lock();
 	eventDispatcher->addEventListenerWithSceneGraphPriority(m_TouchOneByOne, renderComponent->getSceneNode());
 }
 
@@ -410,10 +422,10 @@ void WarSceneScript::WarSceneScriptImpl::TouchManager::setCurrentState()
 	m_CurrentState = stateIter->second;
 }
 
-std::shared_ptr<WarSceneScript::WarSceneScriptImpl> WarSceneScript::WarSceneScriptImpl::TouchManager::getScript() const
+std::shared_ptr<WarSceneScript::WarSceneScriptImpl> WarSceneScript::WarSceneScriptImpl::TouchManager::getScriptImpl() const
 {
-	assert(!m_Script.expired() && "WarSceneScriptImpl::TouchStateManager::getScript() the script is expired.");
-	return m_Script.lock();
+	assert(!m_ScriptImpl.expired() && "WarSceneScriptImpl::TouchStateManager::getScript() the script is expired.");
+	return m_ScriptImpl.lock();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -438,6 +450,7 @@ bool WarSceneScript::vInit(tinyxml2::XMLElement *xmlElement)
 	auto relatedActorElement = xmlElement->FirstChildElement("RelatedActorsPath");
 	WarSceneScriptImpl::s_TileMapActorPath = relatedActorElement->Attribute("TileMap");
 	WarSceneScriptImpl::s_UnitMapActorPath = relatedActorElement->Attribute("UnitMap");
+	WarSceneScriptImpl::s_MovePathActorPath = relatedActorElement->Attribute("MovePath");
 
 	isStaticInitialized = true;
 	return true;
@@ -452,15 +465,20 @@ void WarSceneScript::vPostInit()
 	//Create and add child actors.
 	auto gameLogic = SingletonContainer::getInstance()->get<GameLogic>();
 
-	//Firstly, create and add the tile map.
+	//Create and add the tile map.
 	auto tileMapActor = gameLogic->createActor(WarSceneScriptImpl::s_TileMapActorPath.c_str());
 	pimpl->m_ChildTileMapScript = tileMapActor->getComponent<TileMapScript>();
 	ownerActor->addChild(*tileMapActor);
 
-	//Secondly, create and add the unit map.
+	//Create and add the unit map.
 	auto unitMapActor = gameLogic->createActor(WarSceneScriptImpl::s_UnitMapActorPath.c_str());
 	pimpl->m_ChildUnitMapScript = unitMapActor->getComponent<UnitMapScript>();
 	ownerActor->addChild(*unitMapActor);
+
+	//Create and add the move path.
+	auto movePathActor = gameLogic->createActor(WarSceneScriptImpl::s_MovePathActorPath.c_str());
+	pimpl->m_ChildMovePathScript = movePathActor->getComponent<MovePathScript>();
+	ownerActor->addChild(*movePathActor);
 
 	//#TODO: create and add, commander, weather and so on...
 
