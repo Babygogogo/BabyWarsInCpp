@@ -1,5 +1,5 @@
 #include "cocos2d.h"
-#include "../../cocos2d/external/tinyxml2/tinyxml2.h"
+#include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "WarSceneScript.h"
 #include "TileMapScript.h"
@@ -7,7 +7,7 @@
 #include "MovePathScript.h"
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
-#include "../../BabyEngine/GameLogic/GameLogic.h"
+#include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../Resource/ResourceLoader.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../../BabyEngine/Utilities/Matrix2DDimension.h"
@@ -472,7 +472,7 @@ void WarSceneScript::vPostInit()
 
 	//////////////////////////////////////////////////////////////////////////
 	//Create and add child actors.
-	auto gameLogic = SingletonContainer::getInstance()->get<GameLogic>();
+	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
 
 	//Create and add the tile map.
 	auto tileMapActor = gameLogic->createActor(WarSceneScriptImpl::s_TileMapActorPath.c_str());

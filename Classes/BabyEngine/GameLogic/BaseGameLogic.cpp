@@ -6,9 +6,9 @@
 
 #include "cocos2d.h"
 
-#include "GameLogic.h"
+#include "BaseGameLogic.h"
 #include "../Actor/Actor.h"
-#include "../Actor/ActorFactory.h"
+#include "../Actor/BaseActorFactory.h"
 #include "../Event/EventType.h"
 #include "../Event/EvtDataRequestDestroyActor.h"
 #include "../Event/IEventDispatcher.h"
@@ -16,14 +16,17 @@
 #include "../Process/ProcessRunner.h"
 #include "../Utilities/SingletonContainer.h"
 
+//#TODO: This should be moved into a game-specific game logic!
+#include "../../BabyWars/Actor/BabyWarsActorFactory.h"
+
 //////////////////////////////////////////////////////////////////////////
 //Definition of GameLogicImpl.
 //////////////////////////////////////////////////////////////////////////
-struct GameLogic::GameLogicImpl
+struct BaseGameLogic::BaseGameLogicImpl
 {
 public:
-	GameLogicImpl();
-	~GameLogicImpl();
+	BaseGameLogicImpl();
+	~BaseGameLogicImpl();
 
 	void onRequestDestroyActor(const IEventData & e);
 
@@ -33,21 +36,23 @@ public:
 	bool m_IsUpdatingActors{ false };
 
 	std::map<ActorID, std::shared_ptr<Actor>> m_Actors;
-	std::unique_ptr<ActorFactory> m_ActorFactory{ std::make_unique<ActorFactory>() };
+
+	//#TODO: The creation of the actor factory should be moved into a game-specific game logic!
+	std::unique_ptr<BaseActorFactory> m_ActorFactory{ std::make_unique<BabyWarsActorFactory>() };
 
 	//The operations that are blocked because of the lock. They should be executed when the lock is unlocked.
 	std::list<std::function<void()>> m_CachedOperations;
 };
 
-GameLogic::GameLogicImpl::GameLogicImpl()
+BaseGameLogic::BaseGameLogicImpl::BaseGameLogicImpl()
 {
 }
 
-GameLogic::GameLogicImpl::~GameLogicImpl()
+BaseGameLogic::BaseGameLogicImpl::~BaseGameLogicImpl()
 {
 }
 
-void GameLogic::GameLogicImpl::onRequestDestroyActor(const IEventData & e)
+void BaseGameLogic::BaseGameLogicImpl::onRequestDestroyActor(const IEventData & e)
 {
 	auto actorID = (static_cast<const EvtDataRequestDestoryActor &>(e)).getActorID();
 
@@ -63,7 +68,7 @@ void GameLogic::GameLogicImpl::onRequestDestroyActor(const IEventData & e)
 //////////////////////////////////////////////////////////////////////////
 //Implementation of GameLogic.
 //////////////////////////////////////////////////////////////////////////
-GameLogic::GameLogic() : pimpl{ std::make_shared<GameLogicImpl>() }
+BaseGameLogic::BaseGameLogic() : pimpl{ std::make_shared<BaseGameLogicImpl>() }
 {
 	static int InstanceCount{ 0 };
 	assert((InstanceCount++ == 0) && "GameLogic is created more than once!");
@@ -71,11 +76,11 @@ GameLogic::GameLogic() : pimpl{ std::make_shared<GameLogicImpl>() }
 	SingletonContainer::getInstance()->get<IEventDispatcher>()->vAddListener(EventType::RequestDestoryActor, pimpl, [this](const IEventData & e){pimpl->onRequestDestroyActor(e); });
 }
 
-GameLogic::~GameLogic()
+BaseGameLogic::~BaseGameLogic()
 {
 }
 
-void GameLogic::vUpdate(const std::chrono::milliseconds & deltaTimeMs)
+void BaseGameLogic::vUpdate(const std::chrono::milliseconds & deltaTimeMs)
 {
 	//Update the process runner.
 	pimpl->m_ProcessRunner.updateAllProcess(deltaTimeMs);
@@ -97,12 +102,12 @@ void GameLogic::vUpdate(const std::chrono::milliseconds & deltaTimeMs)
 	}
 }
 
-bool GameLogic::isActorAlive(const ActorID & id) const
+bool BaseGameLogic::isActorAlive(const ActorID & id) const
 {
 	return pimpl->m_Actors.find(id) != pimpl->m_Actors.end();
 }
 
-const std::shared_ptr<Actor> GameLogic::getActor(const ActorID & id) const
+std::shared_ptr<Actor> BaseGameLogic::getActor(const ActorID & id) const
 {
 	//Try to find the actor corresponding to the id.
 	auto actorIter = pimpl->m_Actors.find(id);
@@ -117,7 +122,7 @@ const std::shared_ptr<Actor> GameLogic::getActor(const ActorID & id) const
 	return actorIter->second;
 }
 
-const std::shared_ptr<Actor> GameLogic::createActor(const char *resourceFile, tinyxml2::XMLElement *overrides /*= nullptr*/)
+std::shared_ptr<Actor> BaseGameLogic::createActor(const char *resourceFile, tinyxml2::XMLElement *overrides /*= nullptr*/)
 {
 	//Try to create the actor.
 	auto newActors = pimpl->m_ActorFactory->createActorAndChildren(resourceFile, overrides);

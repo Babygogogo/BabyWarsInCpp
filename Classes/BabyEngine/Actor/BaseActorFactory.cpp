@@ -1,32 +1,21 @@
 #include "cocos2d.h"
-#include "../../cocos2d/external/tinyxml2/tinyxml2.h"
+#include "cocos2d/external/tinyxml2/tinyxml2.h"
 
-#include "ActorFactory.h"
+#include "BaseActorFactory.h"
 #include "Actor.h"
-#include "ActorID.h"
 #include "ActorComponent.h"
+
 #include "GeneralRenderComponent.h"
 #include "FiniteTimeActionComponent.h"
-
-#include "../../BabyWars/Script/TileMapScript.h"
-#include "../../BabyWars/Script/TileScript.h"
-#include "../../BabyWars/Script/UnitMapScript.h"
-#include "../../BabyWars/Script/UnitScript.h"
-#include "../../BabyWars/Script/WarSceneScript.h"
-#include "../../BabyWars/Script/MovePathScript.h"
 #include "../Utilities/GenericFactory.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of ActorFactory::ActorFactoryImpl.
 //////////////////////////////////////////////////////////////////////////
-struct ActorFactory::ActorFactoryImpl
+struct BaseActorFactory::ActorFactoryImpl
 {
-	ActorFactoryImpl();
-	~ActorFactoryImpl();
-
-	//This function is called in the constructor of impl.
-	//You must modify this function whenever the types of components are changed.
-	void registerComponents();
+	ActorFactoryImpl() = default;
+	~ActorFactoryImpl() = default;
 
 	std::shared_ptr<ActorComponent> createComponent(tinyxml2::XMLElement * componentElement);
 	void postInitActor(std::shared_ptr<Actor> & actor);
@@ -38,30 +27,7 @@ struct ActorFactory::ActorFactoryImpl
 	GenericFactory<ActorComponent> m_ComponentFactory;
 };
 
-ActorFactory::ActorFactoryImpl::ActorFactoryImpl()
-{
-	registerComponents();
-}
-
-ActorFactory::ActorFactoryImpl::~ActorFactoryImpl()
-{
-}
-
-void ActorFactory::ActorFactoryImpl::registerComponents()
-{
-	//#TODO: Register all of the concrete components here.
-	m_ComponentFactory.registerType<GeneralRenderComponent>();
-	m_ComponentFactory.registerType<FiniteTimeActionComponent>();
-
-	m_ComponentFactory.registerType<MovePathScript>();
-	m_ComponentFactory.registerType<TileMapScript>();
-	m_ComponentFactory.registerType<TileScript>();
-	m_ComponentFactory.registerType<UnitMapScript>();
-	m_ComponentFactory.registerType<UnitScript>();
-	m_ComponentFactory.registerType<WarSceneScript>();
-}
-
-std::shared_ptr<ActorComponent> ActorFactory::ActorFactoryImpl::createComponent(tinyxml2::XMLElement * componentElement)
+std::shared_ptr<ActorComponent> BaseActorFactory::ActorFactoryImpl::createComponent(tinyxml2::XMLElement * componentElement)
 {
 	auto componentType = componentElement->Value();
 	auto component = m_ComponentFactory.createShared(componentType);
@@ -82,18 +48,18 @@ std::shared_ptr<ActorComponent> ActorFactory::ActorFactoryImpl::createComponent(
 	return component;
 }
 
-void ActorFactory::ActorFactoryImpl::postInitActor(std::shared_ptr<Actor> & actor)
+void BaseActorFactory::ActorFactoryImpl::postInitActor(std::shared_ptr<Actor> & actor)
 {
 	//If you want to post-init the components in some order, do it here.
 	actor->postInit();
 }
 
-ActorID ActorFactory::ActorFactoryImpl::getNextID() const
+ActorID BaseActorFactory::ActorFactoryImpl::getNextID() const
 {
 	return m_currentID + 1;
 }
 
-void ActorFactory::ActorFactoryImpl::updateID()
+void BaseActorFactory::ActorFactoryImpl::updateID()
 {
 	++m_currentID;
 }
@@ -101,15 +67,18 @@ void ActorFactory::ActorFactoryImpl::updateID()
 //////////////////////////////////////////////////////////////////////////
 //Implementation of ActorFactory.
 //////////////////////////////////////////////////////////////////////////
-ActorFactory::ActorFactory() : pimpl{ std::make_unique<ActorFactoryImpl>() }
+BaseActorFactory::BaseActorFactory() : pimpl{ std::make_unique<ActorFactoryImpl>() }
+{
+	//TODO: Modify the register calls if the general components are changed.
+	registerComponent<GeneralRenderComponent>();
+	registerComponent<FiniteTimeActionComponent>();
+}
+
+BaseActorFactory::~BaseActorFactory()
 {
 }
 
-ActorFactory::~ActorFactory()
-{
-}
-
-std::vector<std::shared_ptr<Actor>> ActorFactory::createActorAndChildren(const char *resourceFile, tinyxml2::XMLElement *overrides /*= nullptr*/)
+std::vector<std::shared_ptr<Actor>> BaseActorFactory::createActorAndChildren(const char *resourceFile, tinyxml2::XMLElement *overrides /*= nullptr*/)
 {
 	//Load the resource file. If failed, log and return an empty vector.
 	tinyxml2::XMLDocument xmlDoc;
@@ -170,7 +139,7 @@ std::vector<std::shared_ptr<Actor>> ActorFactory::createActorAndChildren(const c
 	return actorVector;
 }
 
-void ActorFactory::modifyActor(const std::shared_ptr<Actor> & actor, tinyxml2::XMLElement *overrides)
+void BaseActorFactory::modifyActor(const std::shared_ptr<Actor> & actor, tinyxml2::XMLElement *overrides)
 {
 	if (!actor || !overrides)
 		return;
@@ -195,4 +164,9 @@ void ActorFactory::modifyActor(const std::shared_ptr<Actor> & actor, tinyxml2::X
 			}
 		}
 	}
+}
+
+void BaseActorFactory::registerComponentHelper(const std::string & typeName, std::function<std::unique_ptr<ActorComponent>()> makeUnique, std::function < std::shared_ptr<ActorComponent>()> makeShared)
+{
+	pimpl->m_ComponentFactory.registerType(typeName, std::move(makeUnique), std::move(makeShared));
 }

@@ -40,6 +40,9 @@
     <Filter Include="src\BabyEngine\Utilities">
       <UniqueIdentifier>{7b5e476a-9b3b-4f4e-9cb0-fcd28bf93b08}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\BabyWars\Actor">
+      <UniqueIdentifier>{73e738e2-851b-4c54-943a-601d224c4e12}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -55,9 +58,6 @@
       <Filter>src\BabyEngine\Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Actor\ActorComponent.cpp">
-      <Filter>src\BabyEngine\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Actor\ActorFactory.cpp">
       <Filter>src\BabyEngine\Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Actor\BaseRenderComponent.cpp">
@@ -77,9 +77,6 @@
     </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Graphic2D\SceneStack.cpp">
       <Filter>src\BabyEngine\Graphic2D</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\GameLogic\GameLogic.cpp">
-      <Filter>src\BabyEngine\GameLogic</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Process\BaseProcess.cpp">
       <Filter>src\BabyEngine\Process</Filter>
@@ -123,6 +120,15 @@
     <ClCompile Include="..\Classes\BabyWars\Script\WarSceneScript.cpp">
       <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\GameLogic\BaseGameLogic.cpp">
+      <Filter>src\BabyEngine\GameLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\BaseActorFactory.cpp">
+      <Filter>src\BabyEngine\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Actor\BabyWarsActorFactory.cpp">
+      <Filter>src\BabyWars\Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -138,9 +144,6 @@
       <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Actor\ActorComponent.h">
-      <Filter>src\BabyEngine\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Actor\ActorFactory.h">
       <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Actor\ActorID.h">
@@ -187,9 +190,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Graphic2D\SceneStack.h">
       <Filter>src\BabyEngine\Graphic2D</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\GameLogic\GameLogic.h">
-      <Filter>src\BabyEngine\GameLogic</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Process\BaseProcess.h">
       <Filter>src\BabyEngine\Process</Filter>
@@ -253,6 +253,15 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Script\WarSceneScript.h">
       <Filter>src\BabyWars\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\GameLogic\BaseGameLogic.h">
+      <Filter>src\BabyEngine\GameLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\BaseActorFactory.h">
+      <Filter>src\BabyEngine\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Actor\BabyWarsActorFactory.h">
+      <Filter>src\BabyWars\Actor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

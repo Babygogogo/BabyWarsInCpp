@@ -1,5 +1,5 @@
 #include "cocos2d.h"
-#include "../../cocos2d/external/tinyxml2/tinyxml2.h"
+#include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "TileScript.h"
 #include "../../BabyEngine/Actor/Actor.h"

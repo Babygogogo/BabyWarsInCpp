@@ -21,7 +21,7 @@ namespace tinyxml2
 class ActorComponent
 {
 	friend class Actor;
-	friend class ActorFactory;
+	friend class BaseActorFactory;
 
 public:
 	virtual ~ActorComponent();

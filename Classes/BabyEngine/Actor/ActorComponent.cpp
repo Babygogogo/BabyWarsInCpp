@@ -1,5 +1,3 @@
-#include <cassert>
-
 #include "ActorComponent.h"
 
 ActorComponent::~ActorComponent()

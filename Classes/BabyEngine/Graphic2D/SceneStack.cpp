@@ -8,7 +8,7 @@
 #include "../Actor/BaseRenderComponent.h"
 #include "../Event/EvtDataRequestDestroyActor.h"
 #include "../Event/IEventDispatcher.h"
-#include "../GameLogic/GameLogic.h"
+#include "../GameLogic/BaseGameLogic.h"
 #include "../Utilities/SingletonContainer.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -111,7 +111,7 @@ void SceneStack::popCurrentScene()
 	pimpl->m_SceneIDs.pop_back();
 
 	//Search for a living scene from the top of the stack to the bottom.
-	auto gameLogic = SingletonContainer::getInstance()->get<GameLogic>();
+	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
 	while (!pimpl->m_SceneIDs.empty()){
 		//If the current scene is living, run it and end this function.
 		if (auto nextScene = gameLogic->getActor(getCurrentSceneID())){

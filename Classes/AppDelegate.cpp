@@ -1,9 +1,9 @@
 #include "AppDelegate.h"
 #include "HelloWorldScene.h"
-#include "../cocos2d/external/tinyxml2/tinyxml2.h"
+#include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "BabyEngine/Event/EventDispatcher.h"
-#include "BabyEngine/GameLogic/GameLogic.h"
+#include "BabyEngine/GameLogic/BaseGameLogic.h"
 #include "BabyEngine/Graphic2D/SceneStack.h"
 #include "BabyWars/Resource/ResourceLoader.h"
 #include "BabyEngine/Utilities/SingletonContainer.h"
@@ -35,7 +35,7 @@ void AppDelegate::AppDelegateImpl::initGame()
 	//Create essential singleton components.
 	auto & singletonContainer = SingletonContainer::getInstance();
 	singletonContainer->set<IEventDispatcher>(std::make_unique<::EventDispatcher>());
-	singletonContainer->set<GameLogic>(std::make_unique<GameLogic>());
+	singletonContainer->set<BaseGameLogic>(std::make_unique<BaseGameLogic>());
 	singletonContainer->set<SceneStack>(std::make_unique<SceneStack>());
 
 	//Load resources.
@@ -46,7 +46,7 @@ void AppDelegate::AppDelegateImpl::initGame()
 	Director::getInstance()->getScheduler()->scheduleUpdate(this, 0, false);
 
 	//Create the initial scene and run it.
-	auto titleScene = singletonContainer->get<GameLogic>()->createActor(resourceLoader->getInitialScenePath().c_str());
+	auto titleScene = singletonContainer->get<BaseGameLogic>()->createActor(resourceLoader->getInitialScenePath().c_str());
 	singletonContainer->get<SceneStack>()->pushAndRun(*titleScene);
 }
 
@@ -60,7 +60,7 @@ void AppDelegate::AppDelegateImpl::update(float deltaSec)
 	//Update components.
 	const auto & singletonContainer = SingletonContainer::getInstance();
 	singletonContainer->get<IEventDispatcher>()->vDispatchQueuedEvents();
-	singletonContainer->get<GameLogic>()->vUpdate(deltaTimeMs);
+	singletonContainer->get<BaseGameLogic>()->vUpdate(deltaTimeMs);
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -27,17 +27,24 @@ public:
 	GenericFactory() = default;
 	~GenericFactory() = default;
 
+	using UniqueCreator = std::function < std::unique_ptr<Base>() >;
+	using SharedCreator = std::function < std::shared_ptr<Base>() >;
+
 	//Register a type. The type must be a sub-type of Base.
 	//If you double register a type, an assertion will be triggered.
 	//The SubClass must have a static member named Type, which is the type name of the SubClass.
 	template <class SubClass>
 	void registerType()
 	{
-		assert(m_CreatorMap.find(SubClass::Type) == m_CreatorMap.end());
+		registerType(SubClass::Type, std::make_unique<SubClass>, std::make_shared<SubClass>);
+	}
 
-		CreatorStruct creator(std::make_unique<SubClass>, std::make_shared<SubClass>);
+	void registerType(const std::string & typeName, UniqueCreator uniqueCreator, SharedCreator sharedCreator)
+	{
+		assert(m_CreatorMap.find(typeName) == m_CreatorMap.end());
 
-		m_CreatorMap.emplace(std::make_pair(SubClass::Type, std::move(creator)));
+		CreatorStruct creator(std::move(uniqueCreator), std::move(sharedCreator));
+		m_CreatorMap.emplace(std::make_pair(typeName, std::move(creator)));
 	}
 
 	//Create an object. This function return the pointer of the Base class which can be downcast by client code.
@@ -63,10 +70,7 @@ public:
 private:
 	struct CreatorStruct
 	{
-		using UniqueCreator = std::function < std::unique_ptr<Base>() >;
-		using SharedCreator = std::function < std::shared_ptr<Base>() >;
-
-		CreatorStruct(UniqueCreator uniqueCreator, SharedCreator sharedCreator) :
+		CreatorStruct(UniqueCreator && uniqueCreator, SharedCreator && sharedCreator) :
 			createUnique{ std::move(uniqueCreator) }, createShared{ std::move(sharedCreator) }{}
 
 		UniqueCreator createUnique;

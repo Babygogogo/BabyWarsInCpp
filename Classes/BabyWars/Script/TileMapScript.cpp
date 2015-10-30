@@ -1,13 +1,13 @@
 #include <vector>
 
 #include "cocos2d.h"
-#include "../../cocos2d/external/tinyxml2/tinyxml2.h"
+#include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "TileMapScript.h"
 #include "TileScript.h"
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
-#include "../../BabyEngine/GameLogic/GameLogic.h"
+#include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../Resource/TileDataID.h"
 #include "../Resource/ResourceLoader.h"
 #include "../../BabyEngine/Utilities/StringToVector.h"
@@ -77,7 +77,7 @@ void TileMapScript::loadTileMap(const char * xmlPath)
 	//////////////////////////////////////////////////////////////////////////
 	//Load the map.
 	//Some variables to make the job easier.
-	auto gameLogic = SingletonContainer::getInstance()->get<GameLogic>();
+	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
 	auto ownerActor = m_OwnerActor.lock();
 	const auto tilesElement = rootElement->FirstChildElement("Tile");
 	const auto mapElement = rootElement->FirstChildElement("Map");

@@ -1,13 +1,13 @@
 #include <vector>
 
 #include "cocos2d.h"
-#include "../../cocos2d/external/tinyxml2/tinyxml2.h"
+#include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "UnitMapScript.h"
 #include "UnitScript.h"
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
-#include "../../BabyEngine/GameLogic/GameLogic.h"
+#include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../Resource/UnitDataID.h"
 #include "../Resource/ResourceLoader.h"
 #include "../../BabyEngine/Utilities/StringToVector.h"
@@ -78,7 +78,7 @@ void UnitMapScript::loadUnitMap(const char * xmlPath)
 	//////////////////////////////////////////////////////////////////////////
 	//Load the map.
 	//Some variables to make the job easier.
-	auto gameLogic = SingletonContainer::getInstance()->get<GameLogic>();
+	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
 	auto ownerActor = m_OwnerActor.lock();
 	const auto unitsElement = rootElement->FirstChildElement("Unit");
 	const auto mapElement = rootElement->FirstChildElement("Map");

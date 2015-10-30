@@ -36,8 +36,8 @@ class BaseRenderComponent;
  */
 class Actor final
 {
-	friend class ActorFactory;
-	friend class GameLogic;
+	friend class BaseActorFactory;
+	friend class BaseGameLogic;
 
 public:
 	//Actor should be created by GameLogic using std::shared_ptr and destroyed by dispatching EvtDataRequestDestroyActor.
