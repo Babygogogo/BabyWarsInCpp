@@ -1,7 +1,7 @@
 #ifndef __MOVE_PATH_SCRIPT__
 #define __MOVE_PATH_SCRIPT__
 
-#include "../Actor/BaseScriptComponent.h"
+#include "../../BabyEngine/Actor/BaseScriptComponent.h"
 
 struct GridIndex;
 class UnitScript;

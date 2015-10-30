@@ -1,7 +1,7 @@
 #ifndef __WAR_SCENE_SCRIPT__
 #define __WAR_SCENE_SCRIPT__
 
-#include "../Actor/BaseScriptComponent.h"
+#include "../../BabyEngine/Actor/BaseScriptComponent.h"
 
 class WarSceneScript : public BaseScriptComponent
 {

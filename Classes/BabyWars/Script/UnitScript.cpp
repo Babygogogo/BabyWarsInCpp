@@ -2,12 +2,12 @@
 #include "../../cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "UnitScript.h"
-#include "../Actor/Actor.h"
-#include "../Actor/BaseRenderComponent.h"
+#include "../../BabyEngine/Actor/Actor.h"
+#include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../Resource/ResourceLoader.h"
 #include "../Resource/UnitData.h"
-#include "../Utilities/SingletonContainer.h"
-#include "../Utilities/GridIndex.h"
+#include "../../BabyEngine/Utilities/SingletonContainer.h"
+#include "../../BabyEngine/Utilities/GridIndex.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of UnitScriptImpl.

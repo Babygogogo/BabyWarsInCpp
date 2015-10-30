@@ -1,7 +1,7 @@
 #ifndef __UNIT_SCRIPT__
 #define __UNIT_SCRIPT__
 
-#include "../Actor/BaseScriptComponent.h"
+#include "../../BabyEngine/Actor/BaseScriptComponent.h"
 
 //Forward declaration.
 class UnitData;

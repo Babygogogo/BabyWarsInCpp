@@ -2,8 +2,8 @@
 
 #include "MovePathScript.h"
 #include "UnitScript.h"
-#include "../Utilities/GridIndex.h"
-#include "../Utilities/GridIndexPath.h"
+#include "../../BabyEngine/Utilities/GridIndex.h"
+#include "../../BabyEngine/Utilities/GridIndexPath.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of MovePathScriptImpl.

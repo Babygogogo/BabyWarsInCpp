@@ -5,13 +5,13 @@
 #include "TileMapScript.h"
 #include "UnitMapScript.h"
 #include "MovePathScript.h"
-#include "../Actor/Actor.h"
-#include "../Actor/BaseRenderComponent.h"
-#include "../GameLogic/GameLogic.h"
+#include "../../BabyEngine/Actor/Actor.h"
+#include "../../BabyEngine/Actor/BaseRenderComponent.h"
+#include "../../BabyEngine/GameLogic/GameLogic.h"
 #include "../Resource/ResourceLoader.h"
-#include "../Utilities/SingletonContainer.h"
-#include "../Utilities/Matrix2DDimension.h"
-#include "../Utilities/GridIndex.h"
+#include "../../BabyEngine/Utilities/SingletonContainer.h"
+#include "../../BabyEngine/Utilities/Matrix2DDimension.h"
+#include "../../BabyEngine/Utilities/GridIndex.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of WarSceneScriptImpl and the touch state classes.
@@ -265,7 +265,7 @@ protected:
 		}
 		else{
 			script->clearMovePath();
-			script->m_ChildUnitMapScript.lock()->activateUnitAtIndex(touchBeganGridIndex);
+			script->m_ChildUnitMapScript.lock()->deactivateActiveUnit();
 
 			manager->setCurrentState<TouchStateIdle>();
 		}

@@ -2,11 +2,11 @@
 #include "HelloWorldScene.h"
 #include "../cocos2d/external/tinyxml2/tinyxml2.h"
 
-#include "Event/EventDispatcher.h"
-#include "GameLogic/GameLogic.h"
-#include "Graphic2D/SceneStack.h"
-#include "Resource/ResourceLoader.h"
-#include "Utilities/SingletonContainer.h"
+#include "BabyEngine/Event/EventDispatcher.h"
+#include "BabyEngine/GameLogic/GameLogic.h"
+#include "BabyEngine/Graphic2D/SceneStack.h"
+#include "BabyWars/Resource/ResourceLoader.h"
+#include "BabyEngine/Utilities/SingletonContainer.h"
 
 USING_NS_CC;
 

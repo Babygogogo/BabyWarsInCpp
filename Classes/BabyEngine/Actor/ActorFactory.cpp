@@ -8,12 +8,12 @@
 #include "GeneralRenderComponent.h"
 #include "FiniteTimeActionComponent.h"
 
-#include "../Script/TileMapScript.h"
-#include "../Script/TileScript.h"
-#include "../Script/UnitMapScript.h"
-#include "../Script/UnitScript.h"
-#include "../Script/WarSceneScript.h"
-#include "../Script/MovePathScript.h"
+#include "../../BabyWars/Script/TileMapScript.h"
+#include "../../BabyWars/Script/TileScript.h"
+#include "../../BabyWars/Script/UnitMapScript.h"
+#include "../../BabyWars/Script/UnitScript.h"
+#include "../../BabyWars/Script/WarSceneScript.h"
+#include "../../BabyWars/Script/MovePathScript.h"
 #include "../Utilities/GenericFactory.h"
 
 //////////////////////////////////////////////////////////////////////////

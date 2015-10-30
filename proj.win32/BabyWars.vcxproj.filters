@@ -10,29 +10,35 @@
     <Filter Include="src">
       <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Actor">
-      <UniqueIdentifier>{f9e9803e-5f47-458a-a3af-b77beea03279}</UniqueIdentifier>
+    <Filter Include="src\BabyEngine">
+      <UniqueIdentifier>{bd6deed9-c8ff-469e-88d4-f117d5833878}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Event">
+    <Filter Include="src\BabyEngine\Actor">
+      <UniqueIdentifier>{6457fc25-146b-4b27-8f30-a0b36c3d4228}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyEngine\Event">
       <UniqueIdentifier>{116807ac-e8f6-4a15-97d2-4f8c2ee36083}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\GameLogic">
-      <UniqueIdentifier>{9dc9bba8-f129-4eac-b27b-71e836f8488b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Graphic2D">
+    <Filter Include="src\BabyEngine\Graphic2D">
       <UniqueIdentifier>{3f12408d-454b-4032-bc1f-0e2d05249480}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Process">
+    <Filter Include="src\BabyEngine\GameLogic">
+      <UniqueIdentifier>{9dc9bba8-f129-4eac-b27b-71e836f8488b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyEngine\Process">
       <UniqueIdentifier>{5256a001-f175-4c23-801e-116d96bdc276}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Script">
+    <Filter Include="src\BabyWars">
+      <UniqueIdentifier>{ee05c75d-9afb-41ed-955d-2c8becc4ccf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyWars\Resource">
+      <UniqueIdentifier>{70db2d60-0cd9-40b2-af29-66ff802fac5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyWars\Script">
       <UniqueIdentifier>{0c297649-88d8-4607-9845-df3df3e91f4c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Utilities">
+    <Filter Include="src\BabyEngine\Utilities">
       <UniqueIdentifier>{7b5e476a-9b3b-4f4e-9cb0-fcd28bf93b08}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Resource">
-      <UniqueIdentifier>{70db2d60-0cd9-40b2-af29-66ff802fac5a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -45,77 +51,77 @@
     <ClCompile Include="..\Classes\HelloWorldScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Actor\Actor.cpp">
-      <Filter>src\Actor</Filter>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\Actor.cpp">
+      <Filter>src\BabyEngine\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Actor\ActorComponent.cpp">
-      <Filter>src\Actor</Filter>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\ActorComponent.cpp">
+      <Filter>src\BabyEngine\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Actor\ActorFactory.cpp">
-      <Filter>src\Actor</Filter>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\ActorFactory.cpp">
+      <Filter>src\BabyEngine\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Actor\BaseRenderComponent.cpp">
-      <Filter>src\Actor</Filter>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\BaseRenderComponent.cpp">
+      <Filter>src\BabyEngine\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Actor\BaseScriptComponent.cpp">
-      <Filter>src\Actor</Filter>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\BaseScriptComponent.cpp">
+      <Filter>src\BabyEngine\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Actor\FiniteTimeActionComponent.cpp">
-      <Filter>src\Actor</Filter>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\FiniteTimeActionComponent.cpp">
+      <Filter>src\BabyEngine\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Actor\GeneralRenderComponent.cpp">
-      <Filter>src\Actor</Filter>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.cpp">
+      <Filter>src\BabyEngine\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Event\EventDispatcher.cpp">
-      <Filter>src\Event</Filter>
+    <ClCompile Include="..\Classes\BabyEngine\Event\EventDispatcher.cpp">
+      <Filter>src\BabyEngine\Event</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\GameLogic\GameLogic.cpp">
-      <Filter>src\GameLogic</Filter>
+    <ClCompile Include="..\Classes\BabyEngine\Graphic2D\SceneStack.cpp">
+      <Filter>src\BabyEngine\Graphic2D</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Graphic2D\SceneStack.cpp">
-      <Filter>src\Graphic2D</Filter>
+    <ClCompile Include="..\Classes\BabyEngine\GameLogic\GameLogic.cpp">
+      <Filter>src\BabyEngine\GameLogic</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Process\BaseProcess.cpp">
-      <Filter>src\Process</Filter>
+    <ClCompile Include="..\Classes\BabyEngine\Process\BaseProcess.cpp">
+      <Filter>src\BabyEngine\Process</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Process\ProcessRunner.cpp">
-      <Filter>src\Process</Filter>
+    <ClCompile Include="..\Classes\BabyEngine\Process\ProcessRunner.cpp">
+      <Filter>src\BabyEngine\Process</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Utilities\RelativePosition.cpp">
-      <Filter>src\Utilities</Filter>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\GridIndex.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Utilities\SingletonContainer.cpp">
-      <Filter>src\Utilities</Filter>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\RelativePosition.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Resource\ResourceLoader.cpp">
-      <Filter>src\Resource</Filter>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\SingletonContainer.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Resource\TileData.cpp">
-      <Filter>src\Resource</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Resource\ResourceLoader.cpp">
+      <Filter>src\BabyWars\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Script\TileScript.cpp">
-      <Filter>src\Script</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Resource\TileData.cpp">
+      <Filter>src\BabyWars\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Script\WarSceneScript.cpp">
-      <Filter>src\Script</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Resource\UnitData.cpp">
+      <Filter>src\BabyWars\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Script\TileMapScript.cpp">
-      <Filter>src\Script</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Script\MovePathScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Resource\UnitData.cpp">
-      <Filter>src\Resource</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Script\TileMapScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Script\UnitScript.cpp">
-      <Filter>src\Script</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Script\TileScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Script\UnitMapScript.cpp">
-      <Filter>src\Script</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Script\UnitMapScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Utilities\GridIndex.cpp">
-      <Filter>src\Utilities</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Script\UnitScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Script\MovePathScript.cpp">
-      <Filter>src\Script</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Script\WarSceneScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -128,125 +134,125 @@
     <ClInclude Include="..\Classes\HelloWorldScene.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Actor\Actor.h">
-      <Filter>src\Actor</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\Actor.h">
+      <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Actor\ActorComponent.h">
-      <Filter>src\Actor</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\ActorComponent.h">
+      <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Actor\ActorFactory.h">
-      <Filter>src\Actor</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\ActorFactory.h">
+      <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Actor\ActorID.h">
-      <Filter>src\Actor</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\ActorID.h">
+      <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Actor\BaseRenderComponent.h">
-      <Filter>src\Actor</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\BaseRenderComponent.h">
+      <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Actor\BaseScriptComponent.h">
-      <Filter>src\Actor</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\BaseScriptComponent.h">
+      <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Actor\FiniteTimeActionComponent.h">
-      <Filter>src\Actor</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\FiniteTimeActionComponent.h">
+      <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Actor\GeneralRenderComponent.h">
-      <Filter>src\Actor</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.h">
+      <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Actor\SoundPlayer.h">
-      <Filter>src\Actor</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\SoundPlayer.h">
+      <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Event\BaseEventData.h">
-      <Filter>src\Event</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Event\BaseEventData.h">
+      <Filter>src\BabyEngine\Event</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Event\EventDispatcher.h">
-      <Filter>src\Event</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Event\EventDispatcher.h">
+      <Filter>src\BabyEngine\Event</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Event\EventType.h">
-      <Filter>src\Event</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Event\EventType.h">
+      <Filter>src\BabyEngine\Event</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Event\EvtDataGeneric.h">
-      <Filter>src\Event</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Event\EvtDataGeneric.h">
+      <Filter>src\BabyEngine\Event</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Event\EvtDataRequestDestroyActor.h">
-      <Filter>src\Event</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Event\EvtDataRequestDestroyActor.h">
+      <Filter>src\BabyEngine\Event</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Event\IEventData.h">
-      <Filter>src\Event</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Event\IEventData.h">
+      <Filter>src\BabyEngine\Event</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Event\IEventDispatcher.h">
-      <Filter>src\Event</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Event\IEventDispatcher.h">
+      <Filter>src\BabyEngine\Event</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Event\IEventListener.h">
-      <Filter>src\Event</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Event\IEventListener.h">
+      <Filter>src\BabyEngine\Event</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\GameLogic\GameLogic.h">
-      <Filter>src\GameLogic</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Graphic2D\SceneStack.h">
+      <Filter>src\BabyEngine\Graphic2D</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Graphic2D\SceneStack.h">
-      <Filter>src\Graphic2D</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\GameLogic\GameLogic.h">
+      <Filter>src\BabyEngine\GameLogic</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Process\BaseProcess.h">
-      <Filter>src\Process</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Process\BaseProcess.h">
+      <Filter>src\BabyEngine\Process</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Process\ProcessRunner.h">
-      <Filter>src\Process</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Process\ProcessRunner.h">
+      <Filter>src\BabyEngine\Process</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Utilities\GenericFactory.h">
-      <Filter>src\Utilities</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\GenericFactory.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Utilities\RelativePosition.h">
-      <Filter>src\Utilities</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\GridIndex.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Utilities\SingletonContainer.h">
-      <Filter>src\Utilities</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\GridIndexPath.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Utilities\StringToVector.h">
-      <Filter>src\Utilities</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\Matrix2D.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Resource\ResourceLoader.h">
-      <Filter>src\Resource</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\Matrix2DDimension.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Resource\TileData.h">
-      <Filter>src\Resource</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\RelativePosition.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Resource\TileDataID.h">
-      <Filter>src\Resource</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\SingletonContainer.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Script\TileScript.h">
-      <Filter>src\Script</Filter>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\StringToVector.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Script\WarSceneScript.h">
-      <Filter>src\Script</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Resource\ResourceLoader.h">
+      <Filter>src\BabyWars\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Script\TileMapScript.h">
-      <Filter>src\Script</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Resource\TileData.h">
+      <Filter>src\BabyWars\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Resource\UnitData.h">
-      <Filter>src\Resource</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Resource\TileDataID.h">
+      <Filter>src\BabyWars\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Resource\UnitDataID.h">
-      <Filter>src\Resource</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Resource\UnitData.h">
+      <Filter>src\BabyWars\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Script\UnitScript.h">
-      <Filter>src\Script</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Resource\UnitDataID.h">
+      <Filter>src\BabyWars\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Script\UnitMapScript.h">
-      <Filter>src\Script</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Script\MovePathScript.h">
+      <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Utilities\GridIndex.h">
-      <Filter>src\Utilities</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Script\TileMapScript.h">
+      <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Utilities\Matrix2D.h">
-      <Filter>src\Utilities</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Script\TileScript.h">
+      <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Utilities\Matrix2DDimension.h">
-      <Filter>src\Utilities</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Script\UnitMapScript.h">
+      <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Script\MovePathScript.h">
-      <Filter>src\Script</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Script\UnitScript.h">
+      <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Utilities\GridIndexPath.h">
-      <Filter>src\Utilities</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Script\WarSceneScript.h">
+      <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

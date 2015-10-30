@@ -1,7 +1,7 @@
 #ifndef __TILE_SCRIPT__
 #define __TILE_SCRIPT__
 
-#include "../Actor/BaseScriptComponent.h"
+#include "../../BabyEngine/Actor/BaseScriptComponent.h"
 
 //Forward declaration.
 class TileData;

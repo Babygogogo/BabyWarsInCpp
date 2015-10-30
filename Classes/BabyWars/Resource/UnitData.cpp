@@ -1,53 +1,53 @@
 #include "cocos2d.h"
 #include "../cocos2d/external/tinyxml2/tinyxml2.h"
 
-#include "TileData.h"
+#include "UnitData.h"
 #include "ResourceLoader.h"
-#include "../Utilities/SingletonContainer.h"
+#include "../../BabyEngine/Utilities/SingletonContainer.h"
 
 //////////////////////////////////////////////////////////////////////////
-//Definition of TileDataImpl.
+//Definition of UnitDataImpl.
 //////////////////////////////////////////////////////////////////////////
-struct TileData::TileDataImpl
+struct UnitData::UnitDataImpl
 {
-	TileDataImpl();
-	~TileDataImpl();
+	UnitDataImpl();
+	~UnitDataImpl();
 
-	TileDataID m_ID{ 0 };
+	UnitDataID m_ID{ 0 };
 	std::string m_Type;
 	cocos2d::Animation * m_Animation{ cocos2d::Animation::create() };
 	float m_DesignScaleFactor{};
 };
 
-TileData::TileDataImpl::TileDataImpl()
+UnitData::UnitDataImpl::UnitDataImpl()
 {
 	m_Animation->setDelayPerUnit(1);
 	m_Animation->retain();
 }
 
-TileData::TileDataImpl::~TileDataImpl()
+UnitData::UnitDataImpl::~UnitDataImpl()
 {
 	m_Animation->release();
 }
 
 //////////////////////////////////////////////////////////////////////////
-//Implementation of TileData.
+//Implementation of UnitData.
 //////////////////////////////////////////////////////////////////////////
-TileData::TileData() : pimpl{ std::make_unique<TileDataImpl>() }
+UnitData::UnitData() : pimpl{ std::make_unique<UnitDataImpl>() }
 {
 }
 
-TileData::~TileData()
+UnitData::~UnitData()
 {
 }
 
-void TileData::initialize(const char * xmlPath)
+void UnitData::initialize(const char * xmlPath)
 {
 	//Load the xml file.
 	tinyxml2::XMLDocument xmlDoc;
 	xmlDoc.LoadFile(xmlPath);
 	const auto rootElement = xmlDoc.RootElement();
-	assert(rootElement && "TileData::initialize() failed to load xml file.");
+	assert(rootElement && "UnitData::initialize() failed to load xml file.");
 
 	//Load ID and type name.
 	pimpl->m_ID = rootElement->IntAttribute("ID");
@@ -63,7 +63,7 @@ void TileData::initialize(const char * xmlPath)
 		auto delaySec = frameElement->FloatAttribute("DelaySec");
 		animationFrames.pushBack(cocos2d::AnimationFrame::create(spriteFrame, delaySec, cocos2d::ValueMap()));
 	}
-	assert(animationFrames.size() > 0 && "TileData::initialize() the animation is empty.");
+	assert(animationFrames.size() > 0 && "UnitData::initialize() the animation is empty.");
 	pimpl->m_Animation->setFrames(animationFrames);
 
 	//Calculate the design scale factor.
@@ -72,22 +72,22 @@ void TileData::initialize(const char * xmlPath)
 	pimpl->m_DesignScaleFactor = std::max(designGridSize.width / spriteFrameSize.width, designGridSize.height / spriteFrameSize.height);
 }
 
-TileDataID TileData::getID() const
+UnitDataID UnitData::getID() const
 {
 	return pimpl->m_ID;
 }
 
-std::string TileData::getType() const
+std::string UnitData::getType() const
 {
 	return pimpl->m_Type;
 }
 
-cocos2d::Animation * TileData::getAnimation() const
+cocos2d::Animation * UnitData::getAnimation() const
 {
 	return pimpl->m_Animation;
 }
 
-float TileData::getDesignScaleFactor() const
+float UnitData::getDesignScaleFactor() const
 {
 	return pimpl->m_DesignScaleFactor;
 }

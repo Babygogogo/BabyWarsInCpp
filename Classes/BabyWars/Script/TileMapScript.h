@@ -1,7 +1,7 @@
 #ifndef __TILE_MAP_SCRIPT__
 #define __TILE_MAP_SCRIPT__
 
-#include "../Actor/BaseScriptComponent.h"
+#include "../../BabyEngine/Actor/BaseScriptComponent.h"
 
 //Forward declaration.
 namespace cocos2d{
