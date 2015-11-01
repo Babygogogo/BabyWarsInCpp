@@ -161,6 +161,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyEngine\Utilities\RelativePosition.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\SingletonContainer.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Actor\BabyWarsActorFactory.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\GameLogic\BabyWarsGameLogic.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\ResourceLoader.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\TileData.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\UnitData.cpp" />
@@ -205,6 +206,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyEngine\Utilities\SingletonContainer.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\StringToVector.h" />
     <ClInclude Include="..\Classes\BabyWars\Actor\BabyWarsActorFactory.h" />
+    <ClInclude Include="..\Classes\BabyWars\GameLogic\BabyWarsGameLogic.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\ResourceLoader.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\TileData.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\TileDataID.h" />

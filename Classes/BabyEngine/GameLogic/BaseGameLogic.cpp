@@ -16,9 +16,6 @@
 #include "../Process/ProcessRunner.h"
 #include "../Utilities/SingletonContainer.h"
 
-//#TODO: This should be moved into a game-specific game logic!
-#include "../../BabyWars/Actor/BabyWarsActorFactory.h"
-
 //////////////////////////////////////////////////////////////////////////
 //Definition of GameLogicImpl.
 //////////////////////////////////////////////////////////////////////////
@@ -36,9 +33,7 @@ public:
 	bool m_IsUpdatingActors{ false };
 
 	std::map<ActorID, std::shared_ptr<Actor>> m_Actors;
-
-	//#TODO: The creation of the actor factory should be moved into a game-specific game logic!
-	std::unique_ptr<BaseActorFactory> m_ActorFactory{ std::make_unique<BabyWarsActorFactory>() };
+	std::unique_ptr<BaseActorFactory> m_ActorFactory;
 
 	//The operations that are blocked because of the lock. They should be executed when the lock is unlocked.
 	std::list<std::function<void()>> m_CachedOperations;
@@ -78,6 +73,11 @@ BaseGameLogic::BaseGameLogic() : pimpl{ std::make_shared<BaseGameLogicImpl>() }
 
 BaseGameLogic::~BaseGameLogic()
 {
+}
+
+void BaseGameLogic::init()
+{
+	pimpl->m_ActorFactory = vCreateActorFactory();
 }
 
 void BaseGameLogic::vUpdate(const std::chrono::milliseconds & deltaTimeMs)

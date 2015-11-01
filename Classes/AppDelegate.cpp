@@ -1,9 +1,8 @@
 #include "AppDelegate.h"
-#include "HelloWorldScene.h"
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "BabyEngine/Event/EventDispatcher.h"
-#include "BabyEngine/GameLogic/BaseGameLogic.h"
+#include "BabyWars/GameLogic/BabyWarsGameLogic.h"
 #include "BabyEngine/Graphic2D/SceneStack.h"
 #include "BabyWars/Resource/ResourceLoader.h"
 #include "BabyEngine/Utilities/SingletonContainer.h"
@@ -35,8 +34,11 @@ void AppDelegate::AppDelegateImpl::initGame()
 	//Create essential singleton components.
 	auto & singletonContainer = SingletonContainer::getInstance();
 	singletonContainer->set<IEventDispatcher>(std::make_unique<::EventDispatcher>());
-	singletonContainer->set<BaseGameLogic>(std::make_unique<BaseGameLogic>());
 	singletonContainer->set<SceneStack>(std::make_unique<SceneStack>());
+
+	auto gameLogic = std::make_unique<BabyWarsGameLogic>();
+	gameLogic->init();
+	singletonContainer->set<BaseGameLogic>(std::move(gameLogic));
 
 	//Load resources.
 	auto resourceLoader = singletonContainer->get<ResourceLoader>();
@@ -113,7 +115,7 @@ bool AppDelegate::applicationDidFinishLaunching()
 		glview = GLViewImpl::create("BabyWars");
 #endif
 		director->setOpenGLView(glview);
-	}
+}
 
 	// turn on display FPS
 	director->setDisplayStats(true);

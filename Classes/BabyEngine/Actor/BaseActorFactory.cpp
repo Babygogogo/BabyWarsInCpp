@@ -69,13 +69,16 @@ void BaseActorFactory::ActorFactoryImpl::updateID()
 //////////////////////////////////////////////////////////////////////////
 BaseActorFactory::BaseActorFactory() : pimpl{ std::make_unique<ActorFactoryImpl>() }
 {
-	//TODO: Modify the register calls if the general components are changed.
-	registerComponent<GeneralRenderComponent>();
-	registerComponent<FiniteTimeActionComponent>();
 }
 
 BaseActorFactory::~BaseActorFactory()
 {
+}
+
+void BaseActorFactory::init()
+{
+	registerGeneralComponents();
+	vRegisterSpecificComponents();
 }
 
 std::vector<std::shared_ptr<Actor>> BaseActorFactory::createActorAndChildren(const char *resourceFile, tinyxml2::XMLElement *overrides /*= nullptr*/)
@@ -164,6 +167,13 @@ void BaseActorFactory::modifyActor(const std::shared_ptr<Actor> & actor, tinyxml
 			}
 		}
 	}
+}
+
+void BaseActorFactory::registerGeneralComponents()
+{
+	//TODO: Modify the register calls if the general components are changed.
+	registerComponent<GeneralRenderComponent>();
+	registerComponent<FiniteTimeActionComponent>();
 }
 
 void BaseActorFactory::registerComponentHelper(const std::string & typeName, std::function<std::unique_ptr<ActorComponent>()> makeUnique, std::function < std::shared_ptr<ActorComponent>()> makeShared)

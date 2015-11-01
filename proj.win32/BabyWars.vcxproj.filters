@@ -43,6 +43,9 @@
     <Filter Include="src\BabyWars\Actor">
       <UniqueIdentifier>{73e738e2-851b-4c54-943a-601d224c4e12}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\BabyWars\GameLogic">
+      <UniqueIdentifier>{ad5435e6-c13b-4ee3-a56a-1e635876d212}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -128,6 +131,9 @@
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Actor\BabyWarsActorFactory.cpp">
       <Filter>src\BabyWars\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\GameLogic\BabyWarsGameLogic.cpp">
+      <Filter>src\BabyWars\GameLogic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -262,6 +268,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Actor\BabyWarsActorFactory.h">
       <Filter>src\BabyWars\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\GameLogic\BabyWarsGameLogic.h">
+      <Filter>src\BabyWars\GameLogic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

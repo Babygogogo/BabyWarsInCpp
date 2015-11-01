@@ -19,7 +19,7 @@ class ActorComponent;
  * \brief A factory for creating Actors with their components, using the data from xml.
  *
  * \details
- *	Before you can create actors, you must call registerComponent() (usually in ctor) to make the factory aware of the existence of the actor components.
+ *	Before you can create actors, you must call init() to make the factory aware of the existence of the actor components.
  *	This base class register general components already. If the general components are modified, you must come here to change the register calls.
  *	To register the game-specific components, you should create a game-specific factory inheriting from this class, and register components there.
  *
@@ -31,6 +31,9 @@ class BaseActorFactory
 public:
 	BaseActorFactory();
 	~BaseActorFactory();
+
+	//Call this before you call any other members.
+	void init();
 
 	//Create an Actor and its children actors. The resourceFile is the file name of the corresponding .xml file.
 	//modifyActor() will be called after the creation of the actors.
@@ -49,6 +52,11 @@ public:
 	BaseActorFactory& operator=(BaseActorFactory&&) = delete;
 
 protected:
+	//Register general actor components. Called within init().
+	void registerGeneralComponents();
+	//Subclasses must override this to register game specific actor components. Called within init().
+	virtual void vRegisterSpecificComponents() = 0;
+
 	template<class ConcreteActorComponent>
 	void registerComponent(){
 		registerComponentHelper(ConcreteActorComponent::Type, std::make_unique<ConcreteActorComponent>, std::make_shared<ConcreteActorComponent>);

@@ -12,6 +12,7 @@ namespace tinyxml2
 	class XMLElement;
 }
 class Actor;
+class BaseActorFactory;
 
 /*!
  * \class GameLogic
@@ -35,6 +36,9 @@ public:
 	BaseGameLogic();
 	~BaseGameLogic();
 
+	//Call this before you call any other members.
+	void init();
+
 	//Update the game world (ProcessRunner, views, actors and so on)
 	void vUpdate(const std::chrono::milliseconds & deltaTimeMs);
 
@@ -57,6 +61,10 @@ public:
 	BaseGameLogic(BaseGameLogic&&) = delete;
 	BaseGameLogic& operator=(const BaseGameLogic&) = delete;
 	BaseGameLogic& operator=(BaseGameLogic&&) = delete;
+
+protected:
+	//Called within init(). Override this in subclass to create and initialize a game-specific actor factory.
+	virtual std::unique_ptr<BaseActorFactory> vCreateActorFactory() const = 0;
 
 private:
 	//Implementation stuff.
