@@ -20,7 +20,7 @@ public:
 
 	virtual ~EvtDataGeneric() = default;
 
-	virtual const EventType & getType() const override
+	virtual const EventType & vGetType() const override
 	{
 		return m_Type;
 	}
@@ -32,7 +32,7 @@ public:
 	EvtDataGeneric & operator=(EvtDataGeneric &&) = delete;
 
 private:
-	EventType m_Type{ EventType::InvalidEventType };
+	EventType m_Type;
 };
 
 #endif // !__EVENT_DATA_GENERIC__

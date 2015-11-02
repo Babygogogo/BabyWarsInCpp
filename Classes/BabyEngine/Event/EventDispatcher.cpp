@@ -5,7 +5,6 @@
 #include <cassert>
 
 #include "EventDispatcher.h"
-#include "IEventListener.h"
 #include "IEventData.h"
 #include "BaseEventData.h"
 #include "EventType.h"
@@ -45,8 +44,6 @@ struct EventDispatcher::EventDispatcherImpl
 	std::unordered_map<EventType, std::unordered_multimap<void*, std::function<void(BaseEventData*)>>> m_listeners;
 	std::unordered_map<EventType, std::unordered_multimap<void*, std::function<void(BaseEventData*)>>> m_listeners_to_add;
 	std::unordered_set<void*> m_listeners_to_delete;
-
-	std::unordered_map<EventType, std::unordered_set<IEventListener*>> m_script_listeners;
 };
 
 void EventDispatcher::EventDispatcherImpl::handleNewListeners()
@@ -108,7 +105,7 @@ int EventDispatcher::EventDispatcherImpl::getNextQueueIndex(const int & index) c
 void EventDispatcher::EventDispatcherImpl::dispatchEvent(const IEventData & eData)
 {
 	//If there is no listener listening to the event type, simply return.
-	auto listenerCallbackListIter = m_ListenerCallbackLists.find(eData.getType());
+	auto listenerCallbackListIter = m_ListenerCallbackLists.find(eData.vGetType());
 	if (listenerCallbackListIter == m_ListenerCallbackLists.end())
 		return;
 
@@ -224,7 +221,7 @@ void EventDispatcher::vAbortEvent(const EventType & eType, bool allOfThisType /*
 			++eventIter;
 
 			//If we find the event to delete, remove it from the queue.
-			if ((*currentIter)->getType() == eType){
+			if ((*currentIter)->vGetType() == eType){
 				eventQueue.erase(currentIter);
 
 				//If allOfThisType is false, we simply return because there's no need to remove the other events.

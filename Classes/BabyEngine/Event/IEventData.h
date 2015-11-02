@@ -1,7 +1,7 @@
 #ifndef __I_EVENT_DATA__
 #define __I_EVENT_DATA__
 
-enum class EventType;
+#include "EventType.h"
 
 /*!
  * \class IEventData
@@ -16,7 +16,7 @@ class IEventData
 public:
 	virtual ~IEventData() = default;
 
-	virtual const EventType & getType() const = 0;
+	virtual const EventType & vGetType() const = 0;
 };
 
 #endif // !__I_EVENT_DATA__

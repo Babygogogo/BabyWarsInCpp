@@ -9,7 +9,6 @@
 #include "BaseGameLogic.h"
 #include "../Actor/Actor.h"
 #include "../Actor/BaseActorFactory.h"
-#include "../Event/EventType.h"
 #include "../Event/EvtDataRequestDestroyActor.h"
 #include "../Event/IEventDispatcher.h"
 #include "../Graphic2D/SceneStack.h"
@@ -49,7 +48,7 @@ BaseGameLogic::BaseGameLogicImpl::~BaseGameLogicImpl()
 
 void BaseGameLogic::BaseGameLogicImpl::onRequestDestroyActor(const IEventData & e)
 {
-	auto actorID = (static_cast<const EvtDataRequestDestoryActor &>(e)).getActorID();
+	auto actorID = (static_cast<const EvtDataRequestDestroyActor &>(e)).getActorID();
 
 	//Make sure that the actor to destroy is not the running scene.
 	assert(actorID != SingletonContainer::getInstance()->get<SceneStack>()->getCurrentSceneID() && "GameLogicImpl::onRequestDestroyActor() trying to destroy the running scene!");
@@ -68,7 +67,7 @@ BaseGameLogic::BaseGameLogic() : pimpl{ std::make_shared<BaseGameLogicImpl>() }
 	static int InstanceCount{ 0 };
 	assert((InstanceCount++ == 0) && "GameLogic is created more than once!");
 
-	SingletonContainer::getInstance()->get<IEventDispatcher>()->vAddListener(EventType::RequestDestoryActor, pimpl, [this](const IEventData & e){pimpl->onRequestDestroyActor(e); });
+	SingletonContainer::getInstance()->get<IEventDispatcher>()->vAddListener(EvtDataRequestDestroyActor::s_EventType, pimpl, [this](const IEventData & e){pimpl->onRequestDestroyActor(e); });
 }
 
 BaseGameLogic::~BaseGameLogic()

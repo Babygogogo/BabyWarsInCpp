@@ -57,7 +57,7 @@ cocos2d::Scene * SceneStack::SceneStackImpl::getInternalScene(const Actor & acto
 void SceneStack::SceneStackImpl::requestDestroyActor(const ActorID & id) const
 {
 	if (const auto & singletonContainer = SingletonContainer::getInstance()){
-		auto request = std::make_unique<EvtDataRequestDestoryActor>(id);
+		auto request = std::make_unique<EvtDataRequestDestroyActor>(id);
 		singletonContainer->get<IEventDispatcher>()->vQueueEvent(std::move(request));
 	}
 }

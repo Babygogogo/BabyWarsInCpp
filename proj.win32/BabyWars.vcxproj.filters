@@ -135,6 +135,9 @@
     <ClCompile Include="..\Classes\BabyWars\GameLogic\BabyWarsGameLogic.cpp">
       <Filter>src\BabyWars\GameLogic</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Event\EvtDataRequestDestroyActor.cpp">
+      <Filter>src\BabyEngine\Event</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -189,9 +192,6 @@
       <Filter>src\BabyEngine\Event</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Event\IEventDispatcher.h">
-      <Filter>src\BabyEngine\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Event\IEventListener.h">
       <Filter>src\BabyEngine\Event</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Graphic2D\SceneStack.h">

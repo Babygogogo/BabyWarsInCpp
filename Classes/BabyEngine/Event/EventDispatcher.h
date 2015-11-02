@@ -5,10 +5,7 @@
 #include <functional>
 
 #include "IEventDispatcher.h"
-
-class IEventListener;
-class BaseEventData;
-enum class EventType;
+#include "EventType.h"
 
 class EventDispatcher final : public IEventDispatcher
 {

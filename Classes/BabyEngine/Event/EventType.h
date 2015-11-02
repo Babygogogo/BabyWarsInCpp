@@ -1,30 +1,8 @@
 #ifndef __EVENT_TYPE__
 #define __EVENT_TYPE__
 
-enum class EventType
-{
-	InvalidEventType,
+#include <string>
 
-	RequestDestoryActor,
-
-	PlayerGotScore,
-
-	PlayerExplodedStars,
-
-	LevelNoMoreMove,
-
-	NewGameStarted,
-	LevelStarted,
-	StartLevelLabelDisappeared,
-	LevelSummaryStarted,
-	LevelSummaryFinished,
-	RemainingStarsExploded,
-
-	GameOver,
-
-	CurrentScoreUpdated,
-	HighScoreUpdated,
-	TargetScoreUpdated,
-};
+using EventType = std::string;
 
 #endif // !__EVENT_TYPE__

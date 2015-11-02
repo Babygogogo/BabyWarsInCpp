@@ -1,33 +1,36 @@
-#ifndef __EVENT_REQUEST_DESTORY_ACTOR__
-#define __EVENT_REQUEST_DESTORY_ACTOR__
+#ifndef __EVENT_REQUEST_DESTROY_ACTOR__
+#define __EVENT_REQUEST_DESTROY_ACTOR__
 
 #include "BaseEventData.h"
-#include "EventType.h"
 #include "../Actor/ActorID.h"
 
-class EvtDataRequestDestoryActor final : public BaseEventData
+class EvtDataRequestDestroyActor final : public BaseEventData
 {
 public:
-	EvtDataRequestDestoryActor(ActorID actorID) : m_ActorID{ actorID }
+	EvtDataRequestDestroyActor(ActorID actorID) : m_ActorID{ actorID }{}
+
+	virtual ~EvtDataRequestDestroyActor() = default;
+
+	static const EventType s_EventType;
+
+	virtual const EventType & vGetType() const override
 	{
+		return s_EventType;
 	}
 
-	virtual ~EvtDataRequestDestoryActor() = default;
-
-	static const EventType EvtType = EventType::RequestDestoryActor;
-
-	virtual const EventType & getType() const override
-	{
-		return EvtType;
-	}
-
-	int getActorID() const
+	ActorID getActorID() const
 	{
 		return m_ActorID;
 	}
 
+	//Disable copy/move constructor and operator=.
+	EvtDataRequestDestroyActor(const EvtDataRequestDestroyActor &) = delete;
+	EvtDataRequestDestroyActor(EvtDataRequestDestroyActor &&) = delete;
+	EvtDataRequestDestroyActor & operator=(const EvtDataRequestDestroyActor &) = delete;
+	EvtDataRequestDestroyActor & operator=(EvtDataRequestDestroyActor &&) = delete;
+
 private:
-	int m_ActorID{ 0 };
+	ActorID m_ActorID{ INVALID_ACTOR_ID };
 };
 
-#endif // !__EVENT_REQUEST_DESTORY_ACTOR__
+#endif // !__EVENT_REQUEST_DESTROY_ACTOR__

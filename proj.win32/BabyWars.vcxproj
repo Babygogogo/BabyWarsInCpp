@@ -153,6 +153,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyEngine\Actor\FiniteTimeActionComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Event\EventDispatcher.cpp" />
+    <ClCompile Include="..\Classes\BabyEngine\Event\EvtDataRequestDestroyActor.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\GameLogic\BaseGameLogic.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Graphic2D\SceneStack.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Process\BaseProcess.cpp" />
@@ -192,7 +193,6 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyEngine\Event\EvtDataRequestDestroyActor.h" />
     <ClInclude Include="..\Classes\BabyEngine\Event\IEventData.h" />
     <ClInclude Include="..\Classes\BabyEngine\Event\IEventDispatcher.h" />
-    <ClInclude Include="..\Classes\BabyEngine\Event\IEventListener.h" />
     <ClInclude Include="..\Classes\BabyEngine\GameLogic\BaseGameLogic.h" />
     <ClInclude Include="..\Classes\BabyEngine\Graphic2D\SceneStack.h" />
     <ClInclude Include="..\Classes\BabyEngine\Process\BaseProcess.h" />

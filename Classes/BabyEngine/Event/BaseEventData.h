@@ -19,7 +19,7 @@ class BaseEventData : public IEventData
 public:
 	virtual ~BaseEventData() = default;
 
-	virtual const EventType & getType() const override = 0;
+	virtual const EventType & vGetType() const override = 0;
 };
 
 #endif // !__BASE_EVENT_DATA__

@@ -61,7 +61,7 @@ Actor::~Actor()
 
 	auto eventDispatcher = singletonContainer->get<IEventDispatcher>();
 	for (auto childID : pimpl->m_ChildrenID)
-		eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestoryActor>(childID));
+		eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(childID));
 }
 
 ActorID Actor::getID() const
