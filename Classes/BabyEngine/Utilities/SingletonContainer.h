@@ -31,6 +31,12 @@ public:
 	//Set an object of a given type (will replace the old one of the same type if exists).
 	template <typename Base, typename Derived,
 		typename std::enable_if_t<std::is_base_of<Base, Derived>::value>* = nullptr>
+		std::shared_ptr<Base> set(const std::shared_ptr<Derived> & derived){
+		return std::static_pointer_cast<Base>(setHelper(typeid(Base), derived));
+	}
+
+	template <typename Base, typename Derived,
+		typename std::enable_if_t<std::is_base_of<Base, Derived>::value>* = nullptr>
 		std::shared_ptr<Base> set(std::shared_ptr<Derived> && derived){
 		return std::static_pointer_cast<Base>(setHelper(typeid(Base), std::move(derived)));
 	}
@@ -53,6 +59,7 @@ private:
 	//Non-template helper functions for set/get object.
 	std::shared_ptr<void> getHelper(const std::type_index & typeIndex) const;
 	std::shared_ptr<void> setHelper(std::type_index && typeIndex, std::shared_ptr<void> && obj);
+	std::shared_ptr<void> setHelper(std::type_index && typeIndex, const std::shared_ptr<void> & obj);
 
 	//The one and only instance.
 	static std::unique_ptr<SingletonContainer> s_Instance;

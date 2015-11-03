@@ -11,8 +11,8 @@
 #include "../Actor/BaseActorFactory.h"
 #include "../Event/EvtDataRequestDestroyActor.h"
 #include "../Event/IEventDispatcher.h"
-#include "../Graphic2D/SceneStack.h"
 #include "../Process/ProcessRunner.h"
+#include "../UserInterface/BaseHumanView.h"
 #include "../Utilities/SingletonContainer.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -31,8 +31,13 @@ public:
 	//Lock of the process of updating actor.
 	bool m_IsUpdatingActors{ false };
 
+	std::weak_ptr<BaseGameLogic> m_Self;
+
 	std::map<ActorID, std::shared_ptr<Actor>> m_Actors;
+	std::map<GameViewID, std::shared_ptr<BaseGameView>> m_GameViews;
 	std::unique_ptr<BaseActorFactory> m_ActorFactory;
+
+	cocos2d::Scene * m_Scene{ cocos2d::Scene::create() };
 
 	//The operations that are blocked because of the lock. They should be executed when the lock is unlocked.
 	std::list<std::function<void()>> m_CachedOperations;
@@ -40,18 +45,20 @@ public:
 
 BaseGameLogic::BaseGameLogicImpl::BaseGameLogicImpl()
 {
+	m_Scene->retain();
 }
 
 BaseGameLogic::BaseGameLogicImpl::~BaseGameLogicImpl()
 {
+	//The logic is destroyed only when the game is shutting down.
+	//Don't call m_Scene->removeFromParent() because it's done implicitly by the engine and it asserts if we do it manually.
+	m_Scene->removeAllChildren();
+	m_Scene->release();
 }
 
 void BaseGameLogic::BaseGameLogicImpl::onRequestDestroyActor(const IEventData & e)
 {
 	auto actorID = (static_cast<const EvtDataRequestDestroyActor &>(e)).getActorID();
-
-	//Make sure that the actor to destroy is not the running scene.
-	assert(actorID != SingletonContainer::getInstance()->get<SceneStack>()->getCurrentSceneID() && "GameLogicImpl::onRequestDestroyActor() trying to destroy the running scene!");
 
 	if (m_IsUpdatingActors)
 		m_CachedOperations.emplace_back([actorID, this](){m_Actors.erase(actorID); });
@@ -74,9 +81,13 @@ BaseGameLogic::~BaseGameLogic()
 {
 }
 
-void BaseGameLogic::init()
+void BaseGameLogic::init(std::weak_ptr<BaseGameLogic> self)
 {
+	pimpl->m_Self = self;
 	pimpl->m_ActorFactory = vCreateActorFactory();
+	vInitViews();
+
+	cocos2d::Director::getInstance()->runWithScene(pimpl->m_Scene);
 }
 
 void BaseGameLogic::vUpdate(const std::chrono::milliseconds & deltaTimeMs)
@@ -101,15 +112,15 @@ void BaseGameLogic::vUpdate(const std::chrono::milliseconds & deltaTimeMs)
 	}
 }
 
-bool BaseGameLogic::isActorAlive(const ActorID & id) const
+bool BaseGameLogic::isActorAlive(ActorID actorId) const
 {
-	return pimpl->m_Actors.find(id) != pimpl->m_Actors.end();
+	return pimpl->m_Actors.find(actorId) != pimpl->m_Actors.end();
 }
 
-std::shared_ptr<Actor> BaseGameLogic::getActor(const ActorID & id) const
+std::shared_ptr<Actor> BaseGameLogic::getActor(ActorID actorId) const
 {
 	//Try to find the actor corresponding to the id.
-	auto actorIter = pimpl->m_Actors.find(id);
+	auto actorIter = pimpl->m_Actors.find(actorId);
 
 	//If fail to find the actor, return nullptr.
 	if (actorIter == pimpl->m_Actors.end()){
@@ -141,4 +152,40 @@ std::shared_ptr<Actor> BaseGameLogic::createActor(const char *resourceFile, tiny
 	}
 
 	return parentActor;
+}
+
+void BaseGameLogic::addView(std::shared_ptr<BaseGameView> gameView)
+{
+	if (!gameView || gameView->isAttachedToLogic())
+		return;
+
+	assert(!pimpl->m_Self.expired() && "BaseGameLogic::addView() the logic is not initialized.");
+
+	if (auto humanView = std::dynamic_pointer_cast<BaseHumanView>(gameView))
+		pimpl->m_Scene->addChild(humanView->getSceneNode());
+
+	gameView->setLogic(pimpl->m_Self);
+	pimpl->m_GameViews.emplace(gameView->getID(), std::move(gameView));
+}
+
+std::shared_ptr<BaseHumanView> BaseGameLogic::getHumanView() const
+{
+	for (const auto & view : pimpl->m_GameViews)
+		if (auto humanView = std::dynamic_pointer_cast<BaseHumanView>(view.second))
+			return humanView;
+
+	return nullptr;
+}
+
+void BaseGameLogic::removeView(GameViewID viewID)
+{
+	auto viewIter = pimpl->m_GameViews.find(viewID);
+	if (viewIter == pimpl->m_GameViews.end())
+		return;
+
+	if (auto humanView = std::dynamic_pointer_cast<BaseHumanView>(viewIter->second))
+		pimpl->m_Scene->removeChild(humanView->getSceneNode());
+
+	viewIter->second->setLogic(std::weak_ptr<BaseGameLogic>());
+	pimpl->m_GameViews.erase(viewIter);
 }

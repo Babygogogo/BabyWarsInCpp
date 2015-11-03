@@ -46,6 +46,12 @@
     <Filter Include="src\BabyWars\GameLogic">
       <UniqueIdentifier>{ad5435e6-c13b-4ee3-a56a-1e635876d212}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\BabyEngine\UserInterface">
+      <UniqueIdentifier>{d9ea6089-61ae-49be-9407-e9a670a29e3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyWars\UserInterface">
+      <UniqueIdentifier>{f74b2f6e-a635-452f-94eb-ea7534f88d59}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -77,9 +83,6 @@
     </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Event\EventDispatcher.cpp">
       <Filter>src\BabyEngine\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Graphic2D\SceneStack.cpp">
-      <Filter>src\BabyEngine\Graphic2D</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Process\BaseProcess.cpp">
       <Filter>src\BabyEngine\Process</Filter>
@@ -138,6 +141,15 @@
     <ClCompile Include="..\Classes\BabyEngine\Event\EvtDataRequestDestroyActor.cpp">
       <Filter>src\BabyEngine\Event</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\UserInterface\BaseHumanView.cpp">
+      <Filter>src\BabyEngine\UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\UserInterface\BaseGameView.cpp">
+      <Filter>src\BabyEngine\UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\UserInterface\BabyWarsHumanView.cpp">
+      <Filter>src\BabyWars\UserInterface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -193,9 +205,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Event\IEventDispatcher.h">
       <Filter>src\BabyEngine\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Graphic2D\SceneStack.h">
-      <Filter>src\BabyEngine\Graphic2D</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Process\BaseProcess.h">
       <Filter>src\BabyEngine\Process</Filter>
@@ -271,6 +280,18 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\GameLogic\BabyWarsGameLogic.h">
       <Filter>src\BabyWars\GameLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\UserInterface\BaseHumanView.h">
+      <Filter>src\BabyEngine\UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\UserInterface\BabyWarsHumanView.h">
+      <Filter>src\BabyWars\UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\UserInterface\GameViewID.h">
+      <Filter>src\BabyEngine\UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\UserInterface\BaseGameView.h">
+      <Filter>src\BabyEngine\UserInterface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -155,9 +155,10 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyEngine\Event\EventDispatcher.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Event\EvtDataRequestDestroyActor.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\GameLogic\BaseGameLogic.cpp" />
-    <ClCompile Include="..\Classes\BabyEngine\Graphic2D\SceneStack.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Process\BaseProcess.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Process\ProcessRunner.cpp" />
+    <ClCompile Include="..\Classes\BabyEngine\UserInterface\BaseGameView.cpp" />
+    <ClCompile Include="..\Classes\BabyEngine\UserInterface\BaseHumanView.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\GridIndex.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\RelativePosition.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\SingletonContainer.cpp" />
@@ -172,6 +173,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyWars\Script\UnitMapScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\UnitScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\WarSceneScript.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\UserInterface\BabyWarsHumanView.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -194,9 +196,11 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyEngine\Event\IEventData.h" />
     <ClInclude Include="..\Classes\BabyEngine\Event\IEventDispatcher.h" />
     <ClInclude Include="..\Classes\BabyEngine\GameLogic\BaseGameLogic.h" />
-    <ClInclude Include="..\Classes\BabyEngine\Graphic2D\SceneStack.h" />
     <ClInclude Include="..\Classes\BabyEngine\Process\BaseProcess.h" />
     <ClInclude Include="..\Classes\BabyEngine\Process\ProcessRunner.h" />
+    <ClInclude Include="..\Classes\BabyEngine\UserInterface\BaseHumanView.h" />
+    <ClInclude Include="..\Classes\BabyEngine\UserInterface\GameViewID.h" />
+    <ClInclude Include="..\Classes\BabyEngine\UserInterface\BaseGameView.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\GenericFactory.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\GridIndex.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\GridIndexPath.h" />
@@ -218,6 +222,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyWars\Script\UnitMapScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\UnitScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\WarSceneScript.h" />
+    <ClInclude Include="..\Classes\BabyWars\UserInterface\BabyWarsHumanView.h" />
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>

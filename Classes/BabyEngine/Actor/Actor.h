@@ -21,7 +21,7 @@ class BaseRenderComponent;
  * \details
  *	Actors are organized in the form of trees. Methods like addChild(), removeFromParent() are provided for organizing actors.
  *	If a parent actor is destroyed, all of its children will be destroyed too.
- *	Roots of the trees are Actors that created as "scene". They should be push into SceneStack to be actually running.
+ *	Roots of the trees of actors must be attached to human view to make the actors visible.
  *	Actor is a container of various components and/or scripts which implement most of the logics of the real game object.
  *	Actor should be created by GameLogic using std::shared_ptr and destroyed by dispatching EvtDataRequestDestroyActor.
  *
@@ -36,8 +36,9 @@ class BaseRenderComponent;
  */
 class Actor final
 {
-	friend class BaseActorFactory;
-	friend class BaseGameLogic;
+	friend class BaseActorFactory;	//For init(), addComponent(), postInit().
+	friend class BaseGameLogic;		//For update().
+	friend class BaseHumanView;		//For setHumanView().
 
 public:
 	//Actor should be created by GameLogic using std::shared_ptr and destroyed by dispatching EvtDataRequestDestroyActor.
@@ -46,7 +47,6 @@ public:
 	~Actor();
 
 	ActorID getID() const;
-	std::shared_ptr<Actor> getParent() const;
 
 	//Get an attached component by its type name. Returns nullptr if no such component attached.
 	//Warning: Prefer using std::weak_ptr if you need ownership. See the comment for Actor class for details.
@@ -66,9 +66,14 @@ public:
 	//Warning: Prefer using std::weak_ptr if you need ownership. See the comment for Actor class for details.
 	std::shared_ptr<BaseRenderComponent> getRenderComponent() const;
 
+	bool isAttachedToHumanView() const;
+	std::shared_ptr<BaseHumanView> getHumanView() const;
+
 	//Stuff for organizing the Actors as trees.
 	bool hasParent() const;
+	std::shared_ptr<Actor> getParent() const;
 	bool isAncestorOf(const Actor & child) const;
+
 	//If the child has a render component, it will also be added to the parent's render component.
 	//If the child has a parent already, nothing happens.
 	void addChild(Actor & child);
@@ -97,6 +102,9 @@ private:
 	//Called by GameLogic on every game loop.
 	//Calles vUpdate() on every attached component.
 	void update(const std::chrono::milliseconds & delteTimeMs);
+
+	//Called by BaseHumanView when attached to view.
+	void setHumanView(std::weak_ptr<BaseHumanView> humanView);
 
 	//Implementation stuff.
 	struct ActorImpl;

@@ -19,14 +19,11 @@ public:
 
 SingletonContainer::SingletonContainerImpl::SingletonContainerImpl()
 {
-
 }
 
 SingletonContainer::SingletonContainerImpl::~SingletonContainerImpl()
 {
-
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //Implementation of SingletonContainer
@@ -36,13 +33,12 @@ std::unique_ptr<SingletonContainer> SingletonContainer::s_Instance;
 
 SingletonContainer::SingletonContainer() :pimpl(new SingletonContainerImpl())
 {
-
 }
 
 SingletonContainer::~SingletonContainer()
 {
 	//Must manually release here, otherwise the m_instance may point to a deleted instance of SingletonContainer,
-	//making method calls (get() for example) result in undefined behavior. 
+	//making method calls (get() for example) result in undefined behavior.
 	s_Instance.release();
 }
 
@@ -73,4 +69,15 @@ std::shared_ptr<void> SingletonContainer::setHelper(std::type_index && typeIndex
 	//else, log and replace the object with the new one
 	cocos2d::log("SingletonContainer::set : An object of %s already exists and is being replaced.", typeIndex.name());
 	return pimpl->m_Objects[std::move(typeIndex)] = std::move(obj);
+}
+
+std::shared_ptr<void> SingletonContainer::setHelper(std::type_index && typeIndex, const std::shared_ptr<void> & obj)
+{
+	//if an object of the same type doesn't exist, simply emplace the new object and return it
+	if (pimpl->m_Objects.find(typeIndex) == pimpl->m_Objects.end())
+		return pimpl->m_Objects.emplace(std::move(typeIndex), obj).first->second;
+
+	//else, log and replace the object with the new one
+	cocos2d::log("SingletonContainer::set : An object of %s already exists and is being replaced.", typeIndex.name());
+	return pimpl->m_Objects[std::move(typeIndex)] = obj;
 }

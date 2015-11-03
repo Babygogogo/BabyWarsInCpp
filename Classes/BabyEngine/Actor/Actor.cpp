@@ -26,6 +26,7 @@ public:
 	std::weak_ptr<Actor> m_Parent;
 	std::weak_ptr<Actor> m_Self;
 	std::set<ActorID> m_ChildrenID;
+	std::weak_ptr<BaseHumanView> m_HumanView;
 
 	std::string m_Type;
 	std::string m_ResourceFile;
@@ -69,14 +70,6 @@ ActorID Actor::getID() const
 	return pimpl->m_ID;
 }
 
-std::shared_ptr<Actor> Actor::getParent() const
-{
-	if (pimpl->m_Parent.expired())
-		return nullptr;
-
-	return pimpl->m_Parent.lock();
-}
-
 std::shared_ptr<ActorComponent> Actor::getComponent(const std::string & type) const
 {
 	auto findIter = pimpl->m_Components.find(type);
@@ -91,9 +84,30 @@ std::shared_ptr<BaseRenderComponent> Actor::getRenderComponent() const
 	return pimpl->m_RenderComponent;
 }
 
+bool Actor::isAttachedToHumanView() const
+{
+	return !pimpl->m_HumanView.expired();
+}
+
+std::shared_ptr<BaseHumanView> Actor::getHumanView() const
+{
+	if (!isAttachedToHumanView())
+		return nullptr;
+
+	return pimpl->m_HumanView.lock();
+}
+
 bool Actor::hasParent() const
 {
 	return !pimpl->m_Parent.expired();
+}
+
+std::shared_ptr<Actor> Actor::getParent() const
+{
+	if (pimpl->m_Parent.expired())
+		return nullptr;
+
+	return pimpl->m_Parent.lock();
 }
 
 bool Actor::isAncestorOf(const Actor & child) const
@@ -187,4 +201,9 @@ void Actor::postInit()
 void Actor::update(const std::chrono::milliseconds & delteTimeMs)
 {
 	//#TODO: call update() on all components here.
+}
+
+void Actor::setHumanView(std::weak_ptr<BaseHumanView> humanView)
+{
+	pimpl->m_HumanView = humanView;
 }

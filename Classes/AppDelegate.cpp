@@ -2,10 +2,10 @@
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "BabyEngine/Event/EventDispatcher.h"
-#include "BabyWars/GameLogic/BabyWarsGameLogic.h"
-#include "BabyEngine/Graphic2D/SceneStack.h"
-#include "BabyWars/Resource/ResourceLoader.h"
+#include "BabyEngine/UserInterface/BaseHumanView.h"
 #include "BabyEngine/Utilities/SingletonContainer.h"
+#include "BabyWars/GameLogic/BabyWarsGameLogic.h"
+#include "BabyWars/Resource/ResourceLoader.h"
 
 USING_NS_CC;
 
@@ -34,22 +34,22 @@ void AppDelegate::AppDelegateImpl::initGame()
 	//Create essential singleton components.
 	auto & singletonContainer = SingletonContainer::getInstance();
 	singletonContainer->set<IEventDispatcher>(std::make_unique<::EventDispatcher>());
-	singletonContainer->set<SceneStack>(std::make_unique<SceneStack>());
-
-	auto gameLogic = std::make_unique<BabyWarsGameLogic>();
-	gameLogic->init();
-	singletonContainer->set<BaseGameLogic>(std::move(gameLogic));
 
 	//Load resources.
 	auto resourceLoader = singletonContainer->get<ResourceLoader>();
 	resourceLoader->loadResources();
 
+	//Init the game logic.
+	auto gameLogic = std::make_shared<BabyWarsGameLogic>();
+	gameLogic->init(gameLogic);
+	singletonContainer->set<BaseGameLogic>(gameLogic);
+
+	//Create the initial actor and add it to human view.
+	auto initialActor = singletonContainer->get<BaseGameLogic>()->createActor(resourceLoader->getInitialScenePath().c_str());
+	gameLogic->getHumanView()->addActor(initialActor);
+
 	//Schedule update self so that we can update components once per frame in update().
 	Director::getInstance()->getScheduler()->scheduleUpdate(this, 0, false);
-
-	//Create the initial scene and run it.
-	auto titleScene = singletonContainer->get<BaseGameLogic>()->createActor(resourceLoader->getInitialScenePath().c_str());
-	singletonContainer->get<SceneStack>()->pushAndRun(*titleScene);
 }
 
 void AppDelegate::AppDelegateImpl::update(float deltaSec)
@@ -115,7 +115,7 @@ bool AppDelegate::applicationDidFinishLaunching()
 		glview = GLViewImpl::create("BabyWars");
 #endif
 		director->setOpenGLView(glview);
-}
+	}
 
 	// turn on display FPS
 	director->setDisplayStats(true);
