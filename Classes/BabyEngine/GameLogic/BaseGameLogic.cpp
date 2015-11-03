@@ -73,8 +73,6 @@ BaseGameLogic::BaseGameLogic() : pimpl{ std::make_shared<BaseGameLogicImpl>() }
 {
 	static int InstanceCount{ 0 };
 	assert((InstanceCount++ == 0) && "GameLogic is created more than once!");
-
-	SingletonContainer::getInstance()->get<IEventDispatcher>()->vAddListener(EvtDataRequestDestroyActor::s_EventType, pimpl, [this](const IEventData & e){pimpl->onRequestDestroyActor(e); });
 }
 
 BaseGameLogic::~BaseGameLogic()
@@ -85,7 +83,8 @@ void BaseGameLogic::init(std::weak_ptr<BaseGameLogic> self)
 {
 	pimpl->m_Self = self;
 	pimpl->m_ActorFactory = vCreateActorFactory();
-	vInitViews();
+
+	SingletonContainer::getInstance()->get<IEventDispatcher>()->vAddListener(EvtDataRequestDestroyActor::s_EventType, pimpl, [this](const IEventData & e){pimpl->onRequestDestroyActor(e); });
 
 	cocos2d::Director::getInstance()->runWithScene(pimpl->m_Scene);
 }
@@ -175,6 +174,15 @@ std::shared_ptr<BaseHumanView> BaseGameLogic::getHumanView() const
 			return humanView;
 
 	return nullptr;
+}
+
+std::shared_ptr<BaseGameView> BaseGameLogic::getGameView(GameViewID viewID) const
+{
+	const auto viewIter = pimpl->m_GameViews.find(viewID);
+	if (viewIter == pimpl->m_GameViews.end())
+		return nullptr;
+
+	return viewIter->second;
 }
 
 void BaseGameLogic::removeView(GameViewID viewID)

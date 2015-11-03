@@ -6,6 +6,7 @@
 #include "BabyEngine/Utilities/SingletonContainer.h"
 #include "BabyWars/GameLogic/BabyWarsGameLogic.h"
 #include "BabyWars/Resource/ResourceLoader.h"
+#include "BabyWars/UserInterface/BabyWarsHumanView.h"
 
 USING_NS_CC;
 
@@ -44,9 +45,11 @@ void AppDelegate::AppDelegateImpl::initGame()
 	gameLogic->init(gameLogic);
 	singletonContainer->set<BaseGameLogic>(gameLogic);
 
-	//Create the initial actor and add it to human view.
-	auto initialActor = singletonContainer->get<BaseGameLogic>()->createActor(resourceLoader->getInitialScenePath().c_str());
-	gameLogic->getHumanView()->addActor(initialActor);
+	//Create a human view with an initial actor, and add the view to game logic.
+	auto humanView = std::make_shared<BabyWarsHumanView>();
+	humanView->init(humanView);
+	humanView->addActor(gameLogic->createActor(resourceLoader->getInitialScenePath().c_str()));
+	gameLogic->addView(humanView);
 
 	//Schedule update self so that we can update components once per frame in update().
 	Director::getInstance()->getScheduler()->scheduleUpdate(this, 0, false);

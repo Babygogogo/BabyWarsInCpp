@@ -27,8 +27,6 @@ public:
 
 	void init(std::weak_ptr<BaseHumanView> self);
 
-	virtual void vLoadResource() = 0;
-
 	void addActor(const std::shared_ptr<Actor> & actor);
 	void removeActor(ActorID actorID);
 
@@ -36,6 +34,9 @@ public:
 
 protected:
 	BaseHumanView();
+
+	//Called within init(). Override this in subclass to load any game-specific resources.
+	virtual void vLoadResource() = 0;
 
 private:
 	//Implementation stuff.

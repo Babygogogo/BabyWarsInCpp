@@ -11,7 +11,6 @@ public:
 
 private:
 	virtual std::unique_ptr<BaseActorFactory> vCreateActorFactory() const override;
-	virtual void vInitViews() override;
 };
 
 #endif // !__BABY_WARS_GAME_LOGIC__

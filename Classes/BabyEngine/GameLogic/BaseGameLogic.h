@@ -61,6 +61,7 @@ public:
 	//View stuff.
 	void addView(std::shared_ptr<BaseGameView> gameView);
 	std::shared_ptr<BaseHumanView> getHumanView() const;
+	std::shared_ptr<BaseGameView> getGameView(GameViewID viewID) const;
 	void removeView(GameViewID viewID);
 
 	//Disable copy/move constructor and operator=.
@@ -72,7 +73,6 @@ public:
 protected:
 	//Called within init(). Override this in subclass to create and initialize a game-specific actor factory.
 	virtual std::unique_ptr<BaseActorFactory> vCreateActorFactory() const = 0;
-	virtual void vInitViews() = 0;
 
 private:
 	//Implementation stuff.
