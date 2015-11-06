@@ -33,6 +33,7 @@ public:
 
 	void deactivateActiveUnit();
 	bool isUnitActiveAtIndex(const GridIndex & gridIndex) const;
+	bool canActivateUnitAtIndex(const GridIndex & gridIndex) const;
 
 	//This function deactivates the currently active unit, even if there is no unit at the grid index.
 	//Return value indicates that if the unit at the index is successfully activated (if there's no unit, false is returned).

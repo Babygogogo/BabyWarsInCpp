@@ -7,11 +7,17 @@
 #include "MovePathScript.h"
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
+#include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
-#include "../Resource/ResourceLoader.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../../BabyEngine/Utilities/Matrix2DDimension.h"
 #include "../../BabyEngine/Utilities/GridIndex.h"
+#include "../Event/EvtDataDragScene.h"
+#include "../Event/EvtDataActivateUnitAtPosition.h"
+#include "../Event/EvtDataDeactivateActiveUnit.h"
+#include "../Event/EvtDataFinishMakeMovePath.h"
+#include "../Event/EvtDataMakeMovePath.h"
+#include "../Resource/ResourceLoader.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of WarSceneScriptImpl and the touch state classes.
@@ -23,6 +29,12 @@ struct WarSceneScript::WarSceneScriptImpl
 
 	void initialize(std::weak_ptr<WarSceneScriptImpl> selfPtr);
 
+	void onActivateUnitAtPosition(const IEventData & e);
+	void onDeactivateActiveUnit(const IEventData & e);
+	void onDragScene(const IEventData & e);
+	void onFinishMakeMovePath(const IEventData & e);
+	void onMakeMovePath(const IEventData & e);
+
 	cocos2d::Size getMapSize() const;
 	cocos2d::Vec2 toPositionInScene(const cocos2d::Vec2 & position) const;
 	GridIndex toGridIndex(const cocos2d::Vec2 & positionInWindow) const;
@@ -32,6 +44,8 @@ struct WarSceneScript::WarSceneScriptImpl
 	void makeMovePath(const GridIndex & gridIndex);
 	void clearMovePath();
 	bool isMovePathValid() const;
+
+	GridIndex m_MovePathStartIndex{ -1, -1 };
 
 	static std::string s_TileMapActorPath;
 	static std::string s_UnitMapActorPath;
@@ -81,7 +95,6 @@ private:
 
 	std::weak_ptr<WarSceneScriptImpl> m_ScriptImpl;
 
-	bool m_IsTouchInitialized{ false };
 	cocos2d::EventListenerTouchOneByOne * m_TouchOneByOne{ cocos2d::EventListenerTouchOneByOne::create() };
 };
 
@@ -292,6 +305,44 @@ void WarSceneScript::WarSceneScriptImpl::initialize(std::weak_ptr<WarSceneScript
 	m_TouchManager->initialize(m_TouchManager, selfPtr);
 }
 
+void WarSceneScript::WarSceneScriptImpl::onActivateUnitAtPosition(const IEventData & e)
+{
+	const auto & activateUnitEvent = static_cast<const EvtDataActivateUnitAtPosition &>(e);
+	m_ChildUnitMapScript.lock()->activateUnitAtIndex(toGridIndex(activateUnitEvent.getPosition()));
+}
+
+void WarSceneScript::WarSceneScriptImpl::onDeactivateActiveUnit(const IEventData & e)
+{
+	m_ChildUnitMapScript.lock()->deactivateActiveUnit();
+}
+
+void WarSceneScript::WarSceneScriptImpl::onDragScene(const IEventData & e)
+{
+	const auto & dragSceneEvent = static_cast<const EvtDataDragScene &>(e);
+	setPositionWithOffsetAndBoundary(dragSceneEvent.getOffset());
+}
+
+void WarSceneScript::WarSceneScriptImpl::onFinishMakeMovePath(const IEventData & e)
+{
+	if (isMovePathValid()){
+		const auto & finishEvent = static_cast<const EvtDataFinishMakeMovePath &>(e);
+		auto destination = toGridIndex(finishEvent.getPosition());
+
+		m_ChildUnitMapScript.lock()->deactivateAndMoveUnit(m_MovePathStartIndex, destination);
+	}
+	else{
+		m_ChildUnitMapScript.lock()->deactivateActiveUnit();
+	}
+
+	clearMovePath();
+}
+
+void WarSceneScript::WarSceneScriptImpl::onMakeMovePath(const IEventData & e)
+{
+	const auto & makePathEvent = static_cast<const EvtDataMakeMovePath &>(e);
+	makeMovePath(toGridIndex(makePathEvent.getPosition()));
+}
+
 cocos2d::Size WarSceneScript::WarSceneScriptImpl::getMapSize() const
 {
 	auto tileMapDimension = m_ChildTileMapScript.lock()->getMapDimension();
@@ -364,11 +415,19 @@ void WarSceneScript::WarSceneScriptImpl::makeMovePath(const GridIndex & gridInde
 	//auto movingUnit = unitMap->getActiveUnit();
 
 	//m_ChildMovePathScript.lock()->updatePath(destination, movingUnit, *tileMap, *unitMap);
+
+	//This is only for convenience and should be removed.
+	if (m_MovePathStartIndex.rowIndex == -1 && m_MovePathStartIndex.colIndex == -1)
+		m_MovePathStartIndex = gridIndex;
 }
 
 void WarSceneScript::WarSceneScriptImpl::clearMovePath()
 {
 	//#TODO: Complete this function.
+
+	//This is only for convenience and should be removed.
+	m_MovePathStartIndex.rowIndex = -1;
+	m_MovePathStartIndex.colIndex = -1;
 }
 
 bool WarSceneScript::WarSceneScriptImpl::isMovePathValid() const
@@ -492,6 +551,25 @@ void WarSceneScript::vPostInit()
 	//#TODO: create and add, commander, weather and so on...
 
 	//////////////////////////////////////////////////////////////////////////
+	//Attach to event dispatcher.
+	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
+	eventDispatcher->vAddListener(EvtDataActivateUnitAtPosition::s_EventType, pimpl, [this](const IEventData & e){
+		pimpl->onActivateUnitAtPosition(e);
+	});
+	eventDispatcher->vAddListener(EvtDataDeactivateActiveUnit::s_EventType, pimpl, [this](const IEventData & e){
+		pimpl->onDeactivateActiveUnit(e);
+	});
+	eventDispatcher->vAddListener(EvtDataDragScene::s_EventType, pimpl, [this](const IEventData & e){
+		pimpl->onDragScene(e);
+	});
+	eventDispatcher->vAddListener(EvtDataFinishMakeMovePath::s_EventType, pimpl, [this](const IEventData & e){
+		pimpl->onFinishMakeMovePath(e);
+	});
+	eventDispatcher->vAddListener(EvtDataMakeMovePath::s_EventType, pimpl, [this](const IEventData & e){
+		pimpl->onMakeMovePath(e);
+	});
+
+	//////////////////////////////////////////////////////////////////////////
 	//Load the test warScene.
 	//#TODO: Only for testing and should be removed.
 	loadWarScene("Data\\WarScene\\WarSceneData_TestWarScene.xml");
@@ -525,6 +603,18 @@ void WarSceneScript::loadWarScene(const char * xmlPath)
 
 	//Listen to touch events for the scene.
 	pimpl->m_TouchManager->enableTouch(true);
+}
+
+bool WarSceneScript::canActivateUnitAtPosition(const cocos2d::Vec2 & pos) const
+{
+	auto gridIndex = pimpl->toGridIndex(pos);
+	return pimpl->m_ChildUnitMapScript.lock()->canActivateUnitAtIndex(gridIndex);
+}
+
+bool WarSceneScript::isUnitActiveAtPosition(const cocos2d::Vec2 & pos) const
+{
+	auto gridIndex = pimpl->toGridIndex(pos);
+	return pimpl->m_ChildUnitMapScript.lock()->isUnitActiveAtIndex(gridIndex);
 }
 
 const std::string WarSceneScript::Type = "WarSceneScript";

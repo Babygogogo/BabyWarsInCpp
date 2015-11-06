@@ -25,6 +25,7 @@ public:
 	void setGridIndexAndPosition(const GridIndex & gridIndex);
 	GridIndex getGridIndex() const;
 
+	bool canActivate() const;
 	void setActive(bool active);
 
 	void moveTo(const GridIndex & gridIndex);

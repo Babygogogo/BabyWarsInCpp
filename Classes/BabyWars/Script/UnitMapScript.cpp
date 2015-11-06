@@ -162,6 +162,15 @@ bool UnitMapScript::isUnitActiveAtIndex(const GridIndex & gridIndex) const
 	return unitAtIndex == pimpl->m_ActiveUnit.lock();
 }
 
+bool UnitMapScript::canActivateUnitAtIndex(const GridIndex & gridIndex) const
+{
+	auto unitAtIndex = getUnit(gridIndex);
+	if (!unitAtIndex)
+		return false;
+
+	return unitAtIndex->canActivate();
+}
+
 bool UnitMapScript::activateUnitAtIndex(const GridIndex & gridIndex)
 {
 	//Check if there is an currently active unit.

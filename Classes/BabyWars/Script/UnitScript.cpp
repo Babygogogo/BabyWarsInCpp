@@ -91,6 +91,11 @@ GridIndex UnitScript::getGridIndex() const
 	return pimpl->m_GridIndex;
 }
 
+bool UnitScript::canActivate() const
+{
+	return true;
+}
+
 void UnitScript::setActive(bool active)
 {
 	auto underlyingNode = pimpl->m_RenderComponent.lock()->getSceneNode();

@@ -52,6 +52,12 @@
     <Filter Include="src\BabyWars\UserInterface">
       <UniqueIdentifier>{f74b2f6e-a635-452f-94eb-ea7534f88d59}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\BabyWars\Graphic2D">
+      <UniqueIdentifier>{4184babd-512d-4940-b385-57bedee3084a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyWars\Event">
+      <UniqueIdentifier>{bf174404-3ec6-4387-85c2-0c2378cffa49}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -149,6 +155,24 @@
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\UserInterface\BabyWarsHumanView.cpp">
       <Filter>src\BabyWars\UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Graphic2D\WarSceneController.cpp">
+      <Filter>src\BabyWars\Graphic2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataDragScene.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataActivateUnitAtPosition.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataMakeMovePath.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataDeactivateActiveUnit.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataFinishMakeMove.cpp">
+      <Filter>src\BabyWars\Event</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -292,6 +316,27 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\UserInterface\BaseGameView.h">
       <Filter>src\BabyEngine\UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Graphic2D\IController.h">
+      <Filter>src\BabyEngine\Graphic2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Graphic2D\WarSceneController.h">
+      <Filter>src\BabyWars\Graphic2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataDragScene.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataActivateUnitAtPosition.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataMakeMovePath.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataDeactivateActiveUnit.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataFinishMakeMovePath.h">
+      <Filter>src\BabyWars\Event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

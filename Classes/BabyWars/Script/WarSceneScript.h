@@ -3,6 +3,10 @@
 
 #include "../../BabyEngine/Actor/BaseScriptComponent.h"
 
+namespace cocos2d{
+	class Vec2;
+}
+
 class WarSceneScript : public BaseScriptComponent
 {
 public:
@@ -14,6 +18,9 @@ public:
 	virtual const std::string & getType() const override;
 
 	void loadWarScene(const char * xmlPath);
+
+	bool canActivateUnitAtPosition(const cocos2d::Vec2 & pos) const;
+	bool isUnitActiveAtPosition(const cocos2d::Vec2 & pos) const;
 
 	//Disable copy/move constructor and operator=.
 	WarSceneScript(const WarSceneScript &) = delete;
