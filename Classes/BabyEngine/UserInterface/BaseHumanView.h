@@ -11,6 +11,7 @@ namespace cocos2d
 	class Node;
 }
 class Actor;
+class IController;
 
 /*!
  * \class BaseHumanView
@@ -31,6 +32,8 @@ public:
 	void removeActor(ActorID actorID);
 
 	cocos2d::Node * getSceneNode() const;
+
+	void setController(std::unique_ptr<IController> controller);
 
 protected:
 	BaseHumanView();

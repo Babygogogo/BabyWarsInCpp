@@ -2,17 +2,17 @@
 
 #include "cocos2d.h"
 
-#include "WarSceneController.h"
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
-#include "../Event/EvtDataDragScene.h"
 #include "../Event/EvtDataActivateUnitAtPosition.h"
-#include "../Event/EvtDataMakeMovePath.h"
-#include "../Event/EvtDataFinishMakeMovePath.h"
 #include "../Event/EvtDataDeactivateActiveUnit.h"
+#include "../Event/EvtDataDragScene.h"
+#include "../Event/EvtDataFinishMakeMovePath.h"
+#include "../Event/EvtDataMakeMovePath.h"
 #include "../Script/WarSceneScript.h"
+#include "WarSceneController.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of WarSceneControllerImpl.
@@ -60,7 +60,12 @@ class WarSceneController::WarSceneControllerImpl::BaseState
 public:
 	virtual ~BaseState() = default;
 
-	virtual bool onTouchOneByOneBegan(cocos2d::Touch * touch, cocos2d::Event * event) = 0;
+	virtual bool onTouchOneByOneBegan(cocos2d::Touch * touch, cocos2d::Event * event)
+	{
+		m_ControllerImpl.lock()->m_TouchOneByOneBeganPosition = touch->getLocation();
+		return true;
+	}
+
 	virtual void onTouchOneByOneMoved(cocos2d::Touch * touch, cocos2d::Event * event) = 0;
 	virtual void onTouchOneByOneEnded(cocos2d::Touch * touch, cocos2d::Event * event) = 0;
 
@@ -76,12 +81,6 @@ public:
 	virtual ~StateIdle() = default;
 
 protected:
-	virtual bool onTouchOneByOneBegan(cocos2d::Touch * touch, cocos2d::Event * event) override
-	{
-		m_ControllerImpl.lock()->m_TouchOneByOneBeganPosition = touch->getLocation();
-		return true;
-	}
-
 	virtual void onTouchOneByOneMoved(cocos2d::Touch * touch, cocos2d::Event * event) override
 	{
 		//The player just starts dragging the scene, without doing any other things.
@@ -90,7 +89,6 @@ protected:
 		controllerImpl->saveCurrentStateToPrevious();
 		controllerImpl->setCurrentState<StateDraggingScene>();
 
-		//controllerImpl->getScriptImpl()->setPositionWithOffsetAndBoundary(touch->getLocation() - touch->getPreviousLocation());
 		controllerImpl->queueEventDragScene(touch->getLocation() - touch->getPreviousLocation());
 	}
 
@@ -100,9 +98,7 @@ protected:
 		//If he touches an unit, activate it and set the touch state to UnitActivated. Do nothing otherwise.
 		auto controllerImpl = m_ControllerImpl.lock();
 		auto script = controllerImpl->m_Script.lock();
-		//auto scriptImpl = controllerImpl->getScriptImpl();
-		//if (scriptImpl->m_ChildUnitMapScript.lock()->activateUnitAtIndex(scriptImpl->toGridIndex(controllerImpl->m_TouchOneByOneBeganPosition)))
-		//	controllerImpl->setCurrentState<TouchStateActivatedUnit>();
+
 		if (script->canActivateUnitAtPosition(controllerImpl->m_TouchOneByOneBeganPosition)){
 			controllerImpl->queueEventActivateUnitAtPosition(controllerImpl->m_TouchOneByOneBeganPosition);
 			controllerImpl->setCurrentState<StateActivatedUnit>();
@@ -116,17 +112,10 @@ public:
 	virtual ~StateDraggingScene() = default;
 
 protected:
-	virtual bool onTouchOneByOneBegan(cocos2d::Touch * touch, cocos2d::Event * event) override
-	{
-		m_ControllerImpl.lock()->m_TouchOneByOneBeganPosition = touch->getLocation();
-		return true;
-	}
-
 	virtual void onTouchOneByOneMoved(cocos2d::Touch * touch, cocos2d::Event * event) override
 	{
 		//The player continues dragging the scene, without doing any other things.
 		//Just set the position of the scene.
-		//m_Manager.lock()->getScriptImpl()->setPositionWithOffsetAndBoundary(touch->getLocation() - touch->getPreviousLocation());
 		m_ControllerImpl.lock()->queueEventDragScene(touch->getLocation() - touch->getPreviousLocation());
 	}
 
@@ -144,12 +133,6 @@ public:
 	virtual ~StateActivatedUnit() = default;
 
 protected:
-	virtual bool onTouchOneByOneBegan(cocos2d::Touch * touch, cocos2d::Event * event) override
-	{
-		m_ControllerImpl.lock()->m_TouchOneByOneBeganPosition = touch->getLocation();
-		return true;
-	}
-
 	virtual void onTouchOneByOneMoved(cocos2d::Touch * touch, cocos2d::Event * event) override
 	{
 		//The player drag something while an unit is activated. There are some possible meanings of the drag.
@@ -158,27 +141,20 @@ protected:
 		auto controllerImpl = m_ControllerImpl.lock();
 		auto script = controllerImpl->m_Script.lock();
 
-		//auto scriptImpl = controllerImpl->getScriptImpl();
-		//auto unitMapScript = scriptImpl->m_ChildUnitMapScript.lock();
-		//auto gridIndex = scriptImpl->toGridIndex(controllerImpl->m_TouchOneByOneBeganPosition);
-
-		//if (!unitMapScript->isUnitActiveAtIndex(gridIndex)){
 		if (script->isUnitActiveAtPosition(controllerImpl->m_TouchOneByOneBeganPosition)){
-			//1. The player doesn't touch any units, or the unit he touches is not the activated unit. It means that he's dragging the scene.
+			//1. The player is dragging the activated unit. It means that he's making a move path for the unit.
+			//Set the touch state to DrawingMovePath and show the path as player touch.
+			controllerImpl->setCurrentState<StateMakingMovePath>();
+
+			controllerImpl->queueEventMakeMovePath(touch->getLocation());
+		}
+		else{
+			//2. The player doesn't touch any units, or the unit he touches is not the activated unit. It means that he's dragging the scene.
 			//Just set the touch state to DraggingScene and set the position of the scene.
 			controllerImpl->saveCurrentStateToPrevious();
 			controllerImpl->setCurrentState<StateDraggingScene>();
 
-			//scriptImpl->setPositionWithOffsetAndBoundary(touch->getLocation() - touch->getPreviousLocation());
 			controllerImpl->queueEventDragScene(touch->getLocation() - touch->getPreviousLocation());
-		}
-		else{
-			//2. The player is dragging the activated unit. It means that he's making a move path for the unit.
-			//Set the touch state to DrawingMovePath and show the path as player touch.
-			controllerImpl->setCurrentState<StateMakingMovePath>();
-
-			//scriptImpl->makeMovePath(scriptImpl->toGridIndex(touch->getLocation()));
-			controllerImpl->queueEventMakeMovePath(touch->getLocation());
 		}
 	}
 
@@ -191,22 +167,14 @@ protected:
 		auto script = controllerImpl->m_Script.lock();
 		auto touchLocation = touch->getLocation();
 
-		//auto script = controllerImpl->getScriptImpl();
-		//auto unitMapScript = script->m_ChildUnitMapScript.lock();
-		//auto gridIndex = script->toGridIndex(touch->getLocation());
-
-		//if (unitMapScript->isUnitActiveAtIndex(gridIndex)){
 		if (script->isUnitActiveAtPosition(touchLocation)){
 			//The player touched the active unit. It means that he'll deactivate it.
 			controllerImpl->setCurrentState<StateIdle>();
-			//unitMapScript->deactivateActiveUnit();
 			controllerImpl->queueEventDeactivateActiveUnit();
 		}
 		else{
 			//The player touched an inactive unit or an empty grid.
 			//Activate the unit (if it exist) and set the touch state corresponding to the activate result.
-			//if (!unitMapScript->activateUnitAtIndex(gridIndex))
-			//controllerImpl->setCurrentState<TouchStateIdle>();
 			if (script->canActivateUnitAtPosition(touchLocation))
 				controllerImpl->queueEventActivateUnitAtPosition(touchLocation);
 			else{
@@ -223,44 +191,19 @@ public:
 	virtual ~StateMakingMovePath() = default;
 
 protected:
-	virtual bool onTouchOneByOneBegan(cocos2d::Touch * touch, cocos2d::Event * event) override
-	{
-		m_ControllerImpl.lock()->m_TouchOneByOneBeganPosition = touch->getLocation();
-		return true;
-	}
-
 	virtual void onTouchOneByOneMoved(cocos2d::Touch * touch, cocos2d::Event * event) override
 	{
 		//The player is continuing making move path for the active unit.
 		//Show the path as he touch.
-		//auto scriptImpl = m_Manager.lock()->getScriptImpl();
-		//scriptImpl->makeMovePath(scriptImpl->toGridIndex(touch->getLocation()));
 		m_ControllerImpl.lock()->queueEventMakeMovePath(touch->getLocation());
 	}
 
 	virtual void onTouchOneByOneEnded(cocos2d::Touch * touch, cocos2d::Event * event) override
 	{
 		//The player finishes making the move path.
-
 		auto controllerImpl = m_ControllerImpl.lock();
-
-		//auto script = controllerImpl->getScriptImpl();
-		//auto touchBeganGridIndex = script->toGridIndex(controllerImpl->m_TouchOneByOneBeganPosition);
-
-		//if (script->isMovePathValid()){
-		//	auto destination = script->toGridIndex(touch->getLocation());
-
-		//	script->m_ChildUnitMapScript.lock()->deactivateAndMoveUnit(touchBeganGridIndex, destination);
-
-		//	controllerImpl->setCurrentState<TouchStateIdle>();
-		//}
-		//else{
-		//	script->clearMovePath();
-		//	script->m_ChildUnitMapScript.lock()->deactivateActiveUnit();
-
-		//	controllerImpl->setCurrentState<TouchStateIdle>();
-		//}
 		controllerImpl->setCurrentState<StateIdle>();
+
 		controllerImpl->queueEventFinishMakeMovePath(touch->getLocation());
 	}
 };

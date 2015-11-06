@@ -1,7 +1,11 @@
 #ifndef __WAR_SCENE_CONTROLLER__
 #define __WAR_SCENE_CONTROLLER__
 
+#include <memory>
+
 #include "../../BabyEngine/Graphic2D/IController.h"
+
+class Actor;
 
 class WarSceneController : public IController
 {

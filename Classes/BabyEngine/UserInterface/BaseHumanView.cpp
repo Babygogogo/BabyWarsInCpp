@@ -8,6 +8,7 @@
 #include "../Actor/BaseRenderComponent.h"
 #include "../Event/IEventDispatcher.h"
 #include "../Event/EvtDataRequestDestroyActor.h"
+#include "../Graphic2D/IController.h"
 #include "../Utilities/SingletonContainer.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -25,6 +26,8 @@ struct BaseHumanView::BaseHumanViewImpl
 	std::weak_ptr<BaseHumanView> m_Self;
 	std::unordered_map<ActorID, std::weak_ptr<Actor>> m_Actors;
 	cocos2d::Node * m_Node{ cocos2d::Node::create() };
+
+	std::unique_ptr<IController> m_Controller;
 };
 
 BaseHumanView::BaseHumanViewImpl::BaseHumanViewImpl()
@@ -104,4 +107,9 @@ void BaseHumanView::removeActor(ActorID actorID)
 cocos2d::Node * BaseHumanView::getSceneNode() const
 {
 	return pimpl->m_Node;
+}
+
+void BaseHumanView::setController(std::unique_ptr<IController> controller)
+{
+	pimpl->m_Controller = std::move(controller);
 }

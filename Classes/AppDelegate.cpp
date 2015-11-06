@@ -7,6 +7,7 @@
 #include "BabyWars/GameLogic/BabyWarsGameLogic.h"
 #include "BabyWars/Resource/ResourceLoader.h"
 #include "BabyWars/UserInterface/BabyWarsHumanView.h"
+#include "BabyWars/Graphic2D/WarSceneController.h"
 
 USING_NS_CC;
 
@@ -48,7 +49,14 @@ void AppDelegate::AppDelegateImpl::initGame()
 	//Create a human view with an initial actor, and add the view to game logic.
 	auto humanView = std::make_shared<BabyWarsHumanView>();
 	humanView->init(humanView);
-	humanView->addActor(gameLogic->createActor(resourceLoader->getInitialScenePath().c_str()));
+
+	auto initialActor = gameLogic->createActor(resourceLoader->getInitialScenePath().c_str());
+	auto warSceneController = std::make_unique<WarSceneController>();
+	warSceneController->setTarget(initialActor);
+	warSceneController->setEnable(true);
+
+	humanView->addActor(initialActor);
+	humanView->setController(std::move(warSceneController));
 	gameLogic->addView(humanView);
 
 	//Schedule update self so that we can update components once per frame in update().
