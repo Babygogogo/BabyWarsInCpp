@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>MoveArea_01.png</key>
+            <key>MovingRangeGrid_01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{3,3},{32,32}}</string>
@@ -131,7 +131,7 @@
             <key>size</key>
             <string>{110,108}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:b4072c26511b3c5c97e676124c0ecbae:781c7a155bcbcb22bcfc7c16ebc6a665:f46617b9879efc77edf243fcb535d10c$</string>
+            <string>$TexturePacker:SmartUpdate:90c0f431ef485c177b06fb55d79c8ed5:781c7a155bcbcb22bcfc7c16ebc6a665:f46617b9879efc77edf243fcb535d10c$</string>
             <key>textureFileName</key>
             <string>Texture.png</string>
         </dict>

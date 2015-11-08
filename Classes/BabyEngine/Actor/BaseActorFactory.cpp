@@ -32,11 +32,8 @@ std::shared_ptr<ActorComponent> BaseActorFactory::ActorFactoryImpl::createCompon
 	auto componentType = componentElement->Value();
 	auto component = m_ComponentFactory.createShared(componentType);
 
-	//If can't create the component, log and return nullptr.
-	if (!component){
-		cocos2d::log("ActorFactoryImpl::createComponent couldn't find an ActorComponent named %s", componentType);
-		return nullptr;
-	}
+	//Assert if can't create the component.
+	assert(component && "BaseActorFactoryImpl::createComponent() can't find or create the ActorComponent as the xml indicated.");
 
 	//Try to initialize the component. If it fails, log and return nullptr.
 	if (!component->vInit(componentElement)){

@@ -1,7 +1,9 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
 <Actor Type="UnitMap" Resource="Actors\Actor_UnitMap.xml">
 	<Components>
-		<GeneralRenderComponent Type="Node"/>
+		<GeneralRenderComponent Type="Node">
+			<Position LocalZOrder="1"/>
+		</GeneralRenderComponent>
 		<UnitMapScript>
 			<RelatedActorsPath Unit="Actors\Actor_Unit.xml"/>
 		</UnitMapScript>

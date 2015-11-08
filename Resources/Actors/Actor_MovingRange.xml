@@ -1,0 +1,13 @@
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<Actor Type="MovingRange" Resource="Actors\Actor_MovingRange.xml">
+	<Components>
+		<GeneralRenderComponent Type="Node">
+			<Position LocalZOrder="0"/>
+		</GeneralRenderComponent>
+		<MovingRangeScript>
+			<RelatedActorsPath MovingRangeGrid="Actors\Actor_MovingRangeGrid.xml"/>
+		</MovingRangeScript>
+	</Components>
+	<ChildrenActors>
+	</ChildrenActors>
+</Actor>

@@ -44,7 +44,7 @@ cocos2d::Sprite * GeneralRenderComponent::GeneralRenderComponentImpl::createSpri
 	if (auto createWith = xmlElement->FirstChildElement("CreateWith")){
 		if (auto fileName = createWith->Attribute("FileName"))
 			return cocos2d::Sprite::create(fileName);
-		if (auto spriteFrameName = createWith->Attribute("SpriteFrameName"))
+		else if (auto spriteFrameName = createWith->Attribute("SpriteFrameName"))
 			return cocos2d::Sprite::createWithSpriteFrameName(spriteFrameName);
 	}
 
@@ -185,6 +185,11 @@ bool GeneralRenderComponent::vInit(tinyxml2::XMLElement *xmlElement)
 
 		auto localZOrder = positionElement->IntAttribute("LocalZOrder");
 		m_Node->setLocalZOrder(localZOrder);
+	}
+
+	if (auto otherSettingsElement = xmlElement->FirstChildElement("OtherSettings")){
+		auto opacity = otherSettingsElement->IntAttribute("Opacity_0-255");
+		m_Node->setOpacity(opacity);
 	}
 
 	return true;

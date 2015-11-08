@@ -15,6 +15,7 @@
 #include "../Event/EvtDataMakeMovePath.h"
 #include "../Resource/ResourceLoader.h"
 #include "MovePathScript.h"
+#include "MovingRangeScript.h"
 #include "TileMapScript.h"
 #include "UnitMapScript.h"
 #include "WarSceneScript.h"
@@ -48,26 +49,33 @@ struct WarSceneScript::WarSceneScriptImpl
 	static std::string s_TileMapActorPath;
 	static std::string s_UnitMapActorPath;
 	static std::string s_MovePathActorPath;
+	static std::string s_MovingRangeActorPath;
 
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
 	std::weak_ptr<TileMapScript> m_ChildTileMapScript;
 	std::weak_ptr<UnitMapScript> m_ChildUnitMapScript;
 	std::weak_ptr<MovePathScript> m_ChildMovePathScript;
+	std::weak_ptr<MovingRangeScript> m_ChildMovingRangeScript;
 };
 
 std::string WarSceneScript::WarSceneScriptImpl::s_TileMapActorPath;
 std::string WarSceneScript::WarSceneScriptImpl::s_UnitMapActorPath;
 std::string WarSceneScript::WarSceneScriptImpl::s_MovePathActorPath;
+std::string WarSceneScript::WarSceneScriptImpl::s_MovingRangeActorPath;
 
 void WarSceneScript::WarSceneScriptImpl::onActivateUnitAtPosition(const IEventData & e)
 {
 	const auto & activateUnitEvent = static_cast<const EvtDataActivateUnitAtPosition &>(e);
 	m_ChildUnitMapScript.lock()->activateUnitAtIndex(toGridIndex(activateUnitEvent.getPosition()));
+
+	//#TODO: Only for testing and should be modified.
+	m_ChildMovingRangeScript.lock()->showRange(GridIndex(10, 10));
 }
 
 void WarSceneScript::WarSceneScriptImpl::onDeactivateActiveUnit(const IEventData & e)
 {
 	m_ChildUnitMapScript.lock()->deactivateActiveUnit();
+	m_ChildMovingRangeScript.lock()->clearRange();
 }
 
 void WarSceneScript::WarSceneScriptImpl::onDragScene(const IEventData & e)
@@ -83,9 +91,11 @@ void WarSceneScript::WarSceneScriptImpl::onFinishMakeMovePath(const IEventData &
 		auto destination = toGridIndex(finishEvent.getPosition());
 
 		m_ChildUnitMapScript.lock()->deactivateAndMoveUnit(m_MovePathStartIndex, destination);
+		m_ChildMovingRangeScript.lock()->clearRange();
 	}
 	else{
 		m_ChildUnitMapScript.lock()->deactivateActiveUnit();
+		m_ChildMovingRangeScript.lock()->clearRange();
 	}
 
 	clearMovePath();
@@ -211,6 +221,7 @@ bool WarSceneScript::vInit(tinyxml2::XMLElement *xmlElement)
 	WarSceneScriptImpl::s_TileMapActorPath = relatedActorElement->Attribute("TileMap");
 	WarSceneScriptImpl::s_UnitMapActorPath = relatedActorElement->Attribute("UnitMap");
 	WarSceneScriptImpl::s_MovePathActorPath = relatedActorElement->Attribute("MovePath");
+	WarSceneScriptImpl::s_MovingRangeActorPath = relatedActorElement->Attribute("MovingRange");
 
 	isStaticInitialized = true;
 	return true;
@@ -234,6 +245,11 @@ void WarSceneScript::vPostInit()
 	auto unitMapActor = gameLogic->createActor(WarSceneScriptImpl::s_UnitMapActorPath.c_str());
 	pimpl->m_ChildUnitMapScript = unitMapActor->getComponent<UnitMapScript>();
 	ownerActor->addChild(*unitMapActor);
+
+	//Create and add the moving range.
+	auto movingRangeActor = gameLogic->createActor(WarSceneScriptImpl::s_MovingRangeActorPath.c_str());
+	pimpl->m_ChildMovingRangeScript = movingRangeActor->getComponent<MovingRangeScript>();
+	ownerActor->addChild(*movingRangeActor);
 
 	//Create and add the move path.
 	auto movePathActor = gameLogic->createActor(WarSceneScriptImpl::s_MovePathActorPath.c_str());
