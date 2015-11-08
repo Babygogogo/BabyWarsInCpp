@@ -4,6 +4,7 @@
 #include <memory>
 #include <chrono>
 #include <string>
+#include <unordered_map>
 
 #include "ActorID.h"
 
@@ -20,7 +21,6 @@ class BaseRenderComponent;
  *
  * \details
  *	Actors are organized in the form of trees. Methods like addChild(), removeFromParent() are provided for organizing actors.
- *	If a parent actor is destroyed, all of its children will be destroyed too.
  *	Roots of the trees of actors must be attached to human view to make the actors visible.
  *	Actor is a container of various components and/or scripts which implement most of the logics of the real game object.
  *	Actor should be created by GameLogic using std::shared_ptr and destroyed by dispatching EvtDataRequestDestroyActor.
@@ -73,13 +73,19 @@ public:
 	bool hasParent() const;
 	std::shared_ptr<Actor> getParent() const;
 	bool isAncestorOf(const Actor & child) const;
+	const std::unordered_map<ActorID, std::weak_ptr<Actor>> & getChildren() const;
 
 	//If the child has a render component, it will also be added to the parent's render component.
 	//If the child has a parent already, nothing happens.
 	void addChild(Actor & child);
 	//If the actor has a render component, it will also be removed from its parent's render component.
 	//If the actor has no parent, nothing happens.
+	//This function doesn't destroy parent nor self.
 	void removeFromParent();
+	//The render components of the children (if exist) will be removed from the one of this actor (if exist).
+	//If the actor has no child, nothing happens.
+	//This function doesn't destroy self nor children.
+	void removeAllChildren();
 
 	//Disable copy/move constructor and operator=.
 	Actor(const Actor&) = delete;

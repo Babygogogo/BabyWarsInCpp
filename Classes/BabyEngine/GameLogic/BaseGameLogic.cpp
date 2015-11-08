@@ -26,6 +26,8 @@ public:
 
 	void onRequestDestroyActor(const IEventData & e);
 
+	void destroyActors(const std::list<ActorID> actorIDs);
+
 	ProcessRunner m_ProcessRunner;
 
 	//Lock of the process of updating actor.
@@ -58,12 +60,31 @@ BaseGameLogic::BaseGameLogicImpl::~BaseGameLogicImpl()
 
 void BaseGameLogic::BaseGameLogicImpl::onRequestDestroyActor(const IEventData & e)
 {
-	auto actorID = (static_cast<const EvtDataRequestDestroyActor &>(e)).getActorID();
+	const auto & requestDestroyActorEvent = static_cast<const EvtDataRequestDestroyActor &>(e);
+
+	//Generate the actor id list that should be removed.
+	auto actorIDsToDestroy = std::list<ActorID>{requestDestroyActorEvent.getActorID()};
+	if (requestDestroyActorEvent.isAlsoDestroyChildren()){
+		for (const auto & id : actorIDsToDestroy){
+			auto actorIter = m_Actors.find(id);
+			if (actorIter == m_Actors.end())
+				continue;
+
+			for (const auto & child : actorIter->second->getChildren())
+				actorIDsToDestroy.emplace_back(child.first);
+		}
+	}
 
 	if (m_IsUpdatingActors)
-		m_CachedOperations.emplace_back([actorID, this](){m_Actors.erase(actorID); });
+		m_CachedOperations.emplace_back([actorIDsToDestroy, this](){destroyActors(actorIDsToDestroy); });
 	else
-		m_Actors.erase(actorID);
+		destroyActors(actorIDsToDestroy);
+}
+
+void BaseGameLogic::BaseGameLogicImpl::destroyActors(const std::list<ActorID> actorIDs)
+{
+	for (const auto & id : actorIDs)
+		m_Actors.erase(id);
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -11,3 +11,8 @@ ActorID EvtDataRequestDestroyActor::getActorID() const
 {
 	return m_ActorID;
 }
+
+bool EvtDataRequestDestroyActor::isAlsoDestroyChildren() const
+{
+	return m_IsAlsoDestroyChildren;
+}

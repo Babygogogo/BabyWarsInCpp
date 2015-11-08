@@ -1,15 +1,10 @@
 #include <cassert>
-#include <set>
-#include <unordered_map>
 
 #include "cocos2d.h"
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "Actor.h"
 #include "BaseRenderComponent.h"
-#include "../Event/EvtDataRequestDestroyActor.h"
-#include "../Event/IEventDispatcher.h"
-#include "../Utilities/SingletonContainer.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of Actor::ActorImpl.
@@ -25,7 +20,7 @@ public:
 	ActorID m_ID{ INVALID_ACTOR_ID };
 	std::weak_ptr<Actor> m_Parent;
 	std::weak_ptr<Actor> m_Self;
-	std::set<ActorID> m_ChildrenID;
+	std::unordered_map<ActorID, std::weak_ptr<Actor>> m_Children;
 	std::weak_ptr<BaseHumanView> m_HumanView;
 
 	std::string m_Type;
@@ -55,14 +50,7 @@ Actor::~Actor()
 	cocos2d::log("Actor %s destructing.", pimpl->m_Type.c_str());
 
 	removeFromParent();
-
-	auto & singletonContainer = SingletonContainer::getInstance();
-	if (!singletonContainer)
-		return;
-
-	auto eventDispatcher = singletonContainer->get<IEventDispatcher>();
-	for (auto childID : pimpl->m_ChildrenID)
-		eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(childID));
+	removeAllChildren();
 }
 
 ActorID Actor::getID() const
@@ -124,6 +112,11 @@ bool Actor::isAncestorOf(const Actor & child) const
 	return false;
 }
 
+const std::unordered_map<ActorID, std::weak_ptr<Actor>> & Actor::getChildren() const
+{
+	return pimpl->m_Children;
+}
+
 void Actor::addChild(Actor & child)
 {
 	//If the child is not valid or has parent already, simply return.
@@ -131,7 +124,7 @@ void Actor::addChild(Actor & child)
 		return;
 
 	child.pimpl->m_Parent = pimpl->m_Self;
-	pimpl->m_ChildrenID.emplace(child.getID());
+	pimpl->m_Children.emplace(child.getID(), child.pimpl->m_Self);
 
 	//Deal with child's render component if present
 	if (auto childRenderComponent = child.pimpl->m_RenderComponent)
@@ -144,12 +137,28 @@ void Actor::removeFromParent()
 		return;
 
 	//Remove this from the parent's children list.
-	pimpl->m_Parent.lock()->pimpl->m_ChildrenID.erase(pimpl->m_ID);
+	pimpl->m_Parent.lock()->pimpl->m_Children.erase(pimpl->m_ID);
 	pimpl->m_Parent.reset();
 
 	//Deal with child's render component if present.
 	if (pimpl->m_RenderComponent)
 		pimpl->m_RenderComponent->removeFromParent();
+}
+
+void Actor::removeAllChildren()
+{
+	for (const auto & idChildPair : pimpl->m_Children){
+		if (idChildPair.second.expired())
+			continue;
+
+		auto child = idChildPair.second.lock();
+		//Can't call child.removeFromParent() here because it modifies the pimpl->m_Children!
+		child->pimpl->m_Parent.reset();
+		if (auto childRenderComponent = child->getRenderComponent())
+			childRenderComponent->removeFromParent();
+	}
+
+	pimpl->m_Children.clear();
 }
 
 bool Actor::init(ActorID id, const std::shared_ptr<Actor> & selfPtr, tinyxml2::XMLElement *xmlElement)
