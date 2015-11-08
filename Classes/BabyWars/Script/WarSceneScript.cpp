@@ -66,10 +66,14 @@ std::string WarSceneScript::WarSceneScriptImpl::s_MovingRangeActorPath;
 void WarSceneScript::WarSceneScriptImpl::onActivateUnitAtPosition(const IEventData & e)
 {
 	const auto & activateUnitEvent = static_cast<const EvtDataActivateUnitAtPosition &>(e);
-	m_ChildUnitMapScript.lock()->activateUnitAtIndex(toGridIndex(activateUnitEvent.getPosition()));
+	auto gridIndex = toGridIndex(activateUnitEvent.getPosition());
 
-	//#TODO: Only for testing and should be modified.
-	m_ChildMovingRangeScript.lock()->showRange(GridIndex(10, 10));
+	auto unitMapScript = m_ChildUnitMapScript.lock();
+	unitMapScript->activateUnitAtIndex(gridIndex);
+
+	auto movingRangeScript = m_ChildMovingRangeScript.lock();
+	movingRangeScript->clearRange();
+	movingRangeScript->showRange(gridIndex, *m_ChildTileMapScript.lock(), *unitMapScript);
 }
 
 void WarSceneScript::WarSceneScriptImpl::onDeactivateActiveUnit(const IEventData & e)

@@ -1,5 +1,6 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
 <UnitData ID="1" Type="Infantry">
+	<Movement Range="3" Type="Infantry"/>
 	<Animation>
 		<Frame Name="Unit_Infantry_01.png" DelaySec="99999"/>
 	</Animation>

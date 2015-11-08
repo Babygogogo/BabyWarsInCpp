@@ -17,6 +17,9 @@ struct UnitData::UnitDataImpl
 	std::string m_Type;
 	cocos2d::Animation * m_Animation{ cocos2d::Animation::create() };
 	float m_DesignScaleFactor{};
+
+	int m_Movement{ 0 };
+	std::string m_MovementType;
 };
 
 UnitData::UnitDataImpl::UnitDataImpl()
@@ -53,6 +56,11 @@ void UnitData::initialize(const char * xmlPath)
 	pimpl->m_ID = rootElement->IntAttribute("ID");
 	pimpl->m_Type = rootElement->Attribute("Type");
 
+	//Load movement data.
+	auto movementElement = rootElement->FirstChildElement("Movement");
+	pimpl->m_Movement = movementElement->IntAttribute("Range");
+	pimpl->m_MovementType = movementElement->Attribute("Type");
+
 	//Load animation.
 	auto animationFrames = cocos2d::Vector<cocos2d::AnimationFrame*>();
 	const auto spriteFrameCache = cocos2d::SpriteFrameCache::getInstance();
@@ -80,6 +88,16 @@ UnitDataID UnitData::getID() const
 std::string UnitData::getType() const
 {
 	return pimpl->m_Type;
+}
+
+int UnitData::getMovement() const
+{
+	return pimpl->m_Movement;
+}
+
+const std::string & UnitData::getMovementType() const
+{
+	return pimpl->m_MovementType;
 }
 
 cocos2d::Animation * UnitData::getAnimation() const

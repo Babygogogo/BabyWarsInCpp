@@ -15,6 +15,9 @@ struct TileData::TileDataImpl
 
 	TileDataID m_ID{ 0 };
 	std::string m_Type;
+
+	std::unordered_map<std::string, int> m_MovingCost;
+
 	cocos2d::Animation * m_Animation{ cocos2d::Animation::create() };
 	float m_DesignScaleFactor{};
 };
@@ -53,6 +56,11 @@ void TileData::initialize(const char * xmlPath)
 	pimpl->m_ID = rootElement->IntAttribute("ID");
 	pimpl->m_Type = rootElement->Attribute("Type");
 
+	//Load the moving cost.
+	auto movingCostListElement = rootElement->FirstChildElement("MovingCostList");
+	for (auto movingCost = movingCostListElement->FirstChildElement("MovingCost"); movingCost; movingCost = movingCost->NextSiblingElement())
+		pimpl->m_MovingCost.emplace(movingCost->Attribute("MovementType"), movingCost->IntAttribute("Cost"));
+
 	//Load animation.
 	auto animationFrames = cocos2d::Vector<cocos2d::AnimationFrame*>();
 	const auto spriteFrameCache = cocos2d::SpriteFrameCache::getInstance();
@@ -80,6 +88,15 @@ TileDataID TileData::getID() const
 std::string TileData::getType() const
 {
 	return pimpl->m_Type;
+}
+
+int TileData::getMovingCost(const std::string & movementType) const
+{
+	auto costIter = pimpl->m_MovingCost.find(movementType);
+	if (costIter == pimpl->m_MovingCost.end())
+		return 0;
+
+	return costIter->second;
 }
 
 cocos2d::Animation * TileData::getAnimation() const

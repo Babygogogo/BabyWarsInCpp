@@ -3,7 +3,7 @@
 	<Components>
 		<GeneralRenderComponent Type="Sprite">
 			<CreateWith SpriteFrameName="MovingRangeGrid_01.png"/>
-			<OtherSettings Opacity_0-255="200"/>
+			<OtherSettings Opacity_0-255="180"/>
 		</GeneralRenderComponent>
 		<MovingRangeGridScript/>
 	</Components>

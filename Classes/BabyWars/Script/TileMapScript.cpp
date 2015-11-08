@@ -8,7 +8,7 @@
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
-#include "../Resource/TileDataID.h"
+#include "../Resource/TileData.h"
 #include "../Resource/ResourceLoader.h"
 #include "../../BabyEngine/Utilities/StringToVector.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
@@ -118,6 +118,14 @@ void TileMapScript::loadTileMap(const char * xmlPath)
 Matrix2DDimension TileMapScript::getMapDimension() const
 {
 	return pimpl->m_TileMap.getDimension();
+}
+
+int TileMapScript::getMovingCost(const std::string & movementType, const GridIndex & index) const
+{
+	if (!pimpl->m_TileMap.isIndexValid(index))
+		return 0;
+
+	return pimpl->m_TileMap[index].lock()->getTileData()->getMovingCost(movementType);
 }
 
 const std::string TileMapScript::Type = "TileMapScript";

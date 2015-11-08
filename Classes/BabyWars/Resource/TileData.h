@@ -22,6 +22,9 @@ public:
 
 	TileDataID getID() const;
 	std::string getType() const;
+
+	int getMovingCost(const std::string & movementType) const;
+
 	cocos2d::Animation * getAnimation() const;
 	float getDesignScaleFactor() const;
 

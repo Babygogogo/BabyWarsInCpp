@@ -1,5 +1,11 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
 <TileData ID="3" Type="Forest">
+	<MovingCostList>
+		<MovingCost MovementType="Infantry" Cost="1"/>
+		<MovingCost MovementType="Track" Cost="2"/>
+		<MovingCost MovementType="Flying" Cost="1"/>
+		<MovingCost MovementType="Sailing" Cost="0"/>
+	</MovingCostList>
 	<Animation>
 		<Frame Name="Tile_Forest_01.png" DelaySec="99999"/>
 	</Animation>

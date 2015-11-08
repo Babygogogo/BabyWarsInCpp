@@ -7,6 +7,7 @@
 namespace cocos2d{
 	class Size;
 }
+struct GridIndex;
 struct Matrix2DDimension;
 
 class TileMapScript : public BaseScriptComponent
@@ -23,6 +24,8 @@ public:
 	void loadTileMap(const char * xmlPath);
 
 	Matrix2DDimension getMapDimension() const;
+
+	int getMovingCost(const std::string & movementType, const GridIndex & index) const;
 
 	//Disable copy/move constructor and operator=.
 	TileMapScript(const TileMapScript &) = delete;

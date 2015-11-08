@@ -4,6 +4,8 @@
 #include "../../BabyEngine/Actor/BaseScriptComponent.h"
 
 struct GridIndex;
+class TileMapScript;
+class UnitMapScript;
 
 class MovingRangeScript : public BaseScriptComponent
 {
@@ -11,7 +13,7 @@ public:
 	MovingRangeScript();
 	~MovingRangeScript();
 
-	void showRange(const GridIndex & gridIndex);
+	void showRange(const GridIndex & gridIndex, const TileMapScript & tileMap, const UnitMapScript & unitMap);
 	void clearRange();
 
 	//Type name of the class. Used by the ActorFactory and can not be removed.

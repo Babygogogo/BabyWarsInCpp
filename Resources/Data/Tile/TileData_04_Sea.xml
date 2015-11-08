@@ -1,5 +1,11 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
 <TileData ID="4" Type="Sea">
+	<MovingCostList>
+		<MovingCost MovementType="Infantry" Cost="0"/>
+		<MovingCost MovementType="Track" Cost="0"/>
+		<MovingCost MovementType="Flying" Cost="1"/>
+		<MovingCost MovementType="Sailing" Cost="1"/>
+	</MovingCostList>
 	<Animation>
 		<Frame Name="Tile_Sea_01.png" DelaySec="99999"/>
 	</Animation>
