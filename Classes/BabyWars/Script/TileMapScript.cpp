@@ -120,6 +120,14 @@ Matrix2DDimension TileMapScript::getMapDimension() const
 	return pimpl->m_TileMap.getDimension();
 }
 
+bool TileMapScript::canPassThrough(const std::string & movementType, const GridIndex & index) const
+{
+	if (!pimpl->m_TileMap.isIndexValid(index))
+		return false;
+
+	return pimpl->m_TileMap[index].lock()->getTileData()->getMovingCost(movementType) > 0;
+}
+
 int TileMapScript::getMovingCost(const std::string & movementType, const GridIndex & index) const
 {
 	if (!pimpl->m_TileMap.isIndexValid(index))

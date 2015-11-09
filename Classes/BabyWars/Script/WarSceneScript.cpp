@@ -73,7 +73,7 @@ void WarSceneScript::WarSceneScriptImpl::onActivateUnitAtPosition(const IEventDa
 
 	auto movingRangeScript = m_ChildMovingRangeScript.lock();
 	movingRangeScript->clearArea();
-	movingRangeScript->showArea(gridIndex, *m_ChildTileMapScript.lock(), *unitMapScript);
+	movingRangeScript->showArea(*unitMapScript->getActiveUnit(), *m_ChildTileMapScript.lock(), *unitMapScript);
 }
 
 void WarSceneScript::WarSceneScriptImpl::onDeactivateActiveUnit(const IEventData & e)

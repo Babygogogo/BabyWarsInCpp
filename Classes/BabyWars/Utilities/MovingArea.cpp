@@ -1,13 +1,13 @@
 #include "MovingArea.h"
 #include "../../BabyEngine/Utilities/GridIndex.h"
 
-MovingArea::MovingInfo::MovingInfo(int remainingMovementRange, const GridIndex & previousGrid) : m_MaxRemainingMovementRange{ remainingMovementRange }, m_PreviousIndex{ previousGrid }
+MovingArea::MovingInfo::MovingInfo(int movingCost, int remainingMovementRange, bool canStay, const GridIndex & previousGrid) : m_MovingCost{ movingCost }, m_MaxRemainingMovementRange{ remainingMovementRange }, m_CanStay{ canStay }, m_PreviousIndex{ previousGrid }
 {
 }
 
-MovingArea::MovingArea(int remainingMovementRange, const GridIndex & index)
+MovingArea::MovingArea(int remainingMovementRange, const GridIndex & startingIndex)
 {
-	m_Map.emplace(index, MovingInfo(remainingMovementRange, index));
+	m_Map.emplace(startingIndex, MovingInfo(0, remainingMovementRange, true, startingIndex));
 }
 
 std::pair<MovingArea::MovingInfo, bool> MovingArea::getMovingInfo(const GridIndex & index) const

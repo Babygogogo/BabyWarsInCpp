@@ -26,7 +26,7 @@ struct MovingAreaScript::MovingRangeScriptImpl
 	MovingRangeScriptImpl() = default;
 	~MovingRangeScriptImpl() = default;
 
-	MovingArea calculateArea(const GridIndex & gridIndex, const TileMapScript & tileMap, const UnitMapScript & unitMap) const;
+	MovingArea calculateArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap) const;
 	void setChildrenGridActorWithIndexes(const MovingArea & movingArea, Actor & self);
 
 	MovingArea m_MovingArea;
@@ -34,34 +34,26 @@ struct MovingAreaScript::MovingRangeScriptImpl
 	std::unordered_set<ActorID> m_ChildrenGridActorIDs;
 };
 
-MovingArea MovingAreaScript::MovingRangeScriptImpl::calculateArea(const GridIndex & gridIndex, const TileMapScript & tileMap, const UnitMapScript & unitMap) const
+MovingArea MovingAreaScript::MovingRangeScriptImpl::calculateArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap) const
 {
-	auto unit = unitMap.getUnit(gridIndex);
-	if (!unit)
-		return{};
-
-	const auto & movementType = unit->getUnitData()->getMovementType();
-	auto movingArea = MovingArea(unit->getUnitData()->getMovementRange(), gridIndex);
-	auto visitedGridList = std::list<GridIndex>{gridIndex};
+	const auto originIndex = movingUnit.getGridIndex();
+	const auto & movementType = movingUnit.getUnitData()->getMovementType();
+	auto movingArea = MovingArea(movingUnit.getUnitData()->getMovementRange(), originIndex);
+	auto visitedGridList = std::list<GridIndex>{originIndex};
 
 	//Iterate through the visited list to see if the unit can move further. Uses BFS.
 	for (const auto & currentIndex : visitedGridList){
-		for (const auto & nextIndex : currentIndex.getNeighbors()){
-			//Get the moving cost. If the moving cost <= 0, which is invalid, continue.
-			auto movingCost = tileMap.getMovingCost(movementType, nextIndex);
-			if (movingCost <= 0)
+		for (auto && nextIndex : currentIndex.getNeighbors()){
+			if (!tileMap.canPassThrough(movementType, nextIndex) || !unitMap.canPassThrough(movingUnit, nextIndex))
 				continue;
 
-			auto movingInfo = MovingArea::MovingInfo();
-			movingInfo.m_MaxRemainingMovementRange = movingArea.getMovingInfo(currentIndex).first.m_MaxRemainingMovementRange - movingCost;
-			movingInfo.m_PreviousIndex = currentIndex;
-			//TODO: Check if the unit can pass through and/or stay on the grid.
-			movingInfo.m_CanPassThrough = true;
-			movingInfo.m_CanStay = true;
+			auto currentlyRemainingMovementRange = movingArea.getMovingInfo(currentIndex).first.m_MaxRemainingMovementRange;
+			auto movingCost = tileMap.getMovingCost(movementType, nextIndex);
+			auto movingInfo = MovingArea::MovingInfo(movingCost, currentlyRemainingMovementRange - movingCost, unitMap.canUnitStayAtIndex(movingUnit, nextIndex), currentIndex);
 
 			//Add the nextIndex into the visited list if we can update the area using the index.
 			if (movingArea.tryUpdateIndex(nextIndex, std::move(movingInfo)))
-				visitedGridList.emplace_back(nextIndex);
+				visitedGridList.emplace_back(std::move(nextIndex));
 		}
 	}
 
@@ -94,9 +86,9 @@ MovingAreaScript::~MovingAreaScript()
 {
 }
 
-void MovingAreaScript::showArea(const GridIndex & gridIndex, const TileMapScript & tileMap, const UnitMapScript & unitMap)
+void MovingAreaScript::showArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap)
 {
-	pimpl->m_MovingArea = pimpl->calculateArea(gridIndex, tileMap, unitMap);
+	pimpl->m_MovingArea = pimpl->calculateArea(movingUnit, tileMap, unitMap);
 
 	pimpl->setChildrenGridActorWithIndexes(pimpl->m_MovingArea, *m_OwnerActor.lock());
 }

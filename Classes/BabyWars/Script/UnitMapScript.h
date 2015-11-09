@@ -35,6 +35,10 @@ public:
 	bool isUnitActiveAtIndex(const GridIndex & gridIndex) const;
 	bool canActivateUnitAtIndex(const GridIndex & gridIndex) const;
 
+	//Check if a moving unit can pass through or stay at a grid. Only considers the other units on the map, IGNORING the tile map.
+	bool canPassThrough(const UnitScript & unitScript, const GridIndex & gridIndex) const;
+	bool canUnitStayAtIndex(const UnitScript & unitScript, const GridIndex & gridIndex) const;
+
 	//This function deactivates the currently active unit, even if there is no unit at the grid index.
 	//Return value indicates that if the unit at the index is successfully activated (if there's no unit, false is returned).
 	bool activateUnitAtIndex(const GridIndex & gridIndex);

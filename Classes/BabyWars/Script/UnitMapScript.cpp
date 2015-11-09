@@ -171,6 +171,36 @@ bool UnitMapScript::canActivateUnitAtIndex(const GridIndex & gridIndex) const
 	return unitAtIndex->canActivate();
 }
 
+bool UnitMapScript::canPassThrough(const UnitScript & unitScript, const GridIndex & gridIndex) const
+{
+	if (!pimpl->m_UnitMap.isIndexValid(gridIndex))
+		return false;
+
+	if (unitScript.getGridIndex() == gridIndex)
+		return true;
+
+	auto unitAtIndex = getUnit(gridIndex);
+	if (!unitAtIndex)
+		return true;
+
+	return unitScript.canPassThrough(*unitAtIndex);
+}
+
+bool UnitMapScript::canUnitStayAtIndex(const UnitScript & unitScript, const GridIndex & gridIndex) const
+{
+	if (!pimpl->m_UnitMap.isIndexValid(gridIndex))
+		return false;
+
+	if (unitScript.getGridIndex() == gridIndex)
+		return true;
+
+	auto unitAtIndex = getUnit(gridIndex);
+	if (!unitAtIndex)
+		return true;
+
+	return unitScript.canStayTogether(*unitAtIndex);
+}
+
 bool UnitMapScript::activateUnitAtIndex(const GridIndex & gridIndex)
 {
 	//Check if there is an currently active unit.

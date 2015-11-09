@@ -12,18 +12,18 @@ public:
 	struct MovingInfo
 	{
 		MovingInfo() = default;
-		MovingInfo(int remainingMovementRange, const GridIndex & previousIndex);
+		MovingInfo(int movingCost, int remainingMovementRange, bool canStay, const GridIndex & previousIndex);
 
-		bool m_CanPassThrough{ false };
-		bool m_CanStay{ false };
-		int m_MaxRemainingMovementRange{ -1 };
 		GridIndex m_PreviousIndex;
+		int m_MovingCost{ 0 };
+		int m_MaxRemainingMovementRange{ -1 };
+		bool m_CanStay{ false };
 	};
 
 	MovingArea() = default;
 	~MovingArea() = default;
 
-	MovingArea(int remainingMovementRange, const GridIndex & index);
+	MovingArea(int remainingMovementRange, const GridIndex & startingIndex);
 
 	//Get MovingInfo within the area. The bool in the returned value indicates if the MovingInfo is valid.
 	std::pair<MovingInfo, bool> getMovingInfo(const GridIndex & index) const;

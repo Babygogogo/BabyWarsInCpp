@@ -6,6 +6,7 @@
 struct GridIndex;
 class TileMapScript;
 class UnitMapScript;
+class UnitScript;
 class MovingArea;
 
 class MovingAreaScript : public BaseScriptComponent
@@ -14,7 +15,7 @@ public:
 	MovingAreaScript();
 	~MovingAreaScript();
 
-	void showArea(const GridIndex & gridIndex, const TileMapScript & tileMap, const UnitMapScript & unitMap);
+	void showArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap);
 	void clearArea();
 	const MovingArea & getUnderlyingArea() const;
 

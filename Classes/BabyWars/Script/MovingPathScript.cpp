@@ -10,11 +10,10 @@
 //////////////////////////////////////////////////////////////////////////
 struct MovingPathScript::MovePathScriptImpl
 {
-	MovePathScriptImpl(){};
-	~MovePathScriptImpl(){};
+	MovePathScriptImpl() = default;
+	~MovePathScriptImpl() = default;
 
 	GridIndexPath m_MovePath;
-	std::weak_ptr<UnitScript> m_MovingUnit;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -28,21 +27,12 @@ MovingPathScript::~MovingPathScript()
 {
 }
 
-void MovingPathScript::showPath(const GridIndex & destination, std::shared_ptr<UnitScript> movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap)
+void MovingPathScript::showPath(const GridIndex & destination, const MovingArea & area)
 {
-	//Check if the moving unit is changed. If so, reset the path.
-	//if (pimpl->m_MovingUnit.expired() || pimpl->m_MovingUnit.lock() != movingUnit){
-	//	pimpl->m_MovePath.clear();
-	//	pimpl->m_MovePath.pushBack(movingUnit->getGridIndex());
+}
 
-	//	pimpl->m_MovingUnit = movingUnit;
-	//}
-
-	//Check if the destination is in the path already. If so, just cut the path according to the destination.
-	//if (pimpl->m_MovePath.findAndCut(destination))
-	//	return;
-
-	//#TODO: Extend the path from its origin end to the destination.
+void MovingPathScript::clearPath()
+{
 }
 
 bool MovingPathScript::vInit(tinyxml2::XMLElement *xmlElement)

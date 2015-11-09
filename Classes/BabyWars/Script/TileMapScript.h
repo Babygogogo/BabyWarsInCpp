@@ -25,6 +25,7 @@ public:
 
 	Matrix2DDimension getMapDimension() const;
 
+	bool canPassThrough(const std::string & movementType, const GridIndex & index) const;
 	int getMovingCost(const std::string & movementType, const GridIndex & index) const;
 
 	//Disable copy/move constructor and operator=.

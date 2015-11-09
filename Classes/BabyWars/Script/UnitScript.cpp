@@ -109,6 +109,18 @@ void UnitScript::setActive(bool active)
 	underlyingNode->runAction(cocos2d::RepeatForever::create(sequence));
 }
 
+bool UnitScript::canPassThrough(const UnitScript & otherUnit) const
+{
+	//#TODO: Add more conditions here. Check if the units are allied for example.
+	return true;
+}
+
+bool UnitScript::canStayTogether(const UnitScript & otherUnit) const
+{
+	//#TODO: Add more conditions here. Check if the units belong to the same player and are the same type for example.
+	return false;
+}
+
 void UnitScript::moveTo(const GridIndex & gridIndex)
 {
 	pimpl->m_GridIndex = gridIndex;

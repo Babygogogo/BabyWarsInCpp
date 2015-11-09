@@ -28,6 +28,9 @@ public:
 	bool canActivate() const;
 	void setActive(bool active);
 
+	bool canPassThrough(const UnitScript & otherUnit) const;
+	bool canStayTogether(const UnitScript & otherUnit) const;
+
 	void moveTo(const GridIndex & gridIndex);
 
 	//Disable copy/move constructor and operator=.
