@@ -1,8 +1,8 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
-<Actor Type="MovePath" Resource="Actors\Actor_MovePath.xml">
+<Actor Type="MovePath" Resource="Actors\Actor_MovingPath.xml">
 	<Components>
-		<GeneralRenderComponent Type="Sprite"/>
-		<MovePathScript/>
+		<GeneralRenderComponent Type="Node"/>
+		<MovingPathScript/>
 	</Components>
 	<ChildrenActors>
 	</ChildrenActors>

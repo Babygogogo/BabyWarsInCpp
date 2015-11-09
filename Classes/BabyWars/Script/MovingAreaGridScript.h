@@ -5,11 +5,11 @@
 
 struct GridIndex;
 
-class MovingRangeGridScript : public BaseScriptComponent
+class MovingAreaGridScript : public BaseScriptComponent
 {
 public:
-	MovingRangeGridScript();
-	~MovingRangeGridScript();
+	MovingAreaGridScript();
+	~MovingAreaGridScript();
 
 	void setGridIndexAndPosition(const GridIndex & index);
 	void setVisible(bool visible);
@@ -19,10 +19,10 @@ public:
 	virtual const std::string & getType() const override;
 
 	//Disable copy/move constructor and operator=.
-	MovingRangeGridScript(const MovingRangeGridScript &) = delete;
-	MovingRangeGridScript(MovingRangeGridScript &&) = delete;
-	MovingRangeGridScript & operator=(const MovingRangeGridScript &) = delete;
-	MovingRangeGridScript & operator=(MovingRangeGridScript &&) = delete;
+	MovingAreaGridScript(const MovingAreaGridScript &) = delete;
+	MovingAreaGridScript(MovingAreaGridScript &&) = delete;
+	MovingAreaGridScript & operator=(const MovingAreaGridScript &) = delete;
+	MovingAreaGridScript & operator=(MovingAreaGridScript &&) = delete;
 
 private:
 	//Override functions.

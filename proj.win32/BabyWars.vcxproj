@@ -173,9 +173,9 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyWars\Resource\ResourceLoader.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\TileData.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\UnitData.cpp" />
-    <ClCompile Include="..\Classes\BabyWars\Script\MovePathScript.cpp" />
-    <ClCompile Include="..\Classes\BabyWars\Script\MovingRangeGridScript.cpp" />
-    <ClCompile Include="..\Classes\BabyWars\Script\MovingRangeScript.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Script\MovingPathScript.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Script\MovingAreaGridScript.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Script\MovingAreaScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\TileMapScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\TileScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\UnitMapScript.cpp" />
@@ -231,15 +231,16 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyWars\Resource\TileDataID.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitData.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitDataID.h" />
-    <ClInclude Include="..\Classes\BabyWars\Script\MovePathScript.h" />
-    <ClInclude Include="..\Classes\BabyWars\Script\MovingRangeGridScript.h" />
-    <ClInclude Include="..\Classes\BabyWars\Script\MovingRangeScript.h" />
+    <ClInclude Include="..\Classes\BabyWars\Script\MovingPathScript.h" />
+    <ClInclude Include="..\Classes\BabyWars\Script\MovingAreaGridScript.h" />
+    <ClInclude Include="..\Classes\BabyWars\Script\MovingAreaScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\TileMapScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\TileScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\UnitMapScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\UnitScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\WarSceneScript.h" />
     <ClInclude Include="..\Classes\BabyWars\UserInterface\BabyWarsHumanView.h" />
+    <ClInclude Include="..\Classes\BabyWars\Utilities\MovingArea.h" />
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>

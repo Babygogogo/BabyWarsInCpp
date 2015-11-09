@@ -14,8 +14,8 @@
 #include "../Event/EvtDataFinishMakeMovePath.h"
 #include "../Event/EvtDataMakeMovePath.h"
 #include "../Resource/ResourceLoader.h"
-#include "MovePathScript.h"
-#include "MovingRangeScript.h"
+#include "MovingPathScript.h"
+#include "MovingAreaScript.h"
 #include "TileMapScript.h"
 #include "UnitMapScript.h"
 #include "WarSceneScript.h"
@@ -54,8 +54,8 @@ struct WarSceneScript::WarSceneScriptImpl
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
 	std::weak_ptr<TileMapScript> m_ChildTileMapScript;
 	std::weak_ptr<UnitMapScript> m_ChildUnitMapScript;
-	std::weak_ptr<MovePathScript> m_ChildMovePathScript;
-	std::weak_ptr<MovingRangeScript> m_ChildMovingRangeScript;
+	std::weak_ptr<MovingPathScript> m_ChildMovingPathScript;
+	std::weak_ptr<MovingAreaScript> m_ChildMovingRangeScript;
 };
 
 std::string WarSceneScript::WarSceneScriptImpl::s_TileMapActorPath;
@@ -107,8 +107,13 @@ void WarSceneScript::WarSceneScriptImpl::onFinishMakeMovePath(const IEventData &
 
 void WarSceneScript::WarSceneScriptImpl::onMakeMovePath(const IEventData & e)
 {
+	auto unitMapScript = m_ChildUnitMapScript.lock();
+	auto activeUnit = unitMapScript->getActiveUnit();
+	assert(activeUnit && "WarSceneScriptImpl::onMakeMovePath() there's no active unit.");
+
 	const auto & makePathEvent = static_cast<const EvtDataMakeMovePath &>(e);
 	makeMovePath(toGridIndex(makePathEvent.getPosition()));
+	//m_ChildMovingPathScript.lock()->showPath(toGridIndex(makePathEvent.getPosition()), activeUnit, *m_ChildTileMapScript.lock(), *unitMapScript);
 }
 
 cocos2d::Size WarSceneScript::WarSceneScriptImpl::getMapSize() const
@@ -252,12 +257,12 @@ void WarSceneScript::vPostInit()
 
 	//Create and add the moving range.
 	auto movingRangeActor = gameLogic->createActor(WarSceneScriptImpl::s_MovingRangeActorPath.c_str());
-	pimpl->m_ChildMovingRangeScript = movingRangeActor->getComponent<MovingRangeScript>();
+	pimpl->m_ChildMovingRangeScript = movingRangeActor->getComponent<MovingAreaScript>();
 	ownerActor->addChild(*movingRangeActor);
 
 	//Create and add the move path.
 	auto movePathActor = gameLogic->createActor(WarSceneScriptImpl::s_MovePathActorPath.c_str());
-	pimpl->m_ChildMovePathScript = movePathActor->getComponent<MovePathScript>();
+	pimpl->m_ChildMovingPathScript = movePathActor->getComponent<MovingPathScript>();
 	ownerActor->addChild(*movePathActor);
 
 	//#TODO: create and add, commander, weather and so on...

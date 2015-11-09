@@ -1,5 +1,5 @@
-#ifndef __MOVE_PATH_SCRIPT__
-#define __MOVE_PATH_SCRIPT__
+#ifndef __MOVING_PATH_SCRIPT__
+#define __MOVING_PATH_SCRIPT__
 
 #include "../../BabyEngine/Actor/BaseScriptComponent.h"
 
@@ -8,23 +8,23 @@ class UnitScript;
 class UnitMapScript;
 class TileMapScript;
 
-class MovePathScript : public BaseScriptComponent
+class MovingPathScript : public BaseScriptComponent
 {
 public:
-	MovePathScript();
-	~MovePathScript();
+	MovingPathScript();
+	~MovingPathScript();
 
 	//Type name of the class. Used by the ActorFactory and can not be removed.
 	static const std::string Type;
 	virtual const std::string & getType() const override;
 
-	void updatePath(const GridIndex & destination, std::shared_ptr<UnitScript> movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap);
+	void showPath(const GridIndex & destination, std::shared_ptr<UnitScript> movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap);
 
 	//Disable copy/move constructor and operator=.
-	MovePathScript(const MovePathScript &) = delete;
-	MovePathScript(MovePathScript &&) = delete;
-	MovePathScript & operator=(const MovePathScript &) = delete;
-	MovePathScript & operator=(MovePathScript &&) = delete;
+	MovingPathScript(const MovingPathScript &) = delete;
+	MovingPathScript(MovingPathScript &&) = delete;
+	MovingPathScript & operator=(const MovingPathScript &) = delete;
+	MovingPathScript & operator=(MovingPathScript &&) = delete;
 
 private:
 	//Override functions.
@@ -36,4 +36,4 @@ private:
 	std::unique_ptr<MovePathScriptImpl> pimpl;
 };
 
-#endif // !__MOVE_PATH_SCRIPT__
+#endif // !__MOVING_PATH_SCRIPT__

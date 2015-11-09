@@ -58,6 +58,9 @@
     <Filter Include="src\BabyWars\Event">
       <UniqueIdentifier>{bf174404-3ec6-4387-85c2-0c2378cffa49}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\BabyWars\Utilities">
+      <UniqueIdentifier>{0eb5e7b7-a957-4bb1-a894-69a75149623c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -113,9 +116,6 @@
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Resource\UnitData.cpp">
       <Filter>src\BabyWars\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\MovePathScript.cpp">
-      <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Script\TileMapScript.cpp">
       <Filter>src\BabyWars\Script</Filter>
@@ -174,10 +174,13 @@
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataFinishMakeMove.cpp">
       <Filter>src\BabyWars\Event</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\MovingRangeScript.cpp">
+    <ClCompile Include="..\Classes\BabyWars\Script\MovingPathScript.cpp">
       <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\MovingRangeGridScript.cpp">
+    <ClCompile Include="..\Classes\BabyWars\Script\MovingAreaGridScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\MovingAreaScript.cpp">
       <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
   </ItemGroup>
@@ -281,9 +284,6 @@
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitDataID.h">
       <Filter>src\BabyWars\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\MovePathScript.h">
-      <Filter>src\BabyWars\Script</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Script\TileMapScript.h">
       <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
@@ -344,10 +344,16 @@
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataFinishMakeMovePath.h">
       <Filter>src\BabyWars\Event</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\MovingRangeScript.h">
+    <ClInclude Include="..\Classes\BabyWars\Script\MovingPathScript.h">
       <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\MovingRangeGridScript.h">
+    <ClInclude Include="..\Classes\BabyWars\Utilities\MovingArea.h">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\MovingAreaGridScript.h">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\MovingAreaScript.h">
       <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
   </ItemGroup>

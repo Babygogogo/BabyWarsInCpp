@@ -4,8 +4,8 @@
 
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
-#include "MovingRangeScript.h"
-#include "MovingRangeGridScript.h"
+#include "MovingAreaScript.h"
+#include "MovingAreaGridScript.h"
 #include "UnitMapScript.h"
 #include "UnitScript.h"
 #include "TileMapScript.h"
@@ -20,10 +20,10 @@
 //////////////////////////////////////////////////////////////////////////
 //Definition of MovingRangeScriptImpl.
 //////////////////////////////////////////////////////////////////////////
-struct MovingRangeScript::MovingRangeScriptImpl
+struct MovingAreaScript::MovingRangeScriptImpl
 {
-	MovingRangeScriptImpl(){};
-	~MovingRangeScriptImpl(){};
+	MovingRangeScriptImpl() = default;
+	~MovingRangeScriptImpl() = default;
 
 	std::list<GridIndex> calculateRange(const GridIndex & gridIndex, const TileMapScript & tileMap, const UnitMapScript & unitMap);
 	void setChildrenGridActorWithIndexes(const std::list<GridIndex> & indexes, Actor & self);
@@ -32,7 +32,7 @@ struct MovingRangeScript::MovingRangeScriptImpl
 	std::unordered_set<ActorID> m_ChildrenGridActorIDs;
 };
 
-std::list<GridIndex> MovingRangeScript::MovingRangeScriptImpl::calculateRange(const GridIndex & gridIndex, const TileMapScript & tileMap, const UnitMapScript & unitMap)
+std::list<GridIndex> MovingAreaScript::MovingRangeScriptImpl::calculateRange(const GridIndex & gridIndex, const TileMapScript & tileMap, const UnitMapScript & unitMap)
 {
 	auto unit = unitMap.getUnit(gridIndex);
 	if (!unit)
@@ -45,10 +45,8 @@ std::list<GridIndex> MovingRangeScript::MovingRangeScriptImpl::calculateRange(co
 	//Iterate through the visited list to see if the unit can move further.
 	for (const auto & visitedIndex : visitedGridList){
 		for (const auto & neighbor : visitedIndex.getNeighbors()){
-			//Check if there is a unit in the neighbor grid. If yes, continue (this means that the unit can pass through a grid with unit).
-			//TODO: If the neighbor unit belongs to the player, it's valid to pass through it and/or unite with it.
-			if (unitMap.getUnit(neighbor))
-				continue;
+			//By now, don't check if there is a unit in the neighbor grid (this means that the unit can pass through a grid with unit).
+			//TODO: Check if there is a unit and if it's valid to pass through it.
 
 			//Get the moving cost. If the moving cost <= 0, which is invalid, continue.
 			auto movingCost = tileMap.getMovingCost(movementType, neighbor);
@@ -81,13 +79,13 @@ std::list<GridIndex> MovingRangeScript::MovingRangeScriptImpl::calculateRange(co
 	return visitedGridList;
 }
 
-void MovingRangeScript::MovingRangeScriptImpl::setChildrenGridActorWithIndexes(const std::list<GridIndex> & indexes, Actor & self)
+void MovingAreaScript::MovingRangeScriptImpl::setChildrenGridActorWithIndexes(const std::list<GridIndex> & indexes, Actor & self)
 {
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
 
 	for (const auto & index : indexes){
 		auto gridActor = gameLogic->createActor(m_MovingRangeGridActorPath.c_str());
-		auto gridScript = gridActor->getComponent<MovingRangeGridScript>();
+		auto gridScript = gridActor->getComponent<MovingAreaGridScript>();
 		gridScript->setGridIndexAndPosition(index);
 		gridScript->setVisible(true);
 
@@ -99,20 +97,20 @@ void MovingRangeScript::MovingRangeScriptImpl::setChildrenGridActorWithIndexes(c
 //////////////////////////////////////////////////////////////////////////
 //Implementation of WorldScript.
 //////////////////////////////////////////////////////////////////////////
-MovingRangeScript::MovingRangeScript() : pimpl{ std::make_unique<MovingRangeScriptImpl>() }
+MovingAreaScript::MovingAreaScript() : pimpl{ std::make_unique<MovingRangeScriptImpl>() }
 {
 }
 
-MovingRangeScript::~MovingRangeScript()
+MovingAreaScript::~MovingAreaScript()
 {
 }
 
-void MovingRangeScript::showRange(const GridIndex & gridIndex, const TileMapScript & tileMap, const UnitMapScript & unitMap)
+void MovingAreaScript::showRange(const GridIndex & gridIndex, const TileMapScript & tileMap, const UnitMapScript & unitMap)
 {
 	pimpl->setChildrenGridActorWithIndexes(pimpl->calculateRange(gridIndex, tileMap, unitMap), *m_OwnerActor.lock());
 }
 
-void MovingRangeScript::clearRange()
+void MovingAreaScript::clearRange()
 {
 	m_OwnerActor.lock()->removeAllChildren();
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
@@ -121,7 +119,7 @@ void MovingRangeScript::clearRange()
 	pimpl->m_ChildrenGridActorIDs.clear();
 }
 
-bool MovingRangeScript::vInit(tinyxml2::XMLElement * xmlElement)
+bool MovingAreaScript::vInit(tinyxml2::XMLElement * xmlElement)
 {
 	auto relatedActorsPath = xmlElement->FirstChildElement("RelatedActorsPath");
 	pimpl->m_MovingRangeGridActorPath = relatedActorsPath->Attribute("MovingRangeGrid");
@@ -129,13 +127,13 @@ bool MovingRangeScript::vInit(tinyxml2::XMLElement * xmlElement)
 	return true;
 }
 
-void MovingRangeScript::vPostInit()
+void MovingAreaScript::vPostInit()
 {
 }
 
-const std::string MovingRangeScript::Type = "MovingRangeScript";
+const std::string MovingAreaScript::Type = "MovingAreaScript";
 
-const std::string & MovingRangeScript::getType() const
+const std::string & MovingAreaScript::getType() const
 {
 	return Type;
 }

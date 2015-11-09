@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>MovingRangeGrid_01.png</key>
+            <key>MovingAreaGrid_01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{3,3},{32,32}}</string>
@@ -17,20 +17,7 @@
                 <key>sourceSize</key>
                 <string>{32,32}</string>
             </dict>
-            <key>Tile_Forest_01.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{3,39},{32,32}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{32,32}}</string>
-                <key>sourceSize</key>
-                <string>{32,32}</string>
-            </dict>
-            <key>Tile_Plain_01.png</key>
+            <key>MovingPathArrow_01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{39,3},{32,32}}</string>
@@ -43,7 +30,7 @@
                 <key>sourceSize</key>
                 <string>{32,32}</string>
             </dict>
-            <key>Tile_Road_01.png</key>
+            <key>MovingPathCorner_01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{75,3},{32,32}}</string>
@@ -56,10 +43,62 @@
                 <key>sourceSize</key>
                 <string>{32,32}</string>
             </dict>
+            <key>MovingPathLine_01.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{111,3},{32,32}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{32,32}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
+            <key>Tile_Forest_01.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{147,3},{32,32}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{32,32}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
+            <key>Tile_Plain_01.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{183,3},{32,32}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{32,32}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
+            <key>Tile_Road_01.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{219,3},{32,32}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{32,32}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
             <key>Tile_Sea_01.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{39,39},{32,32}}</string>
+                <string>{{255,3},{32,32}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -72,7 +111,7 @@
             <key>Unit_Battleship_01.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{75,39},{32,32}}</string>
+                <string>{{291,3},{32,32}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -85,11 +124,11 @@
             <key>Unit_Bomber_01.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{3,75},{32,30}}</string>
+                <string>{{361,3},{32,30}}</string>
                 <key>offset</key>
                 <string>{0,1}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{32,30}}</string>
                 <key>sourceSize</key>
@@ -98,11 +137,11 @@
             <key>Unit_Infantry_01.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{39,75},{30,32}}</string>
+                <string>{{327,3},{30,32}}</string>
                 <key>offset</key>
                 <string>{-1,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{30,32}}</string>
                 <key>sourceSize</key>
@@ -111,7 +150,7 @@
             <key>Unit_Tank_01.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{75,75},{24,24}}</string>
+                <string>{{395,3},{24,24}}</string>
                 <key>offset</key>
                 <string>{0,-3}</string>
                 <key>rotated</key>
@@ -129,9 +168,9 @@
             <key>realTextureFileName</key>
             <string>Texture.png</string>
             <key>size</key>
-            <string>{110,108}</string>
+            <string>{422,38}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:90c0f431ef485c177b06fb55d79c8ed5:781c7a155bcbcb22bcfc7c16ebc6a665:f46617b9879efc77edf243fcb535d10c$</string>
+            <string>$TexturePacker:SmartUpdate:5426526d5c0078c37ad906341ae70668:7a0a2eef0a6d63f00b391ac27edef431:f46617b9879efc77edf243fcb535d10c$</string>
             <key>textureFileName</key>
             <string>Texture.png</string>
         </dict>

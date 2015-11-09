@@ -1,5 +1,5 @@
-#ifndef __MOVING_RANGE_SCRIPT__
-#define __MOVING_RANGE_SCRIPT__
+#ifndef __MOVING_AREA_SCRIPT__
+#define __MOVING_AREA_SCRIPT__
 
 #include "../../BabyEngine/Actor/BaseScriptComponent.h"
 
@@ -7,11 +7,11 @@ struct GridIndex;
 class TileMapScript;
 class UnitMapScript;
 
-class MovingRangeScript : public BaseScriptComponent
+class MovingAreaScript : public BaseScriptComponent
 {
 public:
-	MovingRangeScript();
-	~MovingRangeScript();
+	MovingAreaScript();
+	~MovingAreaScript();
 
 	void showRange(const GridIndex & gridIndex, const TileMapScript & tileMap, const UnitMapScript & unitMap);
 	void clearRange();
@@ -21,10 +21,10 @@ public:
 	virtual const std::string & getType() const override;
 
 	//Disable copy/move constructor and operator=.
-	MovingRangeScript(const MovingRangeScript &) = delete;
-	MovingRangeScript(MovingRangeScript &&) = delete;
-	MovingRangeScript & operator=(const MovingRangeScript &) = delete;
-	MovingRangeScript & operator=(MovingRangeScript &&) = delete;
+	MovingAreaScript(const MovingAreaScript &) = delete;
+	MovingAreaScript(MovingAreaScript &&) = delete;
+	MovingAreaScript & operator=(const MovingAreaScript &) = delete;
+	MovingAreaScript & operator=(MovingAreaScript &&) = delete;
 
 private:
 	//Override functions.
@@ -36,4 +36,4 @@ private:
 	std::unique_ptr<MovingRangeScriptImpl> pimpl;
 };
 
-#endif // !__MOVING_RANGE_SCRIPT__
+#endif // !__MOVING_AREA_SCRIPT__
