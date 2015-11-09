@@ -3,7 +3,7 @@
 	<Components>
 		<GeneralRenderComponent Type="Sprite">
 			<CreateWith SpriteFrameName="MovingAreaGrid_01.png"/>
-			<OtherSettings Opacity_0-255="180"/>
+			<OtherSettings Opacity_0-255="160"/>
 		</GeneralRenderComponent>
 		<MovingAreaGridScript/>
 	</Components>

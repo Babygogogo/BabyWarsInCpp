@@ -90,7 +90,7 @@ std::string UnitData::getType() const
 	return pimpl->m_Type;
 }
 
-int UnitData::getMovement() const
+int UnitData::getMovementRange() const
 {
 	return pimpl->m_Movement;
 }

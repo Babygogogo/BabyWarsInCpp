@@ -7,6 +7,7 @@ struct GridIndex;
 class UnitScript;
 class UnitMapScript;
 class TileMapScript;
+class MovingArea;
 
 class MovingPathScript : public BaseScriptComponent
 {
@@ -18,6 +19,7 @@ public:
 	static const std::string Type;
 	virtual const std::string & getType() const override;
 
+	void showPath(const GridIndex & destination, const MovingArea & area);
 	void showPath(const GridIndex & destination, std::shared_ptr<UnitScript> movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap);
 
 	//Disable copy/move constructor and operator=.

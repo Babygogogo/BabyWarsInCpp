@@ -72,14 +72,14 @@ void WarSceneScript::WarSceneScriptImpl::onActivateUnitAtPosition(const IEventDa
 	unitMapScript->activateUnitAtIndex(gridIndex);
 
 	auto movingRangeScript = m_ChildMovingRangeScript.lock();
-	movingRangeScript->clearRange();
-	movingRangeScript->showRange(gridIndex, *m_ChildTileMapScript.lock(), *unitMapScript);
+	movingRangeScript->clearArea();
+	movingRangeScript->showArea(gridIndex, *m_ChildTileMapScript.lock(), *unitMapScript);
 }
 
 void WarSceneScript::WarSceneScriptImpl::onDeactivateActiveUnit(const IEventData & e)
 {
 	m_ChildUnitMapScript.lock()->deactivateActiveUnit();
-	m_ChildMovingRangeScript.lock()->clearRange();
+	m_ChildMovingRangeScript.lock()->clearArea();
 }
 
 void WarSceneScript::WarSceneScriptImpl::onDragScene(const IEventData & e)
@@ -95,11 +95,11 @@ void WarSceneScript::WarSceneScriptImpl::onFinishMakeMovePath(const IEventData &
 		auto destination = toGridIndex(finishEvent.getPosition());
 
 		m_ChildUnitMapScript.lock()->deactivateAndMoveUnit(m_MovePathStartIndex, destination);
-		m_ChildMovingRangeScript.lock()->clearRange();
+		m_ChildMovingRangeScript.lock()->clearArea();
 	}
 	else{
 		m_ChildUnitMapScript.lock()->deactivateActiveUnit();
-		m_ChildMovingRangeScript.lock()->clearRange();
+		m_ChildMovingRangeScript.lock()->clearArea();
 	}
 
 	clearMovePath();

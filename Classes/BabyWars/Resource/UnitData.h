@@ -23,7 +23,7 @@ public:
 	UnitDataID getID() const;
 	std::string getType() const;
 
-	int getMovement() const;
+	int getMovementRange() const;
 	const std::string & getMovementType() const;
 
 	cocos2d::Animation * getAnimation() const;

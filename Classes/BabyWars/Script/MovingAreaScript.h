@@ -6,6 +6,7 @@
 struct GridIndex;
 class TileMapScript;
 class UnitMapScript;
+class MovingArea;
 
 class MovingAreaScript : public BaseScriptComponent
 {
@@ -13,8 +14,9 @@ public:
 	MovingAreaScript();
 	~MovingAreaScript();
 
-	void showRange(const GridIndex & gridIndex, const TileMapScript & tileMap, const UnitMapScript & unitMap);
-	void clearRange();
+	void showArea(const GridIndex & gridIndex, const TileMapScript & tileMap, const UnitMapScript & unitMap);
+	void clearArea();
+	const MovingArea & getUnderlyingArea() const;
 
 	//Type name of the class. Used by the ActorFactory and can not be removed.
 	static const std::string Type;
