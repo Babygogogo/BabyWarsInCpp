@@ -25,8 +25,14 @@ public:
 
 	MovingArea(int remainingMovementRange, const GridIndex & startingIndex);
 
-	//Get MovingInfo within the area. The bool in the returned value indicates if the MovingInfo is valid.
-	std::pair<MovingInfo, bool> getMovingInfo(const GridIndex & index) const;
+	bool isInitialized() const;
+	void init(int remainingMovementRange, const GridIndex & startingIndex);
+
+	//Get the starting index of the area. Asserts if the area has no starting index.
+	GridIndex getStartingIndex() const;
+
+	//Get MovingInfo within the area. Asserts if the index is not in the area.
+	MovingInfo getMovingInfo(const GridIndex & index) const;
 
 	bool hasIndex(const GridIndex & index) const;
 	std::vector<GridIndex> getAllIndexesInArea() const;
@@ -36,6 +42,7 @@ public:
 	bool tryUpdateIndex(const GridIndex & index, MovingInfo && movingInfo);
 
 private:
+	GridIndex m_StartingIndex;
 	std::map<GridIndex, MovingInfo> m_Map;
 };
 

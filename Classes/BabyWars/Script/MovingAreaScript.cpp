@@ -43,11 +43,11 @@ MovingArea MovingAreaScript::MovingRangeScriptImpl::calculateArea(const UnitScri
 
 	//Iterate through the visited list to see if the unit can move further. Uses BFS.
 	for (const auto & currentIndex : visitedGridList){
-		for (auto && nextIndex : currentIndex.getNeighbors()){
+		for (auto && nextIndex : currentIndex.getAdjacentIndexes()){
 			if (!tileMap.canPassThrough(movementType, nextIndex) || !unitMap.canPassThrough(movingUnit, nextIndex))
 				continue;
 
-			auto currentlyRemainingMovementRange = movingArea.getMovingInfo(currentIndex).first.m_MaxRemainingMovementRange;
+			auto currentlyRemainingMovementRange = movingArea.getMovingInfo(currentIndex).m_MaxRemainingMovementRange;
 			auto movingCost = tileMap.getMovingCost(movementType, nextIndex);
 			auto movingInfo = MovingArea::MovingInfo(movingCost, currentlyRemainingMovementRange - movingCost, unitMap.canUnitStayAtIndex(movingUnit, nextIndex), currentIndex);
 

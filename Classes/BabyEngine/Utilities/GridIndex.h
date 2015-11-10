@@ -7,7 +7,7 @@ namespace cocos2d{
 	class Size;
 }
 
-#include <list>
+#include <vector>
 
 struct GridIndex
 {
@@ -19,31 +19,25 @@ struct GridIndex
 	//GridIndex(GridIndex &&) = default;
 	//GridIndex & operator=(GridIndex &&) = default;
 
-	GridIndex(int rowIndex, int colIndex) : rowIndex{ rowIndex }, colIndex{ colIndex }{}
+	GridIndex(int rowIndex, int colIndex);
 	GridIndex(const cocos2d::Vec2 & position, const cocos2d::Size & gridSize);
 
-	std::list<GridIndex> getNeighbors() const{
-		auto neighbors = std::list<GridIndex>();
+	//////////////////////////////////////////////////////////////////////////
+	//Operators.
+	bool operator==(const GridIndex & rhs) const;
+	bool operator!=(const GridIndex & rhs) const;
 
-		neighbors.emplace_back(GridIndex(rowIndex - 1, colIndex));
-		neighbors.emplace_back(GridIndex(rowIndex + 1, colIndex));
-		neighbors.emplace_back(GridIndex(rowIndex, colIndex - 1));
-		neighbors.emplace_back(GridIndex(rowIndex, colIndex + 1));
-
-		return neighbors;
-	}
-
-	bool operator==(const GridIndex & rhs) const{ return rowIndex == rhs.rowIndex && colIndex == rhs.colIndex; }
+	GridIndex operator-(const GridIndex & rhs) const;
+	GridIndex operator+(const GridIndex & rhs) const;
+	GridIndex & operator+=(const GridIndex & rhs);
 
 	//This is for std::map and doesn't mean much.
-	bool operator<(const GridIndex & rhs) const
-	{
-		if (rowIndex < rhs.rowIndex)
-			return true;
-		if (rowIndex == rhs.rowIndex && colIndex < rhs.colIndex)
-			return true;
-		return false;
-	}
+	bool operator<(const GridIndex & rhs) const;
+
+	//////////////////////////////////////////////////////////////////////////
+	//Other functions.
+	std::vector<GridIndex> getAdjacentIndexes() const;
+	bool isAdjacentTo(const GridIndex & rhs) const;
 
 	cocos2d::Vec2 toPosition(const cocos2d::Size & gridSize) const;
 

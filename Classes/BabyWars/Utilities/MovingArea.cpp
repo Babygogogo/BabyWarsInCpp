@@ -1,3 +1,5 @@
+#include <cassert>
+
 #include "MovingArea.h"
 #include "../../BabyEngine/Utilities/GridIndex.h"
 
@@ -7,16 +9,33 @@ MovingArea::MovingInfo::MovingInfo(int movingCost, int remainingMovementRange, b
 
 MovingArea::MovingArea(int remainingMovementRange, const GridIndex & startingIndex)
 {
+	init(remainingMovementRange, startingIndex);
+}
+
+bool MovingArea::isInitialized() const
+{
+	return hasIndex(m_StartingIndex);
+}
+
+void MovingArea::init(int remainingMovementRange, const GridIndex & startingIndex)
+{
+	m_StartingIndex = startingIndex;
 	m_Map.emplace(startingIndex, MovingInfo(0, remainingMovementRange, true, startingIndex));
 }
 
-std::pair<MovingArea::MovingInfo, bool> MovingArea::getMovingInfo(const GridIndex & index) const
+GridIndex MovingArea::getStartingIndex() const
+{
+	assert(hasIndex(m_StartingIndex) && "MovingArea::getStartingIndex() the area has no starting index.");
+
+	return m_StartingIndex;
+}
+
+MovingArea::MovingInfo MovingArea::getMovingInfo(const GridIndex & index) const
 {
 	const auto infoIter = m_Map.find(index);
-	if (infoIter == m_Map.end())
-		return std::make_pair(MovingInfo(), false);
+	assert(infoIter != m_Map.end() && "MovingArea::getMovingInfo() the index is not in the area.");
 
-	return std::make_pair(infoIter->second, true);
+	return infoIter->second;
 }
 
 std::vector<GridIndex> MovingArea::getAllIndexesInArea() const
@@ -35,6 +54,7 @@ bool MovingArea::hasIndex(const GridIndex & index) const
 
 void MovingArea::clear()
 {
+	m_StartingIndex.rowIndex = m_StartingIndex.colIndex = -1;
 	m_Map.clear();
 }
 

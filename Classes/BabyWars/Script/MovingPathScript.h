@@ -31,8 +31,8 @@ private:
 	virtual void vPostInit() override;
 
 	//Implementation stuff.
-	struct MovePathScriptImpl;
-	std::unique_ptr<MovePathScriptImpl> pimpl;
+	struct MovingPathScriptImpl;
+	std::unique_ptr<MovingPathScriptImpl> pimpl;
 };
 
 #endif // !__MOVING_PATH_SCRIPT__
