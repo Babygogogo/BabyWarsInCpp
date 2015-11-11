@@ -27,7 +27,7 @@ struct MovingAreaScript::MovingRangeScriptImpl
 	~MovingRangeScriptImpl() = default;
 
 	MovingArea calculateArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap) const;
-	void setChildrenGridActorWithIndexes(const MovingArea & movingArea, Actor & self);
+	void addChildrenGridActorWithArea(const MovingArea & movingArea, Actor & self);
 
 	MovingArea m_MovingArea;
 	std::string m_MovingRangeGridActorPath;
@@ -39,11 +39,11 @@ MovingArea MovingAreaScript::MovingRangeScriptImpl::calculateArea(const UnitScri
 	const auto originIndex = movingUnit.getGridIndex();
 	const auto & movementType = movingUnit.getUnitData()->getMovementType();
 	auto movingArea = MovingArea(movingUnit.getUnitData()->getMovementRange(), originIndex);
-	auto visitedGridList = std::list<GridIndex>{originIndex};
+	auto visitedGridList = std::list<GridIndex>{ originIndex };
 
 	//Iterate through the visited list to see if the unit can move further. Uses BFS.
-	for (const auto & currentIndex : visitedGridList){
-		for (auto && nextIndex : currentIndex.getAdjacentIndexes()){
+	for (const auto & currentIndex : visitedGridList) {
+		for (auto && nextIndex : currentIndex.getAdjacentIndexes()) {
 			if (!tileMap.canPassThrough(movementType, nextIndex) || !unitMap.canPassThrough(movingUnit, nextIndex))
 				continue;
 
@@ -60,11 +60,11 @@ MovingArea MovingAreaScript::MovingRangeScriptImpl::calculateArea(const UnitScri
 	return movingArea;
 }
 
-void MovingAreaScript::MovingRangeScriptImpl::setChildrenGridActorWithIndexes(const MovingArea & movingArea, Actor & self)
+void MovingAreaScript::MovingRangeScriptImpl::addChildrenGridActorWithArea(const MovingArea & movingArea, Actor & self)
 {
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
 
-	for (const auto & index : movingArea.getAllIndexesInArea()){
+	for (const auto & index : movingArea.getAllIndexesInArea()) {
 		auto gridActor = gameLogic->createActor(m_MovingRangeGridActorPath.c_str());
 		auto gridScript = gridActor->getComponent<MovingAreaGridScript>();
 		gridScript->setGridIndexAndPosition(index);
@@ -86,11 +86,12 @@ MovingAreaScript::~MovingAreaScript()
 {
 }
 
-void MovingAreaScript::showArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap)
+void MovingAreaScript::clearAndShowArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap)
 {
-	pimpl->m_MovingArea = pimpl->calculateArea(movingUnit, tileMap, unitMap);
+	clearArea();
 
-	pimpl->setChildrenGridActorWithIndexes(pimpl->m_MovingArea, *m_OwnerActor.lock());
+	pimpl->m_MovingArea = pimpl->calculateArea(movingUnit, tileMap, unitMap);
+	pimpl->addChildrenGridActorWithArea(pimpl->m_MovingArea, *m_OwnerActor.lock());
 }
 
 void MovingAreaScript::clearArea()

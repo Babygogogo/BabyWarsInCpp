@@ -173,6 +173,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyWars\Resource\ResourceLoader.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\TileData.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\UnitData.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Script\MovingPathGridScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\MovingPathScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\MovingAreaGridScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\MovingAreaScript.cpp" />
@@ -212,6 +213,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyEngine\UserInterface\BaseHumanView.h" />
     <ClInclude Include="..\Classes\BabyEngine\UserInterface\GameViewID.h" />
     <ClInclude Include="..\Classes\BabyEngine\UserInterface\BaseGameView.h" />
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\AdjacentDirection.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\GenericFactory.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\GridIndex.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\Matrix2D.h" />
@@ -232,6 +234,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyWars\Resource\TileDataID.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitData.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitDataID.h" />
+    <ClInclude Include="..\Classes\BabyWars\Script\MovingPathGridScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\MovingPathScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\MovingAreaGridScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\MovingAreaScript.h" />

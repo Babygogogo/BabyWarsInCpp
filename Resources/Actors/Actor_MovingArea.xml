@@ -8,6 +8,4 @@
 			<RelatedActorsPath MovingRangeGrid="Actors\Actor_MovingAreaGrid.xml"/>
 		</MovingAreaScript>
 	</Components>
-	<ChildrenActors>
-	</ChildrenActors>
 </Actor>

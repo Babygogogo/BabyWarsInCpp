@@ -189,6 +189,9 @@
     <ClCompile Include="..\Classes\BabyWars\Utilities\MovingPath.cpp">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\MovingPathGridScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -361,6 +364,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Utilities\MovingPath.h">
       <Filter>src\BabyWars\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\MovingPathGridScript.h">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\AdjacentDirection.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

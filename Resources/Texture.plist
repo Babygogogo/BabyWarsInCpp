@@ -17,7 +17,137 @@
                 <key>sourceSize</key>
                 <string>{32,32}</string>
             </dict>
-            <key>MovingPathArrow_01.png</key>
+            <key>MovingPathGrid_ArrowBelow.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{291,3},{30,26}}</string>
+                <key>offset</key>
+                <string>{1,3}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,0},{30,26}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
+            <key>MovingPathGrid_ArrowLeft.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{253,37},{24,30}}</string>
+                <key>offset</key>
+                <string>{4,-1}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{8,2},{24,30}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
+            <key>MovingPathGrid_ArrowRight.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{325,3},{26,30}}</string>
+                <key>offset</key>
+                <string>{-3,-1}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{0,2},{26,30}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
+            <key>MovingPathGrid_ArrowUpper.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{219,37},{30,24}}</string>
+                <key>offset</key>
+                <string>{1,-4}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,8},{30,24}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
+            <key>MovingPathGrid_CornerBelowLeft.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{287,37},{26,24}}</string>
+                <key>offset</key>
+                <string>{-3,-4}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,8},{26,24}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
+            <key>MovingPathGrid_CornerBelowRight.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{345,33},{24,24}}</string>
+                <key>offset</key>
+                <string>{4,-4}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{8,8},{24,24}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
+            <key>MovingPathGrid_CornerUpperLeft.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{359,3},{26,26}}</string>
+                <key>offset</key>
+                <string>{-3,3}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{26,26}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
+            <key>MovingPathGrid_CornerUpperRight.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{317,33},{24,26}}</string>
+                <key>offset</key>
+                <string>{4,3}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{8,0},{24,26}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
+            <key>MovingPathGrid_LineHorizotal.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{3,39},{32,18}}</string>
+                <key>offset</key>
+                <string>{0,-1}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,8},{32,18}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
+            <key>MovingPathGrid_LineVertical.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{39,39},{18,32}}</string>
+                <key>offset</key>
+                <string>{1,0}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{8,0},{18,32}}</string>
+                <key>sourceSize</key>
+                <string>{32,32}</string>
+            </dict>
+            <key>Tile_Forest_01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{39,3},{32,32}}</string>
@@ -30,7 +160,7 @@
                 <key>sourceSize</key>
                 <string>{32,32}</string>
             </dict>
-            <key>MovingPathCorner_01.png</key>
+            <key>Tile_Plain_01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{75,3},{32,32}}</string>
@@ -43,7 +173,7 @@
                 <key>sourceSize</key>
                 <string>{32,32}</string>
             </dict>
-            <key>MovingPathLine_01.png</key>
+            <key>Tile_Road_01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{111,3},{32,32}}</string>
@@ -56,7 +186,7 @@
                 <key>sourceSize</key>
                 <string>{32,32}</string>
             </dict>
-            <key>Tile_Forest_01.png</key>
+            <key>Tile_Sea_01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{147,3},{32,32}}</string>
@@ -69,7 +199,7 @@
                 <key>sourceSize</key>
                 <string>{32,32}</string>
             </dict>
-            <key>Tile_Plain_01.png</key>
+            <key>Unit_Battleship_01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{183,3},{32,32}}</string>
@@ -82,53 +212,14 @@
                 <key>sourceSize</key>
                 <string>{32,32}</string>
             </dict>
-            <key>Tile_Road_01.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{219,3},{32,32}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{32,32}}</string>
-                <key>sourceSize</key>
-                <string>{32,32}</string>
-            </dict>
-            <key>Tile_Sea_01.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{255,3},{32,32}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{32,32}}</string>
-                <key>sourceSize</key>
-                <string>{32,32}</string>
-            </dict>
-            <key>Unit_Battleship_01.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{291,3},{32,32}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{32,32}}</string>
-                <key>sourceSize</key>
-                <string>{32,32}</string>
-            </dict>
             <key>Unit_Bomber_01.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{361,3},{32,30}}</string>
+                <string>{{219,3},{32,30}}</string>
                 <key>offset</key>
                 <string>{0,1}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{32,30}}</string>
                 <key>sourceSize</key>
@@ -137,11 +228,11 @@
             <key>Unit_Infantry_01.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{327,3},{30,32}}</string>
+                <string>{{255,3},{30,32}}</string>
                 <key>offset</key>
                 <string>{-1,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{30,32}}</string>
                 <key>sourceSize</key>
@@ -150,7 +241,7 @@
             <key>Unit_Tank_01.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{395,3},{24,24}}</string>
+                <string>{{373,33},{24,24}}</string>
                 <key>offset</key>
                 <string>{0,-3}</string>
                 <key>rotated</key>
@@ -168,9 +259,9 @@
             <key>realTextureFileName</key>
             <string>Texture.png</string>
             <key>size</key>
-            <string>{422,38}</string>
+            <string>{400,64}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:a096729add74757e447a80ef3de23690:10234492b7fb4d039258b4d09ff7d578:f46617b9879efc77edf243fcb535d10c$</string>
+            <string>$TexturePacker:SmartUpdate:c3844a3335b8d1e07b0e2617f8ce009a:8c38b1736b5b9c1f8d9fbc6e94a802c3:f46617b9879efc77edf243fcb535d10c$</string>
             <key>textureFileName</key>
             <string>Texture.png</string>
         </dict>

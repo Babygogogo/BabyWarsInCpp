@@ -72,8 +72,7 @@ void WarSceneScript::WarSceneScriptImpl::onActivateUnitAtPosition(const IEventDa
 	unitMapScript->activateUnitAtIndex(gridIndex);
 
 	auto movingRangeScript = m_ChildMovingRangeScript.lock();
-	movingRangeScript->clearArea();
-	movingRangeScript->showArea(*unitMapScript->getActiveUnit(), *m_ChildTileMapScript.lock(), *unitMapScript);
+	movingRangeScript->clearAndShowArea(*unitMapScript->getActiveUnit(), *m_ChildTileMapScript.lock(), *unitMapScript);
 }
 
 void WarSceneScript::WarSceneScriptImpl::onDeactivateActiveUnit(const IEventData & e)
@@ -90,14 +89,14 @@ void WarSceneScript::WarSceneScriptImpl::onDragScene(const IEventData & e)
 
 void WarSceneScript::WarSceneScriptImpl::onFinishMakeMovePath(const IEventData & e)
 {
-	if (isMovePathValid()){
+	if (isMovePathValid()) {
 		const auto & finishEvent = static_cast<const EvtDataFinishMakeMovePath &>(e);
 		auto destination = toGridIndex(finishEvent.getPosition());
 
 		m_ChildUnitMapScript.lock()->deactivateAndMoveUnit(m_MovePathStartIndex, destination);
 		m_ChildMovingRangeScript.lock()->clearArea();
 	}
-	else{
+	else {
 		m_ChildUnitMapScript.lock()->deactivateActiveUnit();
 		m_ChildMovingRangeScript.lock()->clearArea();
 	}
@@ -159,18 +158,18 @@ void WarSceneScript::WarSceneScriptImpl::setPositionWithOffsetAndBoundary(const 
 	auto maxY = extraBoundarySize.height;
 
 	//Finally, modify the newPosition using the mins and maxs if needed.
-	if (maxX > minX){
+	if (maxX > minX) {
 		if (newPosition.x > maxX)	newPosition.x = maxX;
 		if (newPosition.x < minX)	newPosition.x = minX;
 	}
-	else{ //This means that the width of the map is less than the window. Just ignore horizontal part of the drag.
+	else { //This means that the width of the map is less than the window. Just ignore horizontal part of the drag.
 		newPosition.x = underlyingNode->getPosition().x;
 	}
-	if (maxY > minY){
+	if (maxY > minY) {
 		if (newPosition.y > maxY)	newPosition.y = maxY;
 		if (newPosition.y < minY)	newPosition.y = minY;
 	}
-	else{ //This means that the height of the map is less than the window. Just ignore vertical part of the drag.
+	else { //This means that the height of the map is less than the window. Just ignore vertical part of the drag.
 		newPosition.y = underlyingNode->getPosition().y;
 	}
 
@@ -270,19 +269,19 @@ void WarSceneScript::vPostInit()
 	//////////////////////////////////////////////////////////////////////////
 	//Attach to event dispatcher.
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
-	eventDispatcher->vAddListener(EvtDataActivateUnitAtPosition::s_EventType, pimpl, [this](const IEventData & e){
+	eventDispatcher->vAddListener(EvtDataActivateUnitAtPosition::s_EventType, pimpl, [this](const IEventData & e) {
 		pimpl->onActivateUnitAtPosition(e);
 	});
-	eventDispatcher->vAddListener(EvtDataDeactivateActiveUnit::s_EventType, pimpl, [this](const IEventData & e){
+	eventDispatcher->vAddListener(EvtDataDeactivateActiveUnit::s_EventType, pimpl, [this](const IEventData & e) {
 		pimpl->onDeactivateActiveUnit(e);
 	});
-	eventDispatcher->vAddListener(EvtDataDragScene::s_EventType, pimpl, [this](const IEventData & e){
+	eventDispatcher->vAddListener(EvtDataDragScene::s_EventType, pimpl, [this](const IEventData & e) {
 		pimpl->onDragScene(e);
 	});
-	eventDispatcher->vAddListener(EvtDataFinishMakeMovePath::s_EventType, pimpl, [this](const IEventData & e){
+	eventDispatcher->vAddListener(EvtDataFinishMakeMovePath::s_EventType, pimpl, [this](const IEventData & e) {
 		pimpl->onFinishMakeMovePath(e);
 	});
-	eventDispatcher->vAddListener(EvtDataMakeMovePath::s_EventType, pimpl, [this](const IEventData & e){
+	eventDispatcher->vAddListener(EvtDataMakeMovePath::s_EventType, pimpl, [this](const IEventData & e) {
 		pimpl->onMakeMovePath(e);
 	});
 

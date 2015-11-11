@@ -15,7 +15,7 @@ public:
 	MovingAreaScript();
 	~MovingAreaScript();
 
-	void showArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap);
+	void clearAndShowArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap);
 	void clearArea();
 	const MovingArea & getUnderlyingArea() const;
 

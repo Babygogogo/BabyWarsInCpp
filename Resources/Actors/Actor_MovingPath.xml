@@ -2,8 +2,8 @@
 <Actor Type="MovePath" Resource="Actors\Actor_MovingPath.xml">
 	<Components>
 		<GeneralRenderComponent Type="Node"/>
-		<MovingPathScript/>
+		<MovingPathScript>
+			<RelatedActorsPath MovingPathGrid="Actors\Actor_MovingPathGrid.xml"/>
+		</MovingPathScript>
 	</Components>
-	<ChildrenActors>
-	</ChildrenActors>
 </Actor>

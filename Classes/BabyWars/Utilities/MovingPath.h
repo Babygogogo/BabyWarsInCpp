@@ -20,17 +20,28 @@ public:
 	MovingPath() = default;
 	~MovingPath() = default;
 
-	bool isInitialized() const;
+	MovingPath(const MovingPath &) = default;
+	MovingPath(MovingPath &&) = default;
+
+	bool isEmpty() const;
 	void init(PathNode && pathNode);
 	void init(std::list<PathNode> && path);
 
 	void clear();
 
-	PathNode getBackNode() const;
+	std::size_t getLength() const;
 	bool hasIndex(const GridIndex & index) const;
+	bool hasPreviousOf(const GridIndex & index) const;
+	bool hasNextOf(const GridIndex & index) const;
+
+	//Asserts if the node doesn't exist.
+	PathNode getFrontNode() const;
+	PathNode getBackNode() const;
+	PathNode getPreviousNodeOf(const GridIndex & index) const;
+	PathNode getNextNodeOf(const GridIndex & index) const;
 
 	//Find the index in the path. If found, erase all indexes behind the found index (exclusive). Otherwise, do nothing.
-	//The return value indicates whether the index is found or not.
+	//The return value indicates whether the path is cut or not.
 	bool tryFindAndCut(const GridIndex & index);
 
 	//Extend the path to destination. The extension succeeds if the followings are true:
@@ -40,7 +51,7 @@ public:
 	//The return value indicates whether the extension is successful.
 	bool tryExtend(const GridIndex & destination, int movingCost);
 
-	const std::vector<PathNode> & getPath() const;
+	const std::vector<PathNode> & getUnderlyingPath() const;
 
 private:
 	std::vector<PathNode> m_Path;

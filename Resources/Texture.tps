@@ -6,7 +6,7 @@
         <key>texturePackerVersion</key>
         <string>3.4.0</string>
         <key>fileName</key>
-        <string>F:/Projects/BabyWars/Resources/Texture.tps</string>
+        <string>E:/Projects/BabyWars/Resources/Texture.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
