@@ -13,6 +13,8 @@ public:
 	{
 		PathNode(const GridIndex & index, int remainingMovementRange);
 
+		bool operator==(const PathNode & rhs) const;
+
 		GridIndex m_GridIndex;
 		int m_RemainingMovementRange{ -1 };
 	};
@@ -22,6 +24,11 @@ public:
 
 	MovingPath(const MovingPath &) = default;
 	MovingPath(MovingPath &&) = default;
+
+	MovingPath & operator=(MovingPath &&) = default;
+
+	bool operator==(const MovingPath & rhs) const;
+	bool operator!=(const MovingPath & rhs) const;
 
 	bool isEmpty() const;
 	void init(PathNode && pathNode);

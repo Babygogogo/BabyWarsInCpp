@@ -121,7 +121,7 @@
                 <key>sourceSize</key>
                 <string>{32,32}</string>
             </dict>
-            <key>MovingPathGrid_LineHorizotal.png</key>
+            <key>MovingPathGrid_LineHorizontal.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{3,39},{32,18}}</string>
@@ -261,7 +261,7 @@
             <key>size</key>
             <string>{400,64}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:c3844a3335b8d1e07b0e2617f8ce009a:8c38b1736b5b9c1f8d9fbc6e94a802c3:f46617b9879efc77edf243fcb535d10c$</string>
+            <string>$TexturePacker:SmartUpdate:94c13ceec74c0f8b26a5bf75f1c77253:8c38b1736b5b9c1f8d9fbc6e94a802c3:f46617b9879efc77edf243fcb535d10c$</string>
             <key>textureFileName</key>
             <string>Texture.png</string>
         </dict>

@@ -19,7 +19,7 @@ struct MovingPathGridScript::MovingPathGridScriptImpl
 	~MovingPathGridScriptImpl() = default;
 
 	const std::string & getSpriteFrameName(AdjacentDirection previous, AdjacentDirection next) const;
-	void setAppearance(cocos2d::Sprite * sprite, const std::string & spriteFrameName);
+	void setAppearance(cocos2d::Sprite * sprite, const std::string & spriteFrameName, const cocos2d::Size & gridSize);
 
 	static std::string s_SpriteFrameNameEmpty;
 	static std::string s_SpriteFrameNameArrowUpper;
@@ -110,7 +110,7 @@ const std::string & MovingPathGridScript::MovingPathGridScriptImpl::getSpriteFra
 	}
 }
 
-void MovingPathGridScript::MovingPathGridScriptImpl::setAppearance(cocos2d::Sprite * sprite, const std::string & spriteFrameName)
+void MovingPathGridScript::MovingPathGridScriptImpl::setAppearance(cocos2d::Sprite * sprite, const std::string & spriteFrameName, const cocos2d::Size & gridSize)
 {
 	if (spriteFrameName.empty()) {
 		sprite->setVisible(false);
@@ -118,8 +118,8 @@ void MovingPathGridScript::MovingPathGridScriptImpl::setAppearance(cocos2d::Spri
 	}
 
 	sprite->setSpriteFrame(cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFrameName));
-
-	//#TODO: Set the scale.
+	sprite->setScaleX(gridSize.width / sprite->getContentSize().width);
+	sprite->setScaleY(gridSize.height / sprite->getContentSize().height);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -137,9 +137,10 @@ void MovingPathGridScript::setAppearanceAndPosition(const GridIndex & index, Adj
 {
 	auto renderComponent = pimpl->m_RenderComponent.lock();
 	auto sprite = renderComponent->getSceneNode<cocos2d::Sprite>();
-	sprite->setPosition(index.toPosition(SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize()));
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
+	sprite->setPosition(index.toPosition(gridSize));
 
-	pimpl->setAppearance(sprite, pimpl->getSpriteFrameName(previous, next));
+	pimpl->setAppearance(sprite, pimpl->getSpriteFrameName(previous, next), gridSize);
 }
 
 bool MovingPathGridScript::vInit(tinyxml2::XMLElement *xmlElement)

@@ -2,7 +2,7 @@
 <Actor Type="UnitMap" Resource="Actors\Actor_UnitMap.xml">
 	<Components>
 		<GeneralRenderComponent Type="Node">
-			<Position LocalZOrder="1"/>
+			<Position LocalZOrder="2"/>
 		</GeneralRenderComponent>
 		<UnitMapScript>
 			<RelatedActorsPath Unit="Actors\Actor_Unit.xml"/>

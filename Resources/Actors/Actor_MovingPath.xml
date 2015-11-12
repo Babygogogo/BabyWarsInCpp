@@ -1,7 +1,9 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
 <Actor Type="MovePath" Resource="Actors\Actor_MovingPath.xml">
 	<Components>
-		<GeneralRenderComponent Type="Node"/>
+		<GeneralRenderComponent Type="Node">
+			<Position LocalZOrder="1"/>
+		</GeneralRenderComponent>
 		<MovingPathScript>
 			<RelatedActorsPath MovingPathGrid="Actors\Actor_MovingPathGrid.xml"/>
 		</MovingPathScript>

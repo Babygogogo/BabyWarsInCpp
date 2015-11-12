@@ -14,6 +14,9 @@ public:
 		MovingInfo() = default;
 		MovingInfo(int movingCost, int remainingMovementRange, bool canStay, const GridIndex & previousIndex);
 
+		bool operator!=(const MovingInfo & rhs) const;
+		bool operator==(const MovingInfo & rhs) const;
+
 		GridIndex m_PreviousIndex;
 		int m_MovingCost{ 0 };
 		int m_MaxRemainingMovementRange{ -1 };
@@ -23,7 +26,13 @@ public:
 	MovingArea() = default;
 	~MovingArea() = default;
 
+	MovingArea(MovingArea &&) = default;
+	MovingArea & operator=(MovingArea &&) = default;
+
 	MovingArea(int remainingMovementRange, const GridIndex & startingIndex);
+
+	bool operator!=(const MovingArea & rhs) const;
+	bool operator==(const MovingArea & rhs) const;
 
 	bool isInitialized() const;
 	void init(int remainingMovementRange, const GridIndex & startingIndex);

@@ -3,6 +3,19 @@
 #include "MovingArea.h"
 #include "../../BabyEngine/Utilities/GridIndex.h"
 
+bool MovingArea::MovingInfo::operator!=(const MovingInfo & rhs) const
+{
+	return (m_PreviousIndex != rhs.m_PreviousIndex)
+		|| (m_MovingCost != rhs.m_MovingCost)
+		|| (m_MaxRemainingMovementRange != rhs.m_MaxRemainingMovementRange)
+		|| (m_CanStay != rhs.m_CanStay);
+}
+
+bool MovingArea::MovingInfo::operator==(const MovingInfo & rhs) const
+{
+	return !(*this != rhs);
+}
+
 MovingArea::MovingInfo::MovingInfo(int movingCost, int remainingMovementRange, bool canStay, const GridIndex & previousGrid) : m_MovingCost{ movingCost }, m_MaxRemainingMovementRange{ remainingMovementRange }, m_CanStay{ canStay }, m_PreviousIndex{ previousGrid }
 {
 }
@@ -10,6 +23,16 @@ MovingArea::MovingInfo::MovingInfo(int movingCost, int remainingMovementRange, b
 MovingArea::MovingArea(int remainingMovementRange, const GridIndex & startingIndex)
 {
 	init(remainingMovementRange, startingIndex);
+}
+
+bool MovingArea::operator!=(const MovingArea & rhs) const
+{
+	return (m_StartingIndex != rhs.m_StartingIndex) || (m_Map != rhs.m_Map);
+}
+
+bool MovingArea::operator==(const MovingArea & rhs) const
+{
+	return !(*this != rhs);
 }
 
 bool MovingArea::isInitialized() const
@@ -64,7 +87,7 @@ bool MovingArea::tryUpdateIndex(const GridIndex & index, MovingInfo && movingInf
 		return false;
 
 	auto indexIter = m_Map.find(index);
-	if (indexIter == m_Map.end()){
+	if (indexIter == m_Map.end()) {
 		m_Map.emplace(std::make_pair(index, std::move(movingInfo)));
 		return true;
 	}

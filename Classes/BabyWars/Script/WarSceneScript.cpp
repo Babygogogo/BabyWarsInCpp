@@ -40,28 +40,26 @@ struct WarSceneScript::WarSceneScriptImpl
 
 	void setPositionWithOffsetAndBoundary(const cocos2d::Vec2 & offset);
 
-	void makeMovePath(const GridIndex & gridIndex);
-	void clearMovePath();
 	bool isMovePathValid() const;
 
 	GridIndex m_MovePathStartIndex{ -1, -1 };
 
 	static std::string s_TileMapActorPath;
 	static std::string s_UnitMapActorPath;
-	static std::string s_MovePathActorPath;
-	static std::string s_MovingRangeActorPath;
+	static std::string s_MovingPathActorPath;
+	static std::string s_MovingAreaActorPath;
 
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
 	std::weak_ptr<TileMapScript> m_ChildTileMapScript;
 	std::weak_ptr<UnitMapScript> m_ChildUnitMapScript;
 	std::weak_ptr<MovingPathScript> m_ChildMovingPathScript;
-	std::weak_ptr<MovingAreaScript> m_ChildMovingRangeScript;
+	std::weak_ptr<MovingAreaScript> m_ChildMovingAreaScript;
 };
 
 std::string WarSceneScript::WarSceneScriptImpl::s_TileMapActorPath;
 std::string WarSceneScript::WarSceneScriptImpl::s_UnitMapActorPath;
-std::string WarSceneScript::WarSceneScriptImpl::s_MovePathActorPath;
-std::string WarSceneScript::WarSceneScriptImpl::s_MovingRangeActorPath;
+std::string WarSceneScript::WarSceneScriptImpl::s_MovingPathActorPath;
+std::string WarSceneScript::WarSceneScriptImpl::s_MovingAreaActorPath;
 
 void WarSceneScript::WarSceneScriptImpl::onActivateUnitAtPosition(const IEventData & e)
 {
@@ -71,14 +69,14 @@ void WarSceneScript::WarSceneScriptImpl::onActivateUnitAtPosition(const IEventDa
 	auto unitMapScript = m_ChildUnitMapScript.lock();
 	unitMapScript->activateUnitAtIndex(gridIndex);
 
-	auto movingRangeScript = m_ChildMovingRangeScript.lock();
+	auto movingRangeScript = m_ChildMovingAreaScript.lock();
 	movingRangeScript->clearAndShowArea(*unitMapScript->getActiveUnit(), *m_ChildTileMapScript.lock(), *unitMapScript);
 }
 
 void WarSceneScript::WarSceneScriptImpl::onDeactivateActiveUnit(const IEventData & e)
 {
 	m_ChildUnitMapScript.lock()->deactivateActiveUnit();
-	m_ChildMovingRangeScript.lock()->clearArea();
+	m_ChildMovingAreaScript.lock()->clearArea();
 }
 
 void WarSceneScript::WarSceneScriptImpl::onDragScene(const IEventData & e)
@@ -94,14 +92,18 @@ void WarSceneScript::WarSceneScriptImpl::onFinishMakeMovePath(const IEventData &
 		auto destination = toGridIndex(finishEvent.getPosition());
 
 		m_ChildUnitMapScript.lock()->deactivateAndMoveUnit(m_MovePathStartIndex, destination);
-		m_ChildMovingRangeScript.lock()->clearArea();
+		m_ChildMovingAreaScript.lock()->clearArea();
 	}
 	else {
 		m_ChildUnitMapScript.lock()->deactivateActiveUnit();
-		m_ChildMovingRangeScript.lock()->clearArea();
+		m_ChildMovingAreaScript.lock()->clearArea();
 	}
 
-	clearMovePath();
+	m_ChildMovingPathScript.lock()->clearPath();
+
+	//This is only for convenience and should be removed.
+	m_MovePathStartIndex.rowIndex = -1;
+	m_MovePathStartIndex.colIndex = -1;
 }
 
 void WarSceneScript::WarSceneScriptImpl::onMakeMovePath(const IEventData & e)
@@ -111,8 +113,12 @@ void WarSceneScript::WarSceneScriptImpl::onMakeMovePath(const IEventData & e)
 	assert(activeUnit && "WarSceneScriptImpl::onMakeMovePath() there's no active unit.");
 
 	const auto & makePathEvent = static_cast<const EvtDataMakeMovePath &>(e);
-	makeMovePath(toGridIndex(makePathEvent.getPosition()));
-	//m_ChildMovingPathScript.lock()->showPath(toGridIndex(makePathEvent.getPosition()), activeUnit, *m_ChildTileMapScript.lock(), *unitMapScript);
+	auto destination = toGridIndex(makePathEvent.getPosition());
+	m_ChildMovingPathScript.lock()->showPath(destination, m_ChildMovingAreaScript.lock()->getUnderlyingArea());
+
+	//This is only for convenience and should be removed.
+	if (m_MovePathStartIndex.rowIndex == -1 && m_MovePathStartIndex.colIndex == -1)
+		m_MovePathStartIndex = destination;
 }
 
 cocos2d::Size WarSceneScript::WarSceneScriptImpl::getMapSize() const
@@ -178,30 +184,6 @@ void WarSceneScript::WarSceneScriptImpl::setPositionWithOffsetAndBoundary(const 
 	underlyingNode->setPosition(newPosition);
 }
 
-void WarSceneScript::WarSceneScriptImpl::makeMovePath(const GridIndex & gridIndex)
-{
-	//#TODO: Complete this function.
-	//auto destination = GridIndex(convertedPosition, SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize());
-	//auto unitMap = m_ChildUnitMapScript.lock();
-	//auto tileMap = m_ChildTileMapScript.lock();
-	//auto movingUnit = unitMap->getActiveUnit();
-
-	//m_ChildMovePathScript.lock()->updatePath(destination, movingUnit, *tileMap, *unitMap);
-
-	//This is only for convenience and should be removed.
-	if (m_MovePathStartIndex.rowIndex == -1 && m_MovePathStartIndex.colIndex == -1)
-		m_MovePathStartIndex = gridIndex;
-}
-
-void WarSceneScript::WarSceneScriptImpl::clearMovePath()
-{
-	//#TODO: Complete this function.
-
-	//This is only for convenience and should be removed.
-	m_MovePathStartIndex.rowIndex = -1;
-	m_MovePathStartIndex.colIndex = -1;
-}
-
 bool WarSceneScript::WarSceneScriptImpl::isMovePathValid() const
 {
 	//#TODO: Complete this function.
@@ -228,8 +210,8 @@ bool WarSceneScript::vInit(tinyxml2::XMLElement *xmlElement)
 	auto relatedActorElement = xmlElement->FirstChildElement("RelatedActorsPath");
 	WarSceneScriptImpl::s_TileMapActorPath = relatedActorElement->Attribute("TileMap");
 	WarSceneScriptImpl::s_UnitMapActorPath = relatedActorElement->Attribute("UnitMap");
-	WarSceneScriptImpl::s_MovePathActorPath = relatedActorElement->Attribute("MovePath");
-	WarSceneScriptImpl::s_MovingRangeActorPath = relatedActorElement->Attribute("MovingRange");
+	WarSceneScriptImpl::s_MovingPathActorPath = relatedActorElement->Attribute("MovePath");
+	WarSceneScriptImpl::s_MovingAreaActorPath = relatedActorElement->Attribute("MovingRange");
 
 	isStaticInitialized = true;
 	return true;
@@ -255,14 +237,14 @@ void WarSceneScript::vPostInit()
 	ownerActor->addChild(*unitMapActor);
 
 	//Create and add the moving range.
-	auto movingRangeActor = gameLogic->createActor(WarSceneScriptImpl::s_MovingRangeActorPath.c_str());
-	pimpl->m_ChildMovingRangeScript = movingRangeActor->getComponent<MovingAreaScript>();
-	ownerActor->addChild(*movingRangeActor);
+	auto movingAreaActor = gameLogic->createActor(WarSceneScriptImpl::s_MovingAreaActorPath.c_str());
+	pimpl->m_ChildMovingAreaScript = movingAreaActor->getComponent<MovingAreaScript>();
+	ownerActor->addChild(*movingAreaActor);
 
 	//Create and add the move path.
-	auto movePathActor = gameLogic->createActor(WarSceneScriptImpl::s_MovePathActorPath.c_str());
-	pimpl->m_ChildMovingPathScript = movePathActor->getComponent<MovingPathScript>();
-	ownerActor->addChild(*movePathActor);
+	auto movingPathActor = gameLogic->createActor(WarSceneScriptImpl::s_MovingPathActorPath.c_str());
+	pimpl->m_ChildMovingPathScript = movingPathActor->getComponent<MovingPathScript>();
+	ownerActor->addChild(*movingPathActor);
 
 	//#TODO: create and add, commander, weather and so on...
 

@@ -1,12 +1,17 @@
 #include <list>
-#include <unordered_map>
+#include <unordered_set>
 
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "MovingPathScript.h"
-#include "UnitScript.h"
+#include "MovingPathGridScript.h"
+#include "../../BabyEngine/Actor/Actor.h"
+#include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Utilities/GridIndex.h"
 #include "../../BabyEngine/Utilities/AdjacentDirection.h"
+#include "../../BabyEngine/Utilities/SingletonContainer.h"
+#include "../../BabyEngine/Event/IEventDispatcher.h"
+#include "../../BabyEngine/Event/EvtDataRequestDestroyActor.h"
 #include "../Utilities/MovingArea.h"
 #include "../Utilities/MovingPath.h"
 
@@ -18,30 +23,34 @@ struct MovingPathScript::MovingPathScriptImpl
 	MovingPathScriptImpl() = default;
 	~MovingPathScriptImpl() = default;
 
-	//The returned value indicates if the path is updated or not.
-	bool createPath(const GridIndex & destination, const MovingArea & area);
-	void setChildrenGridActorWithPath(const MovingPath & path);
+	MovingPath createPath(const MovingPath & oldPath, const GridIndex & destination, const MovingArea & area) const;
+	void setChildrenGridActors(const MovingPath & path, Actor & self);
 
+	std::string m_MovingPathGridActorPath;
+
+	std::unordered_set<ActorID> m_ChildrenGridActorIDs;
 	MovingPath m_MovingPath;
 };
 
-bool MovingPathScript::MovingPathScriptImpl::createPath(const GridIndex & destination, const MovingArea & area)
+MovingPath MovingPathScript::MovingPathScriptImpl::createPath(const MovingPath & oldPath, const GridIndex & destination, const MovingArea & area) const
 {
+	auto newPath = oldPath;
 	//If the destination is in the path already, cut the path and return.
-	if (m_MovingPath.hasIndex(destination))
-		return m_MovingPath.tryFindAndCut(destination);
-
-	//Init the path if it's empty.
-	if (!m_MovingPath.isEmpty()) {
-		auto startingIndex = area.getStartingIndex();
-		auto startingInfo = area.getMovingInfo(startingIndex);
-
-		m_MovingPath.init(MovingPath::PathNode(startingIndex, startingInfo.m_MaxRemainingMovementRange));
+	if (newPath.hasIndex(destination)) {
+		newPath.tryFindAndCut(destination);
+		return newPath;
 	}
 
-	//The destination is not in the path. Try extending the path to destination. Return if succeed.
-	if (m_MovingPath.tryExtend(destination, area.getMovingInfo(destination).m_MovingCost))
-		return true;
+	//Init the path if it's empty.
+	if (newPath.isEmpty()) {
+		auto startingIndex = area.getStartingIndex();
+		auto startingInfo = area.getMovingInfo(startingIndex);
+		newPath.init(MovingPath::PathNode(startingIndex, startingInfo.m_MaxRemainingMovementRange));
+	}
+
+	//The destination is not in the path. Try extending the path to destination. Return the new path if succeed.
+	if (newPath.tryExtend(destination, area.getMovingInfo(destination).m_MovingCost))
+		return newPath;
 
 	//The path can't be extended (because the remaining movement range is not big enough).
 	//Generate a new shortest path.
@@ -59,24 +68,32 @@ bool MovingPathScript::MovingPathScriptImpl::createPath(const GridIndex & destin
 	}
 	pathNodeList.emplace_front(MovingPath::PathNode(startingIndex, area.getMovingInfo(startingIndex).m_MaxRemainingMovementRange));
 
-	m_MovingPath.init(std::move(pathNodeList));
-	return true;
+	newPath.init(std::move(pathNodeList));
+	return newPath;
 }
 
-void MovingPathScript::MovingPathScriptImpl::setChildrenGridActorWithPath(const MovingPath & path)
+void MovingPathScript::MovingPathScriptImpl::setChildrenGridActors(const MovingPath & path, Actor & self)
 {
+	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
+
 	for (const auto & pathNode : path.getUnderlyingPath()) {
-		auto index = pathNode.m_GridIndex;
+		const auto & index = pathNode.m_GridIndex;
 
 		auto previousDirection = AdjacentDirection::INVALID;
 		if (path.hasPreviousOf(index))
-			previousDirection = index.getAdjacentDirectionOf(path.getPreviousNodeOf(index).m_GridIndex);
+			previousDirection = path.getPreviousNodeOf(index).m_GridIndex.getAdjacentDirectionOf(index);
 
 		auto nextDirection = AdjacentDirection::INVALID;
 		if (path.hasNextOf(index))
-			nextDirection = index.getAdjacentDirectionOf(path.getNextNodeOf(index).m_GridIndex);
+			nextDirection = path.getNextNodeOf(index).m_GridIndex.getAdjacentDirectionOf(index);
 
-		//#TODO:
+		//Create the grid actor and attach it to self.
+		auto gridActor = gameLogic->createActor(m_MovingPathGridActorPath.c_str());
+		auto gridScript = gridActor->getComponent<MovingPathGridScript>();
+		gridScript->setAppearanceAndPosition(index, previousDirection, nextDirection);
+
+		self.addChild(*gridActor);
+		m_ChildrenGridActorIDs.emplace(gridActor->getID());
 	}
 }
 
@@ -97,16 +114,31 @@ void MovingPathScript::showPath(const GridIndex & destination, const MovingArea 
 	if (!area.hasIndex(destination))
 		return;
 
-	if (pimpl->createPath(destination, area))
-		pimpl->setChildrenGridActorWithPath(pimpl->m_MovingPath);
+	auto newPath = pimpl->createPath(pimpl->m_MovingPath, destination, area);
+	if (newPath != pimpl->m_MovingPath) {
+		clearPath();
+
+		pimpl->m_MovingPath = std::move(newPath);
+		pimpl->setChildrenGridActors(pimpl->m_MovingPath, *m_OwnerActor.lock());
+	}
 }
 
 void MovingPathScript::clearPath()
 {
+	m_OwnerActor.lock()->removeAllChildren();
+	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
+	for (const auto & actorID : pimpl->m_ChildrenGridActorIDs)
+		eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(actorID));
+
+	pimpl->m_MovingPath.clear();
+	pimpl->m_ChildrenGridActorIDs.clear();
 }
 
 bool MovingPathScript::vInit(tinyxml2::XMLElement *xmlElement)
 {
+	auto relatedActorsPath = xmlElement->FirstChildElement("RelatedActorsPath");
+	pimpl->m_MovingPathGridActorPath = relatedActorsPath->Attribute("MovingPathGrid");
+
 	return true;
 }
 

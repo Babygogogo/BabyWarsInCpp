@@ -3,13 +3,28 @@
 
 #include "MovingPath.h"
 
+bool MovingPath::PathNode::operator==(const PathNode & rhs) const
+{
+	return m_GridIndex == rhs.m_GridIndex && m_RemainingMovementRange == rhs.m_RemainingMovementRange;
+}
+
 MovingPath::PathNode::PathNode(const GridIndex & index, int remainingMovementRange) : m_GridIndex{ index }, m_RemainingMovementRange{ remainingMovementRange }
 {
 }
 
+bool MovingPath::operator==(const MovingPath & rhs) const
+{
+	return m_Path == rhs.m_Path;
+}
+
+bool MovingPath::operator!=(const MovingPath & rhs) const
+{
+	return m_Path != rhs.m_Path;
+}
+
 bool MovingPath::isEmpty() const
 {
-	return !m_Path.empty();
+	return m_Path.empty();
 }
 
 void MovingPath::init(PathNode && pathNode)
@@ -62,13 +77,13 @@ bool MovingPath::hasNextOf(const GridIndex & index) const
 
 MovingPath::PathNode MovingPath::getFrontNode() const
 {
-	assert(isEmpty() && "MovingPath::getFrontNode() the path is empty.");
+	assert(!isEmpty() && "MovingPath::getFrontNode() the path is empty.");
 	return m_Path.front();
 }
 
 MovingPath::PathNode MovingPath::getBackNode() const
 {
-	assert(isEmpty() && "MovingPath::getBackNode() the path is empty.");
+	assert(!isEmpty() && "MovingPath::getBackNode() the path is empty.");
 	return m_Path.back();
 }
 

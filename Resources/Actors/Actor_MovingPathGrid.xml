@@ -2,8 +2,8 @@
 <Actor Type="MovePath" Resource="Actors\Actor_MovingPath.xml">
 	<Components>
 		<GeneralRenderComponent Type="Sprite"/>
-		<MovingPathScript>
+		<MovingPathGridScript>
 			<SpriteFrameNames ArrowUpper="MovingPathGrid_ArrowUpper.png" ArrowBelow="MovingPathGrid_ArrowBelow.png" ArrowLeft="MovingPathGrid_ArrowLeft.png" ArrowRight="MovingPathGrid_ArrowRight.png" CornerUpperRight="MovingPathGrid_CornerUpperRight.png" CornerUpperLeft="MovingPathGrid_CornerUpperLeft.png" CornerBelowRight="MovingPathGrid_CornerBelowRight.png" CornerBelowLeft="MovingPathGrid_CornerBelowLeft.png" LineHorizontal="MovingPathGrid_LineHorizontal.png" LineVertical="MovingPathGrid_LineVertical.png"/>
-		</MovingPathScript>
+		</MovingPathGridScript>
 	</Components>
 </Actor>

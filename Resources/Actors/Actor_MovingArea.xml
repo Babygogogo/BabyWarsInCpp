@@ -5,7 +5,7 @@
 			<Position LocalZOrder="0"/>
 		</GeneralRenderComponent>
 		<MovingAreaScript>
-			<RelatedActorsPath MovingRangeGrid="Actors\Actor_MovingAreaGrid.xml"/>
+			<RelatedActorsPath MovingAreaGrid="Actors\Actor_MovingAreaGrid.xml"/>
 		</MovingAreaScript>
 	</Components>
 </Actor>
