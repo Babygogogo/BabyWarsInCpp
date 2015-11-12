@@ -35,17 +35,18 @@ struct MovingPathScript::MovingPathScriptImpl
 MovingPath MovingPathScript::MovingPathScriptImpl::createPath(const MovingPath & oldPath, const GridIndex & destination, const MovingArea & area) const
 {
 	auto newPath = oldPath;
-	//If the destination is in the path already, cut the path and return.
-	if (newPath.hasIndex(destination)) {
-		newPath.tryFindAndCut(destination);
-		return newPath;
-	}
 
 	//Init the path if it's empty.
 	if (newPath.isEmpty()) {
 		auto startingIndex = area.getStartingIndex();
 		auto startingInfo = area.getMovingInfo(startingIndex);
 		newPath.init(MovingPath::PathNode(startingIndex, startingInfo.m_MaxRemainingMovementRange));
+	}
+
+	//If the destination is in the path already, cut the path and return.
+	if (newPath.hasIndex(destination)) {
+		newPath.tryFindAndCut(destination);
+		return newPath;
 	}
 
 	//The destination is not in the path. Try extending the path to destination. Return the new path if succeed.
@@ -132,6 +133,19 @@ void MovingPathScript::clearPath()
 
 	pimpl->m_MovingPath.clear();
 	pimpl->m_ChildrenGridActorIDs.clear();
+}
+
+bool MovingPathScript::isBackIndex(const GridIndex & index) const
+{
+	if (pimpl->m_MovingPath.isEmpty())
+		return false;
+
+	return pimpl->m_MovingPath.getBackNode().m_GridIndex == index;
+}
+
+const MovingPath & MovingPathScript::getUnderlyingPath() const
+{
+	return pimpl->m_MovingPath;
 }
 
 bool MovingPathScript::vInit(tinyxml2::XMLElement *xmlElement)

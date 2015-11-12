@@ -9,8 +9,8 @@
 #include "../Event/EvtDataActivateUnitAtPosition.h"
 #include "../Event/EvtDataDeactivateActiveUnit.h"
 #include "../Event/EvtDataDragScene.h"
-#include "../Event/EvtDataFinishMakeMovePath.h"
-#include "../Event/EvtDataMakeMovePath.h"
+#include "../Event/EvtDataFinishMakeMovingPath.h"
+#include "../Event/EvtDataMakeMovingPath.h"
 #include "../Script/WarSceneScript.h"
 #include "WarSceneController.h"
 
@@ -70,14 +70,14 @@ public:
 	virtual void onTouchOneByOneEnded(cocos2d::Touch * touch, cocos2d::Event * event) = 0;
 
 protected:
-	BaseState(std::weak_ptr<WarSceneControllerImpl> controllerImpl) : m_ControllerImpl{ std::move(controllerImpl) }{}
+	BaseState(std::weak_ptr<WarSceneControllerImpl> controllerImpl) : m_ControllerImpl{ std::move(controllerImpl) } {}
 
 	std::weak_ptr<WarSceneControllerImpl> m_ControllerImpl;
 };
 
-class WarSceneController::WarSceneControllerImpl::StateIdle : public BaseState{
+class WarSceneController::WarSceneControllerImpl::StateIdle : public BaseState {
 public:
-	StateIdle(std::weak_ptr<WarSceneControllerImpl> controllerImpl) : BaseState(controllerImpl){}
+	StateIdle(std::weak_ptr<WarSceneControllerImpl> controllerImpl) : BaseState(controllerImpl) {}
 	virtual ~StateIdle() = default;
 
 protected:
@@ -99,16 +99,16 @@ protected:
 		auto controllerImpl = m_ControllerImpl.lock();
 		auto script = controllerImpl->m_Script.lock();
 
-		if (script->canActivateUnitAtPosition(controllerImpl->m_TouchOneByOneBeganPosition)){
+		if (script->canActivateUnitAtPosition(controllerImpl->m_TouchOneByOneBeganPosition)) {
 			controllerImpl->queueEventActivateUnitAtPosition(controllerImpl->m_TouchOneByOneBeganPosition);
 			controllerImpl->setCurrentState<StateActivatedUnit>();
 		}
 	}
 };
 
-class WarSceneController::WarSceneControllerImpl::StateDraggingScene : public BaseState{
+class WarSceneController::WarSceneControllerImpl::StateDraggingScene : public BaseState {
 public:
-	StateDraggingScene(std::weak_ptr<WarSceneControllerImpl> manager) : BaseState(manager){}
+	StateDraggingScene(std::weak_ptr<WarSceneControllerImpl> manager) : BaseState(manager) {}
 	virtual ~StateDraggingScene() = default;
 
 protected:
@@ -127,9 +127,9 @@ protected:
 	}
 };
 
-class WarSceneController::WarSceneControllerImpl::StateActivatedUnit : public BaseState{
+class WarSceneController::WarSceneControllerImpl::StateActivatedUnit : public BaseState {
 public:
-	StateActivatedUnit(std::weak_ptr<WarSceneControllerImpl> manager) : BaseState(manager){}
+	StateActivatedUnit(std::weak_ptr<WarSceneControllerImpl> manager) : BaseState(manager) {}
 	virtual ~StateActivatedUnit() = default;
 
 protected:
@@ -141,14 +141,14 @@ protected:
 		auto controllerImpl = m_ControllerImpl.lock();
 		auto script = controllerImpl->m_Script.lock();
 
-		if (script->isUnitActiveAtPosition(controllerImpl->m_TouchOneByOneBeganPosition)){
+		if (script->isUnitActiveAtPosition(controllerImpl->m_TouchOneByOneBeganPosition)) {
 			//1. The player is dragging the activated unit. It means that he's making a move path for the unit.
 			//Set the touch state to DrawingMovePath and show the path as player touch.
 			controllerImpl->setCurrentState<StateMakingMovePath>();
 
 			controllerImpl->queueEventMakeMovePath(touch->getLocation());
 		}
-		else{
+		else {
 			//2. The player doesn't touch any units, or the unit he touches is not the activated unit. It means that he's dragging the scene.
 			//Just set the touch state to DraggingScene and set the position of the scene.
 			controllerImpl->saveCurrentStateToPrevious();
@@ -167,17 +167,17 @@ protected:
 		auto script = controllerImpl->m_Script.lock();
 		auto touchLocation = touch->getLocation();
 
-		if (script->isUnitActiveAtPosition(touchLocation)){
+		if (script->isUnitActiveAtPosition(touchLocation)) {
 			//The player touched the active unit. It means that he'll deactivate it.
 			controllerImpl->setCurrentState<StateIdle>();
 			controllerImpl->queueEventDeactivateActiveUnit();
 		}
-		else{
+		else {
 			//The player touched an inactive unit or an empty grid.
 			//Activate the unit (if it exist) and set the touch state corresponding to the activate result.
 			if (script->canActivateUnitAtPosition(touchLocation))
 				controllerImpl->queueEventActivateUnitAtPosition(touchLocation);
-			else{
+			else {
 				controllerImpl->setCurrentState<StateIdle>();
 				controllerImpl->queueEventDeactivateActiveUnit();
 			}
@@ -185,9 +185,9 @@ protected:
 	}
 };
 
-class WarSceneController::WarSceneControllerImpl::StateMakingMovePath : public BaseState{
+class WarSceneController::WarSceneControllerImpl::StateMakingMovePath : public BaseState {
 public:
-	StateMakingMovePath(std::weak_ptr<WarSceneControllerImpl> manager) : BaseState(manager){}
+	StateMakingMovePath(std::weak_ptr<WarSceneControllerImpl> manager) : BaseState(manager) {}
 	virtual ~StateMakingMovePath() = default;
 
 protected:
@@ -229,13 +229,13 @@ void WarSceneController::WarSceneControllerImpl::init(std::weak_ptr<WarSceneCont
 	setCurrentState<StateIdle>();
 
 	//Initialize the touch listener.
-	m_TouchOneByOne->onTouchBegan = [this](cocos2d::Touch * touch, cocos2d::Event * event){
+	m_TouchOneByOne->onTouchBegan = [this](cocos2d::Touch * touch, cocos2d::Event * event) {
 		return m_CurrentState->onTouchOneByOneBegan(touch, event);
 	};
-	m_TouchOneByOne->onTouchMoved = [this](cocos2d::Touch * touch, cocos2d::Event * event){
+	m_TouchOneByOne->onTouchMoved = [this](cocos2d::Touch * touch, cocos2d::Event * event) {
 		m_CurrentState->onTouchOneByOneMoved(touch, event);
 	};
-	m_TouchOneByOne->onTouchEnded = [this](cocos2d::Touch * touch, cocos2d::Event * event){
+	m_TouchOneByOne->onTouchEnded = [this](cocos2d::Touch * touch, cocos2d::Event * event) {
 		m_CurrentState->onTouchOneByOneEnded(touch, event);
 	};
 }
@@ -260,13 +260,13 @@ void WarSceneController::WarSceneControllerImpl::queueEventDeactivateActiveUnit(
 
 void WarSceneController::WarSceneControllerImpl::queueEventMakeMovePath(const cocos2d::Vec2 & pos) const
 {
-	auto makeMovePathEvent = std::make_unique<EvtDataMakeMovePath>(pos);
+	auto makeMovePathEvent = std::make_unique<EvtDataMakeMovingPath>(pos);
 	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::move(makeMovePathEvent));
 }
 
 void WarSceneController::WarSceneControllerImpl::queueEventFinishMakeMovePath(const cocos2d::Vec2 & pos) const
 {
-	auto makeMovePathEvent = std::make_unique<EvtDataFinishMakeMovePath>(pos);
+	auto makeMovePathEvent = std::make_unique<EvtDataFinishMakeMovingPath>(pos);
 	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::move(makeMovePathEvent));
 }
 
@@ -304,7 +304,7 @@ WarSceneController::~WarSceneController()
 void WarSceneController::setEnable(bool enable)
 {
 	auto eventDispatcher = cocos2d::Director::getInstance()->getEventDispatcher();
-	if (!enable){
+	if (!enable) {
 		eventDispatcher->removeEventListener(pimpl->m_TouchOneByOne);
 		return;
 	}

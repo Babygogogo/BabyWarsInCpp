@@ -2,6 +2,9 @@
 <UnitData ID="1" Type="Infantry">
 	<Movement Range="3" Type="Infantry"/>
 	<Animation>
-		<Frame Name="Unit_Infantry_01.png" DelaySec="99999"/>
+		<Normal>
+			<Frame Name="Unit_Infantry_01.png" DelaySec="99999"/>
+		</Normal>
+		<Others MovingSpeed="200"/>
 	</Animation>
 </UnitData>

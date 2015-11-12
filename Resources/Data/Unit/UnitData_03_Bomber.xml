@@ -2,6 +2,9 @@
 <UnitData ID="3" Type="Bomber">
 	<Movement Range="7" Type="Flying"/>
 	<Animation>
-		<Frame Name="Unit_Bomber_01.png" DelaySec="99999"/>
+		<Normal>
+			<Frame Name="Unit_Bomber_01.png" DelaySec="99999"/>
+		</Normal>
+		<Others MovingSpeed="350"/>
 	</Animation>
 </UnitData>

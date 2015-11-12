@@ -11,9 +11,10 @@
 #include "../Event/EvtDataActivateUnitAtPosition.h"
 #include "../Event/EvtDataDeactivateActiveUnit.h"
 #include "../Event/EvtDataDragScene.h"
-#include "../Event/EvtDataFinishMakeMovePath.h"
-#include "../Event/EvtDataMakeMovePath.h"
+#include "../Event/EvtDataFinishMakeMovingPath.h"
+#include "../Event/EvtDataMakeMovingPath.h"
 #include "../Resource/ResourceLoader.h"
+#include "../Utilities/MovingPath.h"
 #include "MovingPathScript.h"
 #include "MovingAreaScript.h"
 #include "TileMapScript.h"
@@ -31,8 +32,8 @@ struct WarSceneScript::WarSceneScriptImpl
 	void onActivateUnitAtPosition(const IEventData & e);
 	void onDeactivateActiveUnit(const IEventData & e);
 	void onDragScene(const IEventData & e);
-	void onFinishMakeMovePath(const IEventData & e);
-	void onMakeMovePath(const IEventData & e);
+	void onFinishMakeMovingPath(const IEventData & e);
+	void onMakeMovingPath(const IEventData & e);
 
 	cocos2d::Size getMapSize() const;
 	cocos2d::Vec2 toPositionInScene(const cocos2d::Vec2 & position) const;
@@ -69,8 +70,8 @@ void WarSceneScript::WarSceneScriptImpl::onActivateUnitAtPosition(const IEventDa
 	auto unitMapScript = m_ChildUnitMapScript.lock();
 	unitMapScript->activateUnitAtIndex(gridIndex);
 
-	auto movingRangeScript = m_ChildMovingAreaScript.lock();
-	movingRangeScript->clearAndShowArea(*unitMapScript->getActiveUnit(), *m_ChildTileMapScript.lock(), *unitMapScript);
+	auto movingAreaScript = m_ChildMovingAreaScript.lock();
+	movingAreaScript->clearAndShowArea(*unitMapScript->getActiveUnit(), *m_ChildTileMapScript.lock(), *unitMapScript);
 }
 
 void WarSceneScript::WarSceneScriptImpl::onDeactivateActiveUnit(const IEventData & e)
@@ -85,34 +86,35 @@ void WarSceneScript::WarSceneScriptImpl::onDragScene(const IEventData & e)
 	setPositionWithOffsetAndBoundary(dragSceneEvent.getOffset());
 }
 
-void WarSceneScript::WarSceneScriptImpl::onFinishMakeMovePath(const IEventData & e)
+void WarSceneScript::WarSceneScriptImpl::onFinishMakeMovingPath(const IEventData & e)
 {
-	if (isMovePathValid()) {
-		const auto & finishEvent = static_cast<const EvtDataFinishMakeMovePath &>(e);
-		auto destination = toGridIndex(finishEvent.getPosition());
+	const auto & finishEvent = static_cast<const EvtDataFinishMakeMovingPath &>(e);
+	auto touchGridIndex = toGridIndex(finishEvent.getPosition());
 
-		m_ChildUnitMapScript.lock()->deactivateAndMoveUnit(m_MovePathStartIndex, destination);
-		m_ChildMovingAreaScript.lock()->clearArea();
-	}
-	else {
+	auto movingPathScript = m_ChildMovingPathScript.lock();
+	auto unitMapScript = m_ChildUnitMapScript.lock();
+	auto movingUnit = unitMapScript->getActiveUnit();
+
+	if (movingPathScript->isBackIndex(touchGridIndex) && unitMapScript->canUnitStayAtIndex(*movingUnit, touchGridIndex))
+		m_ChildUnitMapScript.lock()->deactivateAndMoveUnit(*movingUnit, movingPathScript->getUnderlyingPath());
+	else
 		m_ChildUnitMapScript.lock()->deactivateActiveUnit();
-		m_ChildMovingAreaScript.lock()->clearArea();
-	}
 
-	m_ChildMovingPathScript.lock()->clearPath();
+	m_ChildMovingAreaScript.lock()->clearArea();
+	movingPathScript->clearPath();
 
 	//This is only for convenience and should be removed.
 	m_MovePathStartIndex.rowIndex = -1;
 	m_MovePathStartIndex.colIndex = -1;
 }
 
-void WarSceneScript::WarSceneScriptImpl::onMakeMovePath(const IEventData & e)
+void WarSceneScript::WarSceneScriptImpl::onMakeMovingPath(const IEventData & e)
 {
 	auto unitMapScript = m_ChildUnitMapScript.lock();
 	auto activeUnit = unitMapScript->getActiveUnit();
 	assert(activeUnit && "WarSceneScriptImpl::onMakeMovePath() there's no active unit.");
 
-	const auto & makePathEvent = static_cast<const EvtDataMakeMovePath &>(e);
+	const auto & makePathEvent = static_cast<const EvtDataMakeMovingPath &>(e);
 	auto destination = toGridIndex(makePathEvent.getPosition());
 	m_ChildMovingPathScript.lock()->showPath(destination, m_ChildMovingAreaScript.lock()->getUnderlyingArea());
 
@@ -260,11 +262,11 @@ void WarSceneScript::vPostInit()
 	eventDispatcher->vAddListener(EvtDataDragScene::s_EventType, pimpl, [this](const IEventData & e) {
 		pimpl->onDragScene(e);
 	});
-	eventDispatcher->vAddListener(EvtDataFinishMakeMovePath::s_EventType, pimpl, [this](const IEventData & e) {
-		pimpl->onFinishMakeMovePath(e);
+	eventDispatcher->vAddListener(EvtDataFinishMakeMovingPath::s_EventType, pimpl, [this](const IEventData & e) {
+		pimpl->onFinishMakeMovingPath(e);
 	});
-	eventDispatcher->vAddListener(EvtDataMakeMovePath::s_EventType, pimpl, [this](const IEventData & e) {
-		pimpl->onMakeMovePath(e);
+	eventDispatcher->vAddListener(EvtDataMakeMovingPath::s_EventType, pimpl, [this](const IEventData & e) {
+		pimpl->onMakeMovingPath(e);
 	});
 
 	//////////////////////////////////////////////////////////////////////////

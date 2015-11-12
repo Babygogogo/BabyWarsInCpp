@@ -7,7 +7,7 @@
 #include "UnitDataID.h"
 
 //Forward declarations.
-namespace cocos2d{
+namespace cocos2d {
 	class Animation;
 }
 
@@ -27,6 +27,7 @@ public:
 	const std::string & getMovementType() const;
 
 	cocos2d::Animation * getAnimation() const;
+	float getAnimationMovingSpeed() const;
 	float getDesignScaleFactor() const;
 
 private:

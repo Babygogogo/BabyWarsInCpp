@@ -1,7 +1,10 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
 <UnitData ID="4" Type="Battleship">
-	<Movement Range="6" Type="Sailing"/>
+	<Movement Range="5" Type="Sailing"/>
 	<Animation>
-		<Frame Name="Unit_Battleship_01.png" DelaySec="99999"/>
+		<Normal>
+			<Frame Name="Unit_Battleship_01.png" DelaySec="99999"/>
+		</Normal>
+		<Others MovingSpeed="300"/>
 	</Animation>
 </UnitData>

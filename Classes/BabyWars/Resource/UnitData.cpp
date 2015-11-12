@@ -13,24 +13,43 @@ struct UnitData::UnitDataImpl
 	UnitDataImpl();
 	~UnitDataImpl();
 
+	cocos2d::Vector<cocos2d::AnimationFrame*> loadAnimationFrames(tinyxml2::XMLElement * animationElement) const;
+
 	UnitDataID m_ID{ 0 };
 	std::string m_Type;
-	cocos2d::Animation * m_Animation{ cocos2d::Animation::create() };
+	cocos2d::Animation * m_NormalAnimation{ cocos2d::Animation::create() };
 	float m_DesignScaleFactor{};
+	float m_MovingSpeed{};
 
-	int m_Movement{ 0 };
+	int m_Movement{};
 	std::string m_MovementType;
 };
 
 UnitData::UnitDataImpl::UnitDataImpl()
 {
-	m_Animation->setDelayPerUnit(1);
-	m_Animation->retain();
+	m_NormalAnimation->setDelayPerUnit(1);
+	m_NormalAnimation->retain();
 }
 
 UnitData::UnitDataImpl::~UnitDataImpl()
 {
-	m_Animation->release();
+	m_NormalAnimation->release();
+}
+
+cocos2d::Vector<cocos2d::AnimationFrame*> UnitData::UnitDataImpl::loadAnimationFrames(tinyxml2::XMLElement * animationElement) const
+{
+	auto animationFrames = cocos2d::Vector<cocos2d::AnimationFrame*>();
+	const auto spriteFrameCache = cocos2d::SpriteFrameCache::getInstance();
+
+	for (auto frameElement = animationElement->FirstChildElement("Frame"); frameElement; frameElement = frameElement->NextSiblingElement()) {
+		//Load a frame of the animation.
+		auto spriteFrame = spriteFrameCache->getSpriteFrameByName(frameElement->Attribute("Name"));
+		auto delaySec = frameElement->FloatAttribute("DelaySec");
+		animationFrames.pushBack(cocos2d::AnimationFrame::create(spriteFrame, delaySec, cocos2d::ValueMap()));
+	}
+	assert(animationFrames.size() > 0 && "UnitData::initialize() the animation is empty.");
+
+	return animationFrames;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -61,21 +80,16 @@ void UnitData::initialize(const char * xmlPath)
 	pimpl->m_Movement = movementElement->IntAttribute("Range");
 	pimpl->m_MovementType = movementElement->Attribute("Type");
 
-	//Load animation.
-	auto animationFrames = cocos2d::Vector<cocos2d::AnimationFrame*>();
-	const auto spriteFrameCache = cocos2d::SpriteFrameCache::getInstance();
-	const auto animationElement = rootElement->FirstChildElement("Animation");
-	for (auto frameElement = animationElement->FirstChildElement("Frame"); frameElement; frameElement = frameElement->NextSiblingElement()){
-		//Load a frame of the animation.
-		auto spriteFrame = spriteFrameCache->getSpriteFrameByName(frameElement->Attribute("Name"));
-		auto delaySec = frameElement->FloatAttribute("DelaySec");
-		animationFrames.pushBack(cocos2d::AnimationFrame::create(spriteFrame, delaySec, cocos2d::ValueMap()));
-	}
-	assert(animationFrames.size() > 0 && "UnitData::initialize() the animation is empty.");
-	pimpl->m_Animation->setFrames(animationFrames);
+	//Load animations.
+	auto animationsElement = rootElement->FirstChildElement("Animation");
+	pimpl->m_NormalAnimation->setFrames(pimpl->loadAnimationFrames(animationsElement->FirstChildElement("Normal")));
+
+	//Load other animation data.
+	auto othersElement = animationsElement->FirstChildElement("Others");
+	pimpl->m_MovingSpeed = othersElement->FloatAttribute("MovingSpeed");
 
 	//Calculate the design scale factor.
-	auto spriteFrameSize = animationFrames.at(0)->getSpriteFrame()->getOriginalSize();
+	auto spriteFrameSize = pimpl->m_NormalAnimation->getFrames().at(0)->getSpriteFrame()->getOriginalSize();
 	auto designGridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
 	pimpl->m_DesignScaleFactor = std::max(designGridSize.width / spriteFrameSize.width, designGridSize.height / spriteFrameSize.height);
 }
@@ -102,7 +116,12 @@ const std::string & UnitData::getMovementType() const
 
 cocos2d::Animation * UnitData::getAnimation() const
 {
-	return pimpl->m_Animation;
+	return pimpl->m_NormalAnimation;
+}
+
+float UnitData::getAnimationMovingSpeed() const
+{
+	return pimpl->m_MovingSpeed;
 }
 
 float UnitData::getDesignScaleFactor() const

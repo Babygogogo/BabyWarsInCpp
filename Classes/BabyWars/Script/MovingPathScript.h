@@ -5,6 +5,7 @@
 
 struct GridIndex;
 class MovingArea;
+class MovingPath;
 
 class MovingPathScript : public BaseScriptComponent
 {
@@ -18,6 +19,10 @@ public:
 
 	void showPath(const GridIndex & destination, const MovingArea & area);
 	void clearPath();
+
+	bool isBackIndex(const GridIndex & index) const;
+
+	const MovingPath & getUnderlyingPath() const;
 
 	//Disable copy/move constructor and operator=.
 	MovingPathScript(const MovingPathScript &) = delete;

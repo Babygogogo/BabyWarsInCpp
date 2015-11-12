@@ -165,13 +165,7 @@
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataActivateUnitAtPosition.cpp">
       <Filter>src\BabyWars\Event</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataMakeMovePath.cpp">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataDeactivateActiveUnit.cpp">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataFinishMakeMove.cpp">
       <Filter>src\BabyWars\Event</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Script\MovingPathScript.cpp">
@@ -191,6 +185,12 @@
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Script\MovingPathGridScript.cpp">
       <Filter>src\BabyWars\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPath.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataFinishMakeMovingPath.cpp">
+      <Filter>src\BabyWars\Event</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -341,13 +341,7 @@
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataActivateUnitAtPosition.h">
       <Filter>src\BabyWars\Event</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataMakeMovePath.h">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataDeactivateActiveUnit.h">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataFinishMakeMovePath.h">
       <Filter>src\BabyWars\Event</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Script\MovingPathScript.h">
@@ -370,6 +364,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Utilities\AdjacentDirection.h">
       <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPath.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataFinishMakeMovingPath.h">
+      <Filter>src\BabyWars\Event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

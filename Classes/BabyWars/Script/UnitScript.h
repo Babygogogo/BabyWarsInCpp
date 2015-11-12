@@ -6,6 +6,7 @@
 //Forward declaration.
 class UnitData;
 struct GridIndex;
+class MovingPath;
 
 class UnitScript : public BaseScriptComponent
 {
@@ -32,6 +33,7 @@ public:
 	bool canStayTogether(const UnitScript & otherUnit) const;
 
 	void moveTo(const GridIndex & gridIndex);
+	void moveAlongPath(const MovingPath & path);
 
 	//Disable copy/move constructor and operator=.
 	UnitScript(const UnitScript &) = delete;

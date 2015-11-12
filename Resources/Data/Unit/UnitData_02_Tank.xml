@@ -2,6 +2,9 @@
 <UnitData ID="2" Type="Tank">
 	<Movement Range="6" Type="Track"/>
 	<Animation>
-		<Frame Name="Unit_Tank_01.png" DelaySec="99999"/>
+		<Normal>
+			<Frame Name="Unit_Tank_01.png" DelaySec="99999"/>
+		</Normal>
+		<Others MovingSpeed="300"/>
 	</Animation>
 </UnitData>

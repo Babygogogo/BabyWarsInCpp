@@ -6,6 +6,7 @@
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../Resource/ResourceLoader.h"
 #include "../Resource/UnitData.h"
+#include "../Utilities/MovingPath.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../../BabyEngine/Utilities/GridIndex.h"
 
@@ -14,8 +15,10 @@
 //////////////////////////////////////////////////////////////////////////
 struct UnitScript::UnitScriptImpl
 {
-	UnitScriptImpl(){};
-	~UnitScriptImpl(){};
+	UnitScriptImpl() {};
+	~UnitScriptImpl() {};
+
+	float calculateMovingTimePerGrid(const cocos2d::Size & gridSize, float movingSpeed) const;
 
 	GridIndex m_GridIndex;
 	std::shared_ptr<UnitData> m_UnitData;
@@ -99,7 +102,7 @@ bool UnitScript::canActivate() const
 void UnitScript::setActive(bool active)
 {
 	auto underlyingNode = pimpl->m_RenderComponent.lock()->getSceneNode();
-	if (!active){
+	if (!active) {
 		underlyingNode->stopAllActions();
 		underlyingNode->setRotation(0);
 		return;
@@ -128,6 +131,27 @@ void UnitScript::moveTo(const GridIndex & gridIndex)
 	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
 	auto moveTo = cocos2d::MoveTo::create(0.5, gridIndex.toPosition(gridSize));
 	pimpl->m_RenderComponent.lock()->getSceneNode()->runAction(moveTo);
+}
+
+void UnitScript::moveAlongPath(const MovingPath & path)
+{
+	assert(path.getLength() > 1 && "UnitScript::moveAlongPath() the length of the path <= 1.");
+	assert(path.getFrontNode().m_GridIndex == pimpl->m_GridIndex && "UnitScript::moveAlongPath() the unit is not at the starting grid of the path.");
+	assert(path.getFrontNode().m_GridIndex != path.getBackNode().m_GridIndex && "UnitScript::moveAlongPath() the starting and ending grid of the path is the same.");
+
+	pimpl->m_GridIndex = path.getBackNode().m_GridIndex;
+
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
+	auto movingSpeed = pimpl->m_UnitData->getAnimationMovingSpeed();
+	auto movingTimePerGrid = gridSize.width / movingSpeed;
+
+	const auto & underlyingPath = path.getUnderlyingPath();
+	auto moveActionList = cocos2d::Vector<cocos2d::FiniteTimeAction*>();
+	for (auto i = 1u; i < underlyingPath.size(); ++i)
+		moveActionList.pushBack(cocos2d::MoveTo::create(movingTimePerGrid, underlyingPath[i].m_GridIndex.toPosition(gridSize)));
+
+	auto moveSequence = cocos2d::Sequence::create(moveActionList);
+	pimpl->m_RenderComponent.lock()->getSceneNode()->runAction(moveSequence);
 }
 
 const std::string UnitScript::Type = "UnitScript";

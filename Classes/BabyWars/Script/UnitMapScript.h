@@ -4,11 +4,12 @@
 #include "../../BabyEngine/Actor/BaseScriptComponent.h"
 
 //Forward declaration.
-namespace cocos2d{
+namespace cocos2d {
 	class Size;
 	class Vec2;
 }
 class UnitScript;
+class MovingPath;
 struct Matrix2DDimension;
 struct GridIndex;
 
@@ -45,7 +46,7 @@ public:
 
 	//Deactivate the unit at the fromIndex. Then move it to toIndex if the path is valid.
 	//Nothing happens if there's no unit at fromIndex.
-	void deactivateAndMoveUnit(const GridIndex & fromIndex, const GridIndex & toIndex);
+	void deactivateAndMoveUnit(UnitScript & unit, const MovingPath & path);
 
 	//Disable copy/move constructor and operator=.
 	UnitMapScript(const UnitMapScript &) = delete;

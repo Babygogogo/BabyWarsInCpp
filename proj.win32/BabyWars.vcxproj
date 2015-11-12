@@ -166,8 +166,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataActivateUnitAtPosition.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataDeactivateActiveUnit.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataDragScene.cpp" />
-    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataFinishMakeMove.cpp" />
-    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataMakeMovePath.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataFinishMakeMovingPath.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPath.cpp" />
     <ClCompile Include="..\Classes\BabyWars\GameLogic\BabyWarsGameLogic.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Graphic2D\WarSceneController.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\ResourceLoader.cpp" />
@@ -225,8 +225,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataActivateUnitAtPosition.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataDeactivateActiveUnit.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataDragScene.h" />
-    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataFinishMakeMovePath.h" />
-    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataMakeMovePath.h" />
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataFinishMakeMovingPath.h" />
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPath.h" />
     <ClInclude Include="..\Classes\BabyWars\GameLogic\BabyWarsGameLogic.h" />
     <ClInclude Include="..\Classes\BabyWars\Graphic2D\WarSceneController.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\ResourceLoader.h" />
