@@ -1,7 +1,7 @@
 #include <cassert>
 
+#include "../Utilities/GridIndex.h"
 #include "MovingArea.h"
-#include "../../BabyEngine/Utilities/GridIndex.h"
 
 bool MovingArea::MovingInfo::operator!=(const MovingInfo & rhs) const
 {

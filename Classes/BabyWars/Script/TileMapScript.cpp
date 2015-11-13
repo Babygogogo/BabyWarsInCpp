@@ -3,25 +3,25 @@
 #include "cocos2d.h"
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
-#include "TileMapScript.h"
-#include "TileScript.h"
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
-#include "../Resource/TileData.h"
-#include "../Resource/ResourceLoader.h"
-#include "../../BabyEngine/Utilities/StringToVector.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
-#include "../../BabyEngine/Utilities/GridIndex.h"
-#include "../../BabyEngine/Utilities/Matrix2D.h"
+#include "../../BabyEngine/Utilities/StringToVector.h"
+#include "../Resource/ResourceLoader.h"
+#include "../Resource/TileData.h"
+#include "../Utilities/GridIndex.h"
+#include "../Utilities/Matrix2D.h"
+#include "TileMapScript.h"
+#include "TileScript.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of TileMapScriptImpl.
 //////////////////////////////////////////////////////////////////////////
 struct TileMapScript::TileMapScriptImpl
 {
-	TileMapScriptImpl(){};
-	~TileMapScriptImpl(){};
+	TileMapScriptImpl() {};
+	~TileMapScriptImpl() {};
 
 	static std::string s_TileActorPath;
 
@@ -85,7 +85,7 @@ void TileMapScript::loadTileMap(const char * xmlPath)
 	//Start loading the tile indexes of the tile map.
 	//Because the code regards the bottom row as the first row while the xml regards the up most row as the first row, we must read the rows in reverse order.
 	auto rowElement = mapElement->FirstChildElement("Row");
-	for (auto rowIndex = dimension.rowCount - 1; rowIndex < dimension.rowCount; --rowIndex){
+	for (auto rowIndex = dimension.rowCount - 1; rowIndex < dimension.rowCount; --rowIndex) {
 		assert(rowElement && "TileMapScript::loadTileMap() the rows count is less than the height of the TileMap.");
 
 		//Load the tile indexes of the row.
@@ -93,7 +93,7 @@ void TileMapScript::loadTileMap(const char * xmlPath)
 		assert(rowIndexes.size() == dimension.colCount && "TileMapScript::loadTileMap() the columns count is less than the width of the TileMap.");
 
 		//For each ID in the row, create an tile actor add the scripts into the tile map.
-		for (auto colIndex = rowIndexes.size() * 0; colIndex < rowIndexes.size(); ++colIndex){
+		for (auto colIndex = rowIndexes.size() * 0; colIndex < rowIndexes.size(); ++colIndex) {
 			auto tileElement = tilesElement->FirstChildElement((std::string("Index") + rowIndexes[colIndex]).c_str());
 			if (!tileElement)
 				continue;

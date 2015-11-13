@@ -1,21 +1,21 @@
 #include "cocos2d.h"
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
-#include "TileScript.h"
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
-#include "../Resource/TileData.h"
-#include "../Resource/ResourceLoader.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
-#include "../../BabyEngine/Utilities/GridIndex.h"
+#include "../Resource/ResourceLoader.h"
+#include "../Resource/TileData.h"
+#include "../Utilities/GridIndex.h"
+#include "TileScript.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of TileScriptImpl.
 //////////////////////////////////////////////////////////////////////////
 struct TileScript::TileScriptImpl
 {
-	TileScriptImpl(){};
-	~TileScriptImpl(){};
+	TileScriptImpl() {};
+	~TileScriptImpl() {};
 
 	GridIndex m_GridIndex;
 	std::shared_ptr<TileData> m_TileData;

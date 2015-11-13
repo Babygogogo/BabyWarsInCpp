@@ -299,18 +299,7 @@ WarSceneController::WarSceneController() : pimpl{ std::make_shared<WarSceneContr
 
 WarSceneController::~WarSceneController()
 {
-}
-
-void WarSceneController::setEnable(bool enable)
-{
-	auto eventDispatcher = cocos2d::Director::getInstance()->getEventDispatcher();
-	if (!enable) {
-		eventDispatcher->removeEventListener(pimpl->m_TouchOneByOne);
-		return;
-	}
-
-	auto renderComponent = pimpl->m_RenderComponent.lock();
-	eventDispatcher->addEventListenerWithSceneGraphPriority(pimpl->m_TouchOneByOne, renderComponent->getSceneNode());
+	unsetTarget();
 }
 
 void WarSceneController::setTarget(const std::shared_ptr<Actor> & actor)
@@ -326,4 +315,27 @@ void WarSceneController::setTarget(const std::shared_ptr<Actor> & actor)
 	pimpl->m_Actor = actor;
 	pimpl->m_Script = sceneScript;
 	pimpl->m_RenderComponent = renderComponent;
+}
+
+void WarSceneController::unsetTarget()
+{
+	setEnable(false);
+
+	pimpl->m_Actor.reset();
+	pimpl->m_Script.reset();
+	pimpl->m_RenderComponent.reset();
+}
+
+void WarSceneController::setEnable(bool enable)
+{
+	auto eventDispatcher = cocos2d::Director::getInstance()->getEventDispatcher();
+	if (!enable) {
+		eventDispatcher->removeEventListener(pimpl->m_TouchOneByOne);
+		return;
+	}
+
+	assert(!pimpl->m_Actor.expired() && "WarSceneController::setEnable() the controller has no target actor.");
+
+	auto renderComponent = pimpl->m_RenderComponent.lock();
+	eventDispatcher->addEventListenerWithSceneGraphPriority(pimpl->m_TouchOneByOne, renderComponent->getSceneNode());
 }

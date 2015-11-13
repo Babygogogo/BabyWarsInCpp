@@ -5,8 +5,6 @@
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
-#include "../../BabyEngine/Utilities/GridIndex.h"
-#include "../../BabyEngine/Utilities/Matrix2DDimension.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../Event/EvtDataActivateUnitAtPosition.h"
 #include "../Event/EvtDataDeactivateActiveUnit.h"
@@ -14,9 +12,11 @@
 #include "../Event/EvtDataFinishMakeMovingPath.h"
 #include "../Event/EvtDataMakeMovingPath.h"
 #include "../Resource/ResourceLoader.h"
+#include "../Utilities/GridIndex.h"
+#include "../Utilities/Matrix2DDimension.h"
 #include "../Utilities/MovingPath.h"
-#include "MovingPathScript.h"
 #include "MovingAreaScript.h"
+#include "MovingPathScript.h"
 #include "TileMapScript.h"
 #include "UnitMapScript.h"
 #include "WarSceneScript.h"
@@ -40,8 +40,6 @@ struct WarSceneScript::WarSceneScriptImpl
 	GridIndex toGridIndex(const cocos2d::Vec2 & positionInWindow) const;
 
 	void setPositionWithOffsetAndBoundary(const cocos2d::Vec2 & offset);
-
-	bool isMovePathValid() const;
 
 	GridIndex m_MovePathStartIndex{ -1, -1 };
 
@@ -184,12 +182,6 @@ void WarSceneScript::WarSceneScriptImpl::setPositionWithOffsetAndBoundary(const 
 	//////////////////////////////////////////////////////////////////////////
 	//Make use of the newPosition.
 	underlyingNode->setPosition(newPosition);
-}
-
-bool WarSceneScript::WarSceneScriptImpl::isMovePathValid() const
-{
-	//#TODO: Complete this function.
-	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////

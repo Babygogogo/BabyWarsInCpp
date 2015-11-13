@@ -16,7 +16,7 @@ USING_NS_CC;
 //////////////////////////////////////////////////////////////////////////
 struct AppDelegate::AppDelegateImpl
 {
-	AppDelegateImpl(){};
+	AppDelegateImpl() {};
 	~AppDelegateImpl();
 
 	void initGame();
@@ -51,7 +51,7 @@ void AppDelegate::AppDelegateImpl::initGame()
 	humanView->init(humanView);
 
 	auto initialActor = gameLogic->createActor(resourceLoader->getInitialScenePath().c_str());
-	auto warSceneController = std::make_unique<WarSceneController>();
+	std::unique_ptr<IController> warSceneController = std::make_unique<WarSceneController>();
 	warSceneController->setTarget(initialActor);
 	warSceneController->setEnable(true);
 

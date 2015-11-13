@@ -99,9 +99,6 @@
     <ClCompile Include="..\Classes\BabyEngine\Process\ProcessRunner.cpp">
       <Filter>src\BabyEngine\Process</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\GridIndex.cpp">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Utilities\RelativePosition.cpp">
       <Filter>src\BabyEngine\Utilities</Filter>
     </ClCompile>
@@ -192,6 +189,9 @@
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataFinishMakeMovingPath.cpp">
       <Filter>src\BabyWars\Event</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\GridIndex.cpp">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -255,15 +255,6 @@
       <Filter>src\BabyEngine\Process</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Utilities\GenericFactory.h">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\GridIndex.h">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\Matrix2D.h">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\Matrix2DDimension.h">
       <Filter>src\BabyEngine\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Utilities\RelativePosition.h">
@@ -362,14 +353,23 @@
     <ClInclude Include="..\Classes\BabyWars\Script\MovingPathGridScript.h">
       <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\AdjacentDirection.h">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPath.h">
       <Filter>src\BabyWars\Event</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataFinishMakeMovingPath.h">
       <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\AdjacentDirection.h">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\GridIndex.h">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\Matrix2D.h">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\Matrix2DDimension.h">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

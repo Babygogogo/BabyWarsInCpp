@@ -3,17 +3,17 @@
 
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
-#include "MovingPathScript.h"
-#include "MovingPathGridScript.h"
 #include "../../BabyEngine/Actor/Actor.h"
-#include "../../BabyEngine/GameLogic/BaseGameLogic.h"
-#include "../../BabyEngine/Utilities/GridIndex.h"
-#include "../../BabyEngine/Utilities/AdjacentDirection.h"
-#include "../../BabyEngine/Utilities/SingletonContainer.h"
-#include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/Event/EvtDataRequestDestroyActor.h"
+#include "../../BabyEngine/Event/IEventDispatcher.h"
+#include "../../BabyEngine/GameLogic/BaseGameLogic.h"
+#include "../../BabyEngine/Utilities/SingletonContainer.h"
+#include "../Utilities/AdjacentDirection.h"
+#include "../Utilities/GridIndex.h"
 #include "../Utilities/MovingArea.h"
 #include "../Utilities/MovingPath.h"
+#include "MovingPathGridScript.h"
+#include "MovingPathScript.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of MovingPathScriptImpl.

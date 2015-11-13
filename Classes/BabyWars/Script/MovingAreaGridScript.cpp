@@ -1,20 +1,20 @@
 #include "cocos2d.h"
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
-#include "MovingAreaGridScript.h"
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
-#include "../../BabyEngine/Utilities/GridIndex.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../../BabyWars/Resource/ResourceLoader.h"
+#include "../Utilities/GridIndex.h"
+#include "MovingAreaGridScript.h"
 
 //////////////////////////////////////////////////////////////////////////
-//Definition of MovingRangeGridScriptImpl.
+//Definition of MovingAreaGridScriptImpl.
 //////////////////////////////////////////////////////////////////////////
-struct MovingAreaGridScript::MovingRangeGridScriptImpl
+struct MovingAreaGridScript::MovingAreaGridScriptImpl
 {
-	MovingRangeGridScriptImpl(){};
-	~MovingRangeGridScriptImpl(){};
+	MovingAreaGridScriptImpl() = default;
+	~MovingAreaGridScriptImpl() = default;
 
 	GridIndex m_GridIndex;
 
@@ -24,7 +24,7 @@ struct MovingAreaGridScript::MovingRangeGridScriptImpl
 //////////////////////////////////////////////////////////////////////////
 //Implementation of WorldScript.
 //////////////////////////////////////////////////////////////////////////
-MovingAreaGridScript::MovingAreaGridScript() : pimpl{ std::make_unique<MovingRangeGridScriptImpl>() }
+MovingAreaGridScript::MovingAreaGridScript() : pimpl{ std::make_unique<MovingAreaGridScriptImpl>() }
 {
 }
 

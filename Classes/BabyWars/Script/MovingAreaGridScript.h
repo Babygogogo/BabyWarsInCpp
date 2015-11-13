@@ -30,8 +30,8 @@ private:
 	virtual void vPostInit() override;
 
 	//Implementation stuff.
-	struct MovingRangeGridScriptImpl;
-	std::unique_ptr<MovingRangeGridScriptImpl> pimpl;
+	struct MovingAreaGridScriptImpl;
+	std::unique_ptr<MovingAreaGridScriptImpl> pimpl;
 };
 
 #endif // !__MOVING_RANGE_GRID_SCRIPT__

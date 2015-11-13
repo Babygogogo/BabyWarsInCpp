@@ -4,7 +4,7 @@
 #include <vector>
 #include <list>
 
-#include "../../BabyEngine/Utilities/GridIndex.h"
+#include "../Utilities/GridIndex.h"
 
 class MovingPath
 {

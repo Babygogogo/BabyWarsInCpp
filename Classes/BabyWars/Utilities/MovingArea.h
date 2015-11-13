@@ -4,7 +4,7 @@
 #include <map>
 #include <vector>
 
-#include "../../BabyEngine/Utilities/GridIndex.h"
+#include "../Utilities/GridIndex.h"
 
 class MovingArea
 {

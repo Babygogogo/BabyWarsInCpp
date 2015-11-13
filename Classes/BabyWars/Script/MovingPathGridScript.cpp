@@ -1,14 +1,14 @@
 #include "cocos2d.h"
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
-#include "MovingPathGridScript.h"
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
-#include "../../BabyEngine/Utilities/AdjacentDirection.h"
-#include "../../BabyEngine/Utilities/GridIndex.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../Resource/ResourceLoader.h"
+#include "../Utilities/AdjacentDirection.h"
+#include "../Utilities/GridIndex.h"
 #include "../Utilities/MovingPath.h"
+#include "MovingPathGridScript.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of MovingPathGridScriptImpl.
