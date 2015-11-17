@@ -32,7 +32,6 @@ public:
 	bool canPassThrough(const UnitScript & otherUnit) const;
 	bool canStayTogether(const UnitScript & otherUnit) const;
 
-	void moveTo(const GridIndex & gridIndex);
 	void moveAlongPath(const MovingPath & path);
 
 	//Disable copy/move constructor and operator=.

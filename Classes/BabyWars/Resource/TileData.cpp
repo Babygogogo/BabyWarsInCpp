@@ -19,7 +19,7 @@ struct TileData::TileDataImpl
 	std::unordered_map<std::string, int> m_MovingCost;
 
 	cocos2d::Animation * m_Animation{ cocos2d::Animation::create() };
-	float m_DesignScaleFactor{};
+	float m_DefaultScaleFactorX{}, m_DefaultScaleFactorY{};
 };
 
 TileData::TileDataImpl::TileDataImpl()
@@ -65,7 +65,7 @@ void TileData::initialize(const char * xmlPath)
 	auto animationFrames = cocos2d::Vector<cocos2d::AnimationFrame*>();
 	const auto spriteFrameCache = cocos2d::SpriteFrameCache::getInstance();
 	const auto animationElement = rootElement->FirstChildElement("Animation");
-	for (auto frameElement = animationElement->FirstChildElement("Frame"); frameElement; frameElement = frameElement->NextSiblingElement()){
+	for (auto frameElement = animationElement->FirstChildElement("Frame"); frameElement; frameElement = frameElement->NextSiblingElement()) {
 		//Load a frame of the animation.
 		auto spriteFrame = spriteFrameCache->getSpriteFrameByName(frameElement->Attribute("Name"));
 		auto delaySec = frameElement->FloatAttribute("DelaySec");
@@ -76,8 +76,9 @@ void TileData::initialize(const char * xmlPath)
 
 	//Calculate the design scale factor.
 	auto spriteFrameSize = animationFrames.at(0)->getSpriteFrame()->getOriginalSize();
-	auto designGridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
-	pimpl->m_DesignScaleFactor = std::max(designGridSize.width / spriteFrameSize.width, designGridSize.height / spriteFrameSize.height);
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
+	pimpl->m_DefaultScaleFactorX = gridSize.width / spriteFrameSize.width;
+	pimpl->m_DefaultScaleFactorY = gridSize.height / spriteFrameSize.height;
 }
 
 TileDataID TileData::getID() const
@@ -104,7 +105,12 @@ cocos2d::Animation * TileData::getAnimation() const
 	return pimpl->m_Animation;
 }
 
-float TileData::getDesignScaleFactor() const
+float TileData::getDefaultScaleFactorX() const
 {
-	return pimpl->m_DesignScaleFactor;
+	return pimpl->m_DefaultScaleFactorX;
+}
+
+float TileData::getDefaultScaleFactorY() const
+{
+	return pimpl->m_DefaultScaleFactorY;
 }

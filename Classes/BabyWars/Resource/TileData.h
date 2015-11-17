@@ -7,7 +7,7 @@
 #include "TileDataID.h"
 
 //Forward declarations.
-namespace cocos2d{
+namespace cocos2d {
 	class Animation;
 }
 
@@ -26,7 +26,8 @@ public:
 	int getMovingCost(const std::string & movementType) const;
 
 	cocos2d::Animation * getAnimation() const;
-	float getDesignScaleFactor() const;
+	float getDefaultScaleFactorX() const;
+	float getDefaultScaleFactorY() const;
 
 private:
 	//Implementation stuff.

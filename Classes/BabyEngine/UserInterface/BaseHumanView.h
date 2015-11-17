@@ -28,10 +28,8 @@ public:
 
 	void init(std::weak_ptr<BaseHumanView> self);
 
-	void addActor(const std::shared_ptr<Actor> & actor);
-	void removeActor(ActorID actorID);
-
-	cocos2d::Node * getSceneNode() const;
+	bool setAndRunSceneActor(const std::shared_ptr<Actor> & actor);
+	std::shared_ptr<Actor> getSceneActor() const;
 
 	void setController(std::unique_ptr<IController> controller);
 

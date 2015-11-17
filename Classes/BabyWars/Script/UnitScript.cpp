@@ -18,8 +18,6 @@ struct UnitScript::UnitScriptImpl
 	UnitScriptImpl() {};
 	~UnitScriptImpl() {};
 
-	float calculateMovingTimePerGrid(const cocos2d::Size & gridSize, float movingSpeed) const;
-
 	GridIndex m_GridIndex;
 	std::shared_ptr<UnitData> m_UnitData;
 
@@ -62,11 +60,8 @@ void UnitScript::loadUnit(tinyxml2::XMLElement * xmlElement)
 	underlyingSprite->setSpriteFrame(unitData->getAnimation()->getFrames().at(0)->getSpriteFrame());
 
 	//Scale the sprite so that it meets the real game grid size.
-	auto designGridSize = resourceLoader->getDesignGridSize();
-	auto realGameGridSize = resourceLoader->getRealGameGridSize();
-	auto designScaleFactor = unitData->getDesignScaleFactor();
-	underlyingSprite->setScaleX(realGameGridSize.width / designGridSize.width * designScaleFactor);
-	underlyingSprite->setScaleY(realGameGridSize.height / designGridSize.height * designScaleFactor);
+	underlyingSprite->setScaleX(unitData->getDefaultScaleFactorX());
+	underlyingSprite->setScaleY(unitData->getDefaultScaleFactorY());
 
 	pimpl->m_UnitData = std::move(unitData);
 
@@ -85,7 +80,7 @@ void UnitScript::setGridIndexAndPosition(const GridIndex & gridIndex)
 	pimpl->m_GridIndex = gridIndex;
 
 	//Set the position of the node according to indexes.
-	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
 	pimpl->m_RenderComponent.lock()->getSceneNode()->setPosition(gridIndex.toPosition(gridSize));
 }
 
@@ -124,15 +119,6 @@ bool UnitScript::canStayTogether(const UnitScript & otherUnit) const
 	return false;
 }
 
-void UnitScript::moveTo(const GridIndex & gridIndex)
-{
-	pimpl->m_GridIndex = gridIndex;
-
-	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
-	auto moveTo = cocos2d::MoveTo::create(0.5, gridIndex.toPosition(gridSize));
-	pimpl->m_RenderComponent.lock()->getSceneNode()->runAction(moveTo);
-}
-
 void UnitScript::moveAlongPath(const MovingPath & path)
 {
 	assert(path.getLength() > 1 && "UnitScript::moveAlongPath() the length of the path <= 1.");
@@ -141,7 +127,7 @@ void UnitScript::moveAlongPath(const MovingPath & path)
 
 	pimpl->m_GridIndex = path.getBackNode().m_GridIndex;
 
-	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
 	auto movingSpeed = pimpl->m_UnitData->getAnimationMovingSpeed();
 	auto movingTimePerGrid = gridSize.width / movingSpeed;
 

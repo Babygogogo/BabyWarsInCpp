@@ -124,7 +124,7 @@ void WarSceneScript::WarSceneScriptImpl::onMakeMovingPath(const IEventData & e)
 cocos2d::Size WarSceneScript::WarSceneScriptImpl::getMapSize() const
 {
 	auto tileMapDimension = m_ChildTileMapScript.lock()->getMapDimension();
-	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
 
 	return{ gridSize.width * tileMapDimension.colCount, gridSize.height * tileMapDimension.rowCount };
 }
@@ -137,7 +137,7 @@ cocos2d::Vec2 WarSceneScript::WarSceneScriptImpl::toPositionInScene(const cocos2
 GridIndex WarSceneScript::WarSceneScriptImpl::toGridIndex(const cocos2d::Vec2 & positionInWindow) const
 {
 	auto positionInScene = toPositionInScene(positionInWindow);
-	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
 	return GridIndex(positionInScene, gridSize);
 }
 
@@ -152,7 +152,7 @@ void WarSceneScript::WarSceneScriptImpl::setPositionWithOffsetAndBoundary(const 
 	//Modify the new position so that the scene can't be set too far away.
 	//Firstly, get the size of window, boundary and scene.
 	auto windowSize = cocos2d::Director::getInstance()->getOpenGLView()->getFrameSize();
-	auto extraBoundarySize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
+	auto extraBoundarySize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
 	auto warSceneSize = getMapSize();
 	warSceneSize.width *= underlyingNode->getScaleX();
 	warSceneSize.height *= underlyingNode->getScaleY();

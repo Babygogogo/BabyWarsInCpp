@@ -21,7 +21,8 @@ protected:
 	BaseGameView();
 
 private:
-	void setLogic(std::weak_ptr<BaseGameLogic> gameLogic);
+	void setLogic(const std::weak_ptr<BaseGameLogic> & gameLogic);
+	void setLogic(std::weak_ptr<BaseGameLogic> && gameLogic);
 
 	//Implementation stuff.
 	struct BaseGameViewImpl;

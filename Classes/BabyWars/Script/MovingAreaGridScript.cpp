@@ -37,7 +37,7 @@ void MovingAreaGridScript::setGridIndexAndPosition(const GridIndex & index)
 	pimpl->m_GridIndex = index;
 
 	auto renderComponent = pimpl->m_RenderComponent.lock();
-	renderComponent->getSceneNode()->setPosition(index.toPosition(SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize()));
+	renderComponent->getSceneNode()->setPosition(index.toPosition(SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize()));
 }
 
 void MovingAreaGridScript::setVisible(bool visible)
@@ -56,7 +56,7 @@ void MovingAreaGridScript::vPostInit()
 	pimpl->m_RenderComponent = renderComponent;
 
 	auto sceneNode = renderComponent->getSceneNode();
-	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
 	sceneNode->setScaleX(gridSize.width / sceneNode->getContentSize().width);
 	sceneNode->setScaleY(gridSize.height / sceneNode->getContentSize().height);
 }

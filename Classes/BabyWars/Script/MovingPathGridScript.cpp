@@ -137,7 +137,7 @@ void MovingPathGridScript::setAppearanceAndPosition(const GridIndex & index, Adj
 {
 	auto renderComponent = pimpl->m_RenderComponent.lock();
 	auto sprite = renderComponent->getSceneNode<cocos2d::Sprite>();
-	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
 	sprite->setPosition(index.toPosition(gridSize));
 
 	pimpl->setAppearance(sprite, pimpl->getSpriteFrameName(previous, next), gridSize);

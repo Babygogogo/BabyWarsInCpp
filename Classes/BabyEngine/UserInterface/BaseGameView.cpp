@@ -69,7 +69,12 @@ std::shared_ptr<BaseGameLogic> BaseGameView::getLogic() const
 	return pimpl->m_Logic.lock();
 }
 
-void BaseGameView::setLogic(std::weak_ptr<BaseGameLogic> gameLogic)
+void BaseGameView::setLogic(const std::weak_ptr<BaseGameLogic> & gameLogic)
 {
 	pimpl->m_Logic = gameLogic;
+}
+
+void BaseGameView::setLogic(std::weak_ptr<BaseGameLogic> && gameLogic)
+{
+	pimpl->m_Logic = std::move(gameLogic);
 }

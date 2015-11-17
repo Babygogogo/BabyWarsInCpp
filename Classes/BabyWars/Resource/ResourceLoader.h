@@ -8,7 +8,7 @@
 #include "UnitDataID.h"
 
 //Forward declaration.
-namespace cocos2d{
+namespace cocos2d {
 	class Size;
 }
 class TileData;
@@ -40,7 +40,6 @@ public:
 	std::string getInitialScenePath() const;
 
 	cocos2d::Size getDesignGridSize() const;
-	cocos2d::Size getRealGameGridSize() const;
 
 	std::shared_ptr<TileData> getTileData(TileDataID id) const;
 	std::shared_ptr<UnitData> getUnitData(UnitDataID id) const;

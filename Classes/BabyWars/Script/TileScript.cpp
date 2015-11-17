@@ -59,11 +59,8 @@ void TileScript::LoadTile(tinyxml2::XMLElement * xmlElement)
 	underlyingSprite->setSpriteFrame(tileData->getAnimation()->getFrames().at(0)->getSpriteFrame());
 
 	//Scale the sprite so that it meets the real game grid size.
-	auto designGridSize = resourceLoader->getDesignGridSize();
-	auto realGameGridSize = resourceLoader->getRealGameGridSize();
-	auto designScaleFactor = tileData->getDesignScaleFactor();
-	underlyingSprite->setScaleX(realGameGridSize.width / designGridSize.width * designScaleFactor);
-	underlyingSprite->setScaleY(realGameGridSize.height / designGridSize.height * designScaleFactor);
+	underlyingSprite->setScaleX(tileData->getDefaultScaleFactorX());
+	underlyingSprite->setScaleY(tileData->getDefaultScaleFactorY());
 
 	pimpl->m_TileData = std::move(tileData);
 
@@ -82,7 +79,7 @@ void TileScript::setGridIndexAndPosition(const GridIndex & gridIndex)
 	pimpl->m_GridIndex = gridIndex;
 
 	//Set the position of the node according to indexes.
-	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getRealGameGridSize();
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
 	pimpl->m_RenderComponent.lock()->getSceneNode()->setPosition(gridIndex.toPosition(gridSize));
 }
 

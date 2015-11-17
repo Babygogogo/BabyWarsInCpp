@@ -28,7 +28,8 @@ public:
 
 	cocos2d::Animation * getAnimation() const;
 	float getAnimationMovingSpeed() const;
-	float getDesignScaleFactor() const;
+	float getDefaultScaleFactorX() const;
+	float getDefaultScaleFactorY() const;
 
 private:
 	//Implementation stuff.

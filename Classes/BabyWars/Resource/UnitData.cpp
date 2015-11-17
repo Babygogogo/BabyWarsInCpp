@@ -18,7 +18,7 @@ struct UnitData::UnitDataImpl
 	UnitDataID m_ID{ 0 };
 	std::string m_Type;
 	cocos2d::Animation * m_NormalAnimation{ cocos2d::Animation::create() };
-	float m_DesignScaleFactor{};
+	float m_DefaultScaleFactorX{}, m_DefaultScaleFactorY{};
 	float m_MovingSpeed{};
 
 	int m_Movement{};
@@ -91,7 +91,8 @@ void UnitData::initialize(const char * xmlPath)
 	//Calculate the design scale factor.
 	auto spriteFrameSize = pimpl->m_NormalAnimation->getFrames().at(0)->getSpriteFrame()->getOriginalSize();
 	auto designGridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
-	pimpl->m_DesignScaleFactor = std::max(designGridSize.width / spriteFrameSize.width, designGridSize.height / spriteFrameSize.height);
+	pimpl->m_DefaultScaleFactorX = designGridSize.width / spriteFrameSize.width;
+	pimpl->m_DefaultScaleFactorY = designGridSize.height / spriteFrameSize.height;
 }
 
 UnitDataID UnitData::getID() const
@@ -124,7 +125,12 @@ float UnitData::getAnimationMovingSpeed() const
 	return pimpl->m_MovingSpeed;
 }
 
-float UnitData::getDesignScaleFactor() const
+float UnitData::getDefaultScaleFactorX() const
 {
-	return pimpl->m_DesignScaleFactor;
+	return pimpl->m_DefaultScaleFactorX;
+}
+
+float UnitData::getDefaultScaleFactorY() const
+{
+	return pimpl->m_DefaultScaleFactorY;
 }

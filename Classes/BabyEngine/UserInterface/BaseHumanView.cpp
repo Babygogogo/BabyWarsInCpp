@@ -1,67 +1,42 @@
 #include <cassert>
-#include <unordered_map>
 
 #include "cocos2d.h"
 
 #include "BaseHumanView.h"
 #include "../Actor/Actor.h"
 #include "../Actor/BaseRenderComponent.h"
-#include "../Event/IEventDispatcher.h"
-#include "../Event/EvtDataRequestDestroyActor.h"
 #include "../Graphic2D/IController.h"
-#include "../Utilities/SingletonContainer.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of BaseHumanViewImpl.
 //////////////////////////////////////////////////////////////////////////
 struct BaseHumanView::BaseHumanViewImpl
 {
-	BaseHumanViewImpl();
-	~BaseHumanViewImpl();
+	BaseHumanViewImpl() = default;
+	~BaseHumanViewImpl() = default;
 
-	void onRequestDestroyActor(const IEventData & e);
-
-	void removeActor(ActorID actorID);
+	bool canSetAndRunSceneActor(const std::shared_ptr<Actor> & actor) const;
 
 	std::weak_ptr<BaseHumanView> m_Self;
-	std::unordered_map<ActorID, std::weak_ptr<Actor>> m_Actors;
-	cocos2d::Node * m_Node{ cocos2d::Node::create() };
 
+	std::weak_ptr<Actor> m_SceneActor;
 	std::unique_ptr<IController> m_Controller;
 };
 
-BaseHumanView::BaseHumanViewImpl::BaseHumanViewImpl()
+bool BaseHumanView::BaseHumanViewImpl::canSetAndRunSceneActor(const std::shared_ptr<Actor> & actor) const
 {
-	m_Node->retain();
-}
+	assert(!m_Self.expired() && "BaseHumanView::canSetAndRunSceneActor() the view is not initialized.");
+	assert(m_Self.lock()->isAttachedToLogic() && "BaseHumanView::canSetAndRunSceneActor() the view is not attached to game logic.");
 
-BaseHumanView::BaseHumanViewImpl::~BaseHumanViewImpl()
-{
-	m_Node->removeFromParent();
-	m_Node->removeAllChildren();
-	m_Node->release();
-}
+	assert(actor && "BaseHumanView::canSetAndRunSceneActor() the actor is nullptr.");
+	assert(!actor->hasParent() && "BaseHumanView::canSetAndRunSceneActor() the actor has parent already.");
+	assert(!actor->isAttachedToHumanView() && "BaseHumanView::canSetAndRunSceneActor() the actor has been attached to view already.");
 
-void BaseHumanView::BaseHumanViewImpl::onRequestDestroyActor(const IEventData & e)
-{
-	const auto & event = static_cast<const EvtDataRequestDestroyActor &>(e);
-	removeActor(event.getActorID());
-}
+	auto renderComponent = actor->getRenderComponent();
+	assert(renderComponent && "BaseHumanView::canSetAndRunSceneActor() the actor has no render component.");
+	assert(renderComponent->getSceneNode<cocos2d::Scene>() && "BaseHumanView::canSetAndRunSceneActor() the actor is not a scene.");
 
-void BaseHumanView::BaseHumanViewImpl::removeActor(ActorID actorID)
-{
-	const auto actorIter = m_Actors.find(actorID);
-	if (actorIter == m_Actors.end())
-		return;
-
-	if (!actorIter->second.expired()){
-		auto actor = actorIter->second.lock();
-		if (auto renderComponent = actor->getRenderComponent())
-			m_Node->removeChild(renderComponent->getSceneNode());
-		actor->setHumanView(std::weak_ptr<BaseHumanView>());
-	}
-
-	m_Actors.erase(actorIter);
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -69,7 +44,6 @@ void BaseHumanView::BaseHumanViewImpl::removeActor(ActorID actorID)
 //////////////////////////////////////////////////////////////////////////
 BaseHumanView::BaseHumanView() : pimpl{ std::make_shared<BaseHumanViewImpl>() }
 {
-	SingletonContainer::getInstance()->get<IEventDispatcher>()->vAddListener(EvtDataRequestDestroyActor::s_EventType, pimpl, [this](const IEventData & e){pimpl->onRequestDestroyActor(e); });
 }
 
 BaseHumanView::~BaseHumanView()
@@ -83,30 +57,30 @@ void BaseHumanView::init(std::weak_ptr<BaseHumanView> self)
 	vLoadResource();
 }
 
-void BaseHumanView::addActor(const std::shared_ptr<Actor> & actor)
+bool BaseHumanView::setAndRunSceneActor(const std::shared_ptr<Actor> & actor)
 {
-	if (!actor)
-		return;
+	if (!pimpl->canSetAndRunSceneActor(actor))
+		return false;
 
-	assert(!actor->hasParent() && "BaseHumanView::addActor() the actor has parent already.");
-	assert(!actor->isAttachedToHumanView() && "BaseHumanView::addActor() the actor has been attached to view already.");
-	assert(!pimpl->m_Self.expired() && "BaseHumanView::addActor() the view is not initialized.");
+	if (pimpl->m_SceneActor.expired())
+		cocos2d::Director::getInstance()->runWithScene(actor->getRenderComponent()->getSceneNode<cocos2d::Scene>());
+	else {
+		pimpl->m_SceneActor.lock()->setHumanView(std::weak_ptr<BaseHumanView>());
+		cocos2d::Director::getInstance()->replaceScene(actor->getRenderComponent()->getSceneNode<cocos2d::Scene>());
+	}
 
-	if (auto renderComponent = actor->getRenderComponent())
-		pimpl->m_Node->addChild(renderComponent->getSceneNode());
-
-	pimpl->m_Actors.emplace(actor->getID(), actor);
 	actor->setHumanView(pimpl->m_Self);
+	pimpl->m_SceneActor = actor;
+
+	return true;
 }
 
-void BaseHumanView::removeActor(ActorID actorID)
+std::shared_ptr<Actor> BaseHumanView::getSceneActor() const
 {
-	pimpl->removeActor(actorID);
-}
+	if (pimpl->m_SceneActor.expired())
+		return nullptr;
 
-cocos2d::Node * BaseHumanView::getSceneNode() const
-{
-	return pimpl->m_Node;
+	return pimpl->m_SceneActor.lock();
 }
 
 void BaseHumanView::setController(std::unique_ptr<IController> controller)

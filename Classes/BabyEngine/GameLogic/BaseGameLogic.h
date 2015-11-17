@@ -23,7 +23,7 @@ class BaseActorFactory;
  * \brief Represents the world of the game.
  *
  * \details
- *	This class should be singleton.
+ *	Inherit from this class to make a game-specific logic. The inherited class should be singleton.
  *	By now, its main job is to maintain actors and game views.
  *	You can create actors by calling createActor(). But to destroy actors, you must dispatch events.
  *	Avoid owning any std::shared_ptr<Actor> outside this class, otherwise it will be hard to destory that actor.
@@ -60,9 +60,13 @@ public:
 
 	//View stuff.
 	void addView(std::shared_ptr<BaseGameView> gameView);
-	std::shared_ptr<BaseHumanView> getHumanView() const;
 	std::shared_ptr<BaseGameView> getGameView(GameViewID viewID) const;
 	void removeView(GameViewID viewID);
+
+	//By now, the game logic can have no more than one human view. Once set, you can't replace nor remove it.
+	void setHumanView(const std::shared_ptr<BaseHumanView> & humanView);
+	void setHumanView(std::shared_ptr<BaseHumanView> && humanView);
+	std::shared_ptr<BaseHumanView> getHumanView() const;
 
 	//Disable copy/move constructor and operator=.
 	BaseGameLogic(const BaseGameLogic&) = delete;

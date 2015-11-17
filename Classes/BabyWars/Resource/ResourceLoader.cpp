@@ -10,8 +10,8 @@
 //////////////////////////////////////////////////////////////////////////
 struct ResourceLoader::ResourceLoaderImpl
 {
-	ResourceLoaderImpl(){};
-	~ResourceLoaderImpl(){};
+	ResourceLoaderImpl() {};
+	~ResourceLoaderImpl() {};
 
 	void loadTextures(const char * listPath);
 	void loadTileDatas(const char * xmlPath);
@@ -19,7 +19,6 @@ struct ResourceLoader::ResourceLoaderImpl
 
 	cocos2d::Size m_DesignResolution;
 	cocos2d::Size m_DesignGridSize;
-	cocos2d::Size m_RealGameGridSize;
 	float m_FramesPerSecond{};
 	std::string m_ResourceListPath;
 	std::string m_InitialScenePath;
@@ -44,7 +43,7 @@ void ResourceLoader::ResourceLoaderImpl::loadTileDatas(const char * xmlPath)
 
 	//Iterate through the list and load each TileData.
 	const auto listElement = rootElement->FirstChildElement("List");
-	for (auto tileDataElement = listElement->FirstChildElement("TileDataPath"); tileDataElement; tileDataElement = tileDataElement->NextSiblingElement()){
+	for (auto tileDataElement = listElement->FirstChildElement("TileDataPath"); tileDataElement; tileDataElement = tileDataElement->NextSiblingElement()) {
 		auto tileData = std::make_shared<TileData>();
 		tileData->initialize(tileDataElement->Attribute("Value"));
 
@@ -64,7 +63,7 @@ void ResourceLoader::ResourceLoaderImpl::loadUnitDatas(const char * xmlPath)
 
 	//Iterate through the list and load each UnitData.
 	const auto listElement = rootElement->FirstChildElement("List");
-	for (auto tileDataElement = listElement->FirstChildElement("UnitDataPath"); tileDataElement; tileDataElement = tileDataElement->NextSiblingElement()){
+	for (auto tileDataElement = listElement->FirstChildElement("UnitDataPath"); tileDataElement; tileDataElement = tileDataElement->NextSiblingElement()) {
 		auto unitData = std::make_shared<UnitData>();
 		unitData->initialize(tileDataElement->Attribute("Value"));
 
@@ -100,12 +99,8 @@ void ResourceLoader::loadGameSettings(const char * xmlPath)
 
 	//Load the grid size.
 	auto gridSizeElement = rootElement->FirstChildElement("GridSize");
-	auto designGridElement = gridSizeElement->FirstChildElement("Design");
-	pimpl->m_DesignGridSize.width = designGridElement->FloatAttribute("Width");
-	pimpl->m_DesignGridSize.height = designGridElement->FloatAttribute("Height");
-	auto realGameGridElement = gridSizeElement->FirstChildElement("RealGame");
-	pimpl->m_RealGameGridSize.width = realGameGridElement->FloatAttribute("Width");
-	pimpl->m_RealGameGridSize.height = realGameGridElement->FloatAttribute("Height");
+	pimpl->m_DesignGridSize.width = gridSizeElement->FloatAttribute("Width");
+	pimpl->m_DesignGridSize.height = gridSizeElement->FloatAttribute("Height");
 
 	//Load other settings.
 	pimpl->m_FramesPerSecond = rootElement->FirstChildElement("FramesPerSecond")->FloatAttribute("Value");
@@ -146,11 +141,6 @@ std::string ResourceLoader::getInitialScenePath() const
 cocos2d::Size ResourceLoader::getDesignGridSize() const
 {
 	return pimpl->m_DesignGridSize;
-}
-
-cocos2d::Size ResourceLoader::getRealGameGridSize() const
-{
-	return pimpl->m_RealGameGridSize;
 }
 
 std::shared_ptr<TileData> ResourceLoader::getTileData(TileDataID id) const

@@ -1,7 +1,7 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
 <Actor Type="WarScene" Resource="Actors\Actor_WarScene.xml">
 	<Components>
-		<GeneralRenderComponent Type="Node"/>
+		<GeneralRenderComponent Type="Scene"/>
 		<WarSceneScript TestTileMap="Data\TileMap\TileMapData_TestTileMap.xml" TestUnitMap="Data\UnitMap\UnitMapData_TestUnitMap.xml">
 			<RelatedActorsPath TileMap="Actors\Actor_TileMap.xml" UnitMap="Actors\Actor_UnitMap.xml" MovePath="Actors\Actor_MovingPath.xml" MovingRange="Actors\Actor_MovingArea.xml"/>
 		</WarSceneScript>

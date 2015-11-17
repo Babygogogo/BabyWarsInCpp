@@ -49,15 +49,15 @@ void AppDelegate::AppDelegateImpl::initGame()
 	//Create a human view with an initial actor, and add the view to game logic.
 	auto humanView = std::make_shared<BabyWarsHumanView>();
 	humanView->init(humanView);
+	gameLogic->setHumanView(humanView);
 
 	auto initialActor = gameLogic->createActor(resourceLoader->getInitialScenePath().c_str());
 	std::unique_ptr<IController> warSceneController = std::make_unique<WarSceneController>();
 	warSceneController->setTarget(initialActor);
 	warSceneController->setEnable(true);
 
-	humanView->addActor(initialActor);
+	humanView->setAndRunSceneActor(initialActor);
 	humanView->setController(std::move(warSceneController));
-	gameLogic->addView(humanView);
 
 	//Schedule update self so that we can update components once per frame in update().
 	Director::getInstance()->getScheduler()->scheduleUpdate(this, 0, false);

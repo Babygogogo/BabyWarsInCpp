@@ -101,7 +101,7 @@ std::shared_ptr<Actor> Actor::getParent() const
 bool Actor::isAncestorOf(const Actor & child) const
 {
 	auto weakAncestor = child.pimpl->m_Parent;
-	while (!weakAncestor.expired()){
+	while (!weakAncestor.expired()) {
 		auto strongAncestor = weakAncestor.lock();
 		if (strongAncestor->pimpl->m_ID == pimpl->m_ID)
 			return true;
@@ -121,6 +121,8 @@ void Actor::addChild(Actor & child)
 {
 	//If the child is not valid or has parent already, simply return.
 	if (child.hasParent())
+		return;
+	if (child.isAttachedToHumanView())
 		return;
 
 	child.pimpl->m_Parent = pimpl->m_Self;
@@ -147,7 +149,7 @@ void Actor::removeFromParent()
 
 void Actor::removeAllChildren()
 {
-	for (const auto & idChildPair : pimpl->m_Children){
+	for (const auto & idChildPair : pimpl->m_Children) {
 		if (idChildPair.second.expired())
 			continue;
 
@@ -167,13 +169,13 @@ bool Actor::init(ActorID id, const std::shared_ptr<Actor> & selfPtr, tinyxml2::X
 		return false;
 
 	auto actorType = xmlElement->Attribute("Type");
-	if (!actorType){
+	if (!actorType) {
 		cocos2d::log("Actor::init failed because there's no type attribute in resource.");
 		return false;
 	}
 
 	auto resourceFile = xmlElement->Attribute("Resource");
-	if (!resourceFile){
+	if (!resourceFile) {
 		cocos2d::log("Actor::init failed because there's no type attribute in resource.");
 		return false;
 	}
@@ -192,7 +194,7 @@ void Actor::addComponent(std::shared_ptr<ActorComponent> && component)
 	assert(component);
 
 	//Check if the component is an render component, and make sure that the actor can have no more than one render component.
-	if (auto renderComponent = std::dynamic_pointer_cast<BaseRenderComponent>(component)){
+	if (auto renderComponent = std::dynamic_pointer_cast<BaseRenderComponent>(component)) {
 		assert(!pimpl->m_RenderComponent && "Actor::addComponent() trying to add more than one render component.");
 		pimpl->m_RenderComponent = std::move(renderComponent);
 	}
