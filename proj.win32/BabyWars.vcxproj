@@ -152,6 +152,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyEngine\Actor\BaseScriptComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Actor\FiniteTimeActionComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.cpp" />
+    <ClCompile Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Event\EventDispatcher.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Event\EvtDataRequestDestroyActor.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\GameLogic\BaseGameLogic.cpp" />
@@ -159,8 +160,11 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyEngine\Process\ProcessRunner.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\UserInterface\BaseGameView.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\UserInterface\BaseHumanView.cpp" />
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToScene.cpp" />
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\RelativePosition.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\SingletonContainer.cpp" />
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Actor\BabyWarsActorFactory.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataActivateUnitAtPosition.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataDeactivateActiveUnit.cpp" />
@@ -198,6 +202,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyEngine\Actor\BaseScriptComponent.h" />
     <ClInclude Include="..\Classes\BabyEngine\Actor\FiniteTimeActionComponent.h" />
     <ClInclude Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.h" />
+    <ClInclude Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.h" />
     <ClInclude Include="..\Classes\BabyEngine\Actor\SoundPlayer.h" />
     <ClInclude Include="..\Classes\BabyEngine\Event\BaseEventData.h" />
     <ClInclude Include="..\Classes\BabyEngine\Event\EventDispatcher.h" />
@@ -213,6 +218,9 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyEngine\UserInterface\BaseHumanView.h" />
     <ClInclude Include="..\Classes\BabyEngine\UserInterface\GameViewID.h" />
     <ClInclude Include="..\Classes\BabyEngine\UserInterface\BaseGameView.h" />
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.h" />
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToScene.h" />
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\GenericFactory.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\RelativePosition.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\SingletonContainer.h" />

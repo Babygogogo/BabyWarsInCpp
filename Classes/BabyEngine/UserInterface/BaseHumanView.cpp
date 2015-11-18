@@ -4,7 +4,7 @@
 
 #include "BaseHumanView.h"
 #include "../Actor/Actor.h"
-#include "../Actor/BaseRenderComponent.h"
+#include "../Actor/SceneRenderComponent.h"
 #include "../Graphic2D/IController.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -32,9 +32,8 @@ bool BaseHumanView::BaseHumanViewImpl::canSetAndRunSceneActor(const std::shared_
 	assert(!actor->hasParent() && "BaseHumanView::canSetAndRunSceneActor() the actor has parent already.");
 	assert(!actor->isAttachedToHumanView() && "BaseHumanView::canSetAndRunSceneActor() the actor has been attached to view already.");
 
-	auto renderComponent = actor->getRenderComponent();
-	assert(renderComponent && "BaseHumanView::canSetAndRunSceneActor() the actor has no render component.");
-	assert(renderComponent->getSceneNode<cocos2d::Scene>() && "BaseHumanView::canSetAndRunSceneActor() the actor is not a scene.");
+	auto sceneRenderComponent = std::dynamic_pointer_cast<SceneRenderComponent>(actor->getBaseRenderComponent());
+	assert(sceneRenderComponent && "BaseHumanView::canSetAndRunSceneActor() the actor has no scene render component.");
 
 	return true;
 }
@@ -62,11 +61,14 @@ bool BaseHumanView::setAndRunSceneActor(const std::shared_ptr<Actor> & actor)
 	if (!pimpl->canSetAndRunSceneActor(actor))
 		return false;
 
+	auto sceneRenderComponent = std::dynamic_pointer_cast<SceneRenderComponent>(actor->getBaseRenderComponent());
+	auto sceneToRun = sceneRenderComponent->getTransitionScene() ? sceneRenderComponent->getTransitionScene() : sceneRenderComponent->getSceneNode<cocos2d::Scene>();
+
 	if (pimpl->m_SceneActor.expired())
-		cocos2d::Director::getInstance()->runWithScene(actor->getRenderComponent()->getSceneNode<cocos2d::Scene>());
+		cocos2d::Director::getInstance()->runWithScene(sceneToRun);
 	else {
 		pimpl->m_SceneActor.lock()->setHumanView(std::weak_ptr<BaseHumanView>());
-		cocos2d::Director::getInstance()->replaceScene(actor->getRenderComponent()->getSceneNode<cocos2d::Scene>());
+		cocos2d::Director::getInstance()->replaceScene(sceneToRun);
 	}
 
 	actor->setHumanView(pimpl->m_Self);

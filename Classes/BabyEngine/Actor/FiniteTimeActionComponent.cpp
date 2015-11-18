@@ -75,7 +75,7 @@ bool FiniteTimeActionComponent::FiniteTimeActionComponentImpl::runNextAction(boo
 	m_CurrentAction = m_ActionList.front();
 	m_ActionList.pop_front();
 
-	m_OwnerActor.lock()->getRenderComponent()->getSceneNode()->runAction(m_CurrentAction);
+	m_OwnerActor.lock()->getBaseRenderComponent()->getSceneNode()->runAction(m_CurrentAction);
 
 	return true;
 }
@@ -105,8 +105,8 @@ void FiniteTimeActionComponent::queueAction(cocos2d::FiniteTimeAction* action, s
 
 	//Create a callback that recalls runNextAction(). Important for automatically running queued actions.
 	auto weakPimpl = std::weak_ptr<FiniteTimeActionComponentImpl>(pimpl);
-	auto recallSelf = cocos2d::CallFunc::create([weakPimpl](){
-		if (!weakPimpl.expired()){
+	auto recallSelf = cocos2d::CallFunc::create([weakPimpl]() {
+		if (!weakPimpl.expired()) {
 			auto strongPimpl = weakPimpl.lock();
 			strongPimpl->eraseCurrentAction();
 			strongPimpl->runNextAction(true);
@@ -150,7 +150,7 @@ void FiniteTimeActionComponent::stopAndClearAllActions()
 	while (!pimpl->m_ActionList.empty())
 		pimpl->popFrontAction();
 
-	m_OwnerActor.lock()->getRenderComponent()->getSceneNode()->stopAllActions();
+	m_OwnerActor.lock()->getBaseRenderComponent()->getSceneNode()->stopAllActions();
 
 	pimpl->eraseCurrentAction();
 }

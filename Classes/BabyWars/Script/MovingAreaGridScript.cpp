@@ -52,7 +52,7 @@ bool MovingAreaGridScript::vInit(tinyxml2::XMLElement *xmlElement)
 
 void MovingAreaGridScript::vPostInit()
 {
-	auto renderComponent = m_OwnerActor.lock()->getRenderComponent();
+	auto renderComponent = m_OwnerActor.lock()->getBaseRenderComponent();
 	pimpl->m_RenderComponent = renderComponent;
 
 	auto sceneNode = renderComponent->getSceneNode();

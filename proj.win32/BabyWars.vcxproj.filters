@@ -192,6 +192,18 @@
     <ClCompile Include="..\Classes\BabyWars\Utilities\GridIndex.cpp">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.cpp">
+      <Filter>src\BabyEngine\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToScene.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -370,6 +382,18 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Utilities\Matrix2DDimension.h">
       <Filter>src\BabyWars\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.h">
+      <Filter>src\BabyEngine\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToScene.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

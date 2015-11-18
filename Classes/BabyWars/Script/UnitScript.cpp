@@ -42,7 +42,7 @@ bool UnitScript::vInit(tinyxml2::XMLElement *xmlElement)
 
 void UnitScript::vPostInit()
 {
-	pimpl->m_RenderComponent = m_OwnerActor.lock()->getRenderComponent();
+	pimpl->m_RenderComponent = m_OwnerActor.lock()->getBaseRenderComponent();
 }
 
 void UnitScript::loadUnit(tinyxml2::XMLElement * xmlElement)
@@ -55,7 +55,7 @@ void UnitScript::loadUnit(tinyxml2::XMLElement * xmlElement)
 	assert(unitData && "UnitScript::setUnitData() with nullptr.");
 
 	auto ownerActor = m_OwnerActor.lock();
-	auto underlyingSprite = ownerActor->getRenderComponent()->getSceneNode<cocos2d::Sprite>();
+	auto underlyingSprite = ownerActor->getBaseRenderComponent()->getSceneNode<cocos2d::Sprite>();
 	//#TODO: This only shows the first first frame of the animation. Update the code to show the whole animation.
 	underlyingSprite->setSpriteFrame(unitData->getAnimation()->getFrames().at(0)->getSpriteFrame());
 

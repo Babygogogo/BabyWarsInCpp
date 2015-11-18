@@ -167,7 +167,7 @@ bool MovingPathGridScript::vInit(tinyxml2::XMLElement *xmlElement)
 
 void MovingPathGridScript::vPostInit()
 {
-	pimpl->m_RenderComponent = m_OwnerActor.lock()->getRenderComponent();
+	pimpl->m_RenderComponent = m_OwnerActor.lock()->getBaseRenderComponent();
 }
 
 const std::string MovingPathGridScript::Type{ "MovingPathGridScript" };

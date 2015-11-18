@@ -309,7 +309,7 @@ void WarSceneController::setTarget(const std::shared_ptr<Actor> & actor)
 	auto sceneScript = actor->getComponent<WarSceneScript>();
 	assert(sceneScript && "WarSceneController::setTarget() the actor has not a WarSceneScript.");
 
-	auto renderComponent = actor->getRenderComponent();
+	auto renderComponent = actor->getBaseRenderComponent();
 	assert(renderComponent && "WarSceneController::setTarget() the actor has not a render component.");
 
 	pimpl->m_Actor = actor;

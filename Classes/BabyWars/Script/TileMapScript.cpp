@@ -58,7 +58,7 @@ bool TileMapScript::vInit(tinyxml2::XMLElement *xmlElement)
 
 void TileMapScript::vPostInit()
 {
-	pimpl->m_RenderComponent = m_OwnerActor.lock()->getRenderComponent();
+	pimpl->m_RenderComponent = m_OwnerActor.lock()->getBaseRenderComponent();
 }
 
 void TileMapScript::loadTileMap(const char * xmlPath)

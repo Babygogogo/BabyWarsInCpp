@@ -21,7 +21,7 @@ class BaseRenderComponent;
  *
  * \details
  *	Actors are organized in the form of trees. Methods like addChild(), removeFromParent() are provided for organizing actors.
- *	Roots of the trees of actors must be attached to human view to make the actors visible.
+ *	Roots of the trees of actors must have SceneRenderComponent and be attached to human view to make the actors visible.
  *	Actor is a container of various components and/or scripts which implement most of the logics of the real game object.
  *	Actor should be created by GameLogic using std::shared_ptr and destroyed by dispatching EvtDataRequestDestroyActor.
  *
@@ -64,7 +64,7 @@ public:
 	//Convenient function for getting the base of render component. An actor can have no more than one concrete render component.
 	//If there is no render component attached, nullptr is returned.
 	//Warning: Prefer using std::weak_ptr if you need ownership. See the comment for Actor class for details.
-	std::shared_ptr<BaseRenderComponent> getRenderComponent() const;
+	std::shared_ptr<BaseRenderComponent> getBaseRenderComponent() const;
 
 	bool isAttachedToHumanView() const;
 	std::shared_ptr<BaseHumanView> getHumanView() const;

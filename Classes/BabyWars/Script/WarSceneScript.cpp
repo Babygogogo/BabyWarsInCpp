@@ -214,7 +214,7 @@ bool WarSceneScript::vInit(tinyxml2::XMLElement *xmlElement)
 void WarSceneScript::vPostInit()
 {
 	auto ownerActor = m_OwnerActor.lock();
-	pimpl->m_RenderComponent = ownerActor->getRenderComponent();
+	pimpl->m_RenderComponent = ownerActor->getBaseRenderComponent();
 
 	//////////////////////////////////////////////////////////////////////////
 	//Create and add child actors.
@@ -287,6 +287,7 @@ void WarSceneScript::loadWarScene(const char * xmlPath)
 	assert(unitMapScript->getMapDimension() == tileMapScript->getMapDimension() && "WarSceneScript::vPostInit() the size of the unit map is not the same as the tile map.");
 
 	//Set the position of the map so that the map is displayed in the middle of the window.
+	//#TODO: After the transition of the scene, the position of the scene is reset to {0,0}. Do something to deal with it.
 	auto windowSize = cocos2d::Director::getInstance()->getOpenGLView()->getFrameSize();
 	auto sceneSize = pimpl->getMapSize();
 	auto posX = -(sceneSize.width - windowSize.width) / 2;

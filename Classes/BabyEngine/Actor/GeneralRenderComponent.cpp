@@ -19,7 +19,6 @@ public:
 	cocos2d::Node * createNode(tinyxml2::XMLElement * xmlElement);
 	cocos2d::Sprite * createSprite(tinyxml2::XMLElement * xmlElement);
 	cocos2d::Layer * createLayer(tinyxml2::XMLElement * xmlElement);
-	cocos2d::Scene * createScene(tinyxml2::XMLElement * xmlElement);
 	cocos2d::Label * createLabel(tinyxml2::XMLElement * xmlElement);
 	cocos2d::Menu * createMenu(tinyxml2::XMLElement * xmlElement);
 	cocos2d::MenuItemImage * createMenuItemImage(tinyxml2::XMLElement *xmlElement);
@@ -41,7 +40,7 @@ cocos2d::Node * GeneralRenderComponent::GeneralRenderComponentImpl::createNode(t
 
 cocos2d::Sprite * GeneralRenderComponent::GeneralRenderComponentImpl::createSprite(tinyxml2::XMLElement * xmlElement)
 {
-	if (auto createWith = xmlElement->FirstChildElement("CreateWith")){
+	if (auto createWith = xmlElement->FirstChildElement("CreateWith")) {
 		if (auto fileName = createWith->Attribute("FileName"))
 			return cocos2d::Sprite::create(fileName);
 		else if (auto spriteFrameName = createWith->Attribute("SpriteFrameName"))
@@ -56,15 +55,10 @@ cocos2d::Layer * GeneralRenderComponent::GeneralRenderComponentImpl::createLayer
 	return cocos2d::Layer::create();
 }
 
-cocos2d::Scene * GeneralRenderComponent::GeneralRenderComponentImpl::createScene(tinyxml2::XMLElement * xmlElement)
-{
-	return cocos2d::Scene::create();
-}
-
 cocos2d::Label * GeneralRenderComponent::GeneralRenderComponentImpl::createLabel(tinyxml2::XMLElement * xmlElement)
 {
-	if (auto createWith = xmlElement->FirstChildElement("CreateWith")){
-		if (createWith->Attribute("FunctionName", "createWithSystemFont")){
+	if (auto createWith = xmlElement->FirstChildElement("CreateWith")) {
+		if (createWith->Attribute("FunctionName", "createWithSystemFont")) {
 			auto text = createWith->Attribute("Text");
 			auto fontName = createWith->Attribute("FontName");
 			auto fontSize = createWith->FloatAttribute("FontSize");
@@ -83,7 +77,7 @@ cocos2d::Menu * GeneralRenderComponent::GeneralRenderComponentImpl::createMenu(t
 
 cocos2d::MenuItemImage * GeneralRenderComponent::GeneralRenderComponentImpl::createMenuItemImage(tinyxml2::XMLElement *xmlElement)
 {
-	if (auto createWith = xmlElement->FirstChildElement("CreateWith")){
+	if (auto createWith = xmlElement->FirstChildElement("CreateWith")) {
 		auto menuItemImage = cocos2d::MenuItemImage::create();
 		auto spriteFrameCache = cocos2d::SpriteFrameCache::getInstance();
 
@@ -101,7 +95,7 @@ cocos2d::MenuItemImage * GeneralRenderComponent::GeneralRenderComponentImpl::cre
 cocos2d::ParticleExplosion * GeneralRenderComponent::GeneralRenderComponentImpl::createParticleExplosion(tinyxml2::XMLElement * xmlElement)
 {
 	auto particle = cocos2d::ParticleExplosion::create();
-	if (auto properties = xmlElement->FirstChildElement("Properties")){
+	if (auto properties = xmlElement->FirstChildElement("Properties")) {
 		if (auto texture = properties->Attribute("Texture"))
 			particle->setTexture(cocos2d::Director::getInstance()->getTextureCache()->addImage(texture));
 		if (auto totalParticles = properties->IntAttribute("TotalParticles"))
@@ -115,21 +109,21 @@ cocos2d::ParticleExplosion * GeneralRenderComponent::GeneralRenderComponentImpl:
 		if (auto speedVariance = properties->FloatAttribute("SpeedVariance"))
 			particle->setSpeedVar(speedVariance);
 
-		if (auto startColorVariance = properties->FirstChildElement("StartColorVariance")){
+		if (auto startColorVariance = properties->FirstChildElement("StartColorVariance")) {
 			auto r = startColorVariance->FloatAttribute("R") / 255.0f;
 			auto g = startColorVariance->FloatAttribute("G") / 255.0f;
 			auto b = startColorVariance->FloatAttribute("B") / 255.0f;
 			auto a = startColorVariance->FloatAttribute("A") / 255.0f;
 			particle->setStartColorVar({ r, g, b, a });
 		}
-		if (auto endColorVariance = properties->FirstChildElement("EndColorVariance")){
+		if (auto endColorVariance = properties->FirstChildElement("EndColorVariance")) {
 			auto r = endColorVariance->FloatAttribute("R") / 255.0f;
 			auto g = endColorVariance->FloatAttribute("G") / 255.0f;
 			auto b = endColorVariance->FloatAttribute("B") / 255.0f;
 			auto a = endColorVariance->FloatAttribute("A") / 255.0f;
 			particle->setEndColorVar({ r, g, b, a });
 		}
-		if (auto gravity = properties->FirstChildElement("Gravity")){
+		if (auto gravity = properties->FirstChildElement("Gravity")) {
 			auto x = gravity->FloatAttribute("X");
 			auto y = gravity->FloatAttribute("Y");
 			particle->setGravity({ x, y });
@@ -162,8 +156,6 @@ bool GeneralRenderComponent::vInit(tinyxml2::XMLElement *xmlElement)
 		m_Node = pimpl->createSprite(xmlElement);
 	else if (strcmp(nodeType, "Layer") == 0)
 		m_Node = pimpl->createLayer(xmlElement);
-	else if (strcmp(nodeType, "Scene") == 0)
-		m_Node = pimpl->createScene(xmlElement);
 	else if (strcmp(nodeType, "Node") == 0)
 		m_Node = pimpl->createNode(xmlElement);
 	else if (strcmp(nodeType, "Label") == 0)
@@ -180,14 +172,14 @@ bool GeneralRenderComponent::vInit(tinyxml2::XMLElement *xmlElement)
 	m_Node->retain();
 
 	//Set some extra data if presents in the xmlElement.
-	if (auto positionElement = xmlElement->FirstChildElement("Position")){
+	if (auto positionElement = xmlElement->FirstChildElement("Position")) {
 		setPosition(RelativePosition(positionElement));
 
 		auto localZOrder = positionElement->IntAttribute("LocalZOrder");
 		m_Node->setLocalZOrder(localZOrder);
 	}
 
-	if (auto otherSettingsElement = xmlElement->FirstChildElement("OtherSettings")){
+	if (auto otherSettingsElement = xmlElement->FirstChildElement("OtherSettings")) {
 		auto opacity = otherSettingsElement->IntAttribute("Opacity_0-255");
 		m_Node->setOpacity(opacity);
 	}

@@ -41,7 +41,7 @@ bool TileScript::vInit(tinyxml2::XMLElement *xmlElement)
 
 void TileScript::vPostInit()
 {
-	pimpl->m_RenderComponent = m_OwnerActor.lock()->getRenderComponent();
+	pimpl->m_RenderComponent = m_OwnerActor.lock()->getBaseRenderComponent();
 }
 
 void TileScript::LoadTile(tinyxml2::XMLElement * xmlElement)
@@ -54,7 +54,7 @@ void TileScript::LoadTile(tinyxml2::XMLElement * xmlElement)
 	assert(tileData && "TileScript::setTileData() with nullptr.");
 
 	auto ownerActor = m_OwnerActor.lock();
-	auto underlyingSprite = ownerActor->getRenderComponent()->getSceneNode<cocos2d::Sprite>();
+	auto underlyingSprite = ownerActor->getBaseRenderComponent()->getSceneNode<cocos2d::Sprite>();
 	//#TODO: This only shows the first first frame of the animation. Update the code to show the whole animation.
 	underlyingSprite->setSpriteFrame(tileData->getAnimation()->getFrames().at(0)->getSpriteFrame());
 

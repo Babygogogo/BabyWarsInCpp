@@ -6,6 +6,7 @@
 #include "ActorComponent.h"
 
 #include "GeneralRenderComponent.h"
+#include "SceneRenderComponent.h"
 #include "FiniteTimeActionComponent.h"
 #include "../Utilities/GenericFactory.h"
 
@@ -36,7 +37,7 @@ std::shared_ptr<ActorComponent> BaseActorFactory::ActorFactoryImpl::createCompon
 	assert(component && "BaseActorFactoryImpl::createComponent() can't find or create the ActorComponent as the xml indicated.");
 
 	//Try to initialize the component. If it fails, log and return nullptr.
-	if (!component->vInit(componentElement)){
+	if (!component->vInit(componentElement)) {
 		cocos2d::log("ActorFactoryImpl::createComponent failed to initialize a(n) %s", componentType);
 		return nullptr;
 	}
@@ -84,14 +85,14 @@ std::vector<std::shared_ptr<Actor>> BaseActorFactory::createActorAndChildren(con
 	tinyxml2::XMLDocument xmlDoc;
 	xmlDoc.LoadFile(resourceFile);
 	const auto rootElement = xmlDoc.RootElement();
-	if (!rootElement){
+	if (!rootElement) {
 		cocos2d::log("ActorFactory::createActor failed to load resource file %s", resourceFile);
 		return{};
 	}
 
 	//Create and init the parent actor. If failed, log and return an empty vector.
 	auto parentActor = std::make_shared<Actor>();
-	if (!parentActor || !parentActor->init(pimpl->getNextID(), parentActor, rootElement)){
+	if (!parentActor || !parentActor->init(pimpl->getNextID(), parentActor, rootElement)) {
 		cocos2d::log("ActorFactory::createActor failed to create or init an actor.");
 		return{};
 	}
@@ -100,8 +101,8 @@ std::vector<std::shared_ptr<Actor>> BaseActorFactory::createActorAndChildren(con
 	pimpl->updateID();
 
 	//Loop through each component element, create components and attach them to actor.
-	if (auto componentsElement = rootElement->FirstChildElement("Components")){
-		for (auto componentElement = componentsElement->FirstChildElement(); componentElement; componentElement = componentElement->NextSiblingElement()){
+	if (auto componentsElement = rootElement->FirstChildElement("Components")) {
+		for (auto componentElement = componentsElement->FirstChildElement(); componentElement; componentElement = componentElement->NextSiblingElement()) {
 			auto component = pimpl->createComponent(componentElement);
 
 			//If failed to create a component, return an empty vector because the actor will be partially complete and may cause more troubles than goods.
@@ -115,11 +116,11 @@ std::vector<std::shared_ptr<Actor>> BaseActorFactory::createActorAndChildren(con
 	}
 
 	//The parent actor is created completely. Place it in the returning vector.
-	auto actorVector = std::vector<std::shared_ptr<Actor>>{parentActor};
+	auto actorVector = std::vector<std::shared_ptr<Actor>>{ parentActor };
 
 	//Loop through each child actor element, create children actors and attach them to the parent actor.
-	if (auto childrenElement = rootElement->FirstChildElement("ChildrenActors")){
-		for (auto childElement = childrenElement->FirstChildElement("Resource"); childElement; childElement = childElement->NextSiblingElement()){
+	if (auto childrenElement = rootElement->FirstChildElement("ChildrenActors")) {
+		for (auto childElement = childrenElement->FirstChildElement("Resource"); childElement; childElement = childElement->NextSiblingElement()) {
 			//Create the child actors according to 'childElement'. If failed, skip it.
 			auto childActors = createActorAndChildren(childElement->Attribute("File"));
 			if (childActors.empty())
@@ -145,19 +146,19 @@ void BaseActorFactory::modifyActor(const std::shared_ptr<Actor> & actor, tinyxml
 		return;
 
 	// Loop through each child element and load the component
-	if (auto componentsElement = overrides->FirstChildElement("Components")){
-		for (auto componentElement = componentsElement->FirstChildElement(); componentElement; componentElement = componentElement->NextSiblingElement()){
+	if (auto componentsElement = overrides->FirstChildElement("Components")) {
+		for (auto componentElement = componentsElement->FirstChildElement(); componentElement; componentElement = componentElement->NextSiblingElement()) {
 			auto component = actor->getComponent(componentElement->Value());
 
 			//If there is a component of the same type already, re-initialize it.
-			if (component){
+			if (component) {
 				component->vInit(componentElement);
 				component->vOnChanged();
 			}
 			else {
 				//Else, create a new component and attach to actor.
 				auto newComponent = pimpl->createComponent(componentElement);
-				if (newComponent){
+				if (newComponent) {
 					component->setOwner(actor);
 					actor->addComponent(std::move(newComponent));
 				}
@@ -170,6 +171,7 @@ void BaseActorFactory::registerGeneralComponents()
 {
 	//TODO: Modify the register calls if the general components are changed.
 	registerComponent<GeneralRenderComponent>();
+	registerComponent<SceneRenderComponent>();
 	registerComponent<FiniteTimeActionComponent>();
 }
 
