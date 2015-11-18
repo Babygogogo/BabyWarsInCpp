@@ -1,8 +1,10 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
 <Actor Type="MovingAreaGrid" Resource="Actors\Actor_MovingAreaGrid.xml">
 	<Components>
-		<GeneralRenderComponent Type="Sprite">
-			<CreateWith SpriteFrameName="MovingAreaGrid_01.png"/>
+		<GeneralRenderComponent>
+			<Node Type="Sprite">
+				<SpriteFrameName Value="MovingAreaGrid_01.png"/>
+			</Node>
 			<OtherSettings Opacity_0-255="160"/>
 		</GeneralRenderComponent>
 		<MovingAreaGridScript/>

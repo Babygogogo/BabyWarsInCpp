@@ -1,7 +1,9 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
 <Actor Type="Tile" Resource="Actors\Actor_Tile.xml">
 	<Components>
-		<GeneralRenderComponent Type="Sprite"/>
+		<GeneralRenderComponent>
+			<Node Type="Sprite"></Node>
+		</GeneralRenderComponent>
 		<TileScript/>
 	</Components>
 	<ChildrenActors>

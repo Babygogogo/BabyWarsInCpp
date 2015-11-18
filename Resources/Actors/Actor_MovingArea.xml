@@ -1,7 +1,8 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
 <Actor Type="MovingArea" Resource="Actors\Actor_MovingArea.xml">
 	<Components>
-		<GeneralRenderComponent Type="Node">
+		<GeneralRenderComponent>
+			<Node Type="Node"/>
 			<Position LocalZOrder="0"/>
 		</GeneralRenderComponent>
 		<MovingAreaScript>

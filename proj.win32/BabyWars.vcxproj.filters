@@ -204,6 +204,27 @@
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToScene.cpp">
       <Filter>src\BabyEngine\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSprite.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToNode.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToLayer.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToMenu.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToLabel.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToMenuItemImage.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToParticleExplosion.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -393,6 +414,27 @@
       <Filter>src\BabyEngine\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToScene.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSprite.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToNode.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToLayer.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToMenu.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToLabel.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToMenuItemImage.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToParticleExplosion.h">
       <Filter>src\BabyEngine\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
