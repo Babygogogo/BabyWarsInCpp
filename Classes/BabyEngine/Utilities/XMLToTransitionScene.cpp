@@ -13,7 +13,7 @@ cocos2d::TransitionFade * utilities::XMLToTransitionFade(tinyxml2::XMLElement *x
 {
 	auto durationElement = xmlElement->FirstChildElement("Duration");
 	assert(durationElement && "utilities::XMLToTransitionFade() the xml element has no duration element.");
-	auto durationSec = durationElement->FloatAttribute("Second_Float");
+	auto durationSec = durationElement->FloatAttribute("Value");
 
 	auto color3BElement = xmlElement->FirstChildElement("Color3B");
 	if (!color3BElement)

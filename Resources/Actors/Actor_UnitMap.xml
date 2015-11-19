@@ -2,9 +2,13 @@
 <Actor Type="UnitMap" Resource="Actors\Actor_UnitMap.xml">
 	<Components>
 		<GeneralRenderComponent>
-			<Node Type="Node"></Node>
-			<Position LocalZOrder="2"/>
+			<SceneNode Type="Node"/>
 		</GeneralRenderComponent>
+		<TransformComponent>
+			<LocalZOrder Value="2">
+				<!--The value is in int.-->
+			</LocalZOrder>
+		</TransformComponent>
 		<UnitMapScript>
 			<RelatedActorsPath Unit="Actors\Actor_Unit.xml"/>
 		</UnitMapScript>

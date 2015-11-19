@@ -8,6 +8,7 @@
 #include "GeneralRenderComponent.h"
 #include "SceneRenderComponent.h"
 #include "FiniteTimeActionComponent.h"
+#include "TransformComponent.h"
 #include "../Utilities/GenericFactory.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -172,6 +173,7 @@ void BaseActorFactory::registerGeneralComponents()
 	//TODO: Modify the register calls if the general components are changed.
 	registerComponent<GeneralRenderComponent>();
 	registerComponent<SceneRenderComponent>();
+	registerComponent<TransformComponent>();
 	registerComponent<FiniteTimeActionComponent>();
 }
 

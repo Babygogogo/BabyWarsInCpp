@@ -29,6 +29,11 @@ SceneRenderComponent::~SceneRenderComponent()
 	CC_SAFE_RELEASE_NULL(pimpl->m_TransitionScene);
 }
 
+cocos2d::Scene * SceneRenderComponent::getScene() const
+{
+	return static_cast<cocos2d::Scene*>(m_Node);
+}
+
 cocos2d::TransitionScene * SceneRenderComponent::getTransitionScene() const
 {
 	return pimpl->m_TransitionScene;

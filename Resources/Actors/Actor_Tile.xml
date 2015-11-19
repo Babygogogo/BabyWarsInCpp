@@ -2,8 +2,9 @@
 <Actor Type="Tile" Resource="Actors\Actor_Tile.xml">
 	<Components>
 		<GeneralRenderComponent>
-			<Node Type="Sprite"></Node>
+			<SceneNode Type="Sprite"/>
 		</GeneralRenderComponent>
+		<TransformComponent/>
 		<TileScript/>
 	</Components>
 	<ChildrenActors>

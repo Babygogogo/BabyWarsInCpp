@@ -68,7 +68,6 @@ void MovingAreaScript::MovingRangeScriptImpl::setChildrenGridActors(const Moving
 		auto gridActor = gameLogic->createActor(m_MovingAreaGridActorPath.c_str());
 		auto gridScript = gridActor->getComponent<MovingAreaGridScript>();
 		gridScript->setGridIndexAndPosition(index);
-		gridScript->setVisible(true);
 
 		self.addChild(*gridActor);
 		m_ChildrenGridActorIDs.emplace(gridActor->getID());

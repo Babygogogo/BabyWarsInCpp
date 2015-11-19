@@ -2,9 +2,13 @@
 <Actor Type="MovePath" Resource="Actors\Actor_MovingPath.xml">
 	<Components>
 		<GeneralRenderComponent>
-			<Node Type="Node"></Node>
-			<Position LocalZOrder="1"/>
+			<SceneNode Type="Node"/>
 		</GeneralRenderComponent>
+		<TransformComponent>
+			<LocalZOrder Value="1">
+				<!--The value is in int.-->
+			</LocalZOrder>
+		</TransformComponent>
 		<MovingPathScript>
 			<RelatedActorsPath MovingPathGrid="Actors\Actor_MovingPathGrid.xml"/>
 		</MovingPathScript>

@@ -2,8 +2,9 @@
 <Actor Type="Unit" Resource="Actors\Actor_Unit.xml">
 	<Components>
 		<GeneralRenderComponent>
-			<Node Type="Sprite"></Node>
+			<SceneNode Type="Sprite"/>
 		</GeneralRenderComponent>
+		<TransformComponent/>
 		<UnitScript/>
 	</Components>
 	<ChildrenActors>

@@ -3,6 +3,7 @@
 
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
+#include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../../BabyWars/Resource/ResourceLoader.h"
 #include "../Utilities/GridIndex.h"
@@ -18,6 +19,7 @@ struct MovingAreaGridScript::MovingAreaGridScriptImpl
 
 	GridIndex m_GridIndex;
 
+	std::weak_ptr<TransformComponent> m_TransformComponent;
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
 };
 
@@ -35,14 +37,7 @@ MovingAreaGridScript::~MovingAreaGridScript()
 void MovingAreaGridScript::setGridIndexAndPosition(const GridIndex & index)
 {
 	pimpl->m_GridIndex = index;
-
-	auto renderComponent = pimpl->m_RenderComponent.lock();
-	renderComponent->getSceneNode()->setPosition(index.toPosition(SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize()));
-}
-
-void MovingAreaGridScript::setVisible(bool visible)
-{
-	pimpl->m_RenderComponent.lock()->getSceneNode()->setVisible(visible);
+	pimpl->m_TransformComponent.lock()->setPosition(index.toPosition(SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize()));
 }
 
 bool MovingAreaGridScript::vInit(tinyxml2::XMLElement *xmlElement)
@@ -52,13 +47,16 @@ bool MovingAreaGridScript::vInit(tinyxml2::XMLElement *xmlElement)
 
 void MovingAreaGridScript::vPostInit()
 {
-	auto renderComponent = m_OwnerActor.lock()->getBaseRenderComponent();
+	auto ownerActor = m_OwnerActor.lock();
+	auto renderComponent = ownerActor->getBaseRenderComponent();
+	assert(renderComponent && "MovingAreaGridScript::vPostInit() the actor has no render component.");
 	pimpl->m_RenderComponent = renderComponent;
 
-	auto sceneNode = renderComponent->getSceneNode();
-	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
-	sceneNode->setScaleX(gridSize.width / sceneNode->getContentSize().width);
-	sceneNode->setScaleY(gridSize.height / sceneNode->getContentSize().height);
+	auto transformComponent = ownerActor->getComponent<TransformComponent>();
+	assert(transformComponent && "MovingAreaGridScript::vPostInit() the actor has no tranform component.");
+	pimpl->m_TransformComponent = transformComponent;
+
+	transformComponent->setScaleToSize(SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize());
 }
 
 const std::string MovingAreaGridScript::Type = "MovingAreaGridScript";

@@ -47,7 +47,7 @@ bool GeneralRenderComponent::vInit(tinyxml2::XMLElement *xmlElement)
 {
 	//Get the type of node from xmlElement.
 	//auto nodeType = xmlElement->Attribute("Type");
-	auto nodeElement = xmlElement->FirstChildElement("Node");
+	auto nodeElement = xmlElement->FirstChildElement("SceneNode");
 	assert(nodeElement && "GeneralRenderComponent::vInit() the xml has no node element.");
 
 	//Create the node as the type.

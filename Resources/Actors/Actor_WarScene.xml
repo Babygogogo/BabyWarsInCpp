@@ -4,7 +4,9 @@
 		<SceneRenderComponent>
 			<Scene/>
 			<TransitionScene Type="TransitionFade">
-				<Duration Second_Float="1"/>
+				<Duration Value="0.5">
+					<!--The value is in second in float.-->
+				</Duration>
 			</TransitionScene>
 		</SceneRenderComponent>
 		<WarSceneScript TestTileMap="Data\TileMap\TileMapData_TestTileMap.xml" TestUnitMap="Data\UnitMap\UnitMapData_TestUnitMap.xml">

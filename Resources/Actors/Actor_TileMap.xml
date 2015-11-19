@@ -2,9 +2,13 @@
 <Actor Type="TileMap" Resource="Actors\Actor_TileMap.xml">
 	<Components>
 		<GeneralRenderComponent>
-			<Node Type="Node"></Node>
-			<Position LocalZOrder="-1"/>
+			<SceneNode Type="Node"/>
 		</GeneralRenderComponent>
+		<TransformComponent>
+			<LocalZOrder Value="-1">
+				<!--The value is in int.-->
+			</LocalZOrder>
+		</TransformComponent>
 		<TileMapScript>
 			<RelatedActorsPath Tile="Actors\Actor_Tile.xml"/>
 		</TileMapScript>

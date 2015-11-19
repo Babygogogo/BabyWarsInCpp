@@ -3,6 +3,7 @@
 
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
+#include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../Resource/ResourceLoader.h"
 #include "../Utilities/AdjacentDirection.h"
@@ -34,6 +35,7 @@ struct MovingPathGridScript::MovingPathGridScriptImpl
 	static std::string s_SpriteFrameNameLineVertical;
 
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
+	std::weak_ptr<TransformComponent> m_TransformComponent;
 };
 
 std::string MovingPathGridScript::MovingPathGridScriptImpl::s_SpriteFrameNameEmpty;
@@ -136,10 +138,10 @@ MovingPathGridScript::~MovingPathGridScript()
 void MovingPathGridScript::setAppearanceAndPosition(const GridIndex & index, AdjacentDirection previous, AdjacentDirection next)
 {
 	auto renderComponent = pimpl->m_RenderComponent.lock();
-	auto sprite = renderComponent->getSceneNode<cocos2d::Sprite>();
 	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
-	sprite->setPosition(index.toPosition(gridSize));
+	pimpl->m_TransformComponent.lock()->setPosition(index.toPosition(gridSize));
 
+	auto sprite = renderComponent->getSceneNode<cocos2d::Sprite>();
 	pimpl->setAppearance(sprite, pimpl->getSpriteFrameName(previous, next), gridSize);
 }
 
@@ -167,7 +169,15 @@ bool MovingPathGridScript::vInit(tinyxml2::XMLElement *xmlElement)
 
 void MovingPathGridScript::vPostInit()
 {
-	pimpl->m_RenderComponent = m_OwnerActor.lock()->getBaseRenderComponent();
+	auto ownerActor = m_OwnerActor.lock();
+
+	auto renderComponent = ownerActor->getBaseRenderComponent();
+	assert(renderComponent && "MovingPathGridScript::vPostInit() the actor has no render component.");
+	pimpl->m_RenderComponent = std::move(renderComponent);
+
+	auto transformComponent = ownerActor->getComponent<TransformComponent>();
+	assert(transformComponent && "MovingPathGridScript::vPostInit() the actor has no transform component.");
+	pimpl->m_TransformComponent = std::move(transformComponent);
 }
 
 const std::string MovingPathGridScript::Type{ "MovingPathGridScript" };

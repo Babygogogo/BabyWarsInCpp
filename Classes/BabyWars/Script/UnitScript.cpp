@@ -3,6 +3,7 @@
 
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
+#include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../Resource/ResourceLoader.h"
 #include "../Resource/UnitData.h"
@@ -22,6 +23,7 @@ struct UnitScript::UnitScriptImpl
 	std::shared_ptr<UnitData> m_UnitData;
 
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
+	std::weak_ptr<TransformComponent> m_TransformComponent;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -33,16 +35,6 @@ UnitScript::UnitScript() : pimpl{ std::make_unique<UnitScriptImpl>() }
 
 UnitScript::~UnitScript()
 {
-}
-
-bool UnitScript::vInit(tinyxml2::XMLElement *xmlElement)
-{
-	return true;
-}
-
-void UnitScript::vPostInit()
-{
-	pimpl->m_RenderComponent = m_OwnerActor.lock()->getBaseRenderComponent();
 }
 
 void UnitScript::loadUnit(tinyxml2::XMLElement * xmlElement)
@@ -60,8 +52,7 @@ void UnitScript::loadUnit(tinyxml2::XMLElement * xmlElement)
 	underlyingSprite->setSpriteFrame(unitData->getAnimation()->getFrames().at(0)->getSpriteFrame());
 
 	//Scale the sprite so that it meets the real game grid size.
-	underlyingSprite->setScaleX(unitData->getDefaultScaleFactorX());
-	underlyingSprite->setScaleY(unitData->getDefaultScaleFactorY());
+	pimpl->m_TransformComponent.lock()->setScaleToSize(resourceLoader->getDesignGridSize());
 
 	pimpl->m_UnitData = std::move(unitData);
 
@@ -81,7 +72,7 @@ void UnitScript::setGridIndexAndPosition(const GridIndex & gridIndex)
 
 	//Set the position of the node according to indexes.
 	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
-	pimpl->m_RenderComponent.lock()->getSceneNode()->setPosition(gridIndex.toPosition(gridSize));
+	pimpl->m_TransformComponent.lock()->setPosition(gridIndex.toPosition(gridSize));
 }
 
 GridIndex UnitScript::getGridIndex() const
@@ -138,6 +129,24 @@ void UnitScript::moveAlongPath(const MovingPath & path)
 
 	auto moveSequence = cocos2d::Sequence::create(moveActionList);
 	pimpl->m_RenderComponent.lock()->getSceneNode()->runAction(moveSequence);
+}
+
+bool UnitScript::vInit(tinyxml2::XMLElement *xmlElement)
+{
+	return true;
+}
+
+void UnitScript::vPostInit()
+{
+	auto ownerActor = m_OwnerActor.lock();
+
+	auto renderComponent = ownerActor->getBaseRenderComponent();
+	assert(renderComponent && "UnitScript::vPostInit() the actor has no render component.");
+	pimpl->m_RenderComponent = std::move(renderComponent);
+
+	auto transformComponent = ownerActor->getComponent<TransformComponent>();
+	assert(transformComponent && "UnitScript::vPostInit() the actor has no transform component.");
+	pimpl->m_TransformComponent = std::move(transformComponent);
 }
 
 const std::string UnitScript::Type = "UnitScript";

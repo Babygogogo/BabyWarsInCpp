@@ -6,6 +6,7 @@
 //Forward declaration.
 namespace cocos2d
 {
+	class Scene;
 	class TransitionScene;
 }
 
@@ -15,6 +16,7 @@ public:
 	SceneRenderComponent();
 	~SceneRenderComponent();
 
+	cocos2d::Scene * getScene() const;
 	cocos2d::TransitionScene * getTransitionScene() const;
 
 	//The type name of this component. Must be the same as the class name.

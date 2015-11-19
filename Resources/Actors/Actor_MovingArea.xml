@@ -2,9 +2,13 @@
 <Actor Type="MovingArea" Resource="Actors\Actor_MovingArea.xml">
 	<Components>
 		<GeneralRenderComponent>
-			<Node Type="Node"/>
-			<Position LocalZOrder="0"/>
+			<SceneNode Type="Node"/>
 		</GeneralRenderComponent>
+		<TransformComponent>
+			<LocalZOrder Value="0">
+				<!--The value is in int.-->
+			</LocalZOrder>
+		</TransformComponent>
 		<MovingAreaScript>
 			<RelatedActorsPath MovingAreaGrid="Actors\Actor_MovingAreaGrid.xml"/>
 		</MovingAreaScript>

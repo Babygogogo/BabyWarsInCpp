@@ -62,7 +62,7 @@ bool BaseHumanView::setAndRunSceneActor(const std::shared_ptr<Actor> & actor)
 		return false;
 
 	auto sceneRenderComponent = std::dynamic_pointer_cast<SceneRenderComponent>(actor->getBaseRenderComponent());
-	auto sceneToRun = sceneRenderComponent->getTransitionScene() ? sceneRenderComponent->getTransitionScene() : sceneRenderComponent->getSceneNode<cocos2d::Scene>();
+	auto sceneToRun = sceneRenderComponent->getTransitionScene() ? sceneRenderComponent->getTransitionScene() : sceneRenderComponent->getScene();
 
 	if (pimpl->m_SceneActor.expired())
 		cocos2d::Director::getInstance()->runWithScene(sceneToRun);

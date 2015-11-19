@@ -190,8 +190,7 @@ bool Actor::init(ActorID id, const std::shared_ptr<Actor> & selfPtr, tinyxml2::X
 
 void Actor::addComponent(std::shared_ptr<ActorComponent> && component)
 {
-	//Ensure that the component is alive.
-	assert(component);
+	assert(component && "Actor::addComponent() the component is nullptr.");
 
 	//Check if the component is an render component, and make sure that the actor can have no more than one render component.
 	if (auto renderComponent = std::dynamic_pointer_cast<BaseRenderComponent>(component)) {
@@ -200,7 +199,7 @@ void Actor::addComponent(std::shared_ptr<ActorComponent> && component)
 	}
 
 	auto emplaceResult = pimpl->m_Components.emplace(std::make_pair(component->getType(), std::move(component)));
-	assert(emplaceResult.second && "Actor::addComponent() can't emplace the component due to some unknown reasons.");
+	assert(emplaceResult.second && "Actor::addComponent() can't emplace the component possibly because a component of the same type already exists.");
 }
 
 void Actor::postInit()

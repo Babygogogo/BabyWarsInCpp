@@ -153,6 +153,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyEngine\Actor\FiniteTimeActionComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.cpp" />
+    <ClCompile Include="..\Classes\BabyEngine\Actor\TransformComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Event\EventDispatcher.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Event\EvtDataRequestDestroyActor.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\GameLogic\BaseGameLogic.cpp" />
@@ -211,6 +212,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.h" />
     <ClInclude Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.h" />
     <ClInclude Include="..\Classes\BabyEngine\Actor\SoundPlayer.h" />
+    <ClInclude Include="..\Classes\BabyEngine\Actor\TransformComponent.h" />
     <ClInclude Include="..\Classes\BabyEngine\Event\BaseEventData.h" />
     <ClInclude Include="..\Classes\BabyEngine\Event\EventDispatcher.h" />
     <ClInclude Include="..\Classes\BabyEngine\Event\EventType.h" />

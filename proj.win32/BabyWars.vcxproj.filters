@@ -225,6 +225,9 @@
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToParticleExplosion.cpp">
       <Filter>src\BabyEngine\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\TransformComponent.cpp">
+      <Filter>src\BabyEngine\Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -436,6 +439,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToParticleExplosion.h">
       <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\TransformComponent.h">
+      <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
