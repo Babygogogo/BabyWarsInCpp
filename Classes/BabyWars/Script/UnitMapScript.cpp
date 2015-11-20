@@ -60,7 +60,7 @@ bool UnitMapScript::vInit(tinyxml2::XMLElement *xmlElement)
 
 void UnitMapScript::vPostInit()
 {
-	pimpl->m_RenderComponent = m_OwnerActor.lock()->getBaseRenderComponent();
+	pimpl->m_RenderComponent = m_OwnerActor.lock()->getRenderComponent();
 }
 
 void UnitMapScript::loadUnitMap(const char * xmlPath)

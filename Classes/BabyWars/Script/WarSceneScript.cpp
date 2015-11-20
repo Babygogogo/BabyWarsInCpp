@@ -3,6 +3,7 @@
 
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
+#include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
@@ -49,6 +50,8 @@ struct WarSceneScript::WarSceneScriptImpl
 	static std::string s_MovingAreaActorPath;
 
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
+	std::weak_ptr<TransformComponent> m_TransformComponent;
+
 	std::weak_ptr<TileMapScript> m_ChildTileMapScript;
 	std::weak_ptr<UnitMapScript> m_ChildUnitMapScript;
 	std::weak_ptr<MovingPathScript> m_ChildMovingPathScript;
@@ -131,7 +134,7 @@ cocos2d::Size WarSceneScript::WarSceneScriptImpl::getMapSize() const
 
 cocos2d::Vec2 WarSceneScript::WarSceneScriptImpl::toPositionInScene(const cocos2d::Vec2 & position) const
 {
-	return m_RenderComponent.lock()->getSceneNode()->convertToNodeSpace(position);
+	return m_TransformComponent.lock()->convertToLocalSpace(position);
 }
 
 GridIndex WarSceneScript::WarSceneScriptImpl::toGridIndex(const cocos2d::Vec2 & positionInWindow) const
@@ -145,8 +148,8 @@ void WarSceneScript::WarSceneScriptImpl::setPositionWithOffsetAndBoundary(const 
 {
 	assert(!m_RenderComponent.expired() && "WarSceneScriptImpl::setPositionWithinBoundary() the render component is expired.");
 	auto strongRenderComponent = m_RenderComponent.lock();
-	auto underlyingNode = strongRenderComponent->getSceneNode();
-	auto newPosition = underlyingNode->getPosition() + offset;
+	auto transformComponent = m_TransformComponent.lock();
+	auto newPosition = transformComponent->getPosition() + offset;
 
 	//////////////////////////////////////////////////////////////////////////
 	//Modify the new position so that the scene can't be set too far away.
@@ -154,8 +157,8 @@ void WarSceneScript::WarSceneScriptImpl::setPositionWithOffsetAndBoundary(const 
 	auto windowSize = cocos2d::Director::getInstance()->getOpenGLView()->getFrameSize();
 	auto extraBoundarySize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
 	auto warSceneSize = getMapSize();
-	warSceneSize.width *= underlyingNode->getScaleX();
-	warSceneSize.height *= underlyingNode->getScaleY();
+	warSceneSize.width *= transformComponent->getScaleX();
+	warSceneSize.height *= transformComponent->getScaleY();
 
 	//Secondly, use the sizes to calculate the possible min and max of the drag-to position.
 	auto minX = -(warSceneSize.width - windowSize.width + extraBoundarySize.width);
@@ -169,19 +172,19 @@ void WarSceneScript::WarSceneScriptImpl::setPositionWithOffsetAndBoundary(const 
 		if (newPosition.x < minX)	newPosition.x = minX;
 	}
 	else { //This means that the width of the map is less than the window. Just ignore horizontal part of the drag.
-		newPosition.x = underlyingNode->getPosition().x;
+		newPosition.x = transformComponent->getPosition().x;
 	}
 	if (maxY > minY) {
 		if (newPosition.y > maxY)	newPosition.y = maxY;
 		if (newPosition.y < minY)	newPosition.y = minY;
 	}
 	else { //This means that the height of the map is less than the window. Just ignore vertical part of the drag.
-		newPosition.y = underlyingNode->getPosition().y;
+		newPosition.y = transformComponent->getPosition().y;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 	//Make use of the newPosition.
-	underlyingNode->setPosition(newPosition);
+	transformComponent->setPosition(newPosition);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -193,6 +196,46 @@ WarSceneScript::WarSceneScript() : pimpl{ std::make_shared<WarSceneScriptImpl>()
 
 WarSceneScript::~WarSceneScript()
 {
+}
+
+void WarSceneScript::loadWarScene(const char * xmlPath)
+{
+	//Load the xml file.
+	tinyxml2::XMLDocument xmlDoc;
+	xmlDoc.LoadFile(xmlPath);
+	const auto rootElement = xmlDoc.RootElement();
+	assert(rootElement && "WarSceneScript::loadWarScene() failed to load xml file.");
+
+	//Load everything on the scene.
+	auto dataPathElement = rootElement->FirstChildElement("DataPath");
+	pimpl->m_ChildTileMapScript.lock()->loadTileMap(dataPathElement->FirstChildElement("TileMap")->Attribute("Value"));
+	pimpl->m_ChildUnitMapScript.lock()->loadUnitMap(dataPathElement->FirstChildElement("UnitMap")->Attribute("Value"));
+	//#TODO: Load weather, commander, ...
+
+	//Check if the size of unit map and tile map is the same.
+	auto tileMapScript = pimpl->m_ChildTileMapScript.lock();
+	auto unitMapScript = pimpl->m_ChildUnitMapScript.lock();
+	assert(unitMapScript->getMapDimension() == tileMapScript->getMapDimension() && "WarSceneScript::vPostInit() the size of the unit map is not the same as the tile map.");
+
+	//Set the position of the map so that the map is displayed in the middle of the window.
+	//#TODO: After the transition of the scene, the position of the scene is reset to {0,0}. Do something to deal with it.
+	auto windowSize = cocos2d::Director::getInstance()->getOpenGLView()->getFrameSize();
+	auto sceneSize = pimpl->getMapSize();
+	auto posX = -(sceneSize.width - windowSize.width) / 2;
+	auto posY = -(sceneSize.height - windowSize.height) / 2;
+	pimpl->m_TransformComponent.lock()->setPosition({ posX, posY });
+}
+
+bool WarSceneScript::canActivateUnitAtPosition(const cocos2d::Vec2 & pos) const
+{
+	auto gridIndex = pimpl->toGridIndex(pos);
+	return pimpl->m_ChildUnitMapScript.lock()->canActivateUnitAtIndex(gridIndex);
+}
+
+bool WarSceneScript::isUnitActiveAtPosition(const cocos2d::Vec2 & pos) const
+{
+	auto gridIndex = pimpl->toGridIndex(pos);
+	return pimpl->m_ChildUnitMapScript.lock()->isUnitActiveAtIndex(gridIndex);
 }
 
 bool WarSceneScript::vInit(tinyxml2::XMLElement *xmlElement)
@@ -214,7 +257,16 @@ bool WarSceneScript::vInit(tinyxml2::XMLElement *xmlElement)
 void WarSceneScript::vPostInit()
 {
 	auto ownerActor = m_OwnerActor.lock();
-	pimpl->m_RenderComponent = ownerActor->getBaseRenderComponent();
+
+	//////////////////////////////////////////////////////////////////////////
+	//Get components.
+	auto renderComponent = ownerActor->getRenderComponent();
+	assert(renderComponent && "WarSceneScript::vPostInit() the actor has no render component.");
+	pimpl->m_RenderComponent = std::move(renderComponent);
+
+	auto transformComponent = ownerActor->getComponent<TransformComponent>();
+	assert(transformComponent && "WarSceneScript::vPostInit() the actor has no transform component.");
+	pimpl->m_TransformComponent = std::move(transformComponent);
 
 	//////////////////////////////////////////////////////////////////////////
 	//Create and add child actors.
@@ -265,46 +317,6 @@ void WarSceneScript::vPostInit()
 	//Load the test warScene.
 	//#TODO: Only for testing and should be removed.
 	loadWarScene("Data\\WarScene\\WarSceneData_TestWarScene.xml");
-}
-
-void WarSceneScript::loadWarScene(const char * xmlPath)
-{
-	//Load the xml file.
-	tinyxml2::XMLDocument xmlDoc;
-	xmlDoc.LoadFile(xmlPath);
-	const auto rootElement = xmlDoc.RootElement();
-	assert(rootElement && "WarSceneScript::loadWarScene() failed to load xml file.");
-
-	//Load everything on the scene.
-	auto dataPathElement = rootElement->FirstChildElement("DataPath");
-	pimpl->m_ChildTileMapScript.lock()->loadTileMap(dataPathElement->FirstChildElement("TileMap")->Attribute("Value"));
-	pimpl->m_ChildUnitMapScript.lock()->loadUnitMap(dataPathElement->FirstChildElement("UnitMap")->Attribute("Value"));
-	//#TODO: Load weather, commander, ...
-
-	//Check if the size of unit map and tile map is the same.
-	auto tileMapScript = pimpl->m_ChildTileMapScript.lock();
-	auto unitMapScript = pimpl->m_ChildUnitMapScript.lock();
-	assert(unitMapScript->getMapDimension() == tileMapScript->getMapDimension() && "WarSceneScript::vPostInit() the size of the unit map is not the same as the tile map.");
-
-	//Set the position of the map so that the map is displayed in the middle of the window.
-	//#TODO: After the transition of the scene, the position of the scene is reset to {0,0}. Do something to deal with it.
-	auto windowSize = cocos2d::Director::getInstance()->getOpenGLView()->getFrameSize();
-	auto sceneSize = pimpl->getMapSize();
-	auto posX = -(sceneSize.width - windowSize.width) / 2;
-	auto posY = -(sceneSize.height - windowSize.height) / 2;
-	pimpl->m_RenderComponent.lock()->getSceneNode()->setPosition(posX, posY);
-}
-
-bool WarSceneScript::canActivateUnitAtPosition(const cocos2d::Vec2 & pos) const
-{
-	auto gridIndex = pimpl->toGridIndex(pos);
-	return pimpl->m_ChildUnitMapScript.lock()->canActivateUnitAtIndex(gridIndex);
-}
-
-bool WarSceneScript::isUnitActiveAtPosition(const cocos2d::Vec2 & pos) const
-{
-	auto gridIndex = pimpl->toGridIndex(pos);
-	return pimpl->m_ChildUnitMapScript.lock()->isUnitActiveAtIndex(gridIndex);
 }
 
 const std::string WarSceneScript::Type = "WarSceneScript";

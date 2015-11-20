@@ -52,11 +52,11 @@ public:
 	//Warning: Prefer using std::weak_ptr if you need ownership. See the comment for Actor class for details.
 	std::shared_ptr<ActorComponent> getComponent(const std::string & type) const;
 
-	//Convenient function for getting component, which automatically downcast the pointer.
+	//Convenient function for getting component, which automatically downcast the returned pointer.
 	//Returns nullptr if no such component attached.
 	//Warning: Prefer using std::weak_ptr if you need ownership. See the comment for Actor class for details.
 	template<typename T>
-	std::shared_ptr<T> getComponent() const	//T should derive from Component
+	std::shared_ptr<T> getComponent() const	//T should derive from ActorComponent
 	{
 		return std::dynamic_pointer_cast<T>(getComponent(T::Type));
 	}
@@ -64,7 +64,16 @@ public:
 	//Convenient function for getting the base of render component. An actor can have no more than one concrete render component.
 	//If there is no render component attached, nullptr is returned.
 	//Warning: Prefer using std::weak_ptr if you need ownership. See the comment for Actor class for details.
-	std::shared_ptr<BaseRenderComponent> getBaseRenderComponent() const;
+	std::shared_ptr<BaseRenderComponent> getRenderComponent() const;
+
+	//Convenient function for getting concrete render component, which automatically downcast the teturned pointer.
+	//Returns nullptr if no such component attached.
+	//Warning: Prefer using std::weak_ptr if you need ownership. See the comment for Actor class for details.
+	template<typename T>
+	std::shared_ptr<T> getRenderComponent() const	//T should derive from BaseRenderComponent.
+	{
+		return std::dynamic_pointer_cast<T>(getRenderComponent());
+	}
 
 	bool isAttachedToHumanView() const;
 	std::shared_ptr<BaseHumanView> getHumanView() const;

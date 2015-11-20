@@ -6,7 +6,7 @@
 		</GeneralRenderComponent>
 		<TransformComponent>
 			<LocalZOrder Value="0">
-				<!--The value is in int.-->
+				<!--The value is an int.-->
 			</LocalZOrder>
 		</TransformComponent>
 		<MovingAreaScript>

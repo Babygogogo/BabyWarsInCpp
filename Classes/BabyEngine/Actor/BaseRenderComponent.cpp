@@ -5,20 +5,32 @@
 #include "BaseRenderComponent.h"
 #include "../Utilities/RelativePosition.h"
 
-BaseRenderComponent::~BaseRenderComponent()
-{
-	if (m_Node){
-		m_Node->removeFromParent();
-		m_Node->release();
-		m_Node = nullptr;
-	}
-}
-
 void BaseRenderComponent::setPosition(const RelativePosition & relativePosition)
 {
 	assert(m_Node && "BaseRenderComponent::setPosition() while the node is not initialized.");
 
 	m_Node->setPosition(relativePosition.getAbsolutePositionX(m_Node), relativePosition.getAbsolutePositionY(m_Node));
+}
+
+void BaseRenderComponent::setVisible(bool visible)
+{
+	assert(m_Node && "BaseRenderComponent::setVisible() while the node is not initialized.");
+
+	m_Node->setVisible(visible);
+}
+
+void BaseRenderComponent::runAction(cocos2d::Action * action)
+{
+	assert(m_Node && "BaseRenderComponent::runAction() while the node is not initialized.");
+
+	m_Node->runAction(action);
+}
+
+void BaseRenderComponent::stopAllActions()
+{
+	assert(m_Node && "BaseRenderComponent::stopAllActions() while the node is not initialized.");
+
+	m_Node->stopAllActions();
 }
 
 void BaseRenderComponent::addChild(const BaseRenderComponent & child)

@@ -36,7 +36,14 @@ public:
 	void setPosition(const cocos2d::Vec2 & position);
 
 	float getScale() const;
+	float getScaleX() const;
+	float getScaleY() const;
 	void setScaleToSize(const cocos2d::Size & size);
+
+	float getRotation() const;
+	void setRotation(float degree);
+
+	cocos2d::Vec2 convertToLocalSpace(const cocos2d::Vec2 & positionInWorld) const;
 
 	//The type name of this component. Must be the same as the class name.
 	static const std::string Type;

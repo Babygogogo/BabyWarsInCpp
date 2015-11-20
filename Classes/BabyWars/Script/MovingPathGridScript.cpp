@@ -2,7 +2,7 @@
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/Actor/Actor.h"
-#include "../../BabyEngine/Actor/BaseRenderComponent.h"
+#include "../../BabyEngine/Actor/SpriteRenderComponent.h"
 #include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../Resource/ResourceLoader.h"
@@ -20,7 +20,6 @@ struct MovingPathGridScript::MovingPathGridScriptImpl
 	~MovingPathGridScriptImpl() = default;
 
 	const std::string & getSpriteFrameName(AdjacentDirection previous, AdjacentDirection next) const;
-	void setAppearance(cocos2d::Sprite * sprite, const std::string & spriteFrameName, const cocos2d::Size & gridSize);
 
 	static std::string s_SpriteFrameNameEmpty;
 	static std::string s_SpriteFrameNameArrowUpper;
@@ -34,7 +33,7 @@ struct MovingPathGridScript::MovingPathGridScriptImpl
 	static std::string s_SpriteFrameNameLineHorizontal;
 	static std::string s_SpriteFrameNameLineVertical;
 
-	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
+	std::weak_ptr<SpriteRenderComponent> m_SpriteRenderComponent;
 	std::weak_ptr<TransformComponent> m_TransformComponent;
 };
 
@@ -112,18 +111,6 @@ const std::string & MovingPathGridScript::MovingPathGridScriptImpl::getSpriteFra
 	}
 }
 
-void MovingPathGridScript::MovingPathGridScriptImpl::setAppearance(cocos2d::Sprite * sprite, const std::string & spriteFrameName, const cocos2d::Size & gridSize)
-{
-	if (spriteFrameName.empty()) {
-		sprite->setVisible(false);
-		return;
-	}
-
-	sprite->setSpriteFrame(cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFrameName));
-	sprite->setScaleX(gridSize.width / sprite->getContentSize().width);
-	sprite->setScaleY(gridSize.height / sprite->getContentSize().height);
-}
-
 //////////////////////////////////////////////////////////////////////////
 //Implementation of MovingPathGridScript.
 //////////////////////////////////////////////////////////////////////////
@@ -137,12 +124,19 @@ MovingPathGridScript::~MovingPathGridScript()
 
 void MovingPathGridScript::setAppearanceAndPosition(const GridIndex & index, AdjacentDirection previous, AdjacentDirection next)
 {
-	auto renderComponent = pimpl->m_RenderComponent.lock();
-	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
-	pimpl->m_TransformComponent.lock()->setPosition(index.toPosition(gridSize));
+	auto renderComponent = pimpl->m_SpriteRenderComponent.lock();
+	const auto & spriteFrameName = pimpl->getSpriteFrameName(previous, next);
+	if (spriteFrameName.empty()) {
+		renderComponent->setVisible(false);
+		return;
+	}
 
-	auto sprite = renderComponent->getSceneNode<cocos2d::Sprite>();
-	pimpl->setAppearance(sprite, pimpl->getSpriteFrameName(previous, next), gridSize);
+	renderComponent->setSpriteFrame(cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFrameName));
+
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
+	auto transformComponent = pimpl->m_TransformComponent.lock();
+	transformComponent->setPosition(index.toPosition(gridSize));
+	transformComponent->setScaleToSize(gridSize);
 }
 
 bool MovingPathGridScript::vInit(tinyxml2::XMLElement *xmlElement)
@@ -171,9 +165,9 @@ void MovingPathGridScript::vPostInit()
 {
 	auto ownerActor = m_OwnerActor.lock();
 
-	auto renderComponent = ownerActor->getBaseRenderComponent();
+	auto renderComponent = ownerActor->getRenderComponent<SpriteRenderComponent>();
 	assert(renderComponent && "MovingPathGridScript::vPostInit() the actor has no render component.");
-	pimpl->m_RenderComponent = std::move(renderComponent);
+	pimpl->m_SpriteRenderComponent = std::move(renderComponent);
 
 	auto transformComponent = ownerActor->getComponent<TransformComponent>();
 	assert(transformComponent && "MovingPathGridScript::vPostInit() the actor has no transform component.");

@@ -54,6 +54,16 @@ float TransformComponent::getScale() const
 	return pimpl->m_RenderComponent->getSceneNode()->getScale();
 }
 
+float TransformComponent::getScaleX() const
+{
+	return pimpl->m_RenderComponent->getSceneNode()->getScaleX();
+}
+
+float TransformComponent::getScaleY() const
+{
+	return pimpl->m_RenderComponent->getSceneNode()->getScaleY();
+}
+
 void TransformComponent::setScaleToSize(const cocos2d::Size & size)
 {
 	auto sceneNode = pimpl->m_RenderComponent->getSceneNode();
@@ -65,6 +75,21 @@ void TransformComponent::setScaleToSize(const cocos2d::Size & size)
 
 	sceneNode->setScaleX(size.width / contentSize.width);
 	sceneNode->setScaleY(size.height / contentSize.height);
+}
+
+float TransformComponent::getRotation() const
+{
+	return pimpl->m_RenderComponent->getSceneNode()->getRotation();
+}
+
+void TransformComponent::setRotation(float degree)
+{
+	pimpl->m_RenderComponent->getSceneNode()->setRotation(degree);
+}
+
+cocos2d::Vec2 TransformComponent::convertToLocalSpace(const cocos2d::Vec2 & positionInWorld) const
+{
+	return pimpl->m_RenderComponent->getSceneNode()->convertToNodeSpace(positionInWorld);
 }
 
 bool TransformComponent::vInit(tinyxml2::XMLElement *xmlElement)
@@ -81,7 +106,7 @@ bool TransformComponent::vInit(tinyxml2::XMLElement *xmlElement)
 
 void TransformComponent::vPostInit()
 {
-	pimpl->m_RenderComponent = m_OwnerActor.lock()->getBaseRenderComponent();
+	pimpl->m_RenderComponent = m_OwnerActor.lock()->getRenderComponent();
 	assert(pimpl->m_RenderComponent && "TransformComponent::vPostInit() the actor has no render component.");
 
 	for (const auto & operation : pimpl->m_CachedOperations)

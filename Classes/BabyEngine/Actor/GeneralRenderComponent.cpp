@@ -41,6 +41,7 @@ GeneralRenderComponent::GeneralRenderComponent() : pimpl{ std::make_unique<Gener
 
 GeneralRenderComponent::~GeneralRenderComponent()
 {
+	CC_SAFE_RELEASE_NULL(m_Node);
 }
 
 bool GeneralRenderComponent::vInit(tinyxml2::XMLElement *xmlElement)
@@ -67,11 +68,9 @@ bool GeneralRenderComponent::vInit(tinyxml2::XMLElement *xmlElement)
 	m_Node->retain();
 
 	//Set some extra data if presents in the xmlElement.
+	//#TODO: This should be refactored.
 	if (auto positionElement = xmlElement->FirstChildElement("Position")) {
 		setPosition(RelativePosition(positionElement));
-
-		auto localZOrder = positionElement->IntAttribute("LocalZOrder");
-		m_Node->setLocalZOrder(localZOrder);
 	}
 
 	if (auto otherSettingsElement = xmlElement->FirstChildElement("OtherSettings")) {

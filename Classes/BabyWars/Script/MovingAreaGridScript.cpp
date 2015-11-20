@@ -48,7 +48,7 @@ bool MovingAreaGridScript::vInit(tinyxml2::XMLElement *xmlElement)
 void MovingAreaGridScript::vPostInit()
 {
 	auto ownerActor = m_OwnerActor.lock();
-	auto renderComponent = ownerActor->getBaseRenderComponent();
+	auto renderComponent = ownerActor->getRenderComponent();
 	assert(renderComponent && "MovingAreaGridScript::vPostInit() the actor has no render component.");
 	pimpl->m_RenderComponent = renderComponent;
 

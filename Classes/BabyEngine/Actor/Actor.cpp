@@ -67,7 +67,7 @@ std::shared_ptr<ActorComponent> Actor::getComponent(const std::string & type) co
 	return findIter->second;
 }
 
-std::shared_ptr<BaseRenderComponent> Actor::getBaseRenderComponent() const
+std::shared_ptr<BaseRenderComponent> Actor::getRenderComponent() const
 {
 	return pimpl->m_RenderComponent;
 }
@@ -156,7 +156,7 @@ void Actor::removeAllChildren()
 		auto child = idChildPair.second.lock();
 		//Can't call child.removeFromParent() here because it modifies the pimpl->m_Children!
 		child->pimpl->m_Parent.reset();
-		if (auto childRenderComponent = child->getBaseRenderComponent())
+		if (auto childRenderComponent = child->getRenderComponent())
 			childRenderComponent->removeFromParent();
 	}
 

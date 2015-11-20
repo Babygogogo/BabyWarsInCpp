@@ -2,7 +2,7 @@
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/Actor/Actor.h"
-#include "../../BabyEngine/Actor/BaseRenderComponent.h"
+#include "../../BabyEngine/Actor/SpriteRenderComponent.h"
 #include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../Resource/ResourceLoader.h"
@@ -22,7 +22,7 @@ struct UnitScript::UnitScriptImpl
 	GridIndex m_GridIndex;
 	std::shared_ptr<UnitData> m_UnitData;
 
-	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
+	std::weak_ptr<SpriteRenderComponent> m_SpriteRenderComponent;
 	std::weak_ptr<TransformComponent> m_TransformComponent;
 };
 
@@ -47,9 +47,8 @@ void UnitScript::loadUnit(tinyxml2::XMLElement * xmlElement)
 	assert(unitData && "UnitScript::setUnitData() with nullptr.");
 
 	auto ownerActor = m_OwnerActor.lock();
-	auto underlyingSprite = ownerActor->getBaseRenderComponent()->getSceneNode<cocos2d::Sprite>();
 	//#TODO: This only shows the first first frame of the animation. Update the code to show the whole animation.
-	underlyingSprite->setSpriteFrame(unitData->getAnimation()->getFrames().at(0)->getSpriteFrame());
+	pimpl->m_SpriteRenderComponent.lock()->setSpriteFrame(unitData->getAnimation()->getFrames().at(0)->getSpriteFrame());
 
 	//Scale the sprite so that it meets the real game grid size.
 	pimpl->m_TransformComponent.lock()->setScaleToSize(resourceLoader->getDesignGridSize());
@@ -87,15 +86,15 @@ bool UnitScript::canActivate() const
 
 void UnitScript::setActive(bool active)
 {
-	auto underlyingNode = pimpl->m_RenderComponent.lock()->getSceneNode();
-	if (!active) {
-		underlyingNode->stopAllActions();
-		underlyingNode->setRotation(0);
+	auto spriteRenderComponent = pimpl->m_SpriteRenderComponent.lock();
+	if (active) {
+		auto sequence = cocos2d::Sequence::create(cocos2d::RotateTo::create(0.2f, 30, 30), cocos2d::RotateTo::create(0.4f, -30, -30), cocos2d::RotateTo::create(0.2f, 0, 0), nullptr);
+		spriteRenderComponent->runAction(cocos2d::RepeatForever::create(sequence));
 		return;
 	}
 
-	auto sequence = cocos2d::Sequence::create(cocos2d::RotateTo::create(0.2f, 30, 30), cocos2d::RotateTo::create(0.4f, -30, -30), cocos2d::RotateTo::create(0.2f, 0, 0), nullptr);
-	underlyingNode->runAction(cocos2d::RepeatForever::create(sequence));
+	spriteRenderComponent->stopAllActions();
+	pimpl->m_TransformComponent.lock()->setRotation(0);
 }
 
 bool UnitScript::canPassThrough(const UnitScript & otherUnit) const
@@ -128,7 +127,7 @@ void UnitScript::moveAlongPath(const MovingPath & path)
 		moveActionList.pushBack(cocos2d::MoveTo::create(movingTimePerGrid, underlyingPath[i].m_GridIndex.toPosition(gridSize)));
 
 	auto moveSequence = cocos2d::Sequence::create(moveActionList);
-	pimpl->m_RenderComponent.lock()->getSceneNode()->runAction(moveSequence);
+	pimpl->m_SpriteRenderComponent.lock()->runAction(moveSequence);
 }
 
 bool UnitScript::vInit(tinyxml2::XMLElement *xmlElement)
@@ -140,9 +139,9 @@ void UnitScript::vPostInit()
 {
 	auto ownerActor = m_OwnerActor.lock();
 
-	auto renderComponent = ownerActor->getBaseRenderComponent();
-	assert(renderComponent && "UnitScript::vPostInit() the actor has no render component.");
-	pimpl->m_RenderComponent = std::move(renderComponent);
+	auto renderComponent = ownerActor->getRenderComponent<SpriteRenderComponent>();
+	assert(renderComponent && "UnitScript::vPostInit() the actor has no sprite render component.");
+	pimpl->m_SpriteRenderComponent = std::move(renderComponent);
 
 	auto transformComponent = ownerActor->getComponent<TransformComponent>();
 	assert(transformComponent && "UnitScript::vPostInit() the actor has no transform component.");

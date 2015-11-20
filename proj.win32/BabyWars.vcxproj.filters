@@ -61,6 +61,9 @@
     <Filter Include="src\BabyWars\Utilities">
       <UniqueIdentifier>{0eb5e7b7-a957-4bb1-a894-69a75149623c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\BabyEngine\Actor\RenderComponent">
+      <UniqueIdentifier>{e3a6b3f9-f0db-443a-906d-567da2cfaadf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -78,16 +81,10 @@
     <ClCompile Include="..\Classes\BabyEngine\Actor\ActorComponent.cpp">
       <Filter>src\BabyEngine\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Actor\BaseRenderComponent.cpp">
-      <Filter>src\BabyEngine\Actor</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Actor\BaseScriptComponent.cpp">
       <Filter>src\BabyEngine\Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Actor\FiniteTimeActionComponent.cpp">
-      <Filter>src\BabyEngine\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.cpp">
       <Filter>src\BabyEngine\Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Event\EventDispatcher.cpp">
@@ -192,9 +189,6 @@
     <ClCompile Include="..\Classes\BabyWars\Utilities\GridIndex.cpp">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.cpp">
-      <Filter>src\BabyEngine\Actor</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.cpp">
       <Filter>src\BabyEngine\Utilities</Filter>
     </ClCompile>
@@ -228,6 +222,18 @@
     <ClCompile Include="..\Classes\BabyEngine\Actor\TransformComponent.cpp">
       <Filter>src\BabyEngine\Actor</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\BaseRenderComponent.cpp">
+      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.cpp">
+      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.cpp">
+      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\SpriteRenderComponent.cpp">
+      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -248,16 +254,10 @@
     <ClInclude Include="..\Classes\BabyEngine\Actor\ActorID.h">
       <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Actor\BaseRenderComponent.h">
-      <Filter>src\BabyEngine\Actor</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Actor\BaseScriptComponent.h">
       <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Actor\FiniteTimeActionComponent.h">
-      <Filter>src\BabyEngine\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.h">
       <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Actor\SoundPlayer.h">
@@ -407,9 +407,6 @@
     <ClInclude Include="..\Classes\BabyWars\Utilities\Matrix2DDimension.h">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.h">
-      <Filter>src\BabyEngine\Actor</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.h">
       <Filter>src\BabyEngine\Utilities</Filter>
     </ClInclude>
@@ -442,6 +439,18 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Actor\TransformComponent.h">
       <Filter>src\BabyEngine\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\BaseRenderComponent.h">
+      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\SpriteRenderComponent.h">
+      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.h">
+      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.h">
+      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

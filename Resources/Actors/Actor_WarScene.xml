@@ -9,6 +9,7 @@
 				</Duration>
 			</TransitionScene>
 		</SceneRenderComponent>
+		<TransformComponent/>
 		<WarSceneScript TestTileMap="Data\TileMap\TileMapData_TestTileMap.xml" TestUnitMap="Data\UnitMap\UnitMapData_TestUnitMap.xml">
 			<RelatedActorsPath TileMap="Actors\Actor_TileMap.xml" UnitMap="Actors\Actor_UnitMap.xml" MovePath="Actors\Actor_MovingPath.xml" MovingRange="Actors\Actor_MovingArea.xml"/>
 		</WarSceneScript>

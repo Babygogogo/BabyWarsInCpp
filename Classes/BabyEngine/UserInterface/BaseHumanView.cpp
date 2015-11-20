@@ -32,7 +32,7 @@ bool BaseHumanView::BaseHumanViewImpl::canSetAndRunSceneActor(const std::shared_
 	assert(!actor->hasParent() && "BaseHumanView::canSetAndRunSceneActor() the actor has parent already.");
 	assert(!actor->isAttachedToHumanView() && "BaseHumanView::canSetAndRunSceneActor() the actor has been attached to view already.");
 
-	auto sceneRenderComponent = std::dynamic_pointer_cast<SceneRenderComponent>(actor->getBaseRenderComponent());
+	auto sceneRenderComponent = std::dynamic_pointer_cast<SceneRenderComponent>(actor->getRenderComponent());
 	assert(sceneRenderComponent && "BaseHumanView::canSetAndRunSceneActor() the actor has no scene render component.");
 
 	return true;
@@ -61,7 +61,7 @@ bool BaseHumanView::setAndRunSceneActor(const std::shared_ptr<Actor> & actor)
 	if (!pimpl->canSetAndRunSceneActor(actor))
 		return false;
 
-	auto sceneRenderComponent = std::dynamic_pointer_cast<SceneRenderComponent>(actor->getBaseRenderComponent());
+	auto sceneRenderComponent = std::dynamic_pointer_cast<SceneRenderComponent>(actor->getRenderComponent());
 	auto sceneToRun = sceneRenderComponent->getTransitionScene() ? sceneRenderComponent->getTransitionScene() : sceneRenderComponent->getScene();
 
 	if (pimpl->m_SceneActor.expired())
