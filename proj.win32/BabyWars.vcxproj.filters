@@ -234,6 +234,9 @@
     <ClCompile Include="..\Classes\BabyEngine\Actor\SpriteRenderComponent.cpp">
       <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Graphic2D\BaseController.cpp">
+      <Filter>src\BabyEngine\Graphic2D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -356,9 +359,6 @@
     <ClInclude Include="..\Classes\BabyEngine\UserInterface\BaseGameView.h">
       <Filter>src\BabyEngine\UserInterface</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Graphic2D\IController.h">
-      <Filter>src\BabyEngine\Graphic2D</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Graphic2D\WarSceneController.h">
       <Filter>src\BabyWars\Graphic2D</Filter>
     </ClInclude>
@@ -451,6 +451,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.h">
       <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Graphic2D\BaseController.h">
+      <Filter>src\BabyEngine\Graphic2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

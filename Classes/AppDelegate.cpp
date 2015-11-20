@@ -52,7 +52,7 @@ void AppDelegate::AppDelegateImpl::initGame()
 	gameLogic->setHumanView(humanView);
 
 	auto initialActor = gameLogic->createActor(resourceLoader->getInitialScenePath().c_str());
-	std::unique_ptr<IController> warSceneController = std::make_unique<WarSceneController>();
+	std::unique_ptr<BaseController> warSceneController = std::make_unique<WarSceneController>();
 	warSceneController->setTarget(initialActor);
 	warSceneController->setEnable(true);
 

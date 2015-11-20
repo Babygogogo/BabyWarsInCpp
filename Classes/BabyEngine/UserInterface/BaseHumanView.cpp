@@ -5,7 +5,7 @@
 #include "BaseHumanView.h"
 #include "../Actor/Actor.h"
 #include "../Actor/SceneRenderComponent.h"
-#include "../Graphic2D/IController.h"
+#include "../Graphic2D/BaseController.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of BaseHumanViewImpl.
@@ -20,7 +20,7 @@ struct BaseHumanView::BaseHumanViewImpl
 	std::weak_ptr<BaseHumanView> m_Self;
 
 	std::weak_ptr<Actor> m_SceneActor;
-	std::unique_ptr<IController> m_Controller;
+	std::unique_ptr<BaseController> m_Controller;
 };
 
 bool BaseHumanView::BaseHumanViewImpl::canSetAndRunSceneActor(const std::shared_ptr<Actor> & actor) const
@@ -85,7 +85,7 @@ std::shared_ptr<Actor> BaseHumanView::getSceneActor() const
 	return pimpl->m_SceneActor.lock();
 }
 
-void BaseHumanView::setController(std::unique_ptr<IController> controller)
+void BaseHumanView::setController(std::unique_ptr<BaseController> controller)
 {
 	pimpl->m_Controller = std::move(controller);
 }

@@ -39,9 +39,7 @@ struct WarSceneController::WarSceneControllerImpl
 	cocos2d::Vec2 m_TouchOneByOneBeganPosition;
 	cocos2d::EventListenerTouchOneByOne * m_TouchOneByOne{ cocos2d::EventListenerTouchOneByOne::create() };
 
-	std::weak_ptr<Actor> m_Actor;
 	std::weak_ptr<WarSceneScript> m_Script;
-	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
 
 	//Controller states.
 	class BaseState;
@@ -302,31 +300,19 @@ WarSceneController::~WarSceneController()
 	unsetTarget();
 }
 
-void WarSceneController::setTarget(const std::shared_ptr<Actor> & actor)
+void WarSceneController::vSetTargetDelegate(const std::shared_ptr<Actor> & actor)
 {
-	assert(actor && "WarSceneController:setTarget() the actor is nullptr.");
-
 	auto sceneScript = actor->getComponent<WarSceneScript>();
 	assert(sceneScript && "WarSceneController::setTarget() the actor has not a WarSceneScript.");
-
-	auto renderComponent = actor->getRenderComponent();
-	assert(renderComponent && "WarSceneController::setTarget() the actor has not a render component.");
-
-	pimpl->m_Actor = actor;
 	pimpl->m_Script = sceneScript;
-	pimpl->m_RenderComponent = renderComponent;
 }
 
-void WarSceneController::unsetTarget()
+void WarSceneController::vUnsetTargetDelegate()
 {
-	setEnable(false);
-
-	pimpl->m_Actor.reset();
 	pimpl->m_Script.reset();
-	pimpl->m_RenderComponent.reset();
 }
 
-void WarSceneController::setEnable(bool enable)
+void WarSceneController::vSetEnableDelegate(bool enable, cocos2d::Node * targetSceneNode)
 {
 	auto eventDispatcher = cocos2d::Director::getInstance()->getEventDispatcher();
 	if (!enable) {
@@ -334,8 +320,5 @@ void WarSceneController::setEnable(bool enable)
 		return;
 	}
 
-	assert(!pimpl->m_Actor.expired() && "WarSceneController::setEnable() the controller has no target actor.");
-
-	auto renderComponent = pimpl->m_RenderComponent.lock();
-	eventDispatcher->addEventListenerWithSceneGraphPriority(pimpl->m_TouchOneByOne, renderComponent->getSceneNode());
+	eventDispatcher->addEventListenerWithSceneGraphPriority(pimpl->m_TouchOneByOne, targetSceneNode);
 }

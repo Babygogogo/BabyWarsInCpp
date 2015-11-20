@@ -38,6 +38,7 @@ public:
 	{
 		return dynamic_cast<T*>(m_Node);
 	}
+	cocos2d::Node * getSceneNode() const;
 
 	void setPosition(const RelativePosition & relativePosition);
 	void setVisible(bool visible);

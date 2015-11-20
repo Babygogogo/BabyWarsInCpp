@@ -11,7 +11,7 @@ namespace cocos2d
 	class Node;
 }
 class Actor;
-class IController;
+class BaseController;
 
 /*!
  * \class BaseHumanView
@@ -31,7 +31,7 @@ public:
 	bool setAndRunSceneActor(const std::shared_ptr<Actor> & actor);
 	std::shared_ptr<Actor> getSceneActor() const;
 
-	void setController(std::unique_ptr<IController> controller);
+	void setController(std::unique_ptr<BaseController> controller);
 
 protected:
 	BaseHumanView();

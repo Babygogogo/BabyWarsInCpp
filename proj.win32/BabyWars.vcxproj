@@ -158,6 +158,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyEngine\Event\EventDispatcher.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Event\EvtDataRequestDestroyActor.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\GameLogic\BaseGameLogic.cpp" />
+    <ClCompile Include="..\Classes\BabyEngine\Graphic2D\BaseController.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Process\BaseProcess.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Process\ProcessRunner.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\UserInterface\BaseGameView.cpp" />
@@ -223,7 +224,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyEngine\Event\IEventData.h" />
     <ClInclude Include="..\Classes\BabyEngine\Event\IEventDispatcher.h" />
     <ClInclude Include="..\Classes\BabyEngine\GameLogic\BaseGameLogic.h" />
-    <ClInclude Include="..\Classes\BabyEngine\Graphic2D\IController.h" />
+    <ClInclude Include="..\Classes\BabyEngine\Graphic2D\BaseController.h" />
     <ClInclude Include="..\Classes\BabyEngine\Process\BaseProcess.h" />
     <ClInclude Include="..\Classes\BabyEngine\Process\ProcessRunner.h" />
     <ClInclude Include="..\Classes\BabyEngine\UserInterface\BaseHumanView.h" />
