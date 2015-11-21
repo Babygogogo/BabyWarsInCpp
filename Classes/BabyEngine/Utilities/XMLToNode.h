@@ -13,7 +13,7 @@ namespace tinyxml2
 
 namespace utilities
 {
-	cocos2d::Node * XMLToNode(tinyxml2::XMLElement * xmlElement);
+	cocos2d::Node * XMLToNode(const tinyxml2::XMLElement * xmlElement);
 }
 
 #endif // !__XML_TO_NODE__

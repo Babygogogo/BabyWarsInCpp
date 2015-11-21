@@ -64,6 +64,9 @@
     <Filter Include="src\BabyEngine\Actor\RenderComponent">
       <UniqueIdentifier>{e3a6b3f9-f0db-443a-906d-567da2cfaadf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\BabyEngine\Utilities\XMLSerialization">
+      <UniqueIdentifier>{4c00a287-a0a0-4ab4-86b7-c41f6fb20b8c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -189,36 +192,6 @@
     <ClCompile Include="..\Classes\BabyWars\Utilities\GridIndex.cpp">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.cpp">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.cpp">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToScene.cpp">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSprite.cpp">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToNode.cpp">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToLayer.cpp">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToMenu.cpp">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToLabel.cpp">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToMenuItemImage.cpp">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToParticleExplosion.cpp">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Actor\TransformComponent.cpp">
       <Filter>src\BabyEngine\Actor</Filter>
     </ClCompile>
@@ -236,6 +209,39 @@
     </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Graphic2D\BaseController.cpp">
       <Filter>src\BabyEngine\Graphic2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\SetSceneNodePropertiesWithXML.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToLabel.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToLayer.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToMenu.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToMenuItemImage.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToNode.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToParticleExplosion.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToScene.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSprite.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -407,36 +413,6 @@
     <ClInclude Include="..\Classes\BabyWars\Utilities\Matrix2DDimension.h">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.h">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.h">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToScene.h">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSprite.h">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToNode.h">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToLayer.h">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToMenu.h">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToLabel.h">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToMenuItemImage.h">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToParticleExplosion.h">
-      <Filter>src\BabyEngine\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Actor\TransformComponent.h">
       <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
@@ -454,6 +430,39 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Graphic2D\BaseController.h">
       <Filter>src\BabyEngine\Graphic2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\SetSceneNodePropertiesWithXML.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToLabel.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToLayer.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToMenu.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToMenuItemImage.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToNode.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToParticleExplosion.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToScene.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSprite.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

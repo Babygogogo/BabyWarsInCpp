@@ -13,7 +13,7 @@ namespace tinyxml2
 
 namespace utilities
 {
-	cocos2d::Color3B XMLToColor3B(tinyxml2::XMLElement * xmlElement);
+	cocos2d::Color3B XMLToColor3B(const tinyxml2::XMLElement * xmlElement);
 }
 
 #endif // !__XML_TO_COLOR_3B__

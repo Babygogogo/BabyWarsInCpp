@@ -13,6 +13,7 @@
 #include "../Utilities/XMLToLabel.h"
 #include "../Utilities/XMLToMenuItemImage.h"
 #include "../Utilities/XMLToParticleExplosion.h"
+#include "../Utilities/SetSceneNodePropertiesWithXML.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of DisplayNodeImpl.
@@ -44,8 +45,10 @@ GeneralRenderComponent::~GeneralRenderComponent()
 	CC_SAFE_RELEASE_NULL(m_Node);
 }
 
-bool GeneralRenderComponent::vInit(tinyxml2::XMLElement *xmlElement)
+bool GeneralRenderComponent::vInit(const tinyxml2::XMLElement * xmlElement)
 {
+	assert(!m_Node && "GeneralRenderComponent::vInit() the scene node is already initialized.");
+
 	//Get the type of node from xmlElement.
 	//auto nodeType = xmlElement->Attribute("Type");
 	auto nodeElement = xmlElement->FirstChildElement("SceneNode");
@@ -67,16 +70,8 @@ bool GeneralRenderComponent::vInit(tinyxml2::XMLElement *xmlElement)
 	assert(m_Node && "GeneralRenderComponent::vInit() can't create a cocos2d::Node!");
 	m_Node->retain();
 
-	//Set some extra data if presents in the xmlElement.
-	//#TODO: This should be refactored.
-	if (auto positionElement = xmlElement->FirstChildElement("Position")) {
-		setPosition(RelativePosition(positionElement));
-	}
-
-	if (auto otherSettingsElement = xmlElement->FirstChildElement("OtherSettings")) {
-		auto opacity = otherSettingsElement->IntAttribute("Opacity_0-255");
-		m_Node->setOpacity(opacity);
-	}
+	if (auto propertiesElement = xmlElement->FirstChildElement("SceneNodeProperties"))
+		utilities::setSceneNodePropertiesWithXML(m_Node, propertiesElement);
 
 	return true;
 }

@@ -3,6 +3,7 @@
 
 #include "SpriteRenderComponent.h"
 #include "../../BabyEngine/Utilities/XMLToSprite.h"
+#include "../../BabyEngine/Utilities/SetSceneNodePropertiesWithXML.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of SpriteRenderComponentImpl.
@@ -32,11 +33,15 @@ void SpriteRenderComponent::setSpriteFrame(cocos2d::SpriteFrame * frame)
 	static_cast<cocos2d::Sprite*>(m_Node)->setSpriteFrame(frame);
 }
 
-bool SpriteRenderComponent::vInit(tinyxml2::XMLElement *xmlElement)
+bool SpriteRenderComponent::vInit(const tinyxml2::XMLElement * xmlElement)
 {
+	assert(!m_Node && "SpriteRenderComponent::vInit() the sprite is already initialized.");
 	m_Node = utilities::XMLToSprite(xmlElement);
 	assert(m_Node && "SpriteRenderComponent::vInit() can't create sprite using the xml.");
 	m_Node->retain();
+
+	if (auto propertiesElement = xmlElement->FirstChildElement("SceneNodeProperties"))
+		utilities::setSceneNodePropertiesWithXML(m_Node, propertiesElement);
 
 	return true;
 }

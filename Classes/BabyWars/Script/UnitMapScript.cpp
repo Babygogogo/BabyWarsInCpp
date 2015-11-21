@@ -45,7 +45,7 @@ UnitMapScript::~UnitMapScript()
 {
 }
 
-bool UnitMapScript::vInit(tinyxml2::XMLElement *xmlElement)
+bool UnitMapScript::vInit(const tinyxml2::XMLElement * xmlElement)
 {
 	static auto isStaticInitialized = false;
 	if (isStaticInitialized)

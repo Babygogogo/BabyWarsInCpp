@@ -139,7 +139,7 @@ void MovingPathGridScript::setAppearanceAndPosition(const GridIndex & index, Adj
 	transformComponent->setScaleToSize(gridSize);
 }
 
-bool MovingPathGridScript::vInit(tinyxml2::XMLElement *xmlElement)
+bool MovingPathGridScript::vInit(const tinyxml2::XMLElement * xmlElement)
 {
 	static auto isStaticInitialized = false;
 	if (isStaticInitialized)

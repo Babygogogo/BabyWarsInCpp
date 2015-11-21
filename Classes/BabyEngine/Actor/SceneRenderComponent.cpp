@@ -4,6 +4,7 @@
 #include "SceneRenderComponent.h"
 #include "../../BabyEngine/Utilities/XMLToScene.h"
 #include "../../BabyEngine/Utilities/XMLToTransitionScene.h"
+#include "../../BabyEngine/Utilities/SetSceneNodePropertiesWithXML.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of SceneRenderComponentImpl.
@@ -39,17 +40,25 @@ cocos2d::TransitionScene * SceneRenderComponent::getTransitionScene() const
 	return pimpl->m_TransitionScene;
 }
 
-bool SceneRenderComponent::vInit(tinyxml2::XMLElement * xmlElement)
+bool SceneRenderComponent::vInit(const tinyxml2::XMLElement * xmlElement)
 {
-	assert(!m_Node && "SceneRenderComponent::vInit() the node is already initialized.");
-
+	//Create the scene.
+	assert(!m_Node && "SceneRenderComponent::vInit() the scene is already initialized.");
 	m_Node = utilities::XMLToScene(xmlElement->FirstChildElement("Scene"));
 	assert(m_Node && "SceneRenderComponent::vInit() can't create scene from xml.");
 	m_Node->retain();
 
+	if (auto scenePropertiesElement = xmlElement->FirstChildElement("SceneProperties"))
+		utilities::setSceneNodePropertiesWithXML(m_Node, scenePropertiesElement);
+
+	//Create the transition scene if necessary.
+	assert(!pimpl->m_TransitionScene && "SceneRenderComponent::vInit() the transition scene is already initialized.");
 	if (auto transitionSceneElement = xmlElement->FirstChildElement("TransitionScene")) {
 		pimpl->m_TransitionScene = utilities::XMLToTransitionScene(transitionSceneElement, static_cast<cocos2d::Scene*>(m_Node));
 		pimpl->m_TransitionScene->retain();
+
+		if (auto transitionScenePropretiesElement = xmlElement->FirstChildElement("TransitionSceneProperties"))
+			utilities::setSceneNodePropertiesWithXML(pimpl->m_TransitionScene, transitionScenePropretiesElement);
 	}
 
 	return true;

@@ -3,7 +3,7 @@
 
 #include "XMLToColor3B.h"
 
-cocos2d::Color3B utilities::XMLToColor3B(tinyxml2::XMLElement * xmlElement)
+cocos2d::Color3B utilities::XMLToColor3B(const tinyxml2::XMLElement * xmlElement)
 {
 	assert(xmlElement && "utilities::XMLToColor3B() the xmlElement is nullptr.");
 

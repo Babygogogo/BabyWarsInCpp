@@ -13,7 +13,7 @@ namespace tinyxml2
 
 namespace utilities
 {
-	cocos2d::Label * XMLToLabel(tinyxml2::XMLElement * xmlElement);
+	cocos2d::Label * XMLToLabel(const tinyxml2::XMLElement * xmlElement);
 }
 
 #endif // !__XML_TO_LABEL__

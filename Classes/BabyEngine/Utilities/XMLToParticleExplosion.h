@@ -13,7 +13,7 @@ namespace tinyxml2
 
 namespace utilities
 {
-	cocos2d::ParticleExplosion * XMLToParticleExplosion(tinyxml2::XMLElement * xmlElement);
+	cocos2d::ParticleExplosion * XMLToParticleExplosion(const tinyxml2::XMLElement * xmlElement);
 }
 
 #endif // !__XML_TO_PARTICLE_EXPLOSION__

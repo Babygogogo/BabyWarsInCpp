@@ -238,7 +238,7 @@ bool WarSceneScript::isUnitActiveAtPosition(const cocos2d::Vec2 & pos) const
 	return pimpl->m_ChildUnitMapScript.lock()->isUnitActiveAtIndex(gridIndex);
 }
 
-bool WarSceneScript::vInit(tinyxml2::XMLElement *xmlElement)
+bool WarSceneScript::vInit(const tinyxml2::XMLElement * xmlElement)
 {
 	static auto isStaticInitialized = false;
 	if (isStaticInitialized)

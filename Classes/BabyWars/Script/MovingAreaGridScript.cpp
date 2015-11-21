@@ -40,7 +40,7 @@ void MovingAreaGridScript::setGridIndexAndPosition(const GridIndex & index)
 	pimpl->m_TransformComponent.lock()->setPosition(index.toPosition(SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize()));
 }
 
-bool MovingAreaGridScript::vInit(tinyxml2::XMLElement *xmlElement)
+bool MovingAreaGridScript::vInit(const tinyxml2::XMLElement * xmlElement)
 {
 	return true;
 }

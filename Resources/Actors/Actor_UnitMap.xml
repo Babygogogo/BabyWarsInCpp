@@ -6,7 +6,7 @@
 		</GeneralRenderComponent>
 		<TransformComponent>
 			<LocalZOrder Value="2">
-				<!--The value is in int.-->
+				<!--The value is an int.-->
 			</LocalZOrder>
 		</TransformComponent>
 		<UnitMapScript>

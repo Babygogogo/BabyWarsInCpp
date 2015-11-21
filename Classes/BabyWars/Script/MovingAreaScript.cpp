@@ -112,7 +112,7 @@ const MovingArea & MovingAreaScript::getUnderlyingArea() const
 	return pimpl->m_MovingArea;
 }
 
-bool MovingAreaScript::vInit(tinyxml2::XMLElement * xmlElement)
+bool MovingAreaScript::vInit(const tinyxml2::XMLElement * xmlElement)
 {
 	auto relatedActorsPath = xmlElement->FirstChildElement("RelatedActorsPath");
 	pimpl->m_MovingAreaGridActorPath = relatedActorsPath->Attribute("MovingAreaGrid");

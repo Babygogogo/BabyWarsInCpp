@@ -3,7 +3,7 @@
 
 #include "XMLToSprite.h"
 
-cocos2d::Sprite * utilities::XMLToSprite(tinyxml2::XMLElement * xmlElement)
+cocos2d::Sprite * utilities::XMLToSprite(const tinyxml2::XMLElement * xmlElement)
 {
 	if (auto fileNameElement = xmlElement->FirstChildElement("FileName"))
 		return cocos2d::Sprite::create(fileNameElement->Attribute("Value"));

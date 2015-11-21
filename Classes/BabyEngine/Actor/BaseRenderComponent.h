@@ -9,7 +9,6 @@ namespace cocos2d
 	class Node;
 	class Action;
 }
-class RelativePosition;
 
 /*!
  * \class BaseRenderComponent
@@ -27,20 +26,13 @@ class RelativePosition;
  */
 class BaseRenderComponent : public ActorComponent
 {
-	friend class Actor;	//For addChild() and removeFromParent().
+	friend class Actor;					//For addChild() and removeFromParent().
+	friend class BaseController;		//For getSceneNode().
+	friend class TransformComponent;	//For getSceneNode().
 
 public:
 	~BaseRenderComponent() = default;
 
-	//Getter for underlying object which automatically downcasts the pointer to the type you specified.
-	template <class T = cocos2d::Node>
-	T * getSceneNode() const
-	{
-		return dynamic_cast<T*>(m_Node);
-	}
-	cocos2d::Node * getSceneNode() const;
-
-	void setPosition(const RelativePosition & relativePosition);
 	void setVisible(bool visible);
 
 	//#TODO: Functions about action should be refactored (maybe extract to a ActionComponent).
@@ -57,11 +49,14 @@ protected:
 	BaseRenderComponent() = default;
 
 	//Concrete render components should create and retain their scene node here.
-	virtual bool vInit(tinyxml2::XMLElement *xmlElement) override = 0;
+	virtual bool vInit(const tinyxml2::XMLElement * xmlElement) = 0;
 
 	cocos2d::Node *m_Node{ nullptr };
 
 private:
+	//Getter for underlying scene node. Should only be used by classes in BabyEngine.
+	cocos2d::Node * getSceneNode() const;
+
 	//Called by the owner Actor.
 	void addChild(const BaseRenderComponent & child);
 	void removeFromParent();

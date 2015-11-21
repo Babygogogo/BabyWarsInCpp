@@ -130,7 +130,7 @@ void UnitScript::moveAlongPath(const MovingPath & path)
 	pimpl->m_SpriteRenderComponent.lock()->runAction(moveSequence);
 }
 
-bool UnitScript::vInit(tinyxml2::XMLElement *xmlElement)
+bool UnitScript::vInit(const tinyxml2::XMLElement * xmlElement)
 {
 	return true;
 }

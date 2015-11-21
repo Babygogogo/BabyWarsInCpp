@@ -3,18 +3,10 @@
 #include "cocos2d.h"
 
 #include "BaseRenderComponent.h"
-#include "../Utilities/RelativePosition.h"
 
 cocos2d::Node * BaseRenderComponent::getSceneNode() const
 {
 	return m_Node;
-}
-
-void BaseRenderComponent::setPosition(const RelativePosition & relativePosition)
-{
-	assert(m_Node && "BaseRenderComponent::setPosition() while the node is not initialized.");
-
-	m_Node->setPosition(relativePosition.getAbsolutePositionX(m_Node), relativePosition.getAbsolutePositionY(m_Node));
 }
 
 void BaseRenderComponent::setVisible(bool visible)

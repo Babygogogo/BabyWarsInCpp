@@ -3,7 +3,7 @@
 
 #include "XMLToParticleExplosion.h"
 
-cocos2d::ParticleExplosion * utilities::XMLToParticleExplosion(tinyxml2::XMLElement * xmlElement)
+cocos2d::ParticleExplosion * utilities::XMLToParticleExplosion(const tinyxml2::XMLElement * xmlElement)
 {
 	auto particle = cocos2d::ParticleExplosion::create();
 	if (auto properties = xmlElement->FirstChildElement("Properties")) {

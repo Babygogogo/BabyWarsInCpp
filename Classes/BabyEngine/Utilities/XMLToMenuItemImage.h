@@ -13,7 +13,7 @@ namespace tinyxml2
 
 namespace utilities
 {
-	cocos2d::MenuItemImage * XMLToMenuItemImage(tinyxml2::XMLElement * xmlElement);
+	cocos2d::MenuItemImage * XMLToMenuItemImage(const tinyxml2::XMLElement * xmlElement);
 }
 
 #endif // !__XML_TO_MENU_ITEM_IMAGE__

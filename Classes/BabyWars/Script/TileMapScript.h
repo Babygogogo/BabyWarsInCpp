@@ -4,7 +4,7 @@
 #include "../../BabyEngine/Actor/BaseScriptComponent.h"
 
 //Forward declaration.
-namespace cocos2d{
+namespace cocos2d {
 	class Size;
 }
 struct GridIndex;
@@ -36,7 +36,7 @@ public:
 
 private:
 	//Override functions.
-	virtual bool vInit(tinyxml2::XMLElement *xmlElement) override;
+	virtual bool vInit(const tinyxml2::XMLElement * xmlElement) override;
 	virtual void vPostInit() override;
 
 	//Implementation stuff.

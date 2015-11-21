@@ -3,7 +3,7 @@
 
 #include "XMLToMenuItemImage.h"
 
-cocos2d::MenuItemImage * utilities::XMLToMenuItemImage(tinyxml2::XMLElement * xmlElement)
+cocos2d::MenuItemImage * utilities::XMLToMenuItemImage(const tinyxml2::XMLElement * xmlElement)
 {
 	if (auto createWith = xmlElement->FirstChildElement("CreateWith")) {
 		auto menuItemImage = cocos2d::MenuItemImage::create();

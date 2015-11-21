@@ -3,7 +3,7 @@
 
 #include "XMLToScene.h"
 
-cocos2d::Scene * utilities::XMLToScene(tinyxml2::XMLElement * xmlElement)
+cocos2d::Scene * utilities::XMLToScene(const tinyxml2::XMLElement * xmlElement)
 {
 	return cocos2d::Scene::create();
 }

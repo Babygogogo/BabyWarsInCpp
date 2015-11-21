@@ -3,7 +3,7 @@
 
 #include "XMLToLabel.h"
 
-cocos2d::Label * utilities::XMLToLabel(tinyxml2::XMLElement * xmlElement)
+cocos2d::Label * utilities::XMLToLabel(const tinyxml2::XMLElement * xmlElement)
 {
 	if (auto createWith = xmlElement->FirstChildElement("CreateWith")) {
 		if (createWith->Attribute("FunctionName", "createWithSystemFont")) {

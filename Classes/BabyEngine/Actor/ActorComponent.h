@@ -30,7 +30,7 @@ public:
 
 protected:
 	//Called by ActorFactory, after the creation of the component and before attaching to an actor.
-	virtual bool vInit(tinyxml2::XMLElement *xmlElement);
+	virtual bool vInit(const tinyxml2::XMLElement * xmlElement);
 	//Called by by Actor by ActorFactory, after attaching all components to an actor. No default behavior.
 	virtual void vPostInit();
 	virtual void vOnChanged();

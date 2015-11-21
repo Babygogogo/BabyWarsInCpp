@@ -92,7 +92,7 @@ cocos2d::Vec2 TransformComponent::convertToLocalSpace(const cocos2d::Vec2 & posi
 	return pimpl->m_RenderComponent->getSceneNode()->convertToNodeSpace(positionInWorld);
 }
 
-bool TransformComponent::vInit(tinyxml2::XMLElement *xmlElement)
+bool TransformComponent::vInit(const tinyxml2::XMLElement * xmlElement)
 {
 	if (auto localZOrderElement = xmlElement->FirstChildElement("LocalZOrder")) {
 		auto localZOrder = localZOrderElement->IntAttribute("Value");

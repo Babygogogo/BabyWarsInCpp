@@ -148,7 +148,7 @@ const MovingPath & MovingPathScript::getUnderlyingPath() const
 	return pimpl->m_MovingPath;
 }
 
-bool MovingPathScript::vInit(tinyxml2::XMLElement *xmlElement)
+bool MovingPathScript::vInit(const tinyxml2::XMLElement * xmlElement)
 {
 	auto relatedActorsPath = xmlElement->FirstChildElement("RelatedActorsPath");
 	pimpl->m_MovingPathGridActorPath = relatedActorsPath->Attribute("MovingPathGrid");

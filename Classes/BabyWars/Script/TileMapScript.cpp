@@ -43,7 +43,7 @@ TileMapScript::~TileMapScript()
 {
 }
 
-bool TileMapScript::vInit(tinyxml2::XMLElement *xmlElement)
+bool TileMapScript::vInit(const tinyxml2::XMLElement * xmlElement)
 {
 	static auto isStaticInitialized = false;
 	if (isStaticInitialized)

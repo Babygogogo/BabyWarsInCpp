@@ -78,7 +78,7 @@ GridIndex TileScript::getGridIndex() const
 	return pimpl->m_GridIndex;
 }
 
-bool TileScript::vInit(tinyxml2::XMLElement *xmlElement)
+bool TileScript::vInit(const tinyxml2::XMLElement * xmlElement)
 {
 	return true;
 }
