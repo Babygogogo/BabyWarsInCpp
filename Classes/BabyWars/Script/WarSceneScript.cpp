@@ -4,14 +4,11 @@
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/Actor/TransformComponent.h"
+#include "../../BabyEngine/Event/EvtDataInputDrag.h"
+#include "../../BabyEngine/Event/EvtDataInputTouch.h"
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
-#include "../Event/EvtDataActivateUnitAtPosition.h"
-#include "../Event/EvtDataDeactivateActiveUnit.h"
-#include "../Event/EvtDataDragScene.h"
-#include "../Event/EvtDataFinishMakeMovingPath.h"
-#include "../Event/EvtDataMakeMovingPath.h"
 #include "../Resource/ResourceLoader.h"
 #include "../Utilities/GridIndex.h"
 #include "../Utilities/Matrix2DDimension.h"
@@ -30,11 +27,17 @@ struct WarSceneScript::WarSceneScriptImpl
 	WarSceneScriptImpl() = default;
 	~WarSceneScriptImpl() = default;
 
-	void onActivateUnitAtPosition(const IEventData & e);
-	void onDeactivateActiveUnit(const IEventData & e);
-	void onDragScene(const IEventData & e);
-	void onFinishMakeMovingPath(const IEventData & e);
-	void onMakeMovingPath(const IEventData & e);
+	void onInputDrag(const IEventData & e);
+	void onInputTouch(const IEventData & e);
+
+	void activateUnitAtPosition(const cocos2d::Vec2 & position);
+	void dragScene(const cocos2d::Vec2 & offset);
+	void deactivateActiveUnit();
+	void makeMovingPath(const cocos2d::Vec2 & position);
+	void finishMakingMovingPath(const cocos2d::Vec2 & position);
+
+	bool canActivateUnitAtPosition(const cocos2d::Vec2 & pos) const;
+	bool isUnitActiveAtPosition(const cocos2d::Vec2 & pos) const;
 
 	cocos2d::Size getMapSize() const;
 	cocos2d::Vec2 toPositionInScene(const cocos2d::Vec2 & position) const;
@@ -49,6 +52,8 @@ struct WarSceneScript::WarSceneScriptImpl
 	static std::string s_MovingPathActorPath;
 	static std::string s_MovingAreaActorPath;
 
+	ActorID m_ActorID{ INVALID_ACTOR_ID };
+
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
 	std::weak_ptr<TransformComponent> m_TransformComponent;
 
@@ -56,6 +61,26 @@ struct WarSceneScript::WarSceneScriptImpl
 	std::weak_ptr<UnitMapScript> m_ChildUnitMapScript;
 	std::weak_ptr<MovingPathScript> m_ChildMovingPathScript;
 	std::weak_ptr<MovingAreaScript> m_ChildMovingAreaScript;
+
+	//////////////////////////////////////////////////////////////////////////
+	//State stuffs.
+	class BaseState;
+	class StateIdle;
+	class StateDraggingScene;
+	class StateActivatedUnit;
+	class StateMakingMovePath;
+
+	void initStateStuff(std::weak_ptr<WarSceneScriptImpl> scriptImpl);
+
+	template <typename State>
+	void setCurrentState();
+
+	void saveCurrentStateToPrevious();
+	void resumeCurrentStateFromPrevious();
+
+	std::shared_ptr<BaseState> m_PreviousState;
+	std::shared_ptr<BaseState> m_CurrentState;
+	std::unordered_map<std::type_index, std::shared_ptr<BaseState>> m_States;
 };
 
 std::string WarSceneScript::WarSceneScriptImpl::s_TileMapActorPath;
@@ -63,34 +88,276 @@ std::string WarSceneScript::WarSceneScriptImpl::s_UnitMapActorPath;
 std::string WarSceneScript::WarSceneScriptImpl::s_MovingPathActorPath;
 std::string WarSceneScript::WarSceneScriptImpl::s_MovingAreaActorPath;
 
-void WarSceneScript::WarSceneScriptImpl::onActivateUnitAtPosition(const IEventData & e)
+void WarSceneScript::WarSceneScriptImpl::initStateStuff(std::weak_ptr<WarSceneScriptImpl> scriptImpl)
 {
-	const auto & activateUnitEvent = static_cast<const EvtDataActivateUnitAtPosition &>(e);
-	auto gridIndex = toGridIndex(activateUnitEvent.getPosition());
+	//Create the state instances.
+	m_States.emplace(typeid(StateIdle), std::make_shared<StateIdle>(scriptImpl));
+	m_States.emplace(typeid(StateDraggingScene), std::make_shared<StateDraggingScene>(scriptImpl));
+	m_States.emplace(typeid(StateActivatedUnit), std::make_shared<StateActivatedUnit>(scriptImpl));
+	m_States.emplace(typeid(StateMakingMovePath), std::make_shared<StateMakingMovePath>(scriptImpl));
 
+	setCurrentState<StateIdle>();
+}
+
+template <typename State>
+void WarSceneScript::WarSceneScriptImpl::setCurrentState()
+{
+	auto stateIter = m_States.find(typeid(State));
+	assert(stateIter != m_States.end() && "WarSceneScriptImpl::setCurrentState() there's no state of the template parameter.");
+
+	m_CurrentState = stateIter->second;
+}
+
+void WarSceneScript::WarSceneScriptImpl::saveCurrentStateToPrevious()
+{
+	m_PreviousState = m_CurrentState;
+}
+
+void WarSceneScript::WarSceneScriptImpl::resumeCurrentStateFromPrevious()
+{
+	m_CurrentState = m_PreviousState;
+}
+
+class WarSceneScript::WarSceneScriptImpl::BaseState
+{
+public:
+	virtual ~BaseState() = default;
+
+	virtual void onTouch(const EvtDataInputTouch & touch) = 0;
+	virtual void onDrag(const EvtDataInputDrag & drag) = 0;
+
+protected:
+	BaseState(std::weak_ptr<WarSceneScriptImpl> scriptImpl) : m_ScriptImpl{ std::move(scriptImpl) } {}
+
+	std::weak_ptr<WarSceneScriptImpl> m_ScriptImpl;
+};
+
+class WarSceneScript::WarSceneScriptImpl::StateIdle : public BaseState
+{
+public:
+	StateIdle(std::weak_ptr<WarSceneScriptImpl> scriptImpl) : BaseState(scriptImpl) {}
+	virtual ~StateIdle() = default;
+
+protected:
+	virtual void onTouch(const EvtDataInputTouch & touch) override
+	{
+		//The player just touch something without moving.
+		//If he touches an unit, activate it and set the touch state to UnitActivated. Do nothing otherwise.
+		auto scriptImpl = m_ScriptImpl.lock();
+		const auto & touchPosition = touch.getPositionInWorld();
+
+		if (scriptImpl->canActivateUnitAtPosition(touchPosition)) {
+			scriptImpl->activateUnitAtPosition(touchPosition);
+			scriptImpl->setCurrentState<StateActivatedUnit>();
+		}
+	}
+
+	virtual void onDrag(const EvtDataInputDrag & drag) override
+	{
+		const auto dragState = drag.getState();
+		if (dragState == EvtDataInputDrag::DragState::Begin) {
+			//The player just starts dragging the scene, without doing any other things.
+			//Just set the touch state to DraggingScene and set the position of the scene.
+			auto scriptImpl = m_ScriptImpl.lock();
+			scriptImpl->saveCurrentStateToPrevious();
+			scriptImpl->setCurrentState<StateDraggingScene>();
+
+			scriptImpl->dragScene(drag.getPositionInWorld() - drag.getPreviousPositionInWorld());
+		}
+		else if (dragState == EvtDataInputDrag::DragState::Dragging) {
+			assert("WarSceneScriptImpl::StateIdle::onDrag() the drag state is logically invalid (Dragging).");
+		}
+		else {	//Must be DragState::End
+			assert("WarSceneScriptImpl::StateIdle::onDrag() the drag state is logically invalid (End).");
+		}
+	}
+};
+
+class WarSceneScript::WarSceneScriptImpl::StateDraggingScene : public BaseState
+{
+public:
+	StateDraggingScene(std::weak_ptr<WarSceneScriptImpl> scriptImpl) : BaseState(scriptImpl) {}
+	virtual ~StateDraggingScene() = default;
+
+protected:
+	virtual void onTouch(const EvtDataInputTouch & touch) override
+	{
+		assert("WarSceneScriptImpl::StateDraggingScene::onTouch() the touch should not happen when dragging scene.");
+	}
+
+	virtual void onDrag(const EvtDataInputDrag & drag) override
+	{
+		const auto dragState = drag.getState();
+		if (dragState == EvtDataInputDrag::DragState::Begin) {
+			assert("WarSceneScriptImpl::StateDraggingScene::onDrag() the drag state is logically invalid (Begin).");
+		}
+		else if (dragState == EvtDataInputDrag::DragState::Dragging) {
+			//The player continues dragging the scene, without doing any other things.
+			//Just set the position of the scene.
+			m_ScriptImpl.lock()->dragScene(drag.getPositionInWorld() - drag.getPreviousPositionInWorld());
+		}
+		else {	//Must be DragState::End
+			//The player finishes dragging the scene.
+			//Set the position of the scene and the touch state to the previous state.
+			m_ScriptImpl.lock()->dragScene(drag.getPositionInWorld() - drag.getPreviousPositionInWorld());
+			m_ScriptImpl.lock()->resumeCurrentStateFromPrevious();
+		}
+	}
+};
+
+class WarSceneScript::WarSceneScriptImpl::StateActivatedUnit : public BaseState
+{
+public:
+	StateActivatedUnit(std::weak_ptr<WarSceneScriptImpl> scriptImpl) : BaseState(scriptImpl) {}
+	virtual ~StateActivatedUnit() = default;
+
+protected:
+	virtual void onTouch(const EvtDataInputTouch & touch) override
+	{
+		//The player touched something without moving. There are some possible meanings of the touch.
+		//There will be much more conditions here. For now, we just assumes that the player is to activate another unit or deactivate the active unit.
+		//#TODO: Add more conditions, such as the player touched a command and so on.
+		auto scriptImpl = m_ScriptImpl.lock();
+		auto touchPosition = touch.getPositionInWorld();
+
+		if (scriptImpl->isUnitActiveAtPosition(touchPosition)) {
+			//The player touched the active unit. It means that he'll deactivate it.
+			scriptImpl->setCurrentState<StateIdle>();
+			scriptImpl->deactivateActiveUnit();
+		}
+		else {
+			//The player touched an inactive unit or an empty grid.
+			//Activate the unit (if it exist) and set the touch state corresponding to the activate result.
+			if (scriptImpl->canActivateUnitAtPosition(touchPosition))
+				scriptImpl->activateUnitAtPosition(touchPosition);
+			else {
+				scriptImpl->setCurrentState<StateIdle>();
+				scriptImpl->deactivateActiveUnit();
+			}
+		}
+	}
+
+	virtual void onDrag(const EvtDataInputDrag & drag) override
+	{
+		//The player drag something while an unit is activated. There are some possible meanings of the drag.
+
+		//Some variables to make the job easier.
+		auto scriptImpl = m_ScriptImpl.lock();
+		const auto dragState = drag.getState();
+		if (dragState == EvtDataInputDrag::DragState::Begin) {
+			if (scriptImpl->isUnitActiveAtPosition(drag.getPreviousPositionInWorld())) {
+				//1. The player is dragging the activated unit. It means that he's making a move path for the unit.
+				//Set the touch state to DrawingMovePath and show the path as player touch.
+				scriptImpl->setCurrentState<StateMakingMovePath>();
+
+				scriptImpl->makeMovingPath(drag.getPositionInWorld());
+			}
+			else {
+				//2. The player doesn't drag any units, or the unit he drags is not the activated unit. It means that he's dragging the scene.
+				//Just set the touch state to DraggingScene and set the position of the scene.
+				scriptImpl->saveCurrentStateToPrevious();
+				scriptImpl->setCurrentState<StateDraggingScene>();
+
+				scriptImpl->dragScene(drag.getPositionInWorld() - drag.getPreviousPositionInWorld());
+			}
+		}
+		else if (dragState == EvtDataInputDrag::DragState::Dragging) {
+			assert("WarSceneScriptImpl::StateActivatedUnit::onDrag() the drag state is logically invalid (Dragging).");
+		}
+		else {	//Must be DragState::End
+			assert("WarSceneScriptImpl::StateActivatedUnit::onDrag() the drag state is logically invalid (End).");
+		}
+	}
+};
+
+class WarSceneScript::WarSceneScriptImpl::StateMakingMovePath : public BaseState
+{
+public:
+	StateMakingMovePath(std::weak_ptr<WarSceneScriptImpl> scriptImpl) : BaseState(scriptImpl) {}
+	virtual ~StateMakingMovePath() = default;
+
+protected:
+	void onTouch(const EvtDataInputTouch & touch) override
+	{
+		assert("WarSceneScriptImpl::StateMakingMovingPath() the touch should not happen when making moving path.");
+	}
+
+	void onDrag(const EvtDataInputDrag & drag) override
+	{
+		const auto dragState = drag.getState();
+		if (dragState == EvtDataInputDrag::DragState::Begin) {
+			assert("WarSceneScriptImpl::StateMakingMovingPath() the drag state is logically invalid (Begin).");
+		}
+		else if (dragState == EvtDataInputDrag::DragState::Dragging) {
+			//The player is continuing making move path for the active unit.
+			//Show the path as he touch.
+			m_ScriptImpl.lock()->makeMovingPath(drag.getPositionInWorld());
+		}
+		else {	//Must be DragState::End
+			//The player finishes making the move path.
+			auto scriptImpl = m_ScriptImpl.lock();
+			scriptImpl->setCurrentState<StateIdle>();
+
+			scriptImpl->finishMakingMovingPath(drag.getPositionInWorld());
+		}
+	}
+};
+
+void WarSceneScript::WarSceneScriptImpl::onInputDrag(const IEventData & e)
+{
+	const auto & eventDrag = static_cast<const EvtDataInputDrag &>(e);
+	if (m_ActorID != eventDrag.getActorID())
+		return;
+
+	m_CurrentState->onDrag(eventDrag);
+}
+
+void WarSceneScript::WarSceneScriptImpl::onInputTouch(const IEventData & e)
+{
+	const auto & eventTouch = static_cast<const EvtDataInputTouch &>(e);
+	if (m_ActorID != eventTouch.getActorID())
+		return;
+
+	m_CurrentState->onTouch(eventTouch);
+}
+
+void WarSceneScript::WarSceneScriptImpl::activateUnitAtPosition(const cocos2d::Vec2 & position)
+{
 	auto unitMapScript = m_ChildUnitMapScript.lock();
-	unitMapScript->activateUnitAtIndex(gridIndex);
+	unitMapScript->activateUnitAtIndex(toGridIndex(position));
 
 	auto movingAreaScript = m_ChildMovingAreaScript.lock();
 	movingAreaScript->clearAndShowArea(*unitMapScript->getActiveUnit(), *m_ChildTileMapScript.lock(), *unitMapScript);
 }
 
-void WarSceneScript::WarSceneScriptImpl::onDeactivateActiveUnit(const IEventData & e)
+void WarSceneScript::WarSceneScriptImpl::dragScene(const cocos2d::Vec2 & offset)
+{
+	setPositionWithOffsetAndBoundary(offset);
+}
+
+void WarSceneScript::WarSceneScriptImpl::deactivateActiveUnit()
 {
 	m_ChildUnitMapScript.lock()->deactivateActiveUnit();
 	m_ChildMovingAreaScript.lock()->clearArea();
 }
 
-void WarSceneScript::WarSceneScriptImpl::onDragScene(const IEventData & e)
+void WarSceneScript::WarSceneScriptImpl::makeMovingPath(const cocos2d::Vec2 & position)
 {
-	const auto & dragSceneEvent = static_cast<const EvtDataDragScene &>(e);
-	setPositionWithOffsetAndBoundary(dragSceneEvent.getOffset());
+	auto unitMapScript = m_ChildUnitMapScript.lock();
+	auto activeUnit = unitMapScript->getActiveUnit();
+	assert(activeUnit && "WarSceneScriptImpl::onMakeMovePath() there's no active unit.");
+
+	auto destination = toGridIndex(position);
+	m_ChildMovingPathScript.lock()->showPath(destination, m_ChildMovingAreaScript.lock()->getUnderlyingArea());
+
+	//This is only for convenience and should be removed.
+	if (m_MovePathStartIndex.rowIndex == -1 && m_MovePathStartIndex.colIndex == -1)
+		m_MovePathStartIndex = destination;
 }
 
-void WarSceneScript::WarSceneScriptImpl::onFinishMakeMovingPath(const IEventData & e)
+void WarSceneScript::WarSceneScriptImpl::finishMakingMovingPath(const cocos2d::Vec2 & position)
 {
-	const auto & finishEvent = static_cast<const EvtDataFinishMakeMovingPath &>(e);
-	auto touchGridIndex = toGridIndex(finishEvent.getPosition());
+	auto touchGridIndex = toGridIndex(position);
 
 	auto movingPathScript = m_ChildMovingPathScript.lock();
 	auto unitMapScript = m_ChildUnitMapScript.lock();
@@ -109,19 +376,14 @@ void WarSceneScript::WarSceneScriptImpl::onFinishMakeMovingPath(const IEventData
 	m_MovePathStartIndex.colIndex = -1;
 }
 
-void WarSceneScript::WarSceneScriptImpl::onMakeMovingPath(const IEventData & e)
+bool WarSceneScript::WarSceneScriptImpl::canActivateUnitAtPosition(const cocos2d::Vec2 & pos) const
 {
-	auto unitMapScript = m_ChildUnitMapScript.lock();
-	auto activeUnit = unitMapScript->getActiveUnit();
-	assert(activeUnit && "WarSceneScriptImpl::onMakeMovePath() there's no active unit.");
+	return m_ChildUnitMapScript.lock()->canActivateUnitAtIndex(toGridIndex(pos));
+}
 
-	const auto & makePathEvent = static_cast<const EvtDataMakeMovingPath &>(e);
-	auto destination = toGridIndex(makePathEvent.getPosition());
-	m_ChildMovingPathScript.lock()->showPath(destination, m_ChildMovingAreaScript.lock()->getUnderlyingArea());
-
-	//This is only for convenience and should be removed.
-	if (m_MovePathStartIndex.rowIndex == -1 && m_MovePathStartIndex.colIndex == -1)
-		m_MovePathStartIndex = destination;
+bool WarSceneScript::WarSceneScriptImpl::isUnitActiveAtPosition(const cocos2d::Vec2 & pos) const
+{
+	return m_ChildUnitMapScript.lock()->isUnitActiveAtIndex(toGridIndex(pos));
 }
 
 cocos2d::Size WarSceneScript::WarSceneScriptImpl::getMapSize() const
@@ -192,6 +454,7 @@ void WarSceneScript::WarSceneScriptImpl::setPositionWithOffsetAndBoundary(const 
 //////////////////////////////////////////////////////////////////////////
 WarSceneScript::WarSceneScript() : pimpl{ std::make_shared<WarSceneScriptImpl>() }
 {
+	pimpl->initStateStuff(pimpl);
 }
 
 WarSceneScript::~WarSceneScript()
@@ -226,18 +489,6 @@ void WarSceneScript::loadWarScene(const char * xmlPath)
 	pimpl->m_TransformComponent.lock()->setPosition({ posX, posY });
 }
 
-bool WarSceneScript::canActivateUnitAtPosition(const cocos2d::Vec2 & pos) const
-{
-	auto gridIndex = pimpl->toGridIndex(pos);
-	return pimpl->m_ChildUnitMapScript.lock()->canActivateUnitAtIndex(gridIndex);
-}
-
-bool WarSceneScript::isUnitActiveAtPosition(const cocos2d::Vec2 & pos) const
-{
-	auto gridIndex = pimpl->toGridIndex(pos);
-	return pimpl->m_ChildUnitMapScript.lock()->isUnitActiveAtIndex(gridIndex);
-}
-
 bool WarSceneScript::vInit(const tinyxml2::XMLElement * xmlElement)
 {
 	static auto isStaticInitialized = false;
@@ -257,6 +508,7 @@ bool WarSceneScript::vInit(const tinyxml2::XMLElement * xmlElement)
 void WarSceneScript::vPostInit()
 {
 	auto ownerActor = m_OwnerActor.lock();
+	pimpl->m_ActorID = ownerActor->getID();
 
 	//////////////////////////////////////////////////////////////////////////
 	//Get components.
@@ -297,20 +549,11 @@ void WarSceneScript::vPostInit()
 	//////////////////////////////////////////////////////////////////////////
 	//Attach to event dispatcher.
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
-	eventDispatcher->vAddListener(EvtDataActivateUnitAtPosition::s_EventType, pimpl, [this](const IEventData & e) {
-		pimpl->onActivateUnitAtPosition(e);
+	eventDispatcher->vAddListener(EvtDataInputTouch::s_EventType, pimpl, [this](const IEventData & e) {
+		pimpl->onInputTouch(e);
 	});
-	eventDispatcher->vAddListener(EvtDataDeactivateActiveUnit::s_EventType, pimpl, [this](const IEventData & e) {
-		pimpl->onDeactivateActiveUnit(e);
-	});
-	eventDispatcher->vAddListener(EvtDataDragScene::s_EventType, pimpl, [this](const IEventData & e) {
-		pimpl->onDragScene(e);
-	});
-	eventDispatcher->vAddListener(EvtDataFinishMakeMovingPath::s_EventType, pimpl, [this](const IEventData & e) {
-		pimpl->onFinishMakeMovingPath(e);
-	});
-	eventDispatcher->vAddListener(EvtDataMakeMovingPath::s_EventType, pimpl, [this](const IEventData & e) {
-		pimpl->onMakeMovingPath(e);
+	eventDispatcher->vAddListener(EvtDataInputDrag::s_EventType, pimpl, [this](const IEventData & e) {
+		pimpl->onInputDrag(e);
 	});
 
 	//////////////////////////////////////////////////////////////////////////

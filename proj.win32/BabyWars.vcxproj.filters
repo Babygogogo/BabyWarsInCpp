@@ -153,9 +153,6 @@
     <ClCompile Include="..\Classes\BabyWars\UserInterface\BabyWarsHumanView.cpp">
       <Filter>src\BabyWars\UserInterface</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Graphic2D\WarSceneController.cpp">
-      <Filter>src\BabyWars\Graphic2D</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataDragScene.cpp">
       <Filter>src\BabyWars\Event</Filter>
     </ClCompile>
@@ -242,6 +239,15 @@
     </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.cpp">
       <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Event\EvtDataInputTouch.cpp">
+      <Filter>src\BabyEngine\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Event\EvtDataInputDrag.cpp">
+      <Filter>src\BabyEngine\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Graphic2D\TouchAndDragController.cpp">
+      <Filter>src\BabyEngine\Graphic2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -365,9 +371,6 @@
     <ClInclude Include="..\Classes\BabyEngine\UserInterface\BaseGameView.h">
       <Filter>src\BabyEngine\UserInterface</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Graphic2D\WarSceneController.h">
-      <Filter>src\BabyWars\Graphic2D</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataDragScene.h">
       <Filter>src\BabyWars\Event</Filter>
     </ClInclude>
@@ -463,6 +466,15 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.h">
       <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Event\EvtDataInputTouch.h">
+      <Filter>src\BabyEngine\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Event\EvtDataInputDrag.h">
+      <Filter>src\BabyEngine\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Graphic2D\TouchAndDragController.h">
+      <Filter>src\BabyEngine\Graphic2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

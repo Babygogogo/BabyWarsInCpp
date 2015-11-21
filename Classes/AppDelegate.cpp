@@ -2,12 +2,12 @@
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "BabyEngine/Event/EventDispatcher.h"
+#include "BabyEngine/Graphic2D/TouchAndDragController.h"
 #include "BabyEngine/UserInterface/BaseHumanView.h"
 #include "BabyEngine/Utilities/SingletonContainer.h"
 #include "BabyWars/GameLogic/BabyWarsGameLogic.h"
 #include "BabyWars/Resource/ResourceLoader.h"
 #include "BabyWars/UserInterface/BabyWarsHumanView.h"
-#include "BabyWars/Graphic2D/WarSceneController.h"
 
 USING_NS_CC;
 
@@ -52,7 +52,7 @@ void AppDelegate::AppDelegateImpl::initGame()
 	gameLogic->setHumanView(humanView);
 
 	auto initialActor = gameLogic->createActor(resourceLoader->getInitialScenePath().c_str());
-	auto warSceneController = std::make_unique<WarSceneController>();
+	auto warSceneController = std::make_unique<TouchAndDragController>();
 	warSceneController->setTarget(initialActor);
 	warSceneController->setEnable(true);
 

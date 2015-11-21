@@ -3,11 +3,11 @@
 
 #include "../../BabyEngine/Graphic2D/BaseController.h"
 
-class WarSceneController : public BaseController
+class TouchAndDragController : public BaseController
 {
 public:
-	WarSceneController();
-	~WarSceneController();
+	TouchAndDragController();
+	~TouchAndDragController();
 
 private:
 	//Override functions.
@@ -16,8 +16,8 @@ private:
 	virtual void vSetEnableDelegate(bool enable, cocos2d::Node * targetSceneNode) override;
 
 	//Implementation stuff.
-	struct WarSceneControllerImpl;
-	std::shared_ptr<WarSceneControllerImpl> pimpl;
+	struct TouchAndDragControllerImpl;
+	std::unique_ptr<TouchAndDragControllerImpl> pimpl;
 };
 
 #endif // !__WAR_SCENE_CONTROLLER__
