@@ -5,6 +5,7 @@
 
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
+#include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../../BabyEngine/Utilities/StringToVector.h"
@@ -28,6 +29,7 @@ struct TileMapScript::TileMapScriptImpl
 	Matrix2D<std::weak_ptr<TileScript>> m_TileMap;
 
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
+	std::weak_ptr<TransformComponent> m_TransformComponent;
 };
 
 std::string TileMapScript::TileMapScriptImpl::s_TileActorPath;
@@ -41,24 +43,6 @@ TileMapScript::TileMapScript() : pimpl{ std::make_unique<TileMapScriptImpl>() }
 
 TileMapScript::~TileMapScript()
 {
-}
-
-bool TileMapScript::vInit(const tinyxml2::XMLElement * xmlElement)
-{
-	static auto isStaticInitialized = false;
-	if (isStaticInitialized)
-		return true;
-
-	auto relatedActorElement = xmlElement->FirstChildElement("RelatedActorsPath");
-	TileMapScriptImpl::s_TileActorPath = relatedActorElement->Attribute("Tile");
-
-	isStaticInitialized = true;
-	return true;
-}
-
-void TileMapScript::vPostInit()
-{
-	pimpl->m_RenderComponent = m_OwnerActor.lock()->getRenderComponent();
 }
 
 void TileMapScript::loadTileMap(const char * xmlPath)
@@ -115,6 +99,16 @@ void TileMapScript::loadTileMap(const char * xmlPath)
 	}
 }
 
+void TileMapScript::setPosition(const cocos2d::Vec2 & position)
+{
+	pimpl->m_TransformComponent.lock()->setPosition(position);
+}
+
+std::shared_ptr<const TransformComponent> TileMapScript::getTransformComponent() const
+{
+	return pimpl->m_TransformComponent.lock();
+}
+
 Matrix2DDimension TileMapScript::getMapDimension() const
 {
 	return pimpl->m_TileMap.getDimension();
@@ -134,6 +128,32 @@ int TileMapScript::getMovingCost(const std::string & movementType, const GridInd
 		return 0;
 
 	return pimpl->m_TileMap[index].lock()->getTileData()->getMovingCost(movementType);
+}
+
+bool TileMapScript::vInit(const tinyxml2::XMLElement * xmlElement)
+{
+	static auto isStaticInitialized = false;
+	if (isStaticInitialized)
+		return true;
+
+	auto relatedActorElement = xmlElement->FirstChildElement("RelatedActorsPath");
+	TileMapScriptImpl::s_TileActorPath = relatedActorElement->Attribute("Tile");
+
+	isStaticInitialized = true;
+	return true;
+}
+
+void TileMapScript::vPostInit()
+{
+	auto ownerActor = m_OwnerActor.lock();
+
+	auto renderComponent = ownerActor->getRenderComponent();
+	assert(renderComponent && "TileMapScript::vPostInit() the actor has no render component.");
+	pimpl->m_RenderComponent = std::move(renderComponent);
+
+	auto transformComponent = ownerActor->getComponent<TransformComponent>();
+	assert(transformComponent && "TileMapScript::vPostInit() the actor has no transform component.");
+	pimpl->m_TransformComponent = std::move(transformComponent);
 }
 
 const std::string TileMapScript::Type = "TileMapScript";

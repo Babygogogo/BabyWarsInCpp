@@ -3,6 +3,11 @@
 
 #include "../../BabyEngine/Actor/BaseScriptComponent.h"
 
+//Forward declaration.
+namespace cocos2d
+{
+	class Vec2;
+}
 struct GridIndex;
 class TileMapScript;
 class UnitMapScript;
@@ -14,6 +19,8 @@ class MovingAreaScript : public BaseScriptComponent
 public:
 	MovingAreaScript();
 	~MovingAreaScript();
+
+	void setPosition(const cocos2d::Vec2 & position);
 
 	void clearAndShowArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap);
 	void clearArea();

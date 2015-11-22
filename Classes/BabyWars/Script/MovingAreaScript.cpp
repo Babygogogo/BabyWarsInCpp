@@ -5,6 +5,7 @@
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/Actor/Actor.h"
+#include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/Event/EvtDataRequestDestroyActor.h"
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
@@ -32,6 +33,8 @@ struct MovingAreaScript::MovingRangeScriptImpl
 	MovingArea m_MovingArea;
 	std::string m_MovingAreaGridActorPath;
 	std::unordered_set<ActorID> m_ChildrenGridActorIDs;
+
+	std::weak_ptr<TransformComponent> m_TransformComponent;
 };
 
 MovingArea MovingAreaScript::MovingRangeScriptImpl::createArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap) const
@@ -85,6 +88,11 @@ MovingAreaScript::~MovingAreaScript()
 {
 }
 
+void MovingAreaScript::setPosition(const cocos2d::Vec2 & position)
+{
+	pimpl->m_TransformComponent.lock()->setPosition(position);
+}
+
 void MovingAreaScript::clearAndShowArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap)
 {
 	auto newArea = pimpl->createArea(movingUnit, tileMap, unitMap);
@@ -122,6 +130,9 @@ bool MovingAreaScript::vInit(const tinyxml2::XMLElement * xmlElement)
 
 void MovingAreaScript::vPostInit()
 {
+	auto transformComponent = m_OwnerActor.lock()->getComponent<TransformComponent>();
+	assert(transformComponent && "MovingAreaScript::vPostInit() the actor has no transform component");
+	pimpl->m_TransformComponent = std::move(transformComponent);
 }
 
 const std::string MovingAreaScript::Type = "MovingAreaScript";

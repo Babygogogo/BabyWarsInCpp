@@ -6,9 +6,11 @@
 //Forward declaration.
 namespace cocos2d {
 	class Size;
+	class Vec2;
 }
 struct GridIndex;
 struct Matrix2DDimension;
+class TransformComponent;
 
 class TileMapScript : public BaseScriptComponent
 {
@@ -16,17 +18,20 @@ public:
 	TileMapScript();
 	~TileMapScript();
 
-	//Type name of the class. Used by the ActorFactory and can not be removed.
-	static const std::string Type;
-	virtual const std::string & getType() const override;
-
 	//Load a tile map with a xml file. Create tile and unit actors if needed.
 	void loadTileMap(const char * xmlPath);
+
+	void setPosition(const cocos2d::Vec2 & position);
+	std::shared_ptr<const TransformComponent> getTransformComponent() const;
 
 	Matrix2DDimension getMapDimension() const;
 
 	bool canPassThrough(const std::string & movementType, const GridIndex & index) const;
 	int getMovingCost(const std::string & movementType, const GridIndex & index) const;
+
+	//Type name of the class. Used by the ActorFactory and can not be removed.
+	static const std::string Type;
+	virtual const std::string & getType() const override;
 
 	//Disable copy/move constructor and operator=.
 	TileMapScript(const TileMapScript &) = delete;

@@ -5,6 +5,7 @@
 
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
+#include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../../BabyEngine/Utilities/StringToVector.h"
@@ -30,6 +31,7 @@ struct UnitMapScript::UnitMapScriptImpl
 	std::weak_ptr<UnitScript> m_ActiveUnit;
 
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
+	std::weak_ptr<TransformComponent> m_TransformComponent;
 };
 
 std::string UnitMapScript::UnitMapScriptImpl::s_UnitActorPath;
@@ -43,24 +45,6 @@ UnitMapScript::UnitMapScript() : pimpl{ std::make_unique<UnitMapScriptImpl>() }
 
 UnitMapScript::~UnitMapScript()
 {
-}
-
-bool UnitMapScript::vInit(const tinyxml2::XMLElement * xmlElement)
-{
-	static auto isStaticInitialized = false;
-	if (isStaticInitialized)
-		return true;
-
-	auto relatedActorElement = xmlElement->FirstChildElement("RelatedActorsPath");
-	UnitMapScriptImpl::s_UnitActorPath = relatedActorElement->Attribute("Unit");
-
-	isStaticInitialized = true;
-	return true;
-}
-
-void UnitMapScript::vPostInit()
-{
-	pimpl->m_RenderComponent = m_OwnerActor.lock()->getRenderComponent();
 }
 
 void UnitMapScript::loadUnitMap(const char * xmlPath)
@@ -117,6 +101,11 @@ void UnitMapScript::loadUnitMap(const char * xmlPath)
 	}
 }
 
+void UnitMapScript::setPosition(const cocos2d::Vec2 & position)
+{
+	pimpl->m_TransformComponent.lock()->setPosition(position);
+}
+
 Matrix2DDimension UnitMapScript::getMapDimension() const
 {
 	return pimpl->m_UnitMap.getDimension();
@@ -165,6 +154,9 @@ bool UnitMapScript::isUnitActiveAtIndex(const GridIndex & gridIndex) const
 
 bool UnitMapScript::canActivateUnitAtIndex(const GridIndex & gridIndex) const
 {
+	if (getActiveUnit())
+		return false;
+
 	auto unitAtIndex = getUnit(gridIndex);
 	if (!unitAtIndex)
 		return false;
@@ -204,24 +196,11 @@ bool UnitMapScript::canUnitStayAtIndex(const UnitScript & unitScript, const Grid
 
 bool UnitMapScript::activateUnitAtIndex(const GridIndex & gridIndex)
 {
-	//Check if there is an currently active unit.
-	if (auto currentlyActiveUnit = getActiveUnit()) {
-		//If the currently active unit is the same unit as the one that the caller wants to activate, just do nothing and return true.
-		if (currentlyActiveUnit->getGridIndex() == gridIndex)
-			return true;
+	assert(canActivateUnitAtIndex(gridIndex) && "UnitMapScript::activateUnitAtIndex() can't activate the unit at index.");
 
-		//Otherwise, deactivate the currently active unit.
-		deactivateActiveUnit();
-	}
-
-	//If there is no unit at the index, return false.
 	auto unitAtIndex = getUnit(gridIndex);
-	if (!unitAtIndex)
-		return false;
-
-	//Activate the unit at the index.
 	unitAtIndex->setActive(true);
-	pimpl->m_ActiveUnit = unitAtIndex;
+	pimpl->m_ActiveUnit = std::move(unitAtIndex);
 	return true;
 }
 
@@ -241,6 +220,32 @@ void UnitMapScript::deactivateAndMoveUnit(UnitScript & unit, const MovingPath & 
 	unit.moveAlongPath(path);
 	pimpl->m_UnitMap[endingIndex] = pimpl->m_UnitMap[startingIndex];
 	pimpl->m_UnitMap[startingIndex].reset();
+}
+
+bool UnitMapScript::vInit(const tinyxml2::XMLElement * xmlElement)
+{
+	static auto isStaticInitialized = false;
+	if (isStaticInitialized)
+		return true;
+
+	auto relatedActorElement = xmlElement->FirstChildElement("RelatedActorsPath");
+	UnitMapScriptImpl::s_UnitActorPath = relatedActorElement->Attribute("Unit");
+
+	isStaticInitialized = true;
+	return true;
+}
+
+void UnitMapScript::vPostInit()
+{
+	auto ownerActor = m_OwnerActor.lock();
+
+	auto renderComponent = ownerActor->getRenderComponent();
+	assert(renderComponent && "UnitMapScript::vPostInit() the actor has no render component.");
+	pimpl->m_RenderComponent = std::move(renderComponent);
+
+	auto transformComponent = ownerActor->getComponent<TransformComponent>();
+	assert(transformComponent && "UnitMapScript::vPostInit() the actor has no transform component.");
+	pimpl->m_TransformComponent = std::move(transformComponent);
 }
 
 const std::string UnitMapScript::Type = "UnitMapScript";

@@ -3,6 +3,11 @@
 
 #include "../../BabyEngine/Actor/BaseScriptComponent.h"
 
+//Forward declaration.
+namespace cocos2d
+{
+	class Vec2;
+}
 struct GridIndex;
 class MovingArea;
 class MovingPath;
@@ -13,9 +18,7 @@ public:
 	MovingPathScript();
 	~MovingPathScript();
 
-	//Type name of the class. Used by the ActorFactory and can not be removed.
-	static const std::string Type;
-	virtual const std::string & getType() const override;
+	void setPosition(const cocos2d::Vec2 & position);
 
 	void showPath(const GridIndex & destination, const MovingArea & area);
 	void clearPath();
@@ -23,6 +26,10 @@ public:
 	bool isBackIndex(const GridIndex & index) const;
 
 	const MovingPath & getUnderlyingPath() const;
+
+	//Type name of the class. Used by the ActorFactory and can not be removed.
+	static const std::string Type;
+	virtual const std::string & getType() const override;
 
 	//Disable copy/move constructor and operator=.
 	MovingPathScript(const MovingPathScript &) = delete;

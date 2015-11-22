@@ -19,12 +19,10 @@ public:
 	UnitMapScript();
 	~UnitMapScript();
 
-	//Type name of the class. Used by the ActorFactory and can not be removed.
-	static const std::string Type;
-	virtual const std::string & getType() const override;
-
 	//Load a unit map with a xml file. Create unit and unit actors if needed.
 	void loadUnitMap(const char * xmlPath);
+
+	void setPosition(const cocos2d::Vec2 & position);
 
 	//Getter of the size of the unit map.
 	Matrix2DDimension getMapDimension() const;
@@ -40,13 +38,17 @@ public:
 	bool canPassThrough(const UnitScript & unitScript, const GridIndex & gridIndex) const;
 	bool canUnitStayAtIndex(const UnitScript & unitScript, const GridIndex & gridIndex) const;
 
-	//This function deactivates the currently active unit, even if there is no unit at the grid index.
-	//Return value indicates that if the unit at the index is successfully activated (if there's no unit, false is returned).
+	//We can have no more than one active unit at the same time.
+	//Asserts if there is an active unit, or can't activate the unit at the index, or there's no unit at the index.
 	bool activateUnitAtIndex(const GridIndex & gridIndex);
 
 	//Deactivate the unit at the fromIndex. Then move it to toIndex if the path is valid.
 	//Nothing happens if there's no unit at fromIndex.
 	void deactivateAndMoveUnit(UnitScript & unit, const MovingPath & path);
+
+	//Type name of the class. Used by the ActorFactory and can not be removed.
+	static const std::string Type;
+	virtual const std::string & getType() const override;
 
 	//Disable copy/move constructor and operator=.
 	UnitMapScript(const UnitMapScript &) = delete;

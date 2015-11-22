@@ -4,6 +4,7 @@
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/Actor/Actor.h"
+#include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/Event/EvtDataRequestDestroyActor.h"
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
@@ -30,6 +31,8 @@ struct MovingPathScript::MovingPathScriptImpl
 
 	std::unordered_set<ActorID> m_ChildrenGridActorIDs;
 	MovingPath m_MovingPath;
+
+	std::weak_ptr<TransformComponent> m_TransformComponent;
 };
 
 MovingPath MovingPathScript::MovingPathScriptImpl::createPath(const MovingPath & oldPath, const GridIndex & destination, const MovingArea & area) const
@@ -109,6 +112,11 @@ MovingPathScript::~MovingPathScript()
 {
 }
 
+void MovingPathScript::setPosition(const cocos2d::Vec2 & position)
+{
+	pimpl->m_TransformComponent.lock()->setPosition(position);
+}
+
 void MovingPathScript::showPath(const GridIndex & destination, const MovingArea & area)
 {
 	//If the destination is not in the area, just do nothing and return.
@@ -158,6 +166,9 @@ bool MovingPathScript::vInit(const tinyxml2::XMLElement * xmlElement)
 
 void MovingPathScript::vPostInit()
 {
+	auto transformComponent = m_OwnerActor.lock()->getComponent<TransformComponent>();
+	assert(transformComponent && "MovingPathScript::vPostInit() the actor has no transform component.");
+	pimpl->m_TransformComponent = std::move(transformComponent);
 }
 
 const std::string MovingPathScript::Type = "MovingPathScript";

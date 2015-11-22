@@ -30,20 +30,20 @@ struct WarSceneScript::WarSceneScriptImpl
 	void onInputDrag(const IEventData & e);
 	void onInputTouch(const IEventData & e);
 
-	void activateUnitAtPosition(const cocos2d::Vec2 & position);
-	void dragScene(const cocos2d::Vec2 & offset);
-	void deactivateActiveUnit();
+	void activateUnitAndShowMovingArea(const cocos2d::Vec2 & position);
+	void dragField(const cocos2d::Vec2 & offset);
+	void deactivateActiveUnitAndClearMovingArea();
 	void makeMovingPath(const cocos2d::Vec2 & position);
 	void finishMakingMovingPath(const cocos2d::Vec2 & position);
+	void setFieldPosition(const cocos2d::Vec2 & position);
 
 	bool canActivateUnitAtPosition(const cocos2d::Vec2 & pos) const;
 	bool isUnitActiveAtPosition(const cocos2d::Vec2 & pos) const;
+	bool hasUnitActive() const;
 
 	cocos2d::Size getMapSize() const;
-	cocos2d::Vec2 toPositionInScene(const cocos2d::Vec2 & position) const;
+	cocos2d::Vec2 toPositionInField(const cocos2d::Vec2 & position) const;
 	GridIndex toGridIndex(const cocos2d::Vec2 & positionInWindow) const;
-
-	void setPositionWithOffsetAndBoundary(const cocos2d::Vec2 & offset);
 
 	GridIndex m_MovePathStartIndex{ -1, -1 };
 
@@ -64,13 +64,14 @@ struct WarSceneScript::WarSceneScriptImpl
 
 	//////////////////////////////////////////////////////////////////////////
 	//State stuffs.
+	void initStateStuff(std::weak_ptr<WarSceneScriptImpl> scriptImpl);
+
+private:
 	class BaseState;
 	class StateIdle;
-	class StateDraggingScene;
+	class StateDraggingField;
 	class StateActivatedUnit;
 	class StateMakingMovePath;
-
-	void initStateStuff(std::weak_ptr<WarSceneScriptImpl> scriptImpl);
 
 	template <typename State>
 	void setCurrentState();
@@ -88,11 +89,14 @@ std::string WarSceneScript::WarSceneScriptImpl::s_UnitMapActorPath;
 std::string WarSceneScript::WarSceneScriptImpl::s_MovingPathActorPath;
 std::string WarSceneScript::WarSceneScriptImpl::s_MovingAreaActorPath;
 
+//////////////////////////////////////////////////////////////////////////
+//Definition of state stuff.
+//////////////////////////////////////////////////////////////////////////
 void WarSceneScript::WarSceneScriptImpl::initStateStuff(std::weak_ptr<WarSceneScriptImpl> scriptImpl)
 {
 	//Create the state instances.
 	m_States.emplace(typeid(StateIdle), std::make_shared<StateIdle>(scriptImpl));
-	m_States.emplace(typeid(StateDraggingScene), std::make_shared<StateDraggingScene>(scriptImpl));
+	m_States.emplace(typeid(StateDraggingField), std::make_shared<StateDraggingField>(scriptImpl));
 	m_States.emplace(typeid(StateActivatedUnit), std::make_shared<StateActivatedUnit>(scriptImpl));
 	m_States.emplace(typeid(StateMakingMovePath), std::make_shared<StateMakingMovePath>(scriptImpl));
 
@@ -135,7 +139,7 @@ protected:
 class WarSceneScript::WarSceneScriptImpl::StateIdle : public BaseState
 {
 public:
-	StateIdle(std::weak_ptr<WarSceneScriptImpl> scriptImpl) : BaseState(scriptImpl) {}
+	StateIdle(std::weak_ptr<WarSceneScriptImpl> scriptImpl) : BaseState(std::move(scriptImpl)) {}
 	virtual ~StateIdle() = default;
 
 protected:
@@ -147,7 +151,7 @@ protected:
 		const auto & touchPosition = touch.getPositionInWorld();
 
 		if (scriptImpl->canActivateUnitAtPosition(touchPosition)) {
-			scriptImpl->activateUnitAtPosition(touchPosition);
+			scriptImpl->activateUnitAndShowMovingArea(touchPosition);
 			scriptImpl->setCurrentState<StateActivatedUnit>();
 		}
 	}
@@ -160,9 +164,9 @@ protected:
 			//Just set the touch state to DraggingScene and set the position of the scene.
 			auto scriptImpl = m_ScriptImpl.lock();
 			scriptImpl->saveCurrentStateToPrevious();
-			scriptImpl->setCurrentState<StateDraggingScene>();
+			scriptImpl->setCurrentState<StateDraggingField>();
 
-			scriptImpl->dragScene(drag.getPositionInWorld() - drag.getPreviousPositionInWorld());
+			scriptImpl->dragField(drag.getPositionInWorld() - drag.getPreviousPositionInWorld());
 		}
 		else if (dragState == EvtDataInputDrag::DragState::Dragging) {
 			assert("WarSceneScriptImpl::StateIdle::onDrag() the drag state is logically invalid (Dragging).");
@@ -173,33 +177,33 @@ protected:
 	}
 };
 
-class WarSceneScript::WarSceneScriptImpl::StateDraggingScene : public BaseState
+class WarSceneScript::WarSceneScriptImpl::StateDraggingField : public BaseState
 {
 public:
-	StateDraggingScene(std::weak_ptr<WarSceneScriptImpl> scriptImpl) : BaseState(scriptImpl) {}
-	virtual ~StateDraggingScene() = default;
+	StateDraggingField(std::weak_ptr<WarSceneScriptImpl> scriptImpl) : BaseState(std::move(scriptImpl)) {}
+	virtual ~StateDraggingField() = default;
 
 protected:
 	virtual void onTouch(const EvtDataInputTouch & touch) override
 	{
-		assert("WarSceneScriptImpl::StateDraggingScene::onTouch() the touch should not happen when dragging scene.");
+		assert("WarSceneScriptImpl::StateDraggingField::onTouch() the touch should not happen when dragging scene.");
 	}
 
 	virtual void onDrag(const EvtDataInputDrag & drag) override
 	{
 		const auto dragState = drag.getState();
 		if (dragState == EvtDataInputDrag::DragState::Begin) {
-			assert("WarSceneScriptImpl::StateDraggingScene::onDrag() the drag state is logically invalid (Begin).");
+			assert("WarSceneScriptImpl::StateDraggingField::onDrag() the drag state is logically invalid (Begin).");
 		}
 		else if (dragState == EvtDataInputDrag::DragState::Dragging) {
 			//The player continues dragging the scene, without doing any other things.
 			//Just set the position of the scene.
-			m_ScriptImpl.lock()->dragScene(drag.getPositionInWorld() - drag.getPreviousPositionInWorld());
+			m_ScriptImpl.lock()->dragField(drag.getPositionInWorld() - drag.getPreviousPositionInWorld());
 		}
 		else {	//Must be DragState::End
 			//The player finishes dragging the scene.
 			//Set the position of the scene and the touch state to the previous state.
-			m_ScriptImpl.lock()->dragScene(drag.getPositionInWorld() - drag.getPreviousPositionInWorld());
+			m_ScriptImpl.lock()->dragField(drag.getPositionInWorld() - drag.getPreviousPositionInWorld());
 			m_ScriptImpl.lock()->resumeCurrentStateFromPrevious();
 		}
 	}
@@ -208,7 +212,7 @@ protected:
 class WarSceneScript::WarSceneScriptImpl::StateActivatedUnit : public BaseState
 {
 public:
-	StateActivatedUnit(std::weak_ptr<WarSceneScriptImpl> scriptImpl) : BaseState(scriptImpl) {}
+	StateActivatedUnit(std::weak_ptr<WarSceneScriptImpl> scriptImpl) : BaseState(std::move(scriptImpl)) {}
 	virtual ~StateActivatedUnit() = default;
 
 protected:
@@ -223,27 +227,27 @@ protected:
 		if (scriptImpl->isUnitActiveAtPosition(touchPosition)) {
 			//The player touched the active unit. It means that he'll deactivate it.
 			scriptImpl->setCurrentState<StateIdle>();
-			scriptImpl->deactivateActiveUnit();
+			scriptImpl->deactivateActiveUnitAndClearMovingArea();
 		}
 		else {
 			//The player touched an inactive unit or an empty grid.
-			//Activate the unit (if it exist) and set the touch state corresponding to the activate result.
+			//Activate the unit (if can) and set the touch state corresponding to the activate result.
+			scriptImpl->deactivateActiveUnitAndClearMovingArea();
+
 			if (scriptImpl->canActivateUnitAtPosition(touchPosition))
-				scriptImpl->activateUnitAtPosition(touchPosition);
-			else {
+				scriptImpl->activateUnitAndShowMovingArea(touchPosition);
+			else
 				scriptImpl->setCurrentState<StateIdle>();
-				scriptImpl->deactivateActiveUnit();
-			}
 		}
 	}
 
 	virtual void onDrag(const EvtDataInputDrag & drag) override
 	{
 		//The player drag something while an unit is activated. There are some possible meanings of the drag.
-
 		//Some variables to make the job easier.
 		auto scriptImpl = m_ScriptImpl.lock();
 		const auto dragState = drag.getState();
+
 		if (dragState == EvtDataInputDrag::DragState::Begin) {
 			if (scriptImpl->isUnitActiveAtPosition(drag.getPreviousPositionInWorld())) {
 				//1. The player is dragging the activated unit. It means that he's making a move path for the unit.
@@ -253,12 +257,12 @@ protected:
 				scriptImpl->makeMovingPath(drag.getPositionInWorld());
 			}
 			else {
-				//2. The player doesn't drag any units, or the unit he drags is not the activated unit. It means that he's dragging the scene.
+				//2. The player doesn't drag the activated unit. It means that he's dragging the scene.
 				//Just set the touch state to DraggingScene and set the position of the scene.
 				scriptImpl->saveCurrentStateToPrevious();
-				scriptImpl->setCurrentState<StateDraggingScene>();
+				scriptImpl->setCurrentState<StateDraggingField>();
 
-				scriptImpl->dragScene(drag.getPositionInWorld() - drag.getPreviousPositionInWorld());
+				scriptImpl->dragField(drag.getPositionInWorld() - drag.getPreviousPositionInWorld());
 			}
 		}
 		else if (dragState == EvtDataInputDrag::DragState::Dragging) {
@@ -273,20 +277,20 @@ protected:
 class WarSceneScript::WarSceneScriptImpl::StateMakingMovePath : public BaseState
 {
 public:
-	StateMakingMovePath(std::weak_ptr<WarSceneScriptImpl> scriptImpl) : BaseState(scriptImpl) {}
+	StateMakingMovePath(std::weak_ptr<WarSceneScriptImpl> scriptImpl) : BaseState(std::move(scriptImpl)) {}
 	virtual ~StateMakingMovePath() = default;
 
 protected:
 	void onTouch(const EvtDataInputTouch & touch) override
 	{
-		assert("WarSceneScriptImpl::StateMakingMovingPath() the touch should not happen when making moving path.");
+		assert("WarSceneScriptImpl::StateMakingMovingPath::onTouch() the touch should not happen when making moving path.");
 	}
 
 	void onDrag(const EvtDataInputDrag & drag) override
 	{
 		const auto dragState = drag.getState();
 		if (dragState == EvtDataInputDrag::DragState::Begin) {
-			assert("WarSceneScriptImpl::StateMakingMovingPath() the drag state is logically invalid (Begin).");
+			assert("WarSceneScriptImpl::StateMakingMovingPath::onDrag() the drag state is logically invalid (Begin).");
 		}
 		else if (dragState == EvtDataInputDrag::DragState::Dragging) {
 			//The player is continuing making move path for the active unit.
@@ -303,6 +307,9 @@ protected:
 	}
 };
 
+//////////////////////////////////////////////////////////////////////////
+//Other members of WarSceneScriptImpl.
+//////////////////////////////////////////////////////////////////////////
 void WarSceneScript::WarSceneScriptImpl::onInputDrag(const IEventData & e)
 {
 	const auto & eventDrag = static_cast<const EvtDataInputDrag &>(e);
@@ -321,7 +328,7 @@ void WarSceneScript::WarSceneScriptImpl::onInputTouch(const IEventData & e)
 	m_CurrentState->onTouch(eventTouch);
 }
 
-void WarSceneScript::WarSceneScriptImpl::activateUnitAtPosition(const cocos2d::Vec2 & position)
+void WarSceneScript::WarSceneScriptImpl::activateUnitAndShowMovingArea(const cocos2d::Vec2 & position)
 {
 	auto unitMapScript = m_ChildUnitMapScript.lock();
 	unitMapScript->activateUnitAtIndex(toGridIndex(position));
@@ -330,12 +337,49 @@ void WarSceneScript::WarSceneScriptImpl::activateUnitAtPosition(const cocos2d::V
 	movingAreaScript->clearAndShowArea(*unitMapScript->getActiveUnit(), *m_ChildTileMapScript.lock(), *unitMapScript);
 }
 
-void WarSceneScript::WarSceneScriptImpl::dragScene(const cocos2d::Vec2 & offset)
+void WarSceneScript::WarSceneScriptImpl::dragField(const cocos2d::Vec2 & offset)
 {
-	setPositionWithOffsetAndBoundary(offset);
+	assert(!m_ChildTileMapScript.expired() && "WarSceneScriptImpl::setPositionWithinBoundary() the child tile map script is expired.");
+	auto transformComponent = m_ChildTileMapScript.lock()->getTransformComponent();
+	auto newPosition = transformComponent->getPosition() + offset;
+
+	//////////////////////////////////////////////////////////////////////////
+	//Modify the new position so that the scene can't be set too far away.
+	//Firstly, get the size of window, boundary and scene.
+	auto windowSize = cocos2d::Director::getInstance()->getOpenGLView()->getFrameSize();
+	auto extraBoundarySize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
+	auto warSceneSize = getMapSize();
+	warSceneSize.width *= transformComponent->getScaleX();
+	warSceneSize.height *= transformComponent->getScaleY();
+
+	//Secondly, use the sizes to calculate the possible min and max of the drag-to position.
+	auto minX = -(warSceneSize.width - windowSize.width + extraBoundarySize.width);
+	auto minY = -(warSceneSize.height - windowSize.height + extraBoundarySize.height);
+	auto maxX = extraBoundarySize.width;
+	auto maxY = extraBoundarySize.height;
+
+	//Finally, modify the newPosition using the mins and maxs if needed.
+	if (maxX > minX) {
+		if (newPosition.x > maxX)	newPosition.x = maxX;
+		if (newPosition.x < minX)	newPosition.x = minX;
+	}
+	else { //This means that the width of the map is less than the window. Just ignore horizontal part of the drag.
+		newPosition.x = transformComponent->getPosition().x;
+	}
+	if (maxY > minY) {
+		if (newPosition.y > maxY)	newPosition.y = maxY;
+		if (newPosition.y < minY)	newPosition.y = minY;
+	}
+	else { //This means that the height of the map is less than the window. Just ignore vertical part of the drag.
+		newPosition.y = transformComponent->getPosition().y;
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	//Make use of the newPosition.
+	setFieldPosition(newPosition);
 }
 
-void WarSceneScript::WarSceneScriptImpl::deactivateActiveUnit()
+void WarSceneScript::WarSceneScriptImpl::deactivateActiveUnitAndClearMovingArea()
 {
 	m_ChildUnitMapScript.lock()->deactivateActiveUnit();
 	m_ChildMovingAreaScript.lock()->clearArea();
@@ -376,6 +420,14 @@ void WarSceneScript::WarSceneScriptImpl::finishMakingMovingPath(const cocos2d::V
 	m_MovePathStartIndex.colIndex = -1;
 }
 
+void WarSceneScript::WarSceneScriptImpl::setFieldPosition(const cocos2d::Vec2 & position)
+{
+	m_ChildMovingAreaScript.lock()->setPosition(position);
+	m_ChildMovingPathScript.lock()->setPosition(position);
+	m_ChildTileMapScript.lock()->setPosition(position);
+	m_ChildUnitMapScript.lock()->setPosition(position);
+}
+
 bool WarSceneScript::WarSceneScriptImpl::canActivateUnitAtPosition(const cocos2d::Vec2 & pos) const
 {
 	return m_ChildUnitMapScript.lock()->canActivateUnitAtIndex(toGridIndex(pos));
@@ -386,6 +438,11 @@ bool WarSceneScript::WarSceneScriptImpl::isUnitActiveAtPosition(const cocos2d::V
 	return m_ChildUnitMapScript.lock()->isUnitActiveAtIndex(toGridIndex(pos));
 }
 
+bool WarSceneScript::WarSceneScriptImpl::hasUnitActive() const
+{
+	return m_ChildUnitMapScript.lock()->getActiveUnit() != nullptr;
+}
+
 cocos2d::Size WarSceneScript::WarSceneScriptImpl::getMapSize() const
 {
 	auto tileMapDimension = m_ChildTileMapScript.lock()->getMapDimension();
@@ -394,59 +451,16 @@ cocos2d::Size WarSceneScript::WarSceneScriptImpl::getMapSize() const
 	return{ gridSize.width * tileMapDimension.colCount, gridSize.height * tileMapDimension.rowCount };
 }
 
-cocos2d::Vec2 WarSceneScript::WarSceneScriptImpl::toPositionInScene(const cocos2d::Vec2 & position) const
+cocos2d::Vec2 WarSceneScript::WarSceneScriptImpl::toPositionInField(const cocos2d::Vec2 & position) const
 {
-	return m_TransformComponent.lock()->convertToLocalSpace(position);
+	return m_ChildTileMapScript.lock()->getTransformComponent()->convertToLocalSpace(position);
 }
 
 GridIndex WarSceneScript::WarSceneScriptImpl::toGridIndex(const cocos2d::Vec2 & positionInWindow) const
 {
-	auto positionInScene = toPositionInScene(positionInWindow);
+	auto positionInScene = toPositionInField(positionInWindow);
 	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
 	return GridIndex(positionInScene, gridSize);
-}
-
-void WarSceneScript::WarSceneScriptImpl::setPositionWithOffsetAndBoundary(const cocos2d::Vec2 & offset)
-{
-	assert(!m_RenderComponent.expired() && "WarSceneScriptImpl::setPositionWithinBoundary() the render component is expired.");
-	auto strongRenderComponent = m_RenderComponent.lock();
-	auto transformComponent = m_TransformComponent.lock();
-	auto newPosition = transformComponent->getPosition() + offset;
-
-	//////////////////////////////////////////////////////////////////////////
-	//Modify the new position so that the scene can't be set too far away.
-	//Firstly, get the size of window, boundary and scene.
-	auto windowSize = cocos2d::Director::getInstance()->getOpenGLView()->getFrameSize();
-	auto extraBoundarySize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
-	auto warSceneSize = getMapSize();
-	warSceneSize.width *= transformComponent->getScaleX();
-	warSceneSize.height *= transformComponent->getScaleY();
-
-	//Secondly, use the sizes to calculate the possible min and max of the drag-to position.
-	auto minX = -(warSceneSize.width - windowSize.width + extraBoundarySize.width);
-	auto minY = -(warSceneSize.height - windowSize.height + extraBoundarySize.height);
-	auto maxX = extraBoundarySize.width;
-	auto maxY = extraBoundarySize.height;
-
-	//Finally, modify the newPosition using the mins and maxs if needed.
-	if (maxX > minX) {
-		if (newPosition.x > maxX)	newPosition.x = maxX;
-		if (newPosition.x < minX)	newPosition.x = minX;
-	}
-	else { //This means that the width of the map is less than the window. Just ignore horizontal part of the drag.
-		newPosition.x = transformComponent->getPosition().x;
-	}
-	if (maxY > minY) {
-		if (newPosition.y > maxY)	newPosition.y = maxY;
-		if (newPosition.y < minY)	newPosition.y = minY;
-	}
-	else { //This means that the height of the map is less than the window. Just ignore vertical part of the drag.
-		newPosition.y = transformComponent->getPosition().y;
-	}
-
-	//////////////////////////////////////////////////////////////////////////
-	//Make use of the newPosition.
-	transformComponent->setPosition(newPosition);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -486,7 +500,7 @@ void WarSceneScript::loadWarScene(const char * xmlPath)
 	auto sceneSize = pimpl->getMapSize();
 	auto posX = -(sceneSize.width - windowSize.width) / 2;
 	auto posY = -(sceneSize.height - windowSize.height) / 2;
-	pimpl->m_TransformComponent.lock()->setPosition({ posX, posY });
+	pimpl->setFieldPosition({ posX, posY });
 }
 
 bool WarSceneScript::vInit(const tinyxml2::XMLElement * xmlElement)
