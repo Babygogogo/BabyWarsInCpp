@@ -10,6 +10,9 @@
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
+#include "../Event/EvtDataActivateUnitEnd.h"
+#include "../Event/EvtDataDeactivateUnitEnd.h"
+#include "../Event/EvtDataMakeMovingPathEnd.h"
 #include "../Resource/UnitData.h"
 #include "../Utilities/GridIndex.h"
 #include "../Utilities/MovingArea.h"
@@ -27,6 +30,13 @@ struct MovingAreaScript::MovingRangeScriptImpl
 	MovingRangeScriptImpl() = default;
 	~MovingRangeScriptImpl() = default;
 
+	void onActivateUnitEnd(const EvtDataActivateUnitEnd & e);
+	void onDeactivateUnitEnd(const EvtDataDeactivateUnitEnd & e);
+	void onMakeMovingPathEnd(const EvtDataMakeMovingPathEnd & e);
+
+	void clearAndShowArea(const UnitScript & movingUnit);
+	void clearArea();
+
 	MovingArea createArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap) const;
 	void setChildrenGridActors(const MovingArea & movingArea, Actor & self);
 
@@ -34,8 +44,49 @@ struct MovingAreaScript::MovingRangeScriptImpl
 	std::string m_MovingAreaGridActorPath;
 	std::unordered_set<ActorID> m_ChildrenGridActorIDs;
 
+	std::weak_ptr<Actor> m_OwnerActor;
 	std::weak_ptr<TransformComponent> m_TransformComponent;
+
+	std::weak_ptr<const TileMapScript> m_TileMapScript;
+	std::weak_ptr<const UnitMapScript> m_UnitMapScript;
 };
+
+void MovingAreaScript::MovingRangeScriptImpl::onActivateUnitEnd(const EvtDataActivateUnitEnd & e)
+{
+	clearAndShowArea(*e.getUnit());
+}
+
+void MovingAreaScript::MovingRangeScriptImpl::onDeactivateUnitEnd(const EvtDataDeactivateUnitEnd & e)
+{
+	clearArea();
+}
+
+void MovingAreaScript::MovingRangeScriptImpl::onMakeMovingPathEnd(const EvtDataMakeMovingPathEnd & e)
+{
+	clearArea();
+}
+
+void MovingAreaScript::MovingRangeScriptImpl::clearAndShowArea(const UnitScript & movingUnit)
+{
+	auto newArea = createArea(movingUnit, *m_TileMapScript.lock(), *m_UnitMapScript.lock());
+	if (newArea != m_MovingArea) {
+		clearArea();
+
+		m_MovingArea = std::move(newArea);
+		setChildrenGridActors(m_MovingArea, *m_OwnerActor.lock());
+	}
+}
+
+void MovingAreaScript::MovingRangeScriptImpl::clearArea()
+{
+	m_OwnerActor.lock()->removeAllChildren();
+	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
+	for (const auto & actorID : m_ChildrenGridActorIDs)
+		eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(actorID));
+
+	m_MovingArea.clear();
+	m_ChildrenGridActorIDs.clear();
+}
 
 MovingArea MovingAreaScript::MovingRangeScriptImpl::createArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap) const
 {
@@ -80,7 +131,7 @@ void MovingAreaScript::MovingRangeScriptImpl::setChildrenGridActors(const Moving
 //////////////////////////////////////////////////////////////////////////
 //Implementation of WorldScript.
 //////////////////////////////////////////////////////////////////////////
-MovingAreaScript::MovingAreaScript() : pimpl{ std::make_unique<MovingRangeScriptImpl>() }
+MovingAreaScript::MovingAreaScript() : pimpl{ std::make_shared<MovingRangeScriptImpl>() }
 {
 }
 
@@ -88,9 +139,14 @@ MovingAreaScript::~MovingAreaScript()
 {
 }
 
-void MovingAreaScript::setPosition(const cocos2d::Vec2 & position)
+void MovingAreaScript::setTileMapScript(std::weak_ptr<const TileMapScript> && tileMapScript)
 {
-	pimpl->m_TransformComponent.lock()->setPosition(position);
+	pimpl->m_TileMapScript = std::move(tileMapScript);
+}
+
+void MovingAreaScript::setUnitMapScript(std::weak_ptr<const UnitMapScript> && unitMapScript)
+{
+	pimpl->m_UnitMapScript = std::move(unitMapScript);
 }
 
 void MovingAreaScript::clearAndShowArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap)
@@ -130,9 +186,22 @@ bool MovingAreaScript::vInit(const tinyxml2::XMLElement * xmlElement)
 
 void MovingAreaScript::vPostInit()
 {
+	pimpl->m_OwnerActor = m_OwnerActor;
+
 	auto transformComponent = m_OwnerActor.lock()->getComponent<TransformComponent>();
 	assert(transformComponent && "MovingAreaScript::vPostInit() the actor has no transform component");
 	pimpl->m_TransformComponent = std::move(transformComponent);
+
+	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
+	eventDispatcher->vAddListener(EvtDataActivateUnitEnd::s_EventType, pimpl, [this](const IEventData & e) {
+		pimpl->onActivateUnitEnd(static_cast<const EvtDataActivateUnitEnd &>(e));
+	});
+	eventDispatcher->vAddListener(EvtDataDeactivateUnitEnd::s_EventType, pimpl, [this](const IEventData & e) {
+		pimpl->onDeactivateUnitEnd(static_cast<const EvtDataDeactivateUnitEnd &>(e));
+	});
+	eventDispatcher->vAddListener(EvtDataMakeMovingPathEnd::s_EventType, pimpl, [this](const IEventData & e) {
+		pimpl->onMakeMovingPathEnd(static_cast<const EvtDataMakeMovingPathEnd &>(e));
+	});
 }
 
 const std::string MovingAreaScript::Type = "MovingAreaScript";

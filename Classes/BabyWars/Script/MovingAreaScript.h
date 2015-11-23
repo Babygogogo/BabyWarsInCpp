@@ -20,7 +20,8 @@ public:
 	MovingAreaScript();
 	~MovingAreaScript();
 
-	void setPosition(const cocos2d::Vec2 & position);
+	void setTileMapScript(std::weak_ptr<const TileMapScript> && tileMapScript);
+	void setUnitMapScript(std::weak_ptr<const UnitMapScript> && unitMapScript);
 
 	void clearAndShowArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap);
 	void clearArea();
@@ -43,7 +44,7 @@ private:
 
 	//Implementation stuff.
 	struct MovingRangeScriptImpl;
-	std::unique_ptr<MovingRangeScriptImpl> pimpl;
+	std::shared_ptr<MovingRangeScriptImpl> pimpl;
 };
 
 #endif // !__MOVING_AREA_SCRIPT__

@@ -6,9 +6,16 @@
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/Actor/TransformComponent.h"
+#include "../../BabyEngine/Event/EvtDataInputTouch.h"
+#include "../../BabyEngine/Event/EvtDataInputDrag.h"
+#include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../../BabyEngine/Utilities/StringToVector.h"
+#include "../Event/EvtDataActivateUnitEnd.h"
+#include "../Event/EvtDataDeactivateUnitEnd.h"
+#include "../Event/EvtDataMakeMovingPathBegin.h"
+#include "../Event/EvtDataMakeMovingPathEnd.h"
 #include "../Resource/ResourceLoader.h"
 #include "../Resource/UnitDataID.h"
 #include "../Utilities/GridIndex.h"
@@ -25,6 +32,16 @@ struct UnitMapScript::UnitMapScriptImpl
 	UnitMapScriptImpl() {};
 	~UnitMapScriptImpl() {};
 
+	void onMakeMovingPathEnd(const EvtDataMakeMovingPathEnd & e);
+
+	GridIndex toGridIndex(const cocos2d::Vec2 & positionInWindow) const;
+
+	std::shared_ptr<UnitScript> getUnit(const GridIndex & gridIndex) const;
+	bool canUnitStayAtIndex(const UnitScript & unitScript, const GridIndex & gridIndex) const;
+
+	void deactivateActiveUnit();
+	void deactivateAndMoveUnit(UnitScript & unit, const MovingPath & path);
+
 	static std::string s_UnitActorPath;
 
 	Matrix2D<std::weak_ptr<UnitScript>> m_UnitMap;
@@ -36,15 +53,126 @@ struct UnitMapScript::UnitMapScriptImpl
 
 std::string UnitMapScript::UnitMapScriptImpl::s_UnitActorPath;
 
+void UnitMapScript::UnitMapScriptImpl::onMakeMovingPathEnd(const EvtDataMakeMovingPathEnd & e)
+{
+	if (!e.isPathValid() || !canUnitStayAtIndex(*m_ActiveUnit.lock(), e.getMovingPath().getBackNode().m_GridIndex)) {
+		deactivateActiveUnit();
+		return;
+	}
+
+	deactivateAndMoveUnit(*m_ActiveUnit.lock(), e.getMovingPath());
+}
+
+GridIndex UnitMapScript::UnitMapScriptImpl::toGridIndex(const cocos2d::Vec2 & positionInWindow) const
+{
+	auto positionInMap = m_TransformComponent.lock()->convertToLocalSpace(positionInWindow);
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
+	return GridIndex(positionInMap, gridSize);
+}
+
+std::shared_ptr<UnitScript> UnitMapScript::UnitMapScriptImpl::getUnit(const GridIndex & gridIndex) const
+{
+	if (!m_UnitMap.isIndexValid(gridIndex))
+		return nullptr;
+
+	auto unitScript = m_UnitMap[gridIndex];
+	if (unitScript.expired())
+		return nullptr;
+
+	return unitScript.lock();
+}
+
+bool UnitMapScript::UnitMapScriptImpl::canUnitStayAtIndex(const UnitScript & unitScript, const GridIndex & gridIndex) const
+{
+	if (!m_UnitMap.isIndexValid(gridIndex))
+		return false;
+
+	if (unitScript.getGridIndex() == gridIndex)
+		return true;
+
+	auto unitAtIndex = getUnit(gridIndex);
+	if (!unitAtIndex)
+		return true;
+
+	return unitScript.canStayTogether(*unitAtIndex);
+}
+
+void UnitMapScript::UnitMapScriptImpl::deactivateActiveUnit()
+{
+	if (m_ActiveUnit.expired())
+		return;
+
+	m_ActiveUnit.lock()->setActive(false);
+	m_ActiveUnit.reset();
+}
+
+void UnitMapScript::UnitMapScriptImpl::deactivateAndMoveUnit(UnitScript & unit, const MovingPath & path)
+{
+	//Deactivate the unit.
+	unit.setActive(false);
+	if (m_ActiveUnit.lock().get() == &unit)
+		m_ActiveUnit.reset();
+
+	if (path.getLength() <= 1)
+		return;
+
+	//Make the move and update the map.
+	const auto startingIndex = path.getFrontNode().m_GridIndex;
+	const auto endingIndex = path.getBackNode().m_GridIndex;
+	unit.moveAlongPath(path);
+	m_UnitMap[endingIndex] = m_UnitMap[startingIndex];
+	m_UnitMap[startingIndex].reset();
+}
+
 //////////////////////////////////////////////////////////////////////////
 //Implementation of UnitMapScript.
 //////////////////////////////////////////////////////////////////////////
-UnitMapScript::UnitMapScript() : pimpl{ std::make_unique<UnitMapScriptImpl>() }
+UnitMapScript::UnitMapScript() : pimpl{ std::make_shared<UnitMapScriptImpl>() }
 {
 }
 
 UnitMapScript::~UnitMapScript()
 {
+}
+
+bool UnitMapScript::onInputTouch(const EvtDataInputTouch & touch)
+{
+	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
+	auto touchIndex = pimpl->toGridIndex(touch.getPositionInWorld());
+
+	//If the active unit is touched, deactivate it and queue an event and return.
+	if (isUnitActiveAtIndex(touchIndex)) {
+		auto activeUnit = getActiveUnit();
+		deactivateActiveUnit();
+		eventDispatcher->vQueueEvent(std::make_unique<EvtDataDeactivateUnitEnd>(activeUnit));
+
+		return false;	//Can't be emitted because the touch means to deactivate the active unit and do nothing else.
+	}
+
+	//If there's an active unit (not in the touched index), deactivate it and queue an event.
+	if (auto activeUnit = getActiveUnit()) {
+		deactivateActiveUnit();
+		eventDispatcher->vQueueEvent(std::make_unique<EvtDataDeactivateUnitEnd>(activeUnit));
+	}
+
+	//If we can activate the touched unit (if exists), activate it and queue an event.
+	if (canActivateUnitAtIndex(touchIndex)) {
+		activateUnitAtIndex(touchIndex);
+		eventDispatcher->vQueueEvent(std::make_unique<EvtDataActivateUnitEnd>(getActiveUnit()));
+	}
+
+	return false;
+}
+
+bool UnitMapScript::onInputDrag(const EvtDataInputDrag & drag)
+{
+	if (drag.getState() == EvtDataInputDrag::DragState::Begin && isUnitActiveAtIndex(pimpl->toGridIndex(drag.getPreviousPositionInWorld()))) {
+		SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataMakeMovingPathBegin>(pimpl->toGridIndex(drag.getPositionInWorld())));
+
+		return true;
+	}
+
+	return false;
 }
 
 void UnitMapScript::loadUnitMap(const char * xmlPath)
@@ -99,11 +227,6 @@ void UnitMapScript::loadUnitMap(const char * xmlPath)
 		//Load the next row of the unit map.
 		rowElement = rowElement->NextSiblingElement();
 	}
-}
-
-void UnitMapScript::setPosition(const cocos2d::Vec2 & position)
-{
-	pimpl->m_TransformComponent.lock()->setPosition(position);
 }
 
 Matrix2DDimension UnitMapScript::getMapDimension() const
@@ -246,6 +369,11 @@ void UnitMapScript::vPostInit()
 	auto transformComponent = ownerActor->getComponent<TransformComponent>();
 	assert(transformComponent && "UnitMapScript::vPostInit() the actor has no transform component.");
 	pimpl->m_TransformComponent = std::move(transformComponent);
+
+	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
+	eventDispatcher->vAddListener(EvtDataMakeMovingPathEnd::s_EventType, pimpl, [this](const IEventData & e) {
+		pimpl->onMakeMovingPathEnd(static_cast<const EvtDataMakeMovingPathEnd &>(e));
+	});
 }
 
 const std::string UnitMapScript::Type = "UnitMapScript";

@@ -23,6 +23,13 @@ void BaseRenderComponent::runAction(cocos2d::Action * action)
 	m_Node->runAction(action);
 }
 
+void BaseRenderComponent::stopAction(cocos2d::Action * action)
+{
+	assert(m_Node && "BaseRenderComponent::stopAction() while the node is not initialized.");
+
+	m_Node->stopAction(action);
+}
+
 void BaseRenderComponent::stopAllActions()
 {
 	assert(m_Node && "BaseRenderComponent::stopAllActions() while the node is not initialized.");

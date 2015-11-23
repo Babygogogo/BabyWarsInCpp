@@ -12,6 +12,8 @@ class UnitScript;
 class MovingPath;
 struct Matrix2DDimension;
 struct GridIndex;
+class EvtDataInputTouch;
+class EvtDataInputDrag;
 
 class UnitMapScript : public BaseScriptComponent
 {
@@ -19,10 +21,11 @@ public:
 	UnitMapScript();
 	~UnitMapScript();
 
+	bool onInputTouch(const EvtDataInputTouch & touch);
+	bool onInputDrag(const EvtDataInputDrag & drag);
+
 	//Load a unit map with a xml file. Create unit and unit actors if needed.
 	void loadUnitMap(const char * xmlPath);
-
-	void setPosition(const cocos2d::Vec2 & position);
 
 	//Getter of the size of the unit map.
 	Matrix2DDimension getMapDimension() const;
@@ -63,7 +66,7 @@ private:
 
 	//Implementation stuff.
 	struct UnitMapScriptImpl;
-	std::unique_ptr<UnitMapScriptImpl> pimpl;
+	std::shared_ptr<UnitMapScriptImpl> pimpl;
 };
 
 #endif // !__UNIT_MAP_SCRIPT__

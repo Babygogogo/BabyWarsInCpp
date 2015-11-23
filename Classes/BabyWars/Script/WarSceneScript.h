@@ -3,10 +3,6 @@
 
 #include "../../BabyEngine/Actor/BaseScriptComponent.h"
 
-namespace cocos2d {
-	class Vec2;
-}
-
 class WarSceneScript : public BaseScriptComponent
 {
 public:

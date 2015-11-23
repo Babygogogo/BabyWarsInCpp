@@ -24,6 +24,7 @@ public:
 
 	bool isIndexValid(const GridIndex & gridIndex) const;
 	Containee & operator[](const GridIndex & gridIndex);
+	const Containee & operator[](const GridIndex & gridIndex) const;
 
 private:
 	std::vector < std::vector<Containee>> m_Matrix;
@@ -81,7 +82,15 @@ bool Matrix2D<Containee>::isIndexValid(const GridIndex & gridIndex) const
 template <class Containee>
 Containee & Matrix2D<Containee>::operator[](const GridIndex & gridIndex)
 {
-	assert(isIndexValid(gridIndex) && "Matrix2D<>::operator[] the gridIndex is invalid.");
+	assert(isIndexValid(gridIndex) && "Matrix2D<>::operator[]() the gridIndex is invalid.");
+
+	return m_Matrix[gridIndex.rowIndex][gridIndex.colIndex];
+}
+
+template <class Containee>
+const Containee & Matrix2D<Containee>::operator[](const GridIndex & gridIndex) const
+{
+	assert(isIndexValid(gridIndex) && "Matrix2D<>::operator[]()const the gridIndex is invalid.");
 
 	return m_Matrix[gridIndex.rowIndex][gridIndex.colIndex];
 }

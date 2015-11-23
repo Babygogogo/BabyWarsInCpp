@@ -27,6 +27,8 @@ struct WarFieldScript::WarFieldScriptImpl
 	WarFieldScriptImpl() = default;
 	~WarFieldScriptImpl() = default;
 
+	bool onDragField(const EvtDataInputDrag & drag);
+
 	void activateUnitAndShowMovingArea(const cocos2d::Vec2 & position);
 	void dragField(const cocos2d::Vec2 & offset);
 	void deactivateActiveUnitAndClearMovingArea();
@@ -46,6 +48,8 @@ struct WarFieldScript::WarFieldScriptImpl
 	static std::string s_UnitMapActorPath;
 	static std::string s_MovingPathActorPath;
 	static std::string s_MovingAreaActorPath;
+
+	bool m_IsDraggingField{ false };
 
 	std::weak_ptr<TransformComponent> m_TransformComponent;
 
@@ -81,6 +85,28 @@ std::string WarFieldScript::WarFieldScriptImpl::s_TileMapActorPath;
 std::string WarFieldScript::WarFieldScriptImpl::s_UnitMapActorPath;
 std::string WarFieldScript::WarFieldScriptImpl::s_MovingPathActorPath;
 std::string WarFieldScript::WarFieldScriptImpl::s_MovingAreaActorPath;
+
+bool WarFieldScript::WarFieldScriptImpl::onDragField(const EvtDataInputDrag & drag)
+{
+	const auto dragState = drag.getState();
+	if (dragState == EvtDataInputDrag::DragState::Begin) {
+		assert(!m_IsDraggingField && "WarFieldScriptImpl::onDragField() the drag is in begin state while the dragging field flag is already on.");
+		m_IsDraggingField = true;
+
+		dragField(drag.getPositionInWorld() - drag.getPreviousPositionInWorld());
+		return true;
+	}
+
+	if (m_IsDraggingField) {
+		if (dragState == EvtDataInputDrag::DragState::End)
+			m_IsDraggingField = false;
+
+		dragField(drag.getPositionInWorld() - drag.getPreviousPositionInWorld());
+		return true;
+	}
+
+	return false;
+}
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of state stuff.
@@ -328,7 +354,7 @@ void WarFieldScript::WarFieldScriptImpl::activateUnitAndShowMovingArea(const coc
 
 void WarFieldScript::WarFieldScriptImpl::dragField(const cocos2d::Vec2 & offset)
 {
-	assert(!m_ChildTileMapScript.expired() && "WarFieldScriptImpl::setPositionWithinBoundary() the child tile map script is expired.");
+	assert(!m_TransformComponent.expired() && "WarFieldScriptImpl::dragField() the transform component is expired.");
 	auto transformComponent = m_TransformComponent.lock();
 	auto newPosition = transformComponent->getPosition() + offset;
 
@@ -453,12 +479,22 @@ WarFieldScript::~WarFieldScript()
 
 bool WarFieldScript::onInputTouch(const EvtDataInputTouch & touch)
 {
-	return pimpl->m_CurrentState->onTouch(touch);
+	//return pimpl->m_CurrentState->onTouch(touch);
+	if (pimpl->m_ChildUnitMapScript.lock()->onInputTouch(touch))
+		return true;
+
+	return false;
 }
 
 bool WarFieldScript::onInputDrag(const EvtDataInputDrag & drag)
 {
-	return pimpl->m_CurrentState->onDrag(drag);
+	//return pimpl->m_CurrentState->onDrag(drag);
+	if (pimpl->m_ChildUnitMapScript.lock()->onInputDrag(drag))
+		return true;
+	if (pimpl->m_ChildMovingPathScript.lock()->onInputDrag(drag))
+		return true;
+
+	return pimpl->onDragField(drag);
 }
 
 void WarFieldScript::loadWarField(const tinyxml2::XMLElement * xmlElement)
@@ -505,10 +541,6 @@ void WarFieldScript::vPostInit()
 
 	//////////////////////////////////////////////////////////////////////////
 	//Get components.
-	//auto renderComponent = ownerActor->getRenderComponent();
-	//assert(renderComponent && "WarSceneScript::vPostInit() the actor has no render component.");
-	//pimpl->m_RenderComponent = std::move(renderComponent);
-
 	auto transformComponent = ownerActor->getComponent<TransformComponent>();
 	assert(transformComponent && "WarSceneScript::vPostInit() the actor has no transform component.");
 	pimpl->m_TransformComponent = std::move(transformComponent);
@@ -527,14 +559,19 @@ void WarFieldScript::vPostInit()
 	pimpl->m_ChildUnitMapScript = unitMapActor->getComponent<UnitMapScript>();
 	ownerActor->addChild(*unitMapActor);
 
-	//Create and add the moving range.
+	//Create and add the moving area.
 	auto movingAreaActor = gameLogic->createActor(WarFieldScriptImpl::s_MovingAreaActorPath.c_str());
-	pimpl->m_ChildMovingAreaScript = movingAreaActor->getComponent<MovingAreaScript>();
+	auto movingAreaScript = movingAreaActor->getComponent<MovingAreaScript>();
+	movingAreaScript->setTileMapScript(pimpl->m_ChildTileMapScript);
+	movingAreaScript->setUnitMapScript(pimpl->m_ChildUnitMapScript);
+	pimpl->m_ChildMovingAreaScript = std::move(movingAreaScript);
 	ownerActor->addChild(*movingAreaActor);
 
 	//Create and add the move path.
 	auto movingPathActor = gameLogic->createActor(WarFieldScriptImpl::s_MovingPathActorPath.c_str());
-	pimpl->m_ChildMovingPathScript = movingPathActor->getComponent<MovingPathScript>();
+	auto movingPathScript = movingPathActor->getComponent<MovingPathScript>();
+	movingPathScript->setMovingAreaScript(pimpl->m_ChildMovingAreaScript);
+	pimpl->m_ChildMovingPathScript = std::move(movingPathScript);
 	ownerActor->addChild(*movingPathActor);
 
 	//#TODO: create and add weather and so on...

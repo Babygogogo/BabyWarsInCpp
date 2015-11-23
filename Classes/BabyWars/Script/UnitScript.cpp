@@ -16,8 +16,11 @@
 //////////////////////////////////////////////////////////////////////////
 struct UnitScript::UnitScriptImpl
 {
-	UnitScriptImpl() {};
-	~UnitScriptImpl() {};
+	UnitScriptImpl();
+	~UnitScriptImpl();
+
+	//#TODO: This should be replaced to show the animation of the activate unit.
+	cocos2d::Action * m_ActiveAction{ nullptr };
 
 	GridIndex m_GridIndex;
 	std::shared_ptr<UnitData> m_UnitData;
@@ -25,6 +28,17 @@ struct UnitScript::UnitScriptImpl
 	std::weak_ptr<SpriteRenderComponent> m_SpriteRenderComponent;
 	std::weak_ptr<TransformComponent> m_TransformComponent;
 };
+
+UnitScript::UnitScriptImpl::UnitScriptImpl()
+{
+	m_ActiveAction = cocos2d::RepeatForever::create(cocos2d::Sequence::create(cocos2d::RotateTo::create(0.2f, 30, 30), cocos2d::RotateTo::create(0.4f, -30, -30), cocos2d::RotateTo::create(0.2f, 0, 0), nullptr));
+	m_ActiveAction->retain();
+}
+
+UnitScript::UnitScriptImpl::~UnitScriptImpl()
+{
+	CC_SAFE_RELEASE_NULL(m_ActiveAction);
+}
 
 //////////////////////////////////////////////////////////////////////////
 //Implementation of WorldScript.
@@ -88,12 +102,11 @@ void UnitScript::setActive(bool active)
 {
 	auto spriteRenderComponent = pimpl->m_SpriteRenderComponent.lock();
 	if (active) {
-		auto sequence = cocos2d::Sequence::create(cocos2d::RotateTo::create(0.2f, 30, 30), cocos2d::RotateTo::create(0.4f, -30, -30), cocos2d::RotateTo::create(0.2f, 0, 0), nullptr);
-		spriteRenderComponent->runAction(cocos2d::RepeatForever::create(sequence));
+		spriteRenderComponent->runAction(pimpl->m_ActiveAction);
 		return;
 	}
 
-	spriteRenderComponent->stopAllActions();
+	spriteRenderComponent->stopAction(pimpl->m_ActiveAction);
 	pimpl->m_TransformComponent.lock()->setRotation(0);
 }
 

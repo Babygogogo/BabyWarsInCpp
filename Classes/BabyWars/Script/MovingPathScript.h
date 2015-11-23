@@ -11,6 +11,8 @@ namespace cocos2d
 struct GridIndex;
 class MovingArea;
 class MovingPath;
+class MovingAreaScript;
+class EvtDataInputDrag;
 
 class MovingPathScript : public BaseScriptComponent
 {
@@ -18,7 +20,9 @@ public:
 	MovingPathScript();
 	~MovingPathScript();
 
-	void setPosition(const cocos2d::Vec2 & position);
+	bool onInputDrag(const EvtDataInputDrag & drag);
+
+	void setMovingAreaScript(std::weak_ptr<const MovingAreaScript> && movingAreaScript);
 
 	void showPath(const GridIndex & destination, const MovingArea & area);
 	void clearPath();
@@ -44,7 +48,7 @@ private:
 
 	//Implementation stuff.
 	struct MovingPathScriptImpl;
-	std::unique_ptr<MovingPathScriptImpl> pimpl;
+	std::shared_ptr<MovingPathScriptImpl> pimpl;
 };
 
 #endif // !__MOVING_PATH_SCRIPT__
