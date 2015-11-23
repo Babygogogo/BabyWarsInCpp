@@ -249,6 +249,9 @@
     <ClCompile Include="..\Classes\BabyEngine\Graphic2D\TouchAndDragController.cpp">
       <Filter>src\BabyEngine\Graphic2D</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\WarFieldScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -475,6 +478,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Graphic2D\TouchAndDragController.h">
       <Filter>src\BabyEngine\Graphic2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\WarFieldScript.h">
+      <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

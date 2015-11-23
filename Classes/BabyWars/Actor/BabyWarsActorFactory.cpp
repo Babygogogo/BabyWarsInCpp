@@ -5,6 +5,7 @@
 #include "../Script/UnitMapScript.h"
 #include "../Script/UnitScript.h"
 #include "../Script/WarSceneScript.h"
+#include "../Script/WarFieldScript.h"
 #include "../Script/MovingPathScript.h"
 #include "../Script/MovingPathGridScript.h"
 #include "../Script/MovingAreaScript.h"
@@ -20,6 +21,7 @@ void BabyWarsActorFactory::vRegisterSpecificComponents()
 	registerComponent<UnitMapScript>();
 	registerComponent<UnitScript>();
 	registerComponent<WarSceneScript>();
+	registerComponent<WarFieldScript>();
 	registerComponent<MovingAreaScript>();
 	registerComponent<MovingAreaGridScript>();
 }

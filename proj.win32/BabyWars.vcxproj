@@ -197,6 +197,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyWars\Script\TileScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\UnitMapScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\UnitScript.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Script\WarFieldScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\WarSceneScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\UserInterface\BabyWarsHumanView.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Utilities\GridIndex.cpp" />
@@ -271,6 +272,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyWars\Script\TileScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\UnitMapScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\UnitScript.h" />
+    <ClInclude Include="..\Classes\BabyWars\Script\WarFieldScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\WarSceneScript.h" />
     <ClInclude Include="..\Classes\BabyWars\UserInterface\BabyWarsHumanView.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\AdjacentDirection.h" />

@@ -1,0 +1,14 @@
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<Actor Type="WarField" Resource="Actors\Actor_WarField.xml">
+	<Components>
+		<GeneralRenderComponent>
+			<SceneNode Type="Node"/>
+		</GeneralRenderComponent>
+		<TransformComponent/>
+		<WarFieldScript>
+			<RelatedActorsPath TileMap="Actors\Actor_TileMap.xml" UnitMap="Actors\Actor_UnitMap.xml" MovePath="Actors\Actor_MovingPath.xml" MovingRange="Actors\Actor_MovingArea.xml"/>
+		</WarFieldScript>
+	</Components>
+	<ChildrenActors>
+	</ChildrenActors>
+</Actor>

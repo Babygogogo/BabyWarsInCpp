@@ -1,6 +1,6 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
 <GameSettings>
-	<DesignResolution Width="1024" Height="768"/>
+	<DesignResolution Width="960" Height="540"/>
 	<GridSize Width="32" Height="32"/>
 	<FramesPerSecond Value="60"/>
 	<ResourceListPath Value="ResourceList.xml"/>
