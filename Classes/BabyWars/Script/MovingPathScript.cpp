@@ -38,6 +38,7 @@ struct MovingPathScript::MovingPathScriptImpl
 	MovingPath createPath(const MovingPath & oldPath, const GridIndex & destination, const MovingArea & area) const;
 	void setChildrenGridActors(const MovingPath & path, Actor & self);
 
+	bool isBackIndex(const GridIndex & index) const;
 	GridIndex toGridIndex(const cocos2d::Vec2 & positionInWindow) const;
 
 	std::string m_MovingPathGridActorPath;
@@ -153,6 +154,14 @@ void MovingPathScript::MovingPathScriptImpl::setChildrenGridActors(const MovingP
 	}
 }
 
+bool MovingPathScript::MovingPathScriptImpl::isBackIndex(const GridIndex & index) const
+{
+	if (m_MovingPath.isEmpty())
+		return false;
+
+	return m_MovingPath.getBackNode().m_GridIndex == index;
+}
+
 GridIndex MovingPathScript::MovingPathScriptImpl::toGridIndex(const cocos2d::Vec2 & positionInWindow) const
 {
 	auto positionInMap = m_TransformComponent.lock()->convertToLocalSpace(positionInWindow);
@@ -185,7 +194,7 @@ bool MovingPathScript::onInputDrag(const EvtDataInputDrag & drag)
 	}
 
 	if (dragState == EvtDataInputDrag::DragState::End) {
-		auto isPathValid = isBackIndex(pimpl->toGridIndex(drag.getPositionInWorld()));
+		auto isPathValid = pimpl->isBackIndex(pimpl->toGridIndex(drag.getPositionInWorld()));
 		SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataMakeMovingPathEnd>(pimpl->m_MovingPath, isPathValid));
 
 		pimpl->clearPath();
@@ -200,45 +209,6 @@ bool MovingPathScript::onInputDrag(const EvtDataInputDrag & drag)
 void MovingPathScript::setMovingAreaScript(std::weak_ptr<const MovingAreaScript> && movingAreaScript)
 {
 	pimpl->m_MovingAreaScript = std::move(movingAreaScript);
-}
-
-void MovingPathScript::showPath(const GridIndex & destination, const MovingArea & area)
-{
-	//If the destination is not in the area, just do nothing and return.
-	if (!area.hasIndex(destination))
-		return;
-
-	auto newPath = pimpl->createPath(pimpl->m_MovingPath, destination, area);
-	if (newPath != pimpl->m_MovingPath) {
-		clearPath();
-
-		pimpl->m_MovingPath = std::move(newPath);
-		pimpl->setChildrenGridActors(pimpl->m_MovingPath, *m_OwnerActor.lock());
-	}
-}
-
-void MovingPathScript::clearPath()
-{
-	m_OwnerActor.lock()->removeAllChildren();
-	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
-	for (const auto & actorID : pimpl->m_ChildrenGridActorIDs)
-		eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(actorID));
-
-	pimpl->m_MovingPath.clear();
-	pimpl->m_ChildrenGridActorIDs.clear();
-}
-
-bool MovingPathScript::isBackIndex(const GridIndex & index) const
-{
-	if (pimpl->m_MovingPath.isEmpty())
-		return false;
-
-	return pimpl->m_MovingPath.getBackNode().m_GridIndex == index;
-}
-
-const MovingPath & MovingPathScript::getUnderlyingPath() const
-{
-	return pimpl->m_MovingPath;
 }
 
 bool MovingPathScript::vInit(const tinyxml2::XMLElement * xmlElement)

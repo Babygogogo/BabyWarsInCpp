@@ -149,28 +149,6 @@ void MovingAreaScript::setUnitMapScript(std::weak_ptr<const UnitMapScript> && un
 	pimpl->m_UnitMapScript = std::move(unitMapScript);
 }
 
-void MovingAreaScript::clearAndShowArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap)
-{
-	auto newArea = pimpl->createArea(movingUnit, tileMap, unitMap);
-	if (newArea != pimpl->m_MovingArea) {
-		clearArea();
-
-		pimpl->m_MovingArea = std::move(newArea);
-		pimpl->setChildrenGridActors(pimpl->m_MovingArea, *m_OwnerActor.lock());
-	}
-}
-
-void MovingAreaScript::clearArea()
-{
-	m_OwnerActor.lock()->removeAllChildren();
-	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
-	for (const auto & actorID : pimpl->m_ChildrenGridActorIDs)
-		eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(actorID));
-
-	pimpl->m_MovingArea.clear();
-	pimpl->m_ChildrenGridActorIDs.clear();
-}
-
 const MovingArea & MovingAreaScript::getUnderlyingArea() const
 {
 	return pimpl->m_MovingArea;

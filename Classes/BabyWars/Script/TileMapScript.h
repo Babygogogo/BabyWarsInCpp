@@ -21,9 +21,6 @@ public:
 	//Load a tile map with a xml file. Create tile and unit actors if needed.
 	void loadTileMap(const char * xmlPath);
 
-	void setPosition(const cocos2d::Vec2 & position);
-	std::shared_ptr<const TransformComponent> getTransformComponent() const;
-
 	Matrix2DDimension getMapDimension() const;
 
 	bool canPassThrough(const std::string & movementType, const GridIndex & index) const;

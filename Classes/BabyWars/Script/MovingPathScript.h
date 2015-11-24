@@ -24,13 +24,6 @@ public:
 
 	void setMovingAreaScript(std::weak_ptr<const MovingAreaScript> && movingAreaScript);
 
-	void showPath(const GridIndex & destination, const MovingArea & area);
-	void clearPath();
-
-	bool isBackIndex(const GridIndex & index) const;
-
-	const MovingPath & getUnderlyingPath() const;
-
 	//Type name of the class. Used by the ActorFactory and can not be removed.
 	static const std::string Type;
 	virtual const std::string & getType() const override;

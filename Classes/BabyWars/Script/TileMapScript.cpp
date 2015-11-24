@@ -1,10 +1,7 @@
-#include <vector>
-
 #include "cocos2d.h"
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/Actor/Actor.h"
-#include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
@@ -21,14 +18,13 @@
 //////////////////////////////////////////////////////////////////////////
 struct TileMapScript::TileMapScriptImpl
 {
-	TileMapScriptImpl() {};
-	~TileMapScriptImpl() {};
+	TileMapScriptImpl() = default;
+	~TileMapScriptImpl() = default;
 
 	static std::string s_TileActorPath;
 
 	Matrix2D<std::weak_ptr<TileScript>> m_TileMap;
 
-	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
 	std::weak_ptr<TransformComponent> m_TransformComponent;
 };
 
@@ -99,16 +95,6 @@ void TileMapScript::loadTileMap(const char * xmlPath)
 	}
 }
 
-void TileMapScript::setPosition(const cocos2d::Vec2 & position)
-{
-	pimpl->m_TransformComponent.lock()->setPosition(position);
-}
-
-std::shared_ptr<const TransformComponent> TileMapScript::getTransformComponent() const
-{
-	return pimpl->m_TransformComponent.lock();
-}
-
 Matrix2DDimension TileMapScript::getMapDimension() const
 {
 	return pimpl->m_TileMap.getDimension();
@@ -146,10 +132,6 @@ bool TileMapScript::vInit(const tinyxml2::XMLElement * xmlElement)
 void TileMapScript::vPostInit()
 {
 	auto ownerActor = m_OwnerActor.lock();
-
-	auto renderComponent = ownerActor->getRenderComponent();
-	assert(renderComponent && "TileMapScript::vPostInit() the actor has no render component.");
-	pimpl->m_RenderComponent = std::move(renderComponent);
 
 	auto transformComponent = ownerActor->getComponent<TransformComponent>();
 	assert(transformComponent && "TileMapScript::vPostInit() the actor has no transform component.");

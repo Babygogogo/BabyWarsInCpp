@@ -1,10 +1,7 @@
-#include <vector>
-
 #include "cocos2d.h"
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/Actor/Actor.h"
-#include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/Event/EvtDataInputTouch.h"
 #include "../../BabyEngine/Event/EvtDataInputDrag.h"
@@ -17,7 +14,6 @@
 #include "../Event/EvtDataMakeMovingPathBegin.h"
 #include "../Event/EvtDataMakeMovingPathEnd.h"
 #include "../Resource/ResourceLoader.h"
-#include "../Resource/UnitDataID.h"
 #include "../Utilities/GridIndex.h"
 #include "../Utilities/Matrix2D.h"
 #include "../Utilities/MovingPath.h"
@@ -29,16 +25,21 @@
 //////////////////////////////////////////////////////////////////////////
 struct UnitMapScript::UnitMapScriptImpl
 {
-	UnitMapScriptImpl() {};
-	~UnitMapScriptImpl() {};
+	UnitMapScriptImpl() = default;
+	~UnitMapScriptImpl() = default;
 
 	void onMakeMovingPathEnd(const EvtDataMakeMovingPathEnd & e);
 
 	GridIndex toGridIndex(const cocos2d::Vec2 & positionInWindow) const;
 
+	bool isUnitActiveAtIndex(const GridIndex & index) const;
+	bool canActivateUnitAtIndex(const GridIndex & gridIndex) const;
+
 	std::shared_ptr<UnitScript> getUnit(const GridIndex & gridIndex) const;
+	std::shared_ptr<UnitScript> getActiveUnit() const;
 	bool canUnitStayAtIndex(const UnitScript & unitScript, const GridIndex & gridIndex) const;
 
+	void activateUnitAtIndex(const GridIndex & gridIndex);
 	void deactivateActiveUnit();
 	void deactivateAndMoveUnit(UnitScript & unit, const MovingPath & path);
 
@@ -47,7 +48,6 @@ struct UnitMapScript::UnitMapScriptImpl
 	Matrix2D<std::weak_ptr<UnitScript>> m_UnitMap;
 	std::weak_ptr<UnitScript> m_ActiveUnit;
 
-	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
 	std::weak_ptr<TransformComponent> m_TransformComponent;
 };
 
@@ -70,6 +70,30 @@ GridIndex UnitMapScript::UnitMapScriptImpl::toGridIndex(const cocos2d::Vec2 & po
 	return GridIndex(positionInMap, gridSize);
 }
 
+bool UnitMapScript::UnitMapScriptImpl::isUnitActiveAtIndex(const GridIndex & index) const
+{
+	if (m_ActiveUnit.expired())
+		return false;
+
+	auto unitAtIndex = getUnit(index);
+	if (!unitAtIndex)
+		return false;
+
+	return unitAtIndex == m_ActiveUnit.lock();
+}
+
+bool UnitMapScript::UnitMapScriptImpl::canActivateUnitAtIndex(const GridIndex & gridIndex) const
+{
+	if (!m_ActiveUnit.expired())
+		return false;
+
+	auto unitAtIndex = getUnit(gridIndex);
+	if (!unitAtIndex)
+		return false;
+
+	return unitAtIndex->canActivate();
+}
+
 std::shared_ptr<UnitScript> UnitMapScript::UnitMapScriptImpl::getUnit(const GridIndex & gridIndex) const
 {
 	if (!m_UnitMap.isIndexValid(gridIndex))
@@ -80,6 +104,14 @@ std::shared_ptr<UnitScript> UnitMapScript::UnitMapScriptImpl::getUnit(const Grid
 		return nullptr;
 
 	return unitScript.lock();
+}
+
+std::shared_ptr<UnitScript> UnitMapScript::UnitMapScriptImpl::getActiveUnit() const
+{
+	if (!m_ActiveUnit.expired())
+		return m_ActiveUnit.lock();
+
+	return nullptr;
 }
 
 bool UnitMapScript::UnitMapScriptImpl::canUnitStayAtIndex(const UnitScript & unitScript, const GridIndex & gridIndex) const
@@ -95,6 +127,15 @@ bool UnitMapScript::UnitMapScriptImpl::canUnitStayAtIndex(const UnitScript & uni
 		return true;
 
 	return unitScript.canStayTogether(*unitAtIndex);
+}
+
+void UnitMapScript::UnitMapScriptImpl::activateUnitAtIndex(const GridIndex & gridIndex)
+{
+	assert(canActivateUnitAtIndex(gridIndex) && "UnitMapScript::activateUnitAtIndex() can't activate the unit at index.");
+
+	auto unitAtIndex = getUnit(gridIndex);
+	unitAtIndex->setActive(true);
+	m_ActiveUnit = std::move(unitAtIndex);
 }
 
 void UnitMapScript::UnitMapScriptImpl::deactivateActiveUnit()
@@ -141,24 +182,24 @@ bool UnitMapScript::onInputTouch(const EvtDataInputTouch & touch)
 	auto touchIndex = pimpl->toGridIndex(touch.getPositionInWorld());
 
 	//If the active unit is touched, deactivate it and queue an event and return.
-	if (isUnitActiveAtIndex(touchIndex)) {
-		auto activeUnit = getActiveUnit();
-		deactivateActiveUnit();
+	if (pimpl->isUnitActiveAtIndex(touchIndex)) {
+		auto activeUnit = pimpl->getActiveUnit();
+		pimpl->deactivateActiveUnit();
 		eventDispatcher->vQueueEvent(std::make_unique<EvtDataDeactivateUnitEnd>(activeUnit));
 
 		return false;	//Can't be emitted because the touch means to deactivate the active unit and do nothing else.
 	}
 
 	//If there's an active unit (not in the touched index), deactivate it and queue an event.
-	if (auto activeUnit = getActiveUnit()) {
-		deactivateActiveUnit();
+	if (auto activeUnit = pimpl->getActiveUnit()) {
+		pimpl->deactivateActiveUnit();
 		eventDispatcher->vQueueEvent(std::make_unique<EvtDataDeactivateUnitEnd>(activeUnit));
 	}
 
 	//If we can activate the touched unit (if exists), activate it and queue an event.
-	if (canActivateUnitAtIndex(touchIndex)) {
-		activateUnitAtIndex(touchIndex);
-		eventDispatcher->vQueueEvent(std::make_unique<EvtDataActivateUnitEnd>(getActiveUnit()));
+	if (pimpl->canActivateUnitAtIndex(touchIndex)) {
+		pimpl->activateUnitAtIndex(touchIndex);
+		eventDispatcher->vQueueEvent(std::make_unique<EvtDataActivateUnitEnd>(pimpl->getActiveUnit()));
 	}
 
 	return false;
@@ -166,7 +207,7 @@ bool UnitMapScript::onInputTouch(const EvtDataInputTouch & touch)
 
 bool UnitMapScript::onInputDrag(const EvtDataInputDrag & drag)
 {
-	if (drag.getState() == EvtDataInputDrag::DragState::Begin && isUnitActiveAtIndex(pimpl->toGridIndex(drag.getPreviousPositionInWorld()))) {
+	if (drag.getState() == EvtDataInputDrag::DragState::Begin && pimpl->isUnitActiveAtIndex(pimpl->toGridIndex(drag.getPreviousPositionInWorld()))) {
 		SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataMakeMovingPathBegin>(pimpl->toGridIndex(drag.getPositionInWorld())));
 
 		return true;
@@ -234,59 +275,6 @@ Matrix2DDimension UnitMapScript::getMapDimension() const
 	return pimpl->m_UnitMap.getDimension();
 }
 
-std::shared_ptr<UnitScript> UnitMapScript::getUnit(const GridIndex & gridIndex) const
-{
-	if (!pimpl->m_UnitMap.isIndexValid(gridIndex))
-		return nullptr;
-
-	auto unitScript = pimpl->m_UnitMap[gridIndex];
-	if (unitScript.expired())
-		return nullptr;
-
-	return unitScript.lock();
-}
-
-std::shared_ptr<UnitScript> UnitMapScript::getActiveUnit() const
-{
-	if (!pimpl->m_ActiveUnit.expired())
-		return pimpl->m_ActiveUnit.lock();
-
-	return nullptr;
-}
-
-void UnitMapScript::deactivateActiveUnit()
-{
-	if (pimpl->m_ActiveUnit.expired())
-		return;
-
-	pimpl->m_ActiveUnit.lock()->setActive(false);
-	pimpl->m_ActiveUnit.reset();
-}
-
-bool UnitMapScript::isUnitActiveAtIndex(const GridIndex & gridIndex) const
-{
-	if (pimpl->m_ActiveUnit.expired())
-		return false;
-
-	auto unitAtIndex = getUnit(gridIndex);
-	if (!unitAtIndex)
-		return false;
-
-	return unitAtIndex == pimpl->m_ActiveUnit.lock();
-}
-
-bool UnitMapScript::canActivateUnitAtIndex(const GridIndex & gridIndex) const
-{
-	if (getActiveUnit())
-		return false;
-
-	auto unitAtIndex = getUnit(gridIndex);
-	if (!unitAtIndex)
-		return false;
-
-	return unitAtIndex->canActivate();
-}
-
 bool UnitMapScript::canPassThrough(const UnitScript & unitScript, const GridIndex & gridIndex) const
 {
 	if (!pimpl->m_UnitMap.isIndexValid(gridIndex))
@@ -295,7 +283,7 @@ bool UnitMapScript::canPassThrough(const UnitScript & unitScript, const GridInde
 	if (unitScript.getGridIndex() == gridIndex)
 		return true;
 
-	auto unitAtIndex = getUnit(gridIndex);
+	auto unitAtIndex = pimpl->getUnit(gridIndex);
 	if (!unitAtIndex)
 		return true;
 
@@ -310,39 +298,11 @@ bool UnitMapScript::canUnitStayAtIndex(const UnitScript & unitScript, const Grid
 	if (unitScript.getGridIndex() == gridIndex)
 		return true;
 
-	auto unitAtIndex = getUnit(gridIndex);
+	auto unitAtIndex = pimpl->getUnit(gridIndex);
 	if (!unitAtIndex)
 		return true;
 
 	return unitScript.canStayTogether(*unitAtIndex);
-}
-
-bool UnitMapScript::activateUnitAtIndex(const GridIndex & gridIndex)
-{
-	assert(canActivateUnitAtIndex(gridIndex) && "UnitMapScript::activateUnitAtIndex() can't activate the unit at index.");
-
-	auto unitAtIndex = getUnit(gridIndex);
-	unitAtIndex->setActive(true);
-	pimpl->m_ActiveUnit = std::move(unitAtIndex);
-	return true;
-}
-
-void UnitMapScript::deactivateAndMoveUnit(UnitScript & unit, const MovingPath & path)
-{
-	//Deactivate the unit.
-	unit.setActive(false);
-	if (getActiveUnit().get() == &unit)
-		pimpl->m_ActiveUnit.reset();
-
-	if (path.getLength() <= 1)
-		return;
-
-	//Make the move and update the map.
-	const auto startingIndex = path.getFrontNode().m_GridIndex;
-	const auto endingIndex = path.getBackNode().m_GridIndex;
-	unit.moveAlongPath(path);
-	pimpl->m_UnitMap[endingIndex] = pimpl->m_UnitMap[startingIndex];
-	pimpl->m_UnitMap[startingIndex].reset();
 }
 
 bool UnitMapScript::vInit(const tinyxml2::XMLElement * xmlElement)
@@ -361,10 +321,6 @@ bool UnitMapScript::vInit(const tinyxml2::XMLElement * xmlElement)
 void UnitMapScript::vPostInit()
 {
 	auto ownerActor = m_OwnerActor.lock();
-
-	auto renderComponent = ownerActor->getRenderComponent();
-	assert(renderComponent && "UnitMapScript::vPostInit() the actor has no render component.");
-	pimpl->m_RenderComponent = std::move(renderComponent);
 
 	auto transformComponent = ownerActor->getComponent<TransformComponent>();
 	assert(transformComponent && "UnitMapScript::vPostInit() the actor has no transform component.");

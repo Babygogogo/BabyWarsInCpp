@@ -23,8 +23,6 @@ public:
 	void setTileMapScript(std::weak_ptr<const TileMapScript> && tileMapScript);
 	void setUnitMapScript(std::weak_ptr<const UnitMapScript> && unitMapScript);
 
-	void clearAndShowArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap);
-	void clearArea();
 	const MovingArea & getUnderlyingArea() const;
 
 	//Type name of the class. Used by the ActorFactory and can not be removed.
