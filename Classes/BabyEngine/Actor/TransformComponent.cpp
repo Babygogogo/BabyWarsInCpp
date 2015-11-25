@@ -29,6 +29,16 @@ TransformComponent::~TransformComponent()
 {
 }
 
+const cocos2d::Size & TransformComponent::getContentSize() const
+{
+	return pimpl->m_RenderComponent->getSceneNode()->getContentSize();
+}
+
+void TransformComponent::setContentSize(const cocos2d::Size & size)
+{
+	pimpl->m_RenderComponent->getSceneNode()->setContentSize(size);
+}
+
 int TransformComponent::getLocalZOrder() const
 {
 	return pimpl->m_RenderComponent->getSceneNode()->getLocalZOrder();

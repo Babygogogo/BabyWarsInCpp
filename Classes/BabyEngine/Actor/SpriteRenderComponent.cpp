@@ -2,8 +2,8 @@
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "SpriteRenderComponent.h"
-#include "../../BabyEngine/Utilities/XMLToSprite.h"
-#include "../../BabyEngine/Utilities/SetSceneNodePropertiesWithXML.h"
+#include "../Utilities/XMLToSprite.h"
+#include "../Utilities/SetSceneNodePropertiesWithXML.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of SpriteRenderComponentImpl.
@@ -36,7 +36,7 @@ void SpriteRenderComponent::setSpriteFrame(cocos2d::SpriteFrame * frame)
 bool SpriteRenderComponent::vInit(const tinyxml2::XMLElement * xmlElement)
 {
 	assert(!m_Node && "SpriteRenderComponent::vInit() the sprite is already initialized.");
-	m_Node = utilities::XMLToSprite(xmlElement);
+	m_Node = utilities::XMLToSprite(xmlElement->FirstChildElement("Sprite"));
 	assert(m_Node && "SpriteRenderComponent::vInit() can't create sprite using the xml.");
 	m_Node->retain();
 

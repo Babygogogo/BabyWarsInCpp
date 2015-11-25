@@ -1,0 +1,14 @@
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<Actor Type="ActionMenu" Resource="Actors\Actor_ActionMenu.xml">
+	<Components>
+		<GeneralRenderComponent>
+			<SceneNode Type="Scale9Sprite">
+				<CapInsets X="4" Y="6" Width="1" Height="1"/>
+				<SpriteFrameName Value="Menu_Background_Red_01.png"/>
+			</SceneNode>
+		</GeneralRenderComponent>
+		<TransformComponent/>
+	</Components>
+	<ChildrenActors>
+	</ChildrenActors>
+</Actor>

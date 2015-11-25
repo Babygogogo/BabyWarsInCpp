@@ -152,6 +152,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyEngine\Actor\BaseScriptComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Actor\FiniteTimeActionComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.cpp" />
+    <ClCompile Include="..\Classes\BabyEngine\Actor\MenuRenderComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Actor\SpriteRenderComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Actor\TransformComponent.cpp" />
@@ -173,6 +174,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToMenu.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToMenuItemImage.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToNode.cpp" />
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToRect.cpp" />
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToScale9Sprite.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToScene.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSprite.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.cpp" />
@@ -189,6 +192,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyWars\Resource\ResourceLoader.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\TileData.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\UnitData.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Script\ActionMenuScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\MovingPathGridScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\MovingPathScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\MovingAreaGridScript.cpp" />
@@ -216,6 +220,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyEngine\Actor\BaseScriptComponent.h" />
     <ClInclude Include="..\Classes\BabyEngine\Actor\FiniteTimeActionComponent.h" />
     <ClInclude Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.h" />
+    <ClInclude Include="..\Classes\BabyEngine\Actor\MenuRenderComponent.h" />
     <ClInclude Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.h" />
     <ClInclude Include="..\Classes\BabyEngine\Actor\SoundPlayer.h" />
     <ClInclude Include="..\Classes\BabyEngine\Actor\SpriteRenderComponent.h" />
@@ -245,6 +250,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToMenuItemImage.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToNode.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToParticleExplosion.h" />
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToRect.h" />
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToScale9Sprite.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToScene.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSprite.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.h" />
@@ -264,6 +271,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyWars\Resource\TileDataID.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitData.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitDataID.h" />
+    <ClInclude Include="..\Classes\BabyWars\Script\ActionMenuScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\MovingPathGridScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\MovingPathScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\MovingAreaGridScript.h" />

@@ -2,9 +2,9 @@
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "SceneRenderComponent.h"
-#include "../../BabyEngine/Utilities/XMLToScene.h"
-#include "../../BabyEngine/Utilities/XMLToTransitionScene.h"
-#include "../../BabyEngine/Utilities/SetSceneNodePropertiesWithXML.h"
+#include "../Utilities/XMLToScene.h"
+#include "../Utilities/XMLToTransitionScene.h"
+#include "../Utilities/SetSceneNodePropertiesWithXML.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of SceneRenderComponentImpl.

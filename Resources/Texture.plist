@@ -4,6 +4,19 @@
     <dict>
         <key>frames</key>
         <dict>
+            <key>Menu_Background_Red_01.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{75,39},{10,14}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{10,14}}</string>
+                <key>sourceSize</key>
+                <string>{10,14}</string>
+            </dict>
             <key>MovingAreaGrid_01.png</key>
             <dict>
                 <key>frame</key>
@@ -261,7 +274,7 @@
             <key>size</key>
             <string>{400,64}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:94c13ceec74c0f8b26a5bf75f1c77253:8c38b1736b5b9c1f8d9fbc6e94a802c3:f46617b9879efc77edf243fcb535d10c$</string>
+            <string>$TexturePacker:SmartUpdate:d6a50b10157d8e8d2de521799ef331f4:59b4112d4e3671da0988e211c35c1421:f46617b9879efc77edf243fcb535d10c$</string>
             <key>textureFileName</key>
             <string>Texture.png</string>
         </dict>

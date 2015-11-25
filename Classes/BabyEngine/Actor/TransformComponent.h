@@ -29,6 +29,9 @@ public:
 	TransformComponent();
 	~TransformComponent();
 
+	const cocos2d::Size & getContentSize() const;
+	void setContentSize(const cocos2d::Size & size);
+
 	int getLocalZOrder() const;
 	void setLocalZOrder(int order);
 

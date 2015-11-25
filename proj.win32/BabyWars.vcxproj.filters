@@ -252,6 +252,18 @@
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPathEnd.cpp">
       <Filter>src\BabyWars\Event</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToScale9Sprite.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToRect.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\MenuRenderComponent.cpp">
+      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\ActionMenuScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -481,6 +493,18 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPathEnd.h">
       <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToScale9Sprite.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToRect.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\MenuRenderComponent.h">
+      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\ActionMenuScript.h">
+      <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

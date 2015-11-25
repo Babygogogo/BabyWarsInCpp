@@ -5,12 +5,13 @@
 #include "Actor.h"
 #include "ActorComponent.h"
 
+#include "../Utilities/GenericFactory.h"
+#include "FiniteTimeActionComponent.h"
 #include "GeneralRenderComponent.h"
+#include "MenuRenderComponent.h"
 #include "SceneRenderComponent.h"
 #include "SpriteRenderComponent.h"
-#include "FiniteTimeActionComponent.h"
 #include "TransformComponent.h"
-#include "../Utilities/GenericFactory.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Definition of ActorFactory::ActorFactoryImpl.
@@ -173,6 +174,7 @@ void BaseActorFactory::registerGeneralComponents()
 {
 	//TODO: Modify the register calls if the general components are changed.
 	registerComponent<GeneralRenderComponent>();
+	registerComponent<MenuRenderComponent>();
 	registerComponent<SceneRenderComponent>();
 	registerComponent<SpriteRenderComponent>();
 	registerComponent<TransformComponent>();

@@ -1,7 +1,9 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
 <Actor Type="Unit" Resource="Actors\Actor_Unit.xml">
 	<Components>
-		<SpriteRenderComponent/>
+		<SpriteRenderComponent>
+			<Sprite/>
+		</SpriteRenderComponent>
 		<TransformComponent/>
 		<UnitScript/>
 	</Components>

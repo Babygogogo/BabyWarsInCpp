@@ -7,6 +7,8 @@
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
+#include "ActionMenuScript.h"
+#include "../../BabyEngine/Actor/TransformComponent.h"
 #include "WarFieldScript.h"
 #include "WarSceneScript.h"
 
@@ -22,6 +24,7 @@ struct WarSceneScript::WarSceneScriptImpl
 	void onInputTouch(const IEventData & e);
 
 	static std::string s_WarFieldActorPath;
+	static std::string s_ActionMenuActorPath;
 
 	ActorID m_ActorID{ INVALID_ACTOR_ID };
 
@@ -29,6 +32,7 @@ struct WarSceneScript::WarSceneScriptImpl
 };
 
 std::string WarSceneScript::WarSceneScriptImpl::s_WarFieldActorPath;
+std::string WarSceneScript::WarSceneScriptImpl::s_ActionMenuActorPath;
 
 void WarSceneScript::WarSceneScriptImpl::onInputDrag(const IEventData & e)
 {
@@ -83,6 +87,7 @@ bool WarSceneScript::vInit(const tinyxml2::XMLElement * xmlElement)
 
 	auto relatedActorElement = xmlElement->FirstChildElement("RelatedActorsPath");
 	WarSceneScriptImpl::s_WarFieldActorPath = relatedActorElement->Attribute("WarField");
+	WarSceneScriptImpl::s_ActionMenuActorPath = relatedActorElement->Attribute("ActionMenu");
 
 	isStaticInitialized = true;
 	return true;
@@ -101,6 +106,10 @@ void WarSceneScript::vPostInit()
 	auto warFieldActor = gameLogic->createActor(WarSceneScriptImpl::s_WarFieldActorPath.c_str());
 	pimpl->m_WarFieldScript = warFieldActor->getComponent<WarFieldScript>();
 	ownerActor->addChild(*warFieldActor);
+
+	auto actionMenuActor = gameLogic->createActor(WarSceneScriptImpl::s_ActionMenuActorPath.c_str());
+	actionMenuActor->getComponent<TransformComponent>()->setPosition({ 200, 200 });
+	ownerActor->addChild(*actionMenuActor);
 
 	//#TODO: create and add, commander, weather and so on...
 

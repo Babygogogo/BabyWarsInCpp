@@ -1,0 +1,14 @@
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<Actor Type="ActionMenu" Resource="Actors\Actor_ActionMenu.xml">
+	<Components>
+		<GeneralRenderComponent>
+			<SceneNode Type="Node"/>
+		</GeneralRenderComponent>
+		<TransformComponent/>
+		<ActionMenuScript>
+			<RelatedActorsPath Background="Actors\Actor_ActionMenuBackground.xml"/>
+		</ActionMenuScript>
+	</Components>
+	<ChildrenActors>
+	</ChildrenActors>
+</Actor>
