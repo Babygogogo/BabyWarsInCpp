@@ -7,9 +7,8 @@
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
-#include "ActionMenuScript.h"
-#include "../../BabyEngine/Actor/TransformComponent.h"
 #include "WarFieldScript.h"
+#include "WarSceneHUDScript.h"
 #include "WarSceneScript.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -24,15 +23,16 @@ struct WarSceneScript::WarSceneScriptImpl
 	void onInputTouch(const IEventData & e);
 
 	static std::string s_WarFieldActorPath;
-	static std::string s_ActionMenuActorPath;
+	static std::string s_WarSceneHUDActorPath;
 
 	ActorID m_ActorID{ INVALID_ACTOR_ID };
 
 	std::weak_ptr<WarFieldScript> m_WarFieldScript;
+	std::weak_ptr<WarSceneHUDScript> m_WarSceneHUDScript;
 };
 
 std::string WarSceneScript::WarSceneScriptImpl::s_WarFieldActorPath;
-std::string WarSceneScript::WarSceneScriptImpl::s_ActionMenuActorPath;
+std::string WarSceneScript::WarSceneScriptImpl::s_WarSceneHUDActorPath;
 
 void WarSceneScript::WarSceneScriptImpl::onInputDrag(const IEventData & e)
 {
@@ -87,7 +87,7 @@ bool WarSceneScript::vInit(const tinyxml2::XMLElement * xmlElement)
 
 	auto relatedActorElement = xmlElement->FirstChildElement("RelatedActorsPath");
 	WarSceneScriptImpl::s_WarFieldActorPath = relatedActorElement->Attribute("WarField");
-	WarSceneScriptImpl::s_ActionMenuActorPath = relatedActorElement->Attribute("ActionMenu");
+	WarSceneScriptImpl::s_WarSceneHUDActorPath = relatedActorElement->Attribute("WarSceneHUD");
 
 	isStaticInitialized = true;
 	return true;
@@ -107,9 +107,9 @@ void WarSceneScript::vPostInit()
 	pimpl->m_WarFieldScript = warFieldActor->getComponent<WarFieldScript>();
 	ownerActor->addChild(*warFieldActor);
 
-	auto actionMenuActor = gameLogic->createActor(WarSceneScriptImpl::s_ActionMenuActorPath.c_str());
-	actionMenuActor->getComponent<TransformComponent>()->setPosition({ 200, 200 });
-	ownerActor->addChild(*actionMenuActor);
+	auto warSceneHUDActor = gameLogic->createActor(WarSceneScriptImpl::s_WarSceneHUDActorPath.c_str());
+	pimpl->m_WarSceneHUDScript = warSceneHUDActor->getComponent<WarSceneHUDScript>();
+	ownerActor->addChild(*warSceneHUDActor);
 
 	//#TODO: create and add, commander, weather and so on...
 

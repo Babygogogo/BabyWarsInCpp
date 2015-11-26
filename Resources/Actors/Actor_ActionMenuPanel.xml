@@ -1,0 +1,17 @@
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<Actor Type="ActionMenuPanel" Resource="Actors\Actor_ActionMenuPanel.xml">
+	<Components>
+		<GeneralRenderComponent>
+			<SceneNode Type="Node"/>
+		</GeneralRenderComponent>
+		<TransformComponent>
+			<Position X="0" Y="-30"/>
+		</TransformComponent>
+		<ActionMenuPanelScript>
+			<RelatedActorsPath Background="Actors\Actor_ActionMenuPanelBackground.xml"/>
+			<PanelSize Width="200" Height="400"/>
+		</ActionMenuPanelScript>
+	</Components>
+	<ChildrenActors>
+	</ChildrenActors>
+</Actor>

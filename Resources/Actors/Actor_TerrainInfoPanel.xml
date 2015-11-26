@@ -1,0 +1,17 @@
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<Actor Type="TerrainInfoPanel" Resource="Actors\Actor_TerrainInfoPanel.xml">
+	<Components>
+		<GeneralRenderComponent>
+			<SceneNode Type="Node"/>
+		</GeneralRenderComponent>
+		<TransformComponent>
+			<Position X="0" Y="-250"/>
+		</TransformComponent>
+		<TerrainInfoPanelScript>
+			<RelatedActorsPath Background="Actors\Actor_ActionMenuPanelBackground.xml"/>
+			<PanelSize Width="200" Height="40"/>
+		</TerrainInfoPanelScript>
+	</Components>
+	<ChildrenActors>
+	</ChildrenActors>
+</Actor>

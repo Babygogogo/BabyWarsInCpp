@@ -1,6 +1,7 @@
 #include "cocos2d.h"
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
+#include "../Utilities/XMLToVec2.h"
 #include "TransformComponent.h"
 #include "BaseRenderComponent.h"
 #include "Actor.h"
@@ -49,7 +50,7 @@ void TransformComponent::setLocalZOrder(int order)
 	pimpl->m_RenderComponent->getSceneNode()->setLocalZOrder(order);
 }
 
-cocos2d::Vec2 TransformComponent::getPosition() const
+const cocos2d::Vec2 & TransformComponent::getPosition() const
 {
 	return pimpl->m_RenderComponent->getSceneNode()->getPosition();
 }
@@ -57,6 +58,20 @@ cocos2d::Vec2 TransformComponent::getPosition() const
 void TransformComponent::setPosition(const cocos2d::Vec2 & position)
 {
 	pimpl->m_RenderComponent->getSceneNode()->setPosition(position);
+}
+
+cocos2d::Vec2 TransformComponent::getPositionInWindow() const
+{
+	auto sceneNode = pimpl->m_RenderComponent->getSceneNode();
+
+	return sceneNode->convertToWorldSpace(sceneNode->getPosition());
+}
+
+void TransformComponent::setPositionInWindow(const cocos2d::Vec2 & positionInWorld)
+{
+	auto sceneNode = pimpl->m_RenderComponent->getSceneNode();
+
+	sceneNode->setPosition(sceneNode->convertToNodeSpace(positionInWorld));
 }
 
 float TransformComponent::getScale() const
@@ -104,10 +119,15 @@ cocos2d::Vec2 TransformComponent::convertToLocalSpace(const cocos2d::Vec2 & posi
 
 bool TransformComponent::vInit(const tinyxml2::XMLElement * xmlElement)
 {
-	if (auto localZOrderElement = xmlElement->FirstChildElement("LocalZOrder")) {
-		auto localZOrder = localZOrderElement->IntAttribute("Value");
-		pimpl->m_CachedOperations.emplace_back([localZOrder, this]() {
+	if (const auto localZOrderElement = xmlElement->FirstChildElement("LocalZOrder")) {
+		pimpl->m_CachedOperations.emplace_back([localZOrder = localZOrderElement->IntAttribute("Value"), this]() {
 			setLocalZOrder(localZOrder);
+		});
+	}
+
+	if (const auto positionElement = xmlElement->FirstChildElement("Position")) {
+		pimpl->m_CachedOperations.emplace_back([position = utilities::XMLToVec2(positionElement), this](){
+			setPosition(position);
 		});
 	}
 

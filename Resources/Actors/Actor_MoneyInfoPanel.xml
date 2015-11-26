@@ -1,0 +1,17 @@
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<Actor Type="MoneyInfoPanel" Resource="Actors\Actor_MoneyInfoPanel.xml">
+	<Components>
+		<GeneralRenderComponent>
+			<SceneNode Type="Node"/>
+		</GeneralRenderComponent>
+		<TransformComponent>
+			<Position X="0" Y="220"/>
+		</TransformComponent>
+		<MoneyInfoPanelScript>
+			<RelatedActorsPath Background="Actors\Actor_ActionMenuPanelBackground.xml"/>
+			<PanelSize Width="200" Height="100"/>
+		</MoneyInfoPanelScript>
+	</Components>
+	<ChildrenActors>
+	</ChildrenActors>
+</Actor>

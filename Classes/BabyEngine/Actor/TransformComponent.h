@@ -35,8 +35,11 @@ public:
 	int getLocalZOrder() const;
 	void setLocalZOrder(int order);
 
-	cocos2d::Vec2 getPosition() const;
+	const cocos2d::Vec2 & getPosition() const;
 	void setPosition(const cocos2d::Vec2 & position);
+
+	cocos2d::Vec2 getPositionInWindow() const;
+	void setPositionInWindow(const cocos2d::Vec2 & positionInWorld);
 
 	float getScale() const;
 	float getScaleX() const;

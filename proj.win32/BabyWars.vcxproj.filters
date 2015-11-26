@@ -261,7 +261,22 @@
     <ClCompile Include="..\Classes\BabyEngine\Actor\MenuRenderComponent.cpp">
       <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\ActionMenuScript.cpp">
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToVec2.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\WarSceneHUDScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\MoneyInfoPanelScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSize.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\ActionMenuPanelScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\TerrainInfoPanelScript.cpp">
       <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
   </ItemGroup>
@@ -503,7 +518,22 @@
     <ClInclude Include="..\Classes\BabyEngine\Actor\MenuRenderComponent.h">
       <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\ActionMenuScript.h">
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToVec2.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\WarSceneHUDScript.h">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\MoneyInfoPanelScript.h">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSize.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\ActionMenuPanelScript.h">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\TerrainInfoPanelScript.h">
       <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
   </ItemGroup>
