@@ -9,6 +9,7 @@
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
+#include "../../BabyEngine/Utilities/XMLToSize.h"
 #include "../Resource/ResourceLoader.h"
 #include "../Utilities/GridIndex.h"
 #include "../Utilities/Matrix2DDimension.h"
@@ -36,6 +37,7 @@ struct WarFieldScript::WarFieldScriptImpl
 	static std::string s_UnitMapActorPath;
 	static std::string s_MovingPathActorPath;
 	static std::string s_MovingAreaActorPath;
+	static cocos2d::Size s_VisibleSize;
 
 	bool m_IsDraggingField{ false };
 
@@ -51,6 +53,7 @@ std::string WarFieldScript::WarFieldScriptImpl::s_TileMapActorPath;
 std::string WarFieldScript::WarFieldScriptImpl::s_UnitMapActorPath;
 std::string WarFieldScript::WarFieldScriptImpl::s_MovingPathActorPath;
 std::string WarFieldScript::WarFieldScriptImpl::s_MovingAreaActorPath;
+cocos2d::Size WarFieldScript::WarFieldScriptImpl::s_VisibleSize;
 
 bool WarFieldScript::WarFieldScriptImpl::onDragField(const EvtDataInputDrag & drag)
 {
@@ -83,15 +86,14 @@ void WarFieldScript::WarFieldScriptImpl::dragField(const cocos2d::Vec2 & offset)
 	//////////////////////////////////////////////////////////////////////////
 	//Modify the new position so that the scene can't be set too far away.
 	//Firstly, get the size of window, boundary and scene.
-	auto windowSize = cocos2d::Director::getInstance()->getOpenGLView()->getFrameSize();
 	auto extraBoundarySize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
 	auto warSceneSize = getMapSize();
 	warSceneSize.width *= transformComponent->getScaleX();
 	warSceneSize.height *= transformComponent->getScaleY();
 
 	//Secondly, use the sizes to calculate the possible min and max of the drag-to position.
-	auto minX = -(warSceneSize.width - windowSize.width + extraBoundarySize.width);
-	auto minY = -(warSceneSize.height - windowSize.height + extraBoundarySize.height);
+	auto minX = -(warSceneSize.width - s_VisibleSize.width + extraBoundarySize.width);
+	auto minY = -(warSceneSize.height - s_VisibleSize.height + extraBoundarySize.height);
 	auto maxX = extraBoundarySize.width;
 	auto maxY = extraBoundarySize.height;
 
@@ -168,10 +170,9 @@ void WarFieldScript::loadWarField(const tinyxml2::XMLElement * xmlElement)
 	assert(unitMapScript->getMapDimension() == tileMapScript->getMapDimension() && "WarFieldScript::loadWarField() the size of the unit map is not the same as the tile map.");
 
 	//Set the position of the map so that the map is displayed in the middle of the window.
-	auto windowSize = cocos2d::Director::getInstance()->getOpenGLView()->getFrameSize();
 	auto sceneSize = pimpl->getMapSize();
-	auto posX = -(sceneSize.width - windowSize.width) / 2;
-	auto posY = -(sceneSize.height - windowSize.height) / 2;
+	auto posX = -(sceneSize.width - WarFieldScriptImpl::s_VisibleSize.width) / 2;
+	auto posY = -(sceneSize.height - WarFieldScriptImpl::s_VisibleSize.height) / 2;
 	pimpl->m_TransformComponent.lock()->setPosition({ posX, posY });
 }
 
@@ -186,6 +187,8 @@ bool WarFieldScript::vInit(const tinyxml2::XMLElement *xmlElement)
 	WarFieldScriptImpl::s_UnitMapActorPath = relatedActorElement->Attribute("UnitMap");
 	WarFieldScriptImpl::s_MovingPathActorPath = relatedActorElement->Attribute("MovePath");
 	WarFieldScriptImpl::s_MovingAreaActorPath = relatedActorElement->Attribute("MovingRange");
+
+	WarFieldScriptImpl::s_VisibleSize = utilities::XMLToSize(xmlElement->FirstChildElement("VisibleSize"));
 
 	isStaticInitialized = true;
 	return true;

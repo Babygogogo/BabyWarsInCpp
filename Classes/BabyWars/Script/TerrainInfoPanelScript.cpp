@@ -1,8 +1,6 @@
-#include "cocos2d.h"
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/Actor/Actor.h"
-#include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../../BabyEngine/Utilities/XMLToSize.h"
@@ -21,7 +19,6 @@ struct TerrainInfoPanelScript::TerrainInfoPanelScriptImpl
 };
 
 std::string TerrainInfoPanelScript::TerrainInfoPanelScriptImpl::s_BackgroundActorPath;
-cocos2d::Size TerrainInfoPanelScript::TerrainInfoPanelScriptImpl::s_PanelSize;
 
 //////////////////////////////////////////////////////////////////////////
 //Implementation of TerrainInfoPanelScript.
@@ -43,8 +40,6 @@ bool TerrainInfoPanelScript::vInit(const tinyxml2::XMLElement * xmlElement)
 	auto relatedActorsElement = xmlElement->FirstChildElement("RelatedActorsPath");
 	TerrainInfoPanelScriptImpl::s_BackgroundActorPath = relatedActorsElement->Attribute("Background");
 
-	TerrainInfoPanelScriptImpl::s_PanelSize = utilities::XMLToSize(xmlElement->FirstChildElement("PanelSize"));
-
 	isStaticMemberInitialized = true;
 	return true;
 }
@@ -55,7 +50,6 @@ void TerrainInfoPanelScript::vPostInit()
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
 
 	auto backgroundActor = gameLogic->createActor(TerrainInfoPanelScriptImpl::s_BackgroundActorPath.c_str());
-	backgroundActor->getComponent<TransformComponent>()->setContentSize(TerrainInfoPanelScriptImpl::s_PanelSize);
 	ownerActor->addChild(*backgroundActor);
 }
 

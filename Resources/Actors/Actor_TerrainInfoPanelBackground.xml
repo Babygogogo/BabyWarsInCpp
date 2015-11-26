@@ -1,5 +1,5 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
-<Actor Type="ActionMenuPanelBackground" Resource="Actors\Actor_ActionMenuPanelBackground.xml">
+<Actor Type="TerrainInfoPanelBackground" Resource="Actors\Actor_TerrainInfoPanelBackground.xml">
 	<Components>
 		<GeneralRenderComponent>
 			<SceneNode Type="Scale9Sprite">
@@ -10,7 +10,7 @@
 				<Opacity Value="200">
 					<!--The value is an int in [0, 255].-->
 				</Opacity>
-				<ContentSize Width="200" Height="400"/>
+				<ContentSize Width="200" Height="40"/>
 			</SceneNodeProperties>
 		</GeneralRenderComponent>
 	</Components>

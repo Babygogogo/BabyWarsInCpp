@@ -7,6 +7,7 @@
 		<TransformComponent/>
 		<WarFieldScript>
 			<RelatedActorsPath TileMap="Actors\Actor_TileMap.xml" UnitMap="Actors\Actor_UnitMap.xml" MovePath="Actors\Actor_MovingPath.xml" MovingRange="Actors\Actor_MovingArea.xml"/>
+			<VisibleSize Width="760" Height="540"/>
 		</WarFieldScript>
 	</Components>
 	<ChildrenActors>

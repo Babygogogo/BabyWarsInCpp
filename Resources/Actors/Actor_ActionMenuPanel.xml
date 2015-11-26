@@ -9,7 +9,6 @@
 		</TransformComponent>
 		<ActionMenuPanelScript>
 			<RelatedActorsPath Background="Actors\Actor_ActionMenuPanelBackground.xml"/>
-			<PanelSize Width="200" Height="400"/>
 		</ActionMenuPanelScript>
 	</Components>
 	<ChildrenActors>

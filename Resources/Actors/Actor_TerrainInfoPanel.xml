@@ -8,8 +8,7 @@
 			<Position X="0" Y="-250"/>
 		</TransformComponent>
 		<TerrainInfoPanelScript>
-			<RelatedActorsPath Background="Actors\Actor_ActionMenuPanelBackground.xml"/>
-			<PanelSize Width="200" Height="40"/>
+			<RelatedActorsPath Background="Actors\Actor_TerrainInfoPanelBackground.xml"/>
 		</TerrainInfoPanelScript>
 	</Components>
 	<ChildrenActors>
