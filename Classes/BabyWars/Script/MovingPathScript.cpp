@@ -6,19 +6,18 @@
 
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/TransformComponent.h"
-#include "../../BabyEngine/Event/EvtDataRequestDestroyActor.h"
 #include "../../BabyEngine/Event/EvtDataInputDrag.h"
+#include "../../BabyEngine/Event/EvtDataRequestDestroyActor.h"
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
-#include "../Event/EvtDataMakeMovingPathBegin.h"
 #include "../Event/EvtDataMakeMovingPathEnd.h"
+#include "../Event/EvtDataShowMovingAreaEnd.h"
 #include "../Resource/ResourceLoader.h"
 #include "../Utilities/AdjacentDirection.h"
 #include "../Utilities/GridIndex.h"
 #include "../Utilities/MovingArea.h"
 #include "../Utilities/MovingPath.h"
-#include "MovingAreaScript.h"
 #include "MovingPathGridScript.h"
 #include "MovingPathScript.h"
 
@@ -30,9 +29,18 @@ struct MovingPathScript::MovingPathScriptImpl
 	MovingPathScriptImpl() = default;
 	~MovingPathScriptImpl() = default;
 
-	void onMakeMovingPathBegin(const EvtDataMakeMovingPathBegin & e);
+	void onShowMovingAreaEnd(const EvtDataShowMovingAreaEnd & e);
 
-	void showPath(const GridIndex & destination);
+	bool canBeginMakingMovingPath(const EvtDataInputDrag & drag) const;
+	void beginMakingMovingPath(const EvtDataInputDrag & drag);
+
+	bool canContinueMakingMovingPath(const EvtDataInputDrag & drag) const;
+	void continueMakingMovingPath(const EvtDataInputDrag & drag);
+
+	bool canEndMakingMovingPath(const EvtDataInputDrag & drag) const;
+	void endMakingMovingPath(const EvtDataInputDrag & drag);
+
+	void updateAndShowPath(const GridIndex & destination);
 	void clearPath();
 
 	MovingPath createPath(const MovingPath & oldPath, const GridIndex & destination, const MovingArea & area) const;
@@ -46,29 +54,91 @@ struct MovingPathScript::MovingPathScriptImpl
 	bool m_IsMakingPath{ false };
 	std::unordered_set<ActorID> m_ChildrenGridActorIDs;
 	MovingPath m_MovingPath;
+	std::weak_ptr<const MovingArea> m_MovingArea;
 
 	std::weak_ptr<Actor> m_OwnerActor;
 	std::weak_ptr<TransformComponent> m_TransformComponent;
-
-	std::weak_ptr<const MovingAreaScript> m_MovingAreaScript;
 };
 
-void MovingPathScript::MovingPathScriptImpl::onMakeMovingPathBegin(const EvtDataMakeMovingPathBegin & e)
+void MovingPathScript::MovingPathScriptImpl::onShowMovingAreaEnd(const EvtDataShowMovingAreaEnd & e)
 {
-	assert(!m_IsMakingPath && "MovingPathScriptImpl::onMakeMovingPathBegin() the flag for making path is already on.");
-	m_IsMakingPath = true;
-
-	showPath(e.getGridIndex());
+	m_MovingArea = e.getMovingArea();
 }
 
-void MovingPathScript::MovingPathScriptImpl::showPath(const GridIndex & destination)
+bool MovingPathScript::MovingPathScriptImpl::canBeginMakingMovingPath(const EvtDataInputDrag & drag) const
 {
-	//If the destination is not in the area, just do nothing and return.
-	const auto & area = m_MovingAreaScript.lock()->getUnderlyingArea();
-	if (!area.hasIndex(destination))
+	if (m_IsMakingPath)
+		return false;
+	if (drag.getState() != EvtDataInputDrag::DragState::Begin)
+		return false;
+	if (m_MovingArea.expired())
+		return false;
+	if (toGridIndex(drag.getPreviousPositionInWorld()) != m_MovingArea.lock()->getStartingIndex())
+		return false;
+
+	return true;
+}
+
+void MovingPathScript::MovingPathScriptImpl::beginMakingMovingPath(const EvtDataInputDrag & drag)
+{
+	assert(!m_IsMakingPath && "MovingPathScriptImpl::beginMakingMovingPath() the flag for making path is already on.");
+	m_IsMakingPath = true;
+
+	updateAndShowPath(toGridIndex(drag.getPositionInWorld()));
+}
+
+bool MovingPathScript::MovingPathScriptImpl::canContinueMakingMovingPath(const EvtDataInputDrag & drag) const
+{
+	if (!m_IsMakingPath)
+		return false;
+	if (drag.getState() != EvtDataInputDrag::DragState::Dragging)
+		return false;
+	if (m_MovingArea.expired())
+		return false;
+
+	return true;
+}
+
+void MovingPathScript::MovingPathScriptImpl::continueMakingMovingPath(const EvtDataInputDrag & drag)
+{
+	assert(m_IsMakingPath && "MovingPathScriptImpl::continueMakingMovingPath() the flag for making path is off.");
+
+	updateAndShowPath(toGridIndex(drag.getPositionInWorld()));
+}
+
+bool MovingPathScript::MovingPathScriptImpl::canEndMakingMovingPath(const EvtDataInputDrag & drag) const
+{
+	if (!m_IsMakingPath)
+		return false;
+	if (drag.getState() != EvtDataInputDrag::DragState::End)
+		return false;
+	if (m_MovingArea.expired())
+		return false;
+
+	return true;
+}
+
+void MovingPathScript::MovingPathScriptImpl::endMakingMovingPath(const EvtDataInputDrag & drag)
+{
+	assert(m_IsMakingPath && "MovingPathScriptImpl::endMakingMovingPath() the flag for making path is off.");
+
+	auto isPathValid = isBackIndex(toGridIndex(drag.getPositionInWorld()));
+	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataMakeMovingPathEnd>(m_MovingPath, isPathValid));
+
+	clearPath();
+	m_IsMakingPath = false;
+}
+
+void MovingPathScript::MovingPathScriptImpl::updateAndShowPath(const GridIndex & destination)
+{
+	//If the area is expired, or the destination is not in the area, just do nothing and return.
+	if (m_MovingArea.expired())
+		return;
+	auto area = m_MovingArea.lock();
+	if (!area->hasIndex(destination))
 		return;
 
-	auto newPath = createPath(m_MovingPath, destination, area);
+	auto newPath = createPath(m_MovingPath, destination, *area);
 	if (newPath != m_MovingPath) {
 		clearPath();
 
@@ -182,33 +252,22 @@ MovingPathScript::~MovingPathScript()
 
 bool MovingPathScript::onInputDrag(const EvtDataInputDrag & drag)
 {
-	if (!pimpl->m_IsMakingPath)
-		return false;
-
-	const auto dragState = drag.getState();
-	assert(dragState != EvtDataInputDrag::DragState::Begin && "MovingPathScript::onInputDrag() the drag is in begin state while it's already making path.");
-
-	if (dragState == EvtDataInputDrag::DragState::Dragging) {
-		pimpl->showPath(pimpl->toGridIndex(drag.getPositionInWorld()));
+	if (pimpl->canBeginMakingMovingPath(drag)) {
+		pimpl->beginMakingMovingPath(drag);
 		return true;
 	}
 
-	if (dragState == EvtDataInputDrag::DragState::End) {
-		auto isPathValid = pimpl->isBackIndex(pimpl->toGridIndex(drag.getPositionInWorld()));
-		SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataMakeMovingPathEnd>(pimpl->m_MovingPath, isPathValid));
+	if (pimpl->canContinueMakingMovingPath(drag)) {
+		pimpl->continueMakingMovingPath(drag);
+		return true;
+	}
 
-		pimpl->clearPath();
-		pimpl->m_IsMakingPath = false;
-
+	if (pimpl->canEndMakingMovingPath(drag)) {
+		pimpl->endMakingMovingPath(drag);
 		return true;
 	}
 
 	return false;
-}
-
-void MovingPathScript::setMovingAreaScript(std::weak_ptr<const MovingAreaScript> && movingAreaScript)
-{
-	pimpl->m_MovingAreaScript = std::move(movingAreaScript);
 }
 
 bool MovingPathScript::vInit(const tinyxml2::XMLElement * xmlElement)
@@ -228,8 +287,8 @@ void MovingPathScript::vPostInit()
 	pimpl->m_TransformComponent = std::move(transformComponent);
 
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
-	eventDispatcher->vAddListener(EvtDataMakeMovingPathBegin::s_EventType, pimpl, [this](const IEventData & e) {
-		pimpl->onMakeMovingPathBegin(static_cast<const EvtDataMakeMovingPathBegin &>(e));
+	eventDispatcher->vAddListener(EvtDataShowMovingAreaEnd::s_EventType, pimpl, [this](const IEventData & e) {
+		pimpl->onShowMovingAreaEnd(static_cast<const EvtDataShowMovingAreaEnd &>(e));
 	});
 }
 

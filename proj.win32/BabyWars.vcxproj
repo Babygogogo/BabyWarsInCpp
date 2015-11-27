@@ -190,6 +190,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataDragScene.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPathEnd.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPathBegin.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataShowMovingAreaEnd.cpp" />
     <ClCompile Include="..\Classes\BabyWars\GameLogic\BabyWarsGameLogic.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\ResourceLoader.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\TileData.cpp" />
@@ -272,6 +273,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataDragScene.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPathEnd.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPathBegin.h" />
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataShowMovingAreaEnd.h" />
     <ClInclude Include="..\Classes\BabyWars\GameLogic\BabyWarsGameLogic.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\ResourceLoader.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\TileData.h" />

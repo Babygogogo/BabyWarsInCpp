@@ -228,9 +228,7 @@ void WarFieldScript::vPostInit()
 
 	//Create and add the moving path.
 	auto movingPathActor = gameLogic->createActor(WarFieldScriptImpl::s_MovingPathActorPath.c_str());
-	auto movingPathScript = movingPathActor->getComponent<MovingPathScript>();
-	movingPathScript->setMovingAreaScript(pimpl->m_ChildMovingAreaScript);
-	pimpl->m_ChildMovingPathScript = std::move(movingPathScript);
+	pimpl->m_ChildMovingPathScript = movingPathActor->getComponent<MovingPathScript>();
 	ownerActor->addChild(*movingPathActor);
 
 	//#TODO: create and add weather and so on...

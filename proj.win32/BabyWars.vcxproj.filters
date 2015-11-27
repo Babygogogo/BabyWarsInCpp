@@ -279,6 +279,9 @@
     <ClCompile Include="..\Classes\BabyWars\Script\TerrainInfoPanelScript.cpp">
       <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataShowMovingAreaEnd.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -535,6 +538,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Script\TerrainInfoPanelScript.h">
       <Filter>src\BabyWars\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataShowMovingAreaEnd.h">
+      <Filter>src\BabyWars\Event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -13,6 +13,7 @@
 #include "../Event/EvtDataActivateUnitEnd.h"
 #include "../Event/EvtDataDeactivateUnitEnd.h"
 #include "../Event/EvtDataMakeMovingPathEnd.h"
+#include "../Event/EvtDataShowMovingAreaEnd.h"
 #include "../Resource/UnitData.h"
 #include "../Utilities/GridIndex.h"
 #include "../Utilities/MovingArea.h"
@@ -37,10 +38,10 @@ struct MovingAreaScript::MovingRangeScriptImpl
 	void clearAndShowArea(const UnitScript & movingUnit);
 	void clearArea();
 
-	MovingArea createArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap) const;
+	std::shared_ptr<MovingArea> createArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap) const;
 	void setChildrenGridActors(const MovingArea & movingArea, Actor & self);
 
-	MovingArea m_MovingArea;
+	std::shared_ptr<MovingArea> m_MovingArea;
 	std::string m_MovingAreaGridActorPath;
 	std::unordered_set<ActorID> m_ChildrenGridActorIDs;
 
@@ -54,6 +55,7 @@ struct MovingAreaScript::MovingRangeScriptImpl
 void MovingAreaScript::MovingRangeScriptImpl::onActivateUnitEnd(const EvtDataActivateUnitEnd & e)
 {
 	clearAndShowArea(*e.getUnit());
+	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataShowMovingAreaEnd>(m_MovingArea));
 }
 
 void MovingAreaScript::MovingRangeScriptImpl::onDeactivateUnitEnd(const EvtDataDeactivateUnitEnd & e)
@@ -69,11 +71,11 @@ void MovingAreaScript::MovingRangeScriptImpl::onMakeMovingPathEnd(const EvtDataM
 void MovingAreaScript::MovingRangeScriptImpl::clearAndShowArea(const UnitScript & movingUnit)
 {
 	auto newArea = createArea(movingUnit, *m_TileMapScript.lock(), *m_UnitMapScript.lock());
-	if (newArea != m_MovingArea) {
+	if (!m_MovingArea || *newArea != *m_MovingArea) {
 		clearArea();
 
 		m_MovingArea = std::move(newArea);
-		setChildrenGridActors(m_MovingArea, *m_OwnerActor.lock());
+		setChildrenGridActors(*m_MovingArea, *m_OwnerActor.lock());
 	}
 }
 
@@ -84,15 +86,15 @@ void MovingAreaScript::MovingRangeScriptImpl::clearArea()
 	for (const auto & actorID : m_ChildrenGridActorIDs)
 		eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(actorID));
 
-	m_MovingArea.clear();
+	m_MovingArea.reset();
 	m_ChildrenGridActorIDs.clear();
 }
 
-MovingArea MovingAreaScript::MovingRangeScriptImpl::createArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap) const
+std::shared_ptr<MovingArea> MovingAreaScript::MovingRangeScriptImpl::createArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap) const
 {
 	const auto originIndex = movingUnit.getGridIndex();
 	const auto & movementType = movingUnit.getUnitData()->getMovementType();
-	auto movingArea = MovingArea(movingUnit.getUnitData()->getMovementRange(), originIndex);
+	auto movingArea = std::make_shared<MovingArea>(movingUnit.getUnitData()->getMovementRange(), originIndex);
 	auto visitedGridList = std::list<GridIndex>{ originIndex };
 
 	//Iterate through the visited list to see if the unit can move further. Uses BFS.
@@ -101,12 +103,12 @@ MovingArea MovingAreaScript::MovingRangeScriptImpl::createArea(const UnitScript 
 			if (!tileMap.canPassThrough(movementType, nextIndex) || !unitMap.canPassThrough(movingUnit, nextIndex))
 				continue;
 
-			auto currentlyRemainingMovementRange = movingArea.getMovingInfo(currentIndex).m_MaxRemainingMovementRange;
+			auto currentlyRemainingMovementRange = movingArea->getMovingInfo(currentIndex).m_MaxRemainingMovementRange;
 			auto movingCost = tileMap.getMovingCost(movementType, nextIndex);
 			auto movingInfo = MovingArea::MovingInfo(movingCost, currentlyRemainingMovementRange - movingCost, unitMap.canUnitStayAtIndex(movingUnit, nextIndex), currentIndex);
 
 			//Add the nextIndex into the visited list if we can update the area using the index.
-			if (movingArea.tryUpdateIndex(nextIndex, std::move(movingInfo)))
+			if (movingArea->tryUpdateIndex(nextIndex, std::move(movingInfo)))
 				visitedGridList.emplace_back(std::move(nextIndex));
 		}
 	}
@@ -151,7 +153,7 @@ void MovingAreaScript::setUnitMapScript(std::weak_ptr<const UnitMapScript> && un
 
 const MovingArea & MovingAreaScript::getUnderlyingArea() const
 {
-	return pimpl->m_MovingArea;
+	return *pimpl->m_MovingArea;
 }
 
 bool MovingAreaScript::vInit(const tinyxml2::XMLElement * xmlElement)

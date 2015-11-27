@@ -4,14 +4,6 @@
 #include "../../BabyEngine/Actor/BaseScriptComponent.h"
 
 //Forward declaration.
-namespace cocos2d
-{
-	class Vec2;
-}
-struct GridIndex;
-class MovingArea;
-class MovingPath;
-class MovingAreaScript;
 class EvtDataInputDrag;
 
 class MovingPathScript : public BaseScriptComponent
@@ -21,8 +13,6 @@ public:
 	~MovingPathScript();
 
 	bool onInputDrag(const EvtDataInputDrag & drag);
-
-	void setMovingAreaScript(std::weak_ptr<const MovingAreaScript> && movingAreaScript);
 
 	//Type name of the class. Used by the ActorFactory and can not be removed.
 	static const std::string Type;

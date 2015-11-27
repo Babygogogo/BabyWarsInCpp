@@ -11,7 +11,6 @@
 #include "../../BabyEngine/Utilities/StringToVector.h"
 #include "../Event/EvtDataActivateUnitEnd.h"
 #include "../Event/EvtDataDeactivateUnitEnd.h"
-#include "../Event/EvtDataMakeMovingPathBegin.h"
 #include "../Event/EvtDataMakeMovingPathEnd.h"
 #include "../Resource/ResourceLoader.h"
 #include "../Utilities/GridIndex.h"
@@ -207,12 +206,6 @@ bool UnitMapScript::onInputTouch(const EvtDataInputTouch & touch)
 
 bool UnitMapScript::onInputDrag(const EvtDataInputDrag & drag)
 {
-	if (drag.getState() == EvtDataInputDrag::DragState::Begin && pimpl->isUnitActiveAtIndex(pimpl->toGridIndex(drag.getPreviousPositionInWorld()))) {
-		SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataMakeMovingPathBegin>(pimpl->toGridIndex(drag.getPositionInWorld())));
-
-		return true;
-	}
-
 	return false;
 }
 
