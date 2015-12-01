@@ -4,11 +4,14 @@
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/SpriteRenderComponent.h"
 #include "../../BabyEngine/Actor/TransformComponent.h"
+#include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
+#include "../Event/EvtDataUnitStateChangeEnd.h"
 #include "../Resource/ResourceLoader.h"
 #include "../Resource/UnitData.h"
 #include "../Utilities/GridIndex.h"
 #include "../Utilities/MovingPath.h"
+#include "../Utilities/UnitState.h"
 #include "UnitScript.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -19,11 +22,15 @@ struct UnitScript::UnitScriptImpl
 	UnitScriptImpl();
 	~UnitScriptImpl();
 
+	void updateAppearanceAccordingToState(UnitState state);
+
 	//#TODO: This should be replaced to show the animation of the activate unit.
 	cocos2d::Action * m_ActiveAction{ nullptr };
 
+	std::weak_ptr<const UnitScript> m_Script;
 	GridIndex m_GridIndex;
 	std::shared_ptr<UnitData> m_UnitData;
+	UnitState m_State{ UnitState::Invalid };
 
 	std::weak_ptr<SpriteRenderComponent> m_SpriteRenderComponent;
 	std::weak_ptr<TransformComponent> m_TransformComponent;
@@ -40,6 +47,18 @@ UnitScript::UnitScriptImpl::~UnitScriptImpl()
 	CC_SAFE_RELEASE_NULL(m_ActiveAction);
 }
 
+void UnitScript::UnitScriptImpl::updateAppearanceAccordingToState(UnitState state)
+{
+	auto spriteRenderComponent = m_SpriteRenderComponent.lock();
+	if (state == UnitState::Active) {
+		spriteRenderComponent->runAction(m_ActiveAction);
+	}
+	else {
+		spriteRenderComponent->stopAction(m_ActiveAction);
+		m_TransformComponent.lock()->setRotation(0);
+	}
+}
+
 //////////////////////////////////////////////////////////////////////////
 //Implementation of WorldScript.
 //////////////////////////////////////////////////////////////////////////
@@ -49,6 +68,23 @@ UnitScript::UnitScript() : pimpl{ std::make_unique<UnitScriptImpl>() }
 
 UnitScript::~UnitScript()
 {
+}
+
+bool UnitScript::onInputTouch(const EvtDataInputTouch & touch)
+{
+	auto state = pimpl->m_State;
+	assert(pimpl->m_State != UnitState::Invalid && "UnitScript::onInputTouch() the state of the unit is invalid.");
+
+	if (state == UnitState::Active) {
+		setState(UnitState::Idle);
+		return true;
+	}
+	else if (state == UnitState::Idle) {
+		setState(UnitState::Active);
+		return true;
+	}
+
+	return false;
 }
 
 void UnitScript::loadUnit(tinyxml2::XMLElement * xmlElement)
@@ -71,6 +107,7 @@ void UnitScript::loadUnit(tinyxml2::XMLElement * xmlElement)
 
 	//////////////////////////////////////////////////////////////////////////
 	//#TODO: Load more data, such as the hp, level and so on, from the xml.
+	pimpl->m_State = UnitState::Idle;
 }
 
 const std::shared_ptr<UnitData> & UnitScript::getUnitData() const
@@ -93,21 +130,26 @@ GridIndex UnitScript::getGridIndex() const
 	return pimpl->m_GridIndex;
 }
 
-bool UnitScript::canActivate() const
+bool UnitScript::canSetState(UnitState state) const
 {
 	return true;
 }
 
-void UnitScript::setActive(bool active)
+UnitState UnitScript::getState() const
 {
-	auto spriteRenderComponent = pimpl->m_SpriteRenderComponent.lock();
-	if (active) {
-		spriteRenderComponent->runAction(pimpl->m_ActiveAction);
+	return pimpl->m_State;
+}
+
+void UnitScript::setState(UnitState state)
+{
+	if (pimpl->m_State == state) {
 		return;
 	}
 
-	spriteRenderComponent->stopAction(pimpl->m_ActiveAction);
-	pimpl->m_TransformComponent.lock()->setRotation(0);
+	auto changeStateEvent = std::make_unique<EvtDataUnitStateChangeEnd>(pimpl->m_Script, pimpl->m_State, state);
+	pimpl->m_State = state;
+	pimpl->updateAppearanceAccordingToState(state);
+	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::move(changeStateEvent));
 }
 
 bool UnitScript::canPassThrough(const UnitScript & otherUnit) const
@@ -151,6 +193,7 @@ bool UnitScript::vInit(const tinyxml2::XMLElement * xmlElement)
 void UnitScript::vPostInit()
 {
 	auto ownerActor = m_OwnerActor.lock();
+	pimpl->m_Script = ownerActor->getComponent<UnitScript>();
 
 	auto renderComponent = ownerActor->getRenderComponent<SpriteRenderComponent>();
 	assert(renderComponent && "UnitScript::vPostInit() the actor has no sprite render component.");

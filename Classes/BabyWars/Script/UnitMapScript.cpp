@@ -9,8 +9,7 @@
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../../BabyEngine/Utilities/StringToVector.h"
-#include "../Event/EvtDataActivateUnitEnd.h"
-#include "../Event/EvtDataDeactivateUnitEnd.h"
+#include "../Event/EvtDataUnitStateChangeEnd.h"
 #include "../Event/EvtDataMakeMovingPathEnd.h"
 #include "../Resource/ResourceLoader.h"
 #include "../Utilities/GridIndex.h"
@@ -28,6 +27,7 @@ struct UnitMapScript::UnitMapScriptImpl
 	~UnitMapScriptImpl() = default;
 
 	void onMakeMovingPathEnd(const EvtDataMakeMovingPathEnd & e);
+	void onUnitStateChangeEnd(const EvtDataUnitStateChangeEnd & e);
 
 	GridIndex toGridIndex(const cocos2d::Vec2 & positionInWindow) const;
 
@@ -62,6 +62,31 @@ void UnitMapScript::UnitMapScriptImpl::onMakeMovingPathEnd(const EvtDataMakeMovi
 	deactivateAndMoveUnit(*m_ActiveUnit.lock(), e.getMovingPath());
 }
 
+void UnitMapScript::UnitMapScriptImpl::onUnitStateChangeEnd(const EvtDataUnitStateChangeEnd & e)
+{
+	auto previousState = e.getPreviousState();
+	auto currentState = e.getCurrentState();
+	if (previousState == currentState) {
+		return;
+	}
+
+	if (currentState == UnitState::Active) {
+		if (!m_ActiveUnit.expired()) {
+			assert(m_ActiveUnit.lock() != e.getUnitScript().lock() && "UnitMapScriptImpl::onUnitStateChangeEnd() the unit which is changed to be active is the currently active unit.");
+			m_ActiveUnit.lock()->setState(UnitState::Idle);
+		}
+
+		m_ActiveUnit = e.getUnitScript();
+		return;
+	}
+
+	if (currentState == UnitState::Idle) {
+		if (!m_ActiveUnit.expired() && (m_ActiveUnit.lock() == e.getUnitScript().lock())) {
+			m_ActiveUnit.reset();
+		}
+	}
+}
+
 GridIndex UnitMapScript::UnitMapScriptImpl::toGridIndex(const cocos2d::Vec2 & positionInWindow) const
 {
 	auto positionInMap = m_TransformComponent.lock()->convertToLocalSpace(positionInWindow);
@@ -90,7 +115,7 @@ bool UnitMapScript::UnitMapScriptImpl::canActivateUnitAtIndex(const GridIndex & 
 	if (!unitAtIndex)
 		return false;
 
-	return unitAtIndex->canActivate();
+	return unitAtIndex->canSetState(UnitState::Active);
 }
 
 std::shared_ptr<UnitScript> UnitMapScript::UnitMapScriptImpl::getUnit(const GridIndex & gridIndex) const
@@ -133,7 +158,7 @@ void UnitMapScript::UnitMapScriptImpl::activateUnitAtIndex(const GridIndex & gri
 	assert(canActivateUnitAtIndex(gridIndex) && "UnitMapScript::activateUnitAtIndex() can't activate the unit at index.");
 
 	auto unitAtIndex = getUnit(gridIndex);
-	unitAtIndex->setActive(true);
+	unitAtIndex->setState(UnitState::Active);
 	m_ActiveUnit = std::move(unitAtIndex);
 }
 
@@ -142,14 +167,14 @@ void UnitMapScript::UnitMapScriptImpl::deactivateActiveUnit()
 	if (m_ActiveUnit.expired())
 		return;
 
-	m_ActiveUnit.lock()->setActive(false);
+	m_ActiveUnit.lock()->setState(UnitState::Idle);
 	m_ActiveUnit.reset();
 }
 
 void UnitMapScript::UnitMapScriptImpl::deactivateAndMoveUnit(UnitScript & unit, const MovingPath & path)
 {
 	//Deactivate the unit.
-	unit.setActive(false);
+	unit.setState(UnitState::Idle);
 	if (m_ActiveUnit.lock().get() == &unit)
 		m_ActiveUnit.reset();
 
@@ -180,28 +205,14 @@ bool UnitMapScript::onInputTouch(const EvtDataInputTouch & touch)
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
 	auto touchIndex = pimpl->toGridIndex(touch.getPositionInWorld());
 
-	//If the active unit is touched, deactivate it and queue an event and return.
-	if (pimpl->isUnitActiveAtIndex(touchIndex)) {
-		auto activeUnit = pimpl->getActiveUnit();
+	if (auto touchUnit = pimpl->getUnit(touchIndex)) {
+		touchUnit->onInputTouch(touch);
+	}
+	else {
 		pimpl->deactivateActiveUnit();
-		eventDispatcher->vQueueEvent(std::make_unique<EvtDataDeactivateUnitEnd>(activeUnit));
-
-		return false;	//Can't be emitted because the touch means to deactivate the active unit and do nothing else.
 	}
 
-	//If there's an active unit (not in the touched index), deactivate it and queue an event.
-	if (auto activeUnit = pimpl->getActiveUnit()) {
-		pimpl->deactivateActiveUnit();
-		eventDispatcher->vQueueEvent(std::make_unique<EvtDataDeactivateUnitEnd>(activeUnit));
-	}
-
-	//If we can activate the touched unit (if exists), activate it and queue an event.
-	if (pimpl->canActivateUnitAtIndex(touchIndex)) {
-		pimpl->activateUnitAtIndex(touchIndex);
-		eventDispatcher->vQueueEvent(std::make_unique<EvtDataActivateUnitEnd>(pimpl->getActiveUnit()));
-	}
-
-	return false;
+	return true;
 }
 
 bool UnitMapScript::onInputDrag(const EvtDataInputDrag & drag)
@@ -322,6 +333,9 @@ void UnitMapScript::vPostInit()
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
 	eventDispatcher->vAddListener(EvtDataMakeMovingPathEnd::s_EventType, pimpl, [this](const IEventData & e) {
 		pimpl->onMakeMovingPathEnd(static_cast<const EvtDataMakeMovingPathEnd &>(e));
+	});
+	eventDispatcher->vAddListener(EvtDataUnitStateChangeEnd::s_EventType, pimpl, [this](const IEventData & e) {
+		pimpl->onUnitStateChangeEnd(static_cast<const EvtDataUnitStateChangeEnd &>(e));
 	});
 }
 

@@ -4,15 +4,8 @@
 #include "../../BabyEngine/Actor/BaseScriptComponent.h"
 
 //Forward declaration.
-namespace cocos2d
-{
-	class Vec2;
-}
-struct GridIndex;
 class TileMapScript;
 class UnitMapScript;
-class UnitScript;
-class MovingArea;
 
 class MovingAreaScript : public BaseScriptComponent
 {
@@ -22,8 +15,6 @@ public:
 
 	void setTileMapScript(std::weak_ptr<const TileMapScript> && tileMapScript);
 	void setUnitMapScript(std::weak_ptr<const UnitMapScript> && unitMapScript);
-
-	const MovingArea & getUnderlyingArea() const;
 
 	//Type name of the class. Used by the ActorFactory and can not be removed.
 	static const std::string Type;

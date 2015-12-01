@@ -246,9 +246,6 @@
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataDeactivateUnitEnd.cpp">
       <Filter>src\BabyWars\Event</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPathBegin.cpp">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPathEnd.cpp">
       <Filter>src\BabyWars\Event</Filter>
     </ClCompile>
@@ -280,6 +277,9 @@
       <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataShowMovingAreaEnd.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataUnitStateChangeEnd.cpp">
       <Filter>src\BabyWars\Event</Filter>
     </ClCompile>
   </ItemGroup>
@@ -506,9 +506,6 @@
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataDeactivateUnitEnd.h">
       <Filter>src\BabyWars\Event</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPathBegin.h">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPathEnd.h">
       <Filter>src\BabyWars\Event</Filter>
     </ClInclude>
@@ -541,6 +538,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataShowMovingAreaEnd.h">
       <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataUnitStateChangeEnd.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\UnitState.h">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

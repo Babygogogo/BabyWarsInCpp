@@ -10,9 +10,7 @@
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
-#include "../Event/EvtDataActivateUnitEnd.h"
-#include "../Event/EvtDataDeactivateUnitEnd.h"
-#include "../Event/EvtDataMakeMovingPathEnd.h"
+#include "../Event/EvtDataUnitStateChangeEnd.h"
 #include "../Event/EvtDataShowMovingAreaEnd.h"
 #include "../Resource/UnitData.h"
 #include "../Utilities/GridIndex.h"
@@ -31,17 +29,17 @@ struct MovingAreaScript::MovingRangeScriptImpl
 	MovingRangeScriptImpl() = default;
 	~MovingRangeScriptImpl() = default;
 
-	void onActivateUnitEnd(const EvtDataActivateUnitEnd & e);
-	void onDeactivateUnitEnd(const EvtDataDeactivateUnitEnd & e);
-	void onMakeMovingPathEnd(const EvtDataMakeMovingPathEnd & e);
+	void onUnitStateChangeEnd(const EvtDataUnitStateChangeEnd & e);
 
-	void clearAndShowArea(const UnitScript & movingUnit);
+	void createAndShowArea(const std::weak_ptr<const UnitScript> activeUnit);
 	void clearArea();
 
 	std::shared_ptr<MovingArea> createArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap) const;
 	void setChildrenGridActors(const MovingArea & movingArea, Actor & self);
 
+	std::weak_ptr<const UnitScript> m_ActiveUnit;
 	std::shared_ptr<MovingArea> m_MovingArea;
+
 	std::string m_MovingAreaGridActorPath;
 	std::unordered_set<ActorID> m_ChildrenGridActorIDs;
 
@@ -52,31 +50,38 @@ struct MovingAreaScript::MovingRangeScriptImpl
 	std::weak_ptr<const UnitMapScript> m_UnitMapScript;
 };
 
-void MovingAreaScript::MovingRangeScriptImpl::onActivateUnitEnd(const EvtDataActivateUnitEnd & e)
+void MovingAreaScript::MovingRangeScriptImpl::onUnitStateChangeEnd(const EvtDataUnitStateChangeEnd & e)
 {
-	clearAndShowArea(*e.getUnit());
-	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataShowMovingAreaEnd>(m_MovingArea));
-}
-
-void MovingAreaScript::MovingRangeScriptImpl::onDeactivateUnitEnd(const EvtDataDeactivateUnitEnd & e)
-{
-	clearArea();
-}
-
-void MovingAreaScript::MovingRangeScriptImpl::onMakeMovingPathEnd(const EvtDataMakeMovingPathEnd & e)
-{
-	clearArea();
-}
-
-void MovingAreaScript::MovingRangeScriptImpl::clearAndShowArea(const UnitScript & movingUnit)
-{
-	auto newArea = createArea(movingUnit, *m_TileMapScript.lock(), *m_UnitMapScript.lock());
-	if (!m_MovingArea || *newArea != *m_MovingArea) {
-		clearArea();
-
-		m_MovingArea = std::move(newArea);
-		setChildrenGridActors(*m_MovingArea, *m_OwnerActor.lock());
+	auto currentState = e.getCurrentState();
+	auto previousState = e.getPreviousState();
+	if (currentState == previousState) {
+		return;
 	}
+
+	if (currentState == UnitState::Active) {
+		if (!m_ActiveUnit.expired()) {
+			assert(m_ActiveUnit.lock() != e.getUnitScript().lock() && "MovingRangeScriptImpl::onUnitStateChangeEnd() the unit that is changed to be active is the same unit as the active unit.");
+			clearArea();
+		}
+
+		createAndShowArea(e.getUnitScript());
+	}
+	else if (currentState == UnitState::Idle) {
+		if (!m_ActiveUnit.expired() && m_ActiveUnit.lock() == e.getUnitScript().lock()) {
+			clearArea();
+		}
+	}
+}
+
+void MovingAreaScript::MovingRangeScriptImpl::createAndShowArea(const std::weak_ptr<const UnitScript> activeUnit)
+{
+	assert(!activeUnit.expired() && "MovingRangeScriptImpl::showArea() the active unit is nullptr.");
+
+	m_ActiveUnit = activeUnit;
+	m_MovingArea = createArea(*activeUnit.lock(), *m_TileMapScript.lock(), *m_UnitMapScript.lock());
+	setChildrenGridActors(*m_MovingArea, *m_OwnerActor.lock());
+
+	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataShowMovingAreaEnd>(m_MovingArea));
 }
 
 void MovingAreaScript::MovingRangeScriptImpl::clearArea()
@@ -86,6 +91,7 @@ void MovingAreaScript::MovingRangeScriptImpl::clearArea()
 	for (const auto & actorID : m_ChildrenGridActorIDs)
 		eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(actorID));
 
+	m_ActiveUnit.reset();
 	m_MovingArea.reset();
 	m_ChildrenGridActorIDs.clear();
 }
@@ -151,11 +157,6 @@ void MovingAreaScript::setUnitMapScript(std::weak_ptr<const UnitMapScript> && un
 	pimpl->m_UnitMapScript = std::move(unitMapScript);
 }
 
-const MovingArea & MovingAreaScript::getUnderlyingArea() const
-{
-	return *pimpl->m_MovingArea;
-}
-
 bool MovingAreaScript::vInit(const tinyxml2::XMLElement * xmlElement)
 {
 	auto relatedActorsPath = xmlElement->FirstChildElement("RelatedActorsPath");
@@ -173,14 +174,8 @@ void MovingAreaScript::vPostInit()
 	pimpl->m_TransformComponent = std::move(transformComponent);
 
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
-	eventDispatcher->vAddListener(EvtDataActivateUnitEnd::s_EventType, pimpl, [this](const IEventData & e) {
-		pimpl->onActivateUnitEnd(static_cast<const EvtDataActivateUnitEnd &>(e));
-	});
-	eventDispatcher->vAddListener(EvtDataDeactivateUnitEnd::s_EventType, pimpl, [this](const IEventData & e) {
-		pimpl->onDeactivateUnitEnd(static_cast<const EvtDataDeactivateUnitEnd &>(e));
-	});
-	eventDispatcher->vAddListener(EvtDataMakeMovingPathEnd::s_EventType, pimpl, [this](const IEventData & e) {
-		pimpl->onMakeMovingPathEnd(static_cast<const EvtDataMakeMovingPathEnd &>(e));
+	eventDispatcher->vAddListener(EvtDataUnitStateChangeEnd::s_EventType, pimpl, [this](const IEventData & e) {
+		pimpl->onUnitStateChangeEnd(static_cast<const EvtDataUnitStateChangeEnd &>(e));
 	});
 }
 

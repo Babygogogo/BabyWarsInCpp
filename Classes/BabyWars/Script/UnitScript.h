@@ -7,6 +7,8 @@
 class UnitData;
 struct GridIndex;
 class MovingPath;
+class EvtDataInputTouch;
+enum class UnitState;
 
 class UnitScript : public BaseScriptComponent
 {
@@ -14,9 +16,7 @@ public:
 	UnitScript();
 	~UnitScript();
 
-	//Type name of the class. Used by the ActorFactory and can not be removed.
-	static const std::string Type;
-	virtual const std::string & getType() const override;
+	bool onInputTouch(const EvtDataInputTouch & touch);
 
 	void loadUnit(tinyxml2::XMLElement * xmlElement);
 
@@ -26,13 +26,18 @@ public:
 	void setGridIndexAndPosition(const GridIndex & gridIndex);
 	GridIndex getGridIndex() const;
 
-	bool canActivate() const;
-	void setActive(bool active);
+	bool canSetState(UnitState state) const;
+	UnitState getState() const;
+	void setState(UnitState state);
 
 	bool canPassThrough(const UnitScript & otherUnit) const;
 	bool canStayTogether(const UnitScript & otherUnit) const;
 
 	void moveAlongPath(const MovingPath & path);
+
+	//Type name of the class. Used by the ActorFactory and can not be removed.
+	static const std::string Type;
+	virtual const std::string & getType() const override;
 
 	//Disable copy/move constructor and operator=.
 	UnitScript(const UnitScript &) = delete;
