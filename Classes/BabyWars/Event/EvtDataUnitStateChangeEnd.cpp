@@ -1,8 +1,8 @@
 #include "EvtDataUnitStateChangeEnd.h"
 
-const std::weak_ptr<const UnitScript> & EvtDataUnitStateChangeEnd::getUnitScript() const
+std::shared_ptr<UnitScript> EvtDataUnitStateChangeEnd::getUnitScript() const
 {
-	return m_UnitScript;
+	return m_UnitScript.lock();
 }
 
 UnitState EvtDataUnitStateChangeEnd::getPreviousState() const

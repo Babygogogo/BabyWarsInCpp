@@ -7,6 +7,7 @@
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../Event/EvtDataUnitStateChangeEnd.h"
+#include "../Event/EvtDataUnitIndexChangeEnd.h"
 #include "../Resource/ResourceLoader.h"
 #include "../Resource/UnitData.h"
 #include "../Utilities/GridIndex.h"
@@ -23,12 +24,15 @@ struct UnitScript::UnitScriptImpl
 	~UnitScriptImpl();
 
 	void updateAppearanceAccordingToState(UnitState state);
+	void updateMoveAction(const MovingPath & path);
 
-	//#TODO: This should be replaced to show the animation of the activate unit.
+	//#TODO: This should be replaced to show the animation of the active unit.
 	cocos2d::Action * m_ActiveAction{ nullptr };
+	cocos2d::Action * m_MoveAction{ nullptr };
 
-	std::weak_ptr<const UnitScript> m_Script;
+	std::weak_ptr<UnitScript> m_Script;
 	GridIndex m_GridIndex;
+	GridIndex m_IndexBeforeMoving;
 	std::shared_ptr<UnitData> m_UnitData;
 	UnitState m_State{ UnitState::Invalid };
 
@@ -45,6 +49,7 @@ UnitScript::UnitScriptImpl::UnitScriptImpl()
 UnitScript::UnitScriptImpl::~UnitScriptImpl()
 {
 	CC_SAFE_RELEASE_NULL(m_ActiveAction);
+	CC_SAFE_RELEASE_NULL(m_MoveAction);
 }
 
 void UnitScript::UnitScriptImpl::updateAppearanceAccordingToState(UnitState state)
@@ -57,6 +62,29 @@ void UnitScript::UnitScriptImpl::updateAppearanceAccordingToState(UnitState stat
 		spriteRenderComponent->stopAction(m_ActiveAction);
 		m_TransformComponent.lock()->setRotation(0);
 	}
+}
+
+void UnitScript::UnitScriptImpl::updateMoveAction(const MovingPath & path)
+{
+	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
+	auto movingDurationPerGrid = 1 / m_UnitData->getAnimationMovingSpeedGridPerSec();
+	const auto & underlyingPath = path.getUnderlyingPath();
+
+	auto moveActionList = cocos2d::Vector<cocos2d::FiniteTimeAction*>();
+	for (auto i = 1u; i < underlyingPath.size(); ++i)
+		moveActionList.pushBack(cocos2d::MoveTo::create(movingDurationPerGrid, underlyingPath[i].m_GridIndex.toPosition(gridSize)));
+
+	moveActionList.pushBack(cocos2d::CallFunc::create([script = m_Script, pathEndIndex = path.getBackNode().m_GridIndex]() {
+		if (!script.expired()) {
+			auto strongScript = script.lock();
+			strongScript->setGridIndexAndPosition(pathEndIndex);
+			strongScript->setState(UnitState::MovingEnd);
+		}
+	}));
+
+	CC_SAFE_RELEASE_NULL(m_MoveAction);
+	m_MoveAction = cocos2d::Sequence::create(moveActionList);
+	m_MoveAction->retain();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -83,6 +111,12 @@ bool UnitScript::onInputTouch(const EvtDataInputTouch & touch)
 		setState(UnitState::Active);
 		return true;
 	}
+	//else if (state == UnitState::Moving) {
+	//	return false;
+	//}
+	//else if (state == UnitState::MovingEnd) {
+	//	return false;
+	//}
 
 	return false;
 }
@@ -117,8 +151,9 @@ const std::shared_ptr<UnitData> & UnitScript::getUnitData() const
 
 void UnitScript::setGridIndexAndPosition(const GridIndex & gridIndex)
 {
-	//Set the indexes.
+	//Set the indexes and dispatch event.
 	pimpl->m_GridIndex = gridIndex;
+	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataUnitIndexChangeEnd>(pimpl->m_Script));
 
 	//Set the position of the node according to indexes.
 	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
@@ -166,23 +201,28 @@ bool UnitScript::canStayTogether(const UnitScript & otherUnit) const
 
 void UnitScript::moveAlongPath(const MovingPath & path)
 {
-	assert(path.getLength() > 1 && "UnitScript::moveAlongPath() the length of the path <= 1.");
+	assert(pimpl->m_State == UnitState::Active && "UnitScript::moveAlongPath() the unit is not in active state.");
+	assert(path.getLength() != 0 && "UnitScript::moveAlongPath() the length of the path is 0.");
 	assert(path.getFrontNode().m_GridIndex == pimpl->m_GridIndex && "UnitScript::moveAlongPath() the unit is not at the starting grid of the path.");
-	assert(path.getFrontNode().m_GridIndex != path.getBackNode().m_GridIndex && "UnitScript::moveAlongPath() the starting and ending grid of the path is the same.");
 
-	pimpl->m_GridIndex = path.getBackNode().m_GridIndex;
+	pimpl->m_IndexBeforeMoving = pimpl->m_GridIndex;
+	pimpl->updateMoveAction(path);
+	pimpl->m_SpriteRenderComponent.lock()->runAction(pimpl->m_MoveAction);
+	setState(UnitState::Moving);
+}
 
-	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
-	auto movingSpeed = pimpl->m_UnitData->getAnimationMovingSpeed();
-	auto movingTimePerGrid = gridSize.width / movingSpeed;
+void UnitScript::undoMove()
+{
+	assert(pimpl->m_State != UnitState::Invalid && "UnitScript::undoMove() the unit is in invalid state.");
+	if (pimpl->m_State == UnitState::Idle || pimpl->m_State == UnitState::Waiting)
+		return;
 
-	const auto & underlyingPath = path.getUnderlyingPath();
-	auto moveActionList = cocos2d::Vector<cocos2d::FiniteTimeAction*>();
-	for (auto i = 1u; i < underlyingPath.size(); ++i)
-		moveActionList.pushBack(cocos2d::MoveTo::create(movingTimePerGrid, underlyingPath[i].m_GridIndex.toPosition(gridSize)));
+	if (pimpl->m_State == UnitState::Moving || pimpl->m_State == UnitState::MovingEnd) {
+		pimpl->m_SpriteRenderComponent.lock()->stopAction(pimpl->m_MoveAction);
+		setGridIndexAndPosition(pimpl->m_IndexBeforeMoving);
+	}
 
-	auto moveSequence = cocos2d::Sequence::create(moveActionList);
-	pimpl->m_SpriteRenderComponent.lock()->runAction(moveSequence);
+	setState(UnitState::Idle);
 }
 
 bool UnitScript::vInit(const tinyxml2::XMLElement * xmlElement)

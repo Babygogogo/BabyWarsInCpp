@@ -122,8 +122,9 @@ void MovingPathScript::MovingPathScriptImpl::endMakingMovingPath(const EvtDataIn
 {
 	assert(m_IsMakingPath && "MovingPathScriptImpl::endMakingMovingPath() the flag for making path is off.");
 
-	auto isPathValid = isBackIndex(toGridIndex(drag.getPositionInWorld()));
-	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataMakeMovingPathEnd>(m_MovingPath, isPathValid));
+	if (isBackIndex(toGridIndex(drag.getPositionInWorld()))) {
+		SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataMakeMovingPathEnd>(m_MovingPath));
+	}
 
 	clearPath();
 	m_IsMakingPath = false;

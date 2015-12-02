@@ -19,7 +19,7 @@ struct UnitData::UnitDataImpl
 	std::string m_Type;
 	cocos2d::Animation * m_NormalAnimation{ cocos2d::Animation::create() };
 	float m_DefaultScaleFactorX{}, m_DefaultScaleFactorY{};
-	float m_MovingSpeed{};
+	float m_MovingSpeedGridPerSec{};
 
 	int m_Movement{};
 	std::string m_MovementType;
@@ -85,8 +85,7 @@ void UnitData::initialize(const char * xmlPath)
 	pimpl->m_NormalAnimation->setFrames(pimpl->loadAnimationFrames(animationsElement->FirstChildElement("Normal")));
 
 	//Load other animation data.
-	auto othersElement = animationsElement->FirstChildElement("Others");
-	pimpl->m_MovingSpeed = othersElement->FloatAttribute("MovingSpeed");
+	pimpl->m_MovingSpeedGridPerSec = animationsElement->FirstChildElement("MovingSpeed")->FloatAttribute("Value");
 
 	//Calculate the design scale factor.
 	auto spriteFrameSize = pimpl->m_NormalAnimation->getFrames().at(0)->getSpriteFrame()->getOriginalSize();
@@ -120,9 +119,9 @@ cocos2d::Animation * UnitData::getAnimation() const
 	return pimpl->m_NormalAnimation;
 }
 
-float UnitData::getAnimationMovingSpeed() const
+float UnitData::getAnimationMovingSpeedGridPerSec() const
 {
-	return pimpl->m_MovingSpeed;
+	return pimpl->m_MovingSpeedGridPerSec;
 }
 
 float UnitData::getDefaultScaleFactorX() const

@@ -6,6 +6,8 @@ enum class UnitState
 	Invalid,
 	Idle,
 	Active,
+	Moving,
+	MovingEnd,
 	Waiting
 };
 

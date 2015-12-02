@@ -186,7 +186,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToVec2.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Actor\BabyWarsActorFactory.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataActivateUnitEnd.cpp" />
-    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataDeactivateUnitEnd.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataUnitIndexChangeEnd.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataDragScene.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPathEnd.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataUnitStateChangeEnd.cpp" />
@@ -269,7 +269,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToVec2.h" />
     <ClInclude Include="..\Classes\BabyWars\Actor\BabyWarsActorFactory.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataActivateUnitEnd.h" />
-    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataDeactivateUnitEnd.h" />
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataUnitIndexChangeEnd.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataDragScene.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPathEnd.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataUnitStateChangeEnd.h" />

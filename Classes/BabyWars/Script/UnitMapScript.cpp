@@ -10,6 +10,7 @@
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../../BabyEngine/Utilities/StringToVector.h"
 #include "../Event/EvtDataUnitStateChangeEnd.h"
+#include "../Event/EvtDataUnitIndexChangeEnd.h"
 #include "../Event/EvtDataMakeMovingPathEnd.h"
 #include "../Resource/ResourceLoader.h"
 #include "../Utilities/GridIndex.h"
@@ -28,24 +29,18 @@ struct UnitMapScript::UnitMapScriptImpl
 
 	void onMakeMovingPathEnd(const EvtDataMakeMovingPathEnd & e);
 	void onUnitStateChangeEnd(const EvtDataUnitStateChangeEnd & e);
+	void onUnitIndexChangeEnd(const EvtDataUnitIndexChangeEnd & e);
 
 	GridIndex toGridIndex(const cocos2d::Vec2 & positionInWindow) const;
 
-	bool isUnitActiveAtIndex(const GridIndex & index) const;
-	bool canActivateUnitAtIndex(const GridIndex & gridIndex) const;
-
 	std::shared_ptr<UnitScript> getUnit(const GridIndex & gridIndex) const;
-	std::shared_ptr<UnitScript> getActiveUnit() const;
+	std::shared_ptr<UnitScript> getFocusUnit() const;
 	bool canUnitStayAtIndex(const UnitScript & unitScript, const GridIndex & gridIndex) const;
-
-	void activateUnitAtIndex(const GridIndex & gridIndex);
-	void deactivateActiveUnit();
-	void deactivateAndMoveUnit(UnitScript & unit, const MovingPath & path);
 
 	static std::string s_UnitActorPath;
 
 	Matrix2D<std::weak_ptr<UnitScript>> m_UnitMap;
-	std::weak_ptr<UnitScript> m_ActiveUnit;
+	std::weak_ptr<UnitScript> m_FocusUnit;
 
 	std::weak_ptr<TransformComponent> m_TransformComponent;
 };
@@ -54,12 +49,15 @@ std::string UnitMapScript::UnitMapScriptImpl::s_UnitActorPath;
 
 void UnitMapScript::UnitMapScriptImpl::onMakeMovingPathEnd(const EvtDataMakeMovingPathEnd & e)
 {
-	if (!e.isPathValid() || !canUnitStayAtIndex(*m_ActiveUnit.lock(), e.getMovingPath().getBackNode().m_GridIndex)) {
-		deactivateActiveUnit();
-		return;
-	}
+	assert(!m_FocusUnit.expired() && "UnitMapScriptImpl::onMakeMovingPathEnd() there is no focus unit.");
 
-	deactivateAndMoveUnit(*m_ActiveUnit.lock(), e.getMovingPath());
+	auto focusUnit = getFocusUnit();
+	if (!canUnitStayAtIndex(*focusUnit, e.getMovingPath().getBackNode().m_GridIndex)) {
+		focusUnit->setState(UnitState::Idle);
+	}
+	else {
+		focusUnit->moveAlongPath(e.getMovingPath());
+	}
 }
 
 void UnitMapScript::UnitMapScriptImpl::onUnitStateChangeEnd(const EvtDataUnitStateChangeEnd & e)
@@ -71,20 +69,32 @@ void UnitMapScript::UnitMapScriptImpl::onUnitStateChangeEnd(const EvtDataUnitSta
 	}
 
 	if (currentState == UnitState::Active) {
-		if (!m_ActiveUnit.expired()) {
-			assert(m_ActiveUnit.lock() != e.getUnitScript().lock() && "UnitMapScriptImpl::onUnitStateChangeEnd() the unit which is changed to be active is the currently active unit.");
-			m_ActiveUnit.lock()->setState(UnitState::Idle);
+		if (auto focusUnit = getFocusUnit()) {
+			assert(focusUnit != e.getUnitScript() && "UnitMapScriptImpl::onUnitStateChangeEnd() the unit which is changed to be active is the focus unit.");
+			focusUnit->undoMove();
 		}
 
-		m_ActiveUnit = e.getUnitScript();
-		return;
+		m_FocusUnit = e.getUnitScript();
 	}
-
-	if (currentState == UnitState::Idle) {
-		if (!m_ActiveUnit.expired() && (m_ActiveUnit.lock() == e.getUnitScript().lock())) {
-			m_ActiveUnit.reset();
+	else if (currentState == UnitState::Idle) {
+		if (getFocusUnit() == e.getUnitScript()) {
+			m_FocusUnit.reset();
 		}
 	}
+	else if (currentState == UnitState::Moving) {
+		auto movingUnitIndex = e.getUnitScript()->getGridIndex();
+		m_UnitMap[movingUnitIndex].reset();
+	}
+	else if (currentState == UnitState::MovingEnd) {
+		//#TODO: This is a hack which makes the unit in idle state after moving. Should be removed.
+		e.getUnitScript()->setState(UnitState::Idle);
+	}
+}
+
+void UnitMapScript::UnitMapScriptImpl::onUnitIndexChangeEnd(const EvtDataUnitIndexChangeEnd & e)
+{
+	const auto unit = e.getUnit();
+	m_UnitMap[unit->getGridIndex()] = unit;
 }
 
 GridIndex UnitMapScript::UnitMapScriptImpl::toGridIndex(const cocos2d::Vec2 & positionInWindow) const
@@ -92,30 +102,6 @@ GridIndex UnitMapScript::UnitMapScriptImpl::toGridIndex(const cocos2d::Vec2 & po
 	auto positionInMap = m_TransformComponent.lock()->convertToLocalSpace(positionInWindow);
 	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
 	return GridIndex(positionInMap, gridSize);
-}
-
-bool UnitMapScript::UnitMapScriptImpl::isUnitActiveAtIndex(const GridIndex & index) const
-{
-	if (m_ActiveUnit.expired())
-		return false;
-
-	auto unitAtIndex = getUnit(index);
-	if (!unitAtIndex)
-		return false;
-
-	return unitAtIndex == m_ActiveUnit.lock();
-}
-
-bool UnitMapScript::UnitMapScriptImpl::canActivateUnitAtIndex(const GridIndex & gridIndex) const
-{
-	if (!m_ActiveUnit.expired())
-		return false;
-
-	auto unitAtIndex = getUnit(gridIndex);
-	if (!unitAtIndex)
-		return false;
-
-	return unitAtIndex->canSetState(UnitState::Active);
 }
 
 std::shared_ptr<UnitScript> UnitMapScript::UnitMapScriptImpl::getUnit(const GridIndex & gridIndex) const
@@ -130,12 +116,12 @@ std::shared_ptr<UnitScript> UnitMapScript::UnitMapScriptImpl::getUnit(const Grid
 	return unitScript.lock();
 }
 
-std::shared_ptr<UnitScript> UnitMapScript::UnitMapScriptImpl::getActiveUnit() const
+std::shared_ptr<UnitScript> UnitMapScript::UnitMapScriptImpl::getFocusUnit() const
 {
-	if (!m_ActiveUnit.expired())
-		return m_ActiveUnit.lock();
+	if (m_FocusUnit.expired())
+		return nullptr;
 
-	return nullptr;
+	return m_FocusUnit.lock();
 }
 
 bool UnitMapScript::UnitMapScriptImpl::canUnitStayAtIndex(const UnitScript & unitScript, const GridIndex & gridIndex) const
@@ -153,42 +139,6 @@ bool UnitMapScript::UnitMapScriptImpl::canUnitStayAtIndex(const UnitScript & uni
 	return unitScript.canStayTogether(*unitAtIndex);
 }
 
-void UnitMapScript::UnitMapScriptImpl::activateUnitAtIndex(const GridIndex & gridIndex)
-{
-	assert(canActivateUnitAtIndex(gridIndex) && "UnitMapScript::activateUnitAtIndex() can't activate the unit at index.");
-
-	auto unitAtIndex = getUnit(gridIndex);
-	unitAtIndex->setState(UnitState::Active);
-	m_ActiveUnit = std::move(unitAtIndex);
-}
-
-void UnitMapScript::UnitMapScriptImpl::deactivateActiveUnit()
-{
-	if (m_ActiveUnit.expired())
-		return;
-
-	m_ActiveUnit.lock()->setState(UnitState::Idle);
-	m_ActiveUnit.reset();
-}
-
-void UnitMapScript::UnitMapScriptImpl::deactivateAndMoveUnit(UnitScript & unit, const MovingPath & path)
-{
-	//Deactivate the unit.
-	unit.setState(UnitState::Idle);
-	if (m_ActiveUnit.lock().get() == &unit)
-		m_ActiveUnit.reset();
-
-	if (path.getLength() <= 1)
-		return;
-
-	//Make the move and update the map.
-	const auto startingIndex = path.getFrontNode().m_GridIndex;
-	const auto endingIndex = path.getBackNode().m_GridIndex;
-	unit.moveAlongPath(path);
-	m_UnitMap[endingIndex] = m_UnitMap[startingIndex];
-	m_UnitMap[startingIndex].reset();
-}
-
 //////////////////////////////////////////////////////////////////////////
 //Implementation of UnitMapScript.
 //////////////////////////////////////////////////////////////////////////
@@ -202,17 +152,23 @@ UnitMapScript::~UnitMapScript()
 
 bool UnitMapScript::onInputTouch(const EvtDataInputTouch & touch)
 {
-	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
-	auto touchIndex = pimpl->toGridIndex(touch.getPositionInWorld());
+	auto focusUnit = pimpl->getFocusUnit();
+	auto touchUnit = pimpl->getUnit(pimpl->toGridIndex(touch.getPositionInWorld()));
 
-	if (auto touchUnit = pimpl->getUnit(touchIndex)) {
-		touchUnit->onInputTouch(touch);
-	}
-	else {
-		pimpl->deactivateActiveUnit();
+	if (!touchUnit) {
+		if (focusUnit) {
+			focusUnit->undoMove();
+			return true;
+		}
+
+		return false;
 	}
 
-	return true;
+	if (touchUnit->onInputTouch(touch)) {
+		return true;
+	}
+
+	return false;
 }
 
 bool UnitMapScript::onInputDrag(const EvtDataInputDrag & drag)
@@ -266,7 +222,6 @@ void UnitMapScript::loadUnitMap(const char * xmlPath)
 
 			//Add the unit actor and script to UnitMap.
 			ownerActor->addChild(*unitActor);
-			pimpl->m_UnitMap[gridIndex] = unitScript;
 		}
 
 		//Load the next row of the unit map.
@@ -336,6 +291,9 @@ void UnitMapScript::vPostInit()
 	});
 	eventDispatcher->vAddListener(EvtDataUnitStateChangeEnd::s_EventType, pimpl, [this](const IEventData & e) {
 		pimpl->onUnitStateChangeEnd(static_cast<const EvtDataUnitStateChangeEnd &>(e));
+	});
+	eventDispatcher->vAddListener(EvtDataUnitIndexChangeEnd::s_EventType, pimpl, [this](const IEventData & e) {
+		pimpl->onUnitIndexChangeEnd(static_cast<const EvtDataUnitIndexChangeEnd &>(e));
 	});
 }
 

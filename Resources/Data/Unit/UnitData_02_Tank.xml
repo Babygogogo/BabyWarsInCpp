@@ -5,6 +5,8 @@
 		<Normal>
 			<Frame Name="Unit_Tank_01.png" DelaySec="99999"/>
 		</Normal>
-		<Others MovingSpeed="300"/>
+		<MovingSpeed Value="8">
+			<!-- The value is a float which indicates how many grids the unit can move across in a second. -->
+		</MovingSpeed>
 	</Animation>
 </UnitData>

@@ -11,11 +11,11 @@ class UnitScript;
 class EvtDataUnitStateChangeEnd : public BaseEventData
 {
 public:
-	EvtDataUnitStateChangeEnd(std::weak_ptr<const UnitScript> unitScript, UnitState previousState, UnitState currentState)
+	EvtDataUnitStateChangeEnd(std::weak_ptr<UnitScript> unitScript, UnitState previousState, UnitState currentState)
 		: m_UnitScript{ std::move(unitScript) }, m_PreviousState{ previousState }, m_CurrentState{ currentState } {}
 	virtual ~EvtDataUnitStateChangeEnd() = default;
 
-	const std::weak_ptr<const UnitScript> & getUnitScript() const;
+	std::shared_ptr<UnitScript> getUnitScript() const;
 	UnitState getPreviousState() const;
 	UnitState getCurrentState() const;
 
@@ -29,7 +29,7 @@ public:
 	EvtDataUnitStateChangeEnd & operator=(EvtDataUnitStateChangeEnd &&) = delete;
 
 private:
-	std::weak_ptr<const UnitScript> m_UnitScript;
+	std::weak_ptr<UnitScript> m_UnitScript;
 	UnitState m_PreviousState, m_CurrentState;
 };
 

@@ -34,6 +34,7 @@ public:
 	bool canStayTogether(const UnitScript & otherUnit) const;
 
 	void moveAlongPath(const MovingPath & path);
+	void undoMove();
 
 	//Type name of the class. Used by the ActorFactory and can not be removed.
 	static const std::string Type;

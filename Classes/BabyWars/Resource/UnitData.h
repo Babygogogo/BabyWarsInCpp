@@ -27,7 +27,7 @@ public:
 	const std::string & getMovementType() const;
 
 	cocos2d::Animation * getAnimation() const;
-	float getAnimationMovingSpeed() const;
+	float getAnimationMovingSpeedGridPerSec() const;
 	float getDefaultScaleFactorX() const;
 	float getDefaultScaleFactorY() const;
 

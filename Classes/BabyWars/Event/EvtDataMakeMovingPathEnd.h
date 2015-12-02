@@ -8,14 +8,13 @@
 class EvtDataMakeMovingPathEnd : public BaseEventData
 {
 public:
-	EvtDataMakeMovingPathEnd(const MovingPath & movingPath, bool isPathValid) : m_MovingPath{ movingPath }, m_IsPathValid{ isPathValid } {}
+	EvtDataMakeMovingPathEnd(const MovingPath & movingPath) : m_MovingPath{ movingPath } {}
 	virtual ~EvtDataMakeMovingPathEnd() = default;
+
+	const MovingPath & getMovingPath() const;
 
 	static const EventType s_EventType;
 	virtual const EventType & vGetType() const override;
-
-	const MovingPath & getMovingPath() const;
-	bool isPathValid() const;
 
 	//Disable copy/move constructor and operator=.
 	EvtDataMakeMovingPathEnd(const EvtDataMakeMovingPathEnd &) = delete;
@@ -25,7 +24,6 @@ public:
 
 private:
 	MovingPath m_MovingPath;
-	bool m_IsPathValid{ false };
 };
 
 #endif // !#ifndef __EVENT_DATA_FINISH_MAKE_MOVING_PATH__
