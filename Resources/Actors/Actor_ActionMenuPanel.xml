@@ -8,7 +8,7 @@
 			<Position X="0" Y="-30"/>
 		</TransformComponent>
 		<ActionMenuPanelScript>
-			<RelatedActorsPath Background="Actors\Actor_ActionMenuPanelBackground.xml"/>
+			<RelatedActorsPath Background="Actors\Actor_ActionMenuPanelBackground.xml" ActionList="Actors\Actor_ActionList.xml"/>
 		</ActionMenuPanelScript>
 	</Components>
 	<ChildrenActors>

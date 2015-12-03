@@ -49,13 +49,10 @@ std::string UnitMapScript::UnitMapScriptImpl::s_UnitActorPath;
 
 void UnitMapScript::UnitMapScriptImpl::onMakeMovingPathEnd(const EvtDataMakeMovingPathEnd & e)
 {
-	assert(!m_FocusUnit.expired() && "UnitMapScriptImpl::onMakeMovingPathEnd() there is no focus unit.");
-
 	auto focusUnit = getFocusUnit();
-	if (!canUnitStayAtIndex(*focusUnit, e.getMovingPath().getBackNode().m_GridIndex)) {
-		focusUnit->setState(UnitState::Idle);
-	}
-	else {
+	assert(focusUnit && "UnitMapScriptImpl::onMakeMovingPathEnd() there is no focus unit.");
+
+	if (canUnitStayAtIndex(*focusUnit, e.getMovingPath().getBackNode().m_GridIndex)) {
 		focusUnit->moveAlongPath(e.getMovingPath());
 	}
 }
@@ -82,8 +79,10 @@ void UnitMapScript::UnitMapScriptImpl::onUnitStateChangeEnd(const EvtDataUnitSta
 		}
 	}
 	else if (currentState == UnitState::Moving) {
-		auto movingUnitIndex = e.getUnitScript()->getGridIndex();
-		m_UnitMap[movingUnitIndex].reset();
+		auto focusUnit = getFocusUnit();
+		assert(focusUnit == e.getUnitScript() && "UnitMapScriptImpl::onUnitStateChangeEnd() the moving unit is not the focus unit.");
+
+		m_UnitMap[focusUnit->getGridIndex()].reset();
 	}
 	else if (currentState == UnitState::MovingEnd) {
 		//#TODO: This is a hack which makes the unit in idle state after moving. Should be removed.

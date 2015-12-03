@@ -15,9 +15,11 @@ struct ActionMenuPanelScript::ActionMenuPanelScriptImpl
 	~ActionMenuPanelScriptImpl() = default;
 
 	static std::string s_BackgroundActorPath;
+	static std::string s_ListActorPath;
 };
 
 std::string ActionMenuPanelScript::ActionMenuPanelScriptImpl::s_BackgroundActorPath;
+std::string ActionMenuPanelScript::ActionMenuPanelScriptImpl::s_ListActorPath;
 
 //////////////////////////////////////////////////////////////////////////
 //Implementation of ActionMenuPanelScript.
@@ -38,6 +40,7 @@ bool ActionMenuPanelScript::vInit(const tinyxml2::XMLElement *xmlElement)
 
 	const auto relatedActorsElement = xmlElement->FirstChildElement("RelatedActorsPath");
 	ActionMenuPanelScriptImpl::s_BackgroundActorPath = relatedActorsElement->Attribute("Background");
+	ActionMenuPanelScriptImpl::s_ListActorPath = relatedActorsElement->Attribute("ActionList");
 
 	isStaticMembersInitialized = true;
 	return true;
@@ -48,8 +51,8 @@ void ActionMenuPanelScript::vPostInit()
 	auto ownerActor = m_OwnerActor.lock();
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
 
-	auto backgroundActor = gameLogic->createActor(ActionMenuPanelScriptImpl::s_BackgroundActorPath.c_str());
-	ownerActor->addChild(*backgroundActor);
+	ownerActor->addChild(*gameLogic->createActor(ActionMenuPanelScriptImpl::s_BackgroundActorPath.c_str()));
+	ownerActor->addChild(*gameLogic->createActor(ActionMenuPanelScriptImpl::s_ListActorPath.c_str()));
 }
 
 const std::string ActionMenuPanelScript::Type{ "ActionMenuPanelScript" };

@@ -1,5 +1,7 @@
 #include "BabyWarsActorFactory.h"
 
+#include "../Script/ActionListItemScript.h"
+#include "../Script/ActionListScript.h"
 #include "../Script/ActionMenuPanelScript.h"
 #include "../Script/TileMapScript.h"
 #include "../Script/TileScript.h"
@@ -18,6 +20,8 @@
 void BabyWarsActorFactory::vRegisterSpecificComponents()
 {
 	//#TODO: Update the register calls whenever the game-specific actor components are changed.
+	registerComponent<ActionListItemScript>();
+	registerComponent<ActionListScript>();
 	registerComponent<ActionMenuPanelScript>();
 	registerComponent<MovingPathScript>();
 	registerComponent<MovingPathGridScript>();

@@ -152,6 +152,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyEngine\Actor\BaseScriptComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Actor\FiniteTimeActionComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.cpp" />
+    <ClCompile Include="..\Classes\BabyEngine\Actor\ListViewRenderComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Actor\MenuRenderComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Actor\SpriteRenderComponent.cpp" />
@@ -168,6 +169,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyEngine\UserInterface\BaseGameView.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\UserInterface\BaseHumanView.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\SetSceneNodePropertiesWithXML.cpp" />
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToButton.cpp" />
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToListView.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToParticleExplosion.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToLabel.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToLayer.cpp" />
@@ -195,6 +198,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyWars\Resource\ResourceLoader.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\TileData.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\UnitData.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Script\ActionListItemScript.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Script\ActionListScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\ActionMenuPanelScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\MoneyInfoPanelScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\MovingPathGridScript.cpp" />
@@ -226,6 +231,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyEngine\Actor\BaseScriptComponent.h" />
     <ClInclude Include="..\Classes\BabyEngine\Actor\FiniteTimeActionComponent.h" />
     <ClInclude Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.h" />
+    <ClInclude Include="..\Classes\BabyEngine\Actor\ListViewRenderComponent.h" />
     <ClInclude Include="..\Classes\BabyEngine\Actor\MenuRenderComponent.h" />
     <ClInclude Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.h" />
     <ClInclude Include="..\Classes\BabyEngine\Actor\SoundPlayer.h" />
@@ -249,9 +255,11 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyEngine\UserInterface\GameViewID.h" />
     <ClInclude Include="..\Classes\BabyEngine\UserInterface\BaseGameView.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\SetSceneNodePropertiesWithXML.h" />
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToButton.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToLabel.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToLayer.h" />
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToListView.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToMenu.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToMenuItemImage.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToNode.h" />
@@ -280,6 +288,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyWars\Resource\TileDataID.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitData.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitDataID.h" />
+    <ClInclude Include="..\Classes\BabyWars\Script\ActionListItemScript.h" />
+    <ClInclude Include="..\Classes\BabyWars\Script\ActionListScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\ActionMenuPanelScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\MoneyInfoPanelScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\MovingPathGridScript.h" />

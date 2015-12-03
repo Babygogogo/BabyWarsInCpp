@@ -102,6 +102,11 @@ void TransformComponent::setScaleToSize(const cocos2d::Size & size)
 	sceneNode->setScaleY(size.height / contentSize.height);
 }
 
+void TransformComponent::setScale(float scale)
+{
+	pimpl->m_RenderComponent->getSceneNode()->setScale(scale);
+}
+
 float TransformComponent::getRotation() const
 {
 	return pimpl->m_RenderComponent->getSceneNode()->getRotation();
@@ -128,6 +133,12 @@ bool TransformComponent::vInit(const tinyxml2::XMLElement * xmlElement)
 	if (const auto positionElement = xmlElement->FirstChildElement("Position")) {
 		pimpl->m_CachedOperations.emplace_back([position = utilities::XMLToVec2(positionElement), this](){
 			setPosition(position);
+		});
+	}
+
+	if (const auto scaleElement = xmlElement->FirstChildElement("Scale")) {
+		pimpl->m_CachedOperations.emplace_back([scale = scaleElement->FloatAttribute("Value"), this](){
+			setScale(scale);
 		});
 	}
 

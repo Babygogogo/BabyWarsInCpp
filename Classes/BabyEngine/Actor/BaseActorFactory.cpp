@@ -9,6 +9,7 @@
 #include "FiniteTimeActionComponent.h"
 #include "GeneralRenderComponent.h"
 #include "MenuRenderComponent.h"
+#include "ListViewRenderComponent.h"
 #include "SceneRenderComponent.h"
 #include "SpriteRenderComponent.h"
 #include "TransformComponent.h"
@@ -175,6 +176,7 @@ void BaseActorFactory::registerGeneralComponents()
 	//TODO: Modify the register calls if the general components are changed.
 	registerComponent<GeneralRenderComponent>();
 	registerComponent<MenuRenderComponent>();
+	registerComponent<ListViewRenderComponent>();
 	registerComponent<SceneRenderComponent>();
 	registerComponent<SpriteRenderComponent>();
 	registerComponent<TransformComponent>();

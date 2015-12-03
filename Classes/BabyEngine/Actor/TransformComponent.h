@@ -45,6 +45,7 @@ public:
 	float getScaleX() const;
 	float getScaleY() const;
 	void setScaleToSize(const cocos2d::Size & size);
+	void setScale(float scale);
 
 	float getRotation() const;
 	void setRotation(float degree);

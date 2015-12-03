@@ -12,7 +12,6 @@
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../Event/EvtDataUnitStateChangeEnd.h"
 #include "../Event/EvtDataShowMovingAreaEnd.h"
-#include "../Event/EvtDataMakeMovingPathEnd.h"
 #include "../Resource/UnitData.h"
 #include "../Utilities/GridIndex.h"
 #include "../Utilities/MovingArea.h"
@@ -31,7 +30,6 @@ struct MovingAreaScript::MovingRangeScriptImpl
 	~MovingRangeScriptImpl() = default;
 
 	void onUnitStateChangeEnd(const EvtDataUnitStateChangeEnd & e);
-	void onMakeMovingPathEnd(const EvtDataMakeMovingPathEnd & e);
 
 	bool isAreaShownForUnit(const UnitScript & unitScript) const;
 
@@ -68,16 +66,11 @@ void MovingAreaScript::MovingRangeScriptImpl::onUnitStateChangeEnd(const EvtData
 		clearArea();
 		createAndShowArea(e.getUnitScript());
 	}
-	else if (currentState == UnitState::Idle) {
+	else {
 		if (isAreaShownForUnit(*e.getUnitScript())) {
 			clearArea();
 		}
 	}
-}
-
-void MovingAreaScript::MovingRangeScriptImpl::onMakeMovingPathEnd(const EvtDataMakeMovingPathEnd & e)
-{
-	clearArea();
 }
 
 bool MovingAreaScript::MovingRangeScriptImpl::isAreaShownForUnit(const UnitScript & unitScript) const
@@ -191,9 +184,6 @@ void MovingAreaScript::vPostInit()
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
 	eventDispatcher->vAddListener(EvtDataUnitStateChangeEnd::s_EventType, pimpl, [this](const IEventData & e) {
 		pimpl->onUnitStateChangeEnd(static_cast<const EvtDataUnitStateChangeEnd &>(e));
-	});
-	eventDispatcher->vAddListener(EvtDataMakeMovingPathEnd::s_EventType, pimpl, [this](const IEventData & e) {
-		pimpl->onMakeMovingPathEnd(static_cast<const EvtDataMakeMovingPathEnd &>(e));
 	});
 }
 

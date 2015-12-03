@@ -282,6 +282,21 @@
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataUnitIndexChangeEnd.cpp">
       <Filter>src\BabyWars\Event</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToListView.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\ListViewRenderComponent.cpp">
+      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\ActionListScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\ActionListItemScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToButton.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -544,6 +559,21 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataUnitIndexChangeEnd.h">
       <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToListView.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\ListViewRenderComponent.h">
+      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\ActionListScript.h">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\ActionListItemScript.h">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToButton.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

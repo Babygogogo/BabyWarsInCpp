@@ -1,0 +1,30 @@
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<Actor Type="ActionListItem" Resource="Actors\Actor_ActionListItem.xml">
+	<Components>
+		<GeneralRenderComponent>
+			<SceneNode Type="Button">
+				<NormalTexture>
+					<TextureName Value="Menu_Background_Red_01.png"/>
+					<TextureResourceType Value="Plist">
+						<!-- The value should be either "Plist" or "Local".-->
+					</TextureResourceType>
+					<CapInsets X="4" Y="6" Width="1" Height="1"/>
+				</NormalTexture>
+				<ZoomScale Value="0.05"/>
+			</SceneNode>
+			<SceneNodeProperties>
+				<Opacity Value="160">
+					<!--The value is an int in [0, 255].-->
+				</Opacity>
+				<ContentSize Width="180" Height="40"/>
+			</SceneNodeProperties>
+		</GeneralRenderComponent>
+		<TransformComponent>
+			<Scale Value="0.95"/>
+		</TransformComponent>
+		<ActionListItemScript>
+		</ActionListItemScript>
+	</Components>
+	<ChildrenActors>
+	</ChildrenActors>
+</Actor>

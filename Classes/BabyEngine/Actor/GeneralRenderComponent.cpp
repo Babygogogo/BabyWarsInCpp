@@ -15,6 +15,7 @@
 #include "../Utilities/XMLToMenuItemImage.h"
 #include "../Utilities/XMLToParticleExplosion.h"
 #include "../Utilities/XMLToScale9Sprite.h"
+#include "../Utilities/XMLToButton.h"
 #include "../Utilities/SetSceneNodePropertiesWithXML.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -68,6 +69,7 @@ bool GeneralRenderComponent::vInit(const tinyxml2::XMLElement * xmlElement)
 	else if (nodeType == "MenuItemImage")		m_Node = utilities::XMLToMenuItemImage(nodeElement);
 	else if (nodeType == "ParticleExplosion")	m_Node = utilities::XMLToParticleExplosion(nodeElement);
 	else if (nodeType == "Scale9Sprite")		m_Node = utilities::XMLToScale9Sprite(nodeElement);
+	else if (nodeType == "Button")				m_Node = utilities::XMLToButton(nodeElement);
 
 	//Ensure that the node is created, then retain it.
 	assert(m_Node && "GeneralRenderComponent::vInit() can't create an instance of cocos2d::Node or its sub class!");
