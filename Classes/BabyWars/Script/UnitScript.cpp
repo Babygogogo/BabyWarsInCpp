@@ -6,6 +6,7 @@
 #include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
+#include "../Event/EvtDataRequestChangeUnitState.h"
 #include "../Event/EvtDataUnitStateChangeEnd.h"
 #include "../Event/EvtDataUnitIndexChangeEnd.h"
 #include "../Resource/ResourceLoader.h"
@@ -13,6 +14,7 @@
 #include "../Utilities/GridIndex.h"
 #include "../Utilities/MovingPath.h"
 #include "../Utilities/UnitState.h"
+#include "../Utilities/GameCommand.h"
 #include "UnitScript.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -22,6 +24,11 @@ struct UnitScript::UnitScriptImpl
 {
 	UnitScriptImpl();
 	~UnitScriptImpl();
+
+	void onRequestChangeUnitState(const EvtDataRequestChangeUnitState & e);
+
+	bool canSetState(UnitState state) const;
+	void setState(UnitState state);
 
 	void updateAppearanceAccordingToState(UnitState state);
 	void updateMoveAction(const MovingPath & path);
@@ -50,6 +57,31 @@ UnitScript::UnitScriptImpl::~UnitScriptImpl()
 {
 	CC_SAFE_RELEASE_NULL(m_ActiveAction);
 	CC_SAFE_RELEASE_NULL(m_MoveAction);
+}
+
+void UnitScript::UnitScriptImpl::onRequestChangeUnitState(const EvtDataRequestChangeUnitState & e)
+{
+	const auto newState = e.getNewState();
+	if (canSetState(newState)) {
+		setState(newState);
+	}
+}
+
+bool UnitScript::UnitScriptImpl::canSetState(UnitState state) const
+{
+	return true;
+}
+
+void UnitScript::UnitScriptImpl::setState(UnitState state)
+{
+	if (m_State == state) {
+		return;
+	}
+
+	auto changeStateEvent = std::make_unique<EvtDataUnitStateChangeEnd>(m_Script, m_State, state);
+	m_State = state;
+	updateAppearanceAccordingToState(state);
+	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::move(changeStateEvent));
 }
 
 void UnitScript::UnitScriptImpl::updateAppearanceAccordingToState(UnitState state)
@@ -90,7 +122,7 @@ void UnitScript::UnitScriptImpl::updateMoveAction(const MovingPath & path)
 //////////////////////////////////////////////////////////////////////////
 //Implementation of WorldScript.
 //////////////////////////////////////////////////////////////////////////
-UnitScript::UnitScript() : pimpl{ std::make_unique<UnitScriptImpl>() }
+UnitScript::UnitScript() : pimpl{ std::make_shared<UnitScriptImpl>() }
 {
 }
 
@@ -131,7 +163,7 @@ void UnitScript::loadUnit(tinyxml2::XMLElement * xmlElement)
 	assert(unitData && "UnitScript::setUnitData() with nullptr.");
 
 	auto ownerActor = m_OwnerActor.lock();
-	//#TODO: This only shows the first first frame of the animation. Update the code to show the whole animation.
+	//#TODO: This only shows the first frame of the animation. Update the code to show the whole animation.
 	pimpl->m_SpriteRenderComponent.lock()->setSpriteFrame(unitData->getAnimation()->getFrames().at(0)->getSpriteFrame());
 
 	//Scale the sprite so that it meets the real game grid size.
@@ -147,6 +179,24 @@ void UnitScript::loadUnit(tinyxml2::XMLElement * xmlElement)
 const std::shared_ptr<UnitData> & UnitScript::getUnitData() const
 {
 	return pimpl->m_UnitData;
+}
+
+std::vector<GameCommand> UnitScript::getCommands() const
+{
+	assert(pimpl->m_State != UnitState::Invalid && "UnitScript::getCommands() the unit is in invalid state.");
+	auto commands = std::vector<GameCommand>{};
+
+	if (pimpl->m_State == UnitState::Idle || pimpl->m_State == UnitState::Active || pimpl->m_State == UnitState::Moving || pimpl->m_State == UnitState::Waiting) {
+		return commands;
+	}
+
+	if (pimpl->m_State == UnitState::MovingEnd) {
+		commands.emplace_back("Wait", [unitScript = pimpl->m_Script]() {
+			SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataRequestChangeUnitState>(unitScript, UnitState::Waiting));
+		});
+	}
+
+	return commands;
 }
 
 void UnitScript::setGridIndexAndPosition(const GridIndex & gridIndex)
@@ -167,7 +217,7 @@ GridIndex UnitScript::getGridIndex() const
 
 bool UnitScript::canSetState(UnitState state) const
 {
-	return true;
+	return pimpl->canSetState(state);
 }
 
 UnitState UnitScript::getState() const
@@ -177,14 +227,7 @@ UnitState UnitScript::getState() const
 
 void UnitScript::setState(UnitState state)
 {
-	if (pimpl->m_State == state) {
-		return;
-	}
-
-	auto changeStateEvent = std::make_unique<EvtDataUnitStateChangeEnd>(pimpl->m_Script, pimpl->m_State, state);
-	pimpl->m_State = state;
-	pimpl->updateAppearanceAccordingToState(state);
-	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::move(changeStateEvent));
+	pimpl->setState(state);
 }
 
 bool UnitScript::canPassThrough(const UnitScript & otherUnit) const
@@ -242,6 +285,10 @@ void UnitScript::vPostInit()
 	auto transformComponent = ownerActor->getComponent<TransformComponent>();
 	assert(transformComponent && "UnitScript::vPostInit() the actor has no transform component.");
 	pimpl->m_TransformComponent = std::move(transformComponent);
+
+	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
+	eventDispatcher->vAddListener(EvtDataRequestChangeUnitState::s_EventType, pimpl, [](const auto & e) {
+	});
 }
 
 const std::string UnitScript::Type = "UnitScript";

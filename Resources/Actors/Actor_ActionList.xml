@@ -13,7 +13,7 @@
 			<Position X="-90" Y="-190"/>
 		</TransformComponent>
 		<ActionListScript>
-			<RelatedActorsPath ListItem="Actors\Actor_ActionListItem.xml"/>
+			<RelatedActorsPath ListItem="Actors\Actor_CommandListItem.xml"/>
 		</ActionListScript>
 	</Components>
 	<ChildrenActors>

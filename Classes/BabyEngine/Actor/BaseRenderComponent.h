@@ -18,7 +18,7 @@ namespace cocos2d
  * \details
  *	Every BaseRenderComponent has one and only one cocos2d::Node* or its children as its internal renderer.
  *	BaseRenderComponents are automatically organized in the form of trees, just like actors.
- *	That is, BaseRenderComponent::addChild() is called within Actor::addChild().
+ *	That is, BaseRenderComponent::vAddChild() is called within Actor::vAddChild().
  *	For simplicity, every actor can have no more than one concrete render component.
  *
  * \author Babygogogo
@@ -26,9 +26,10 @@ namespace cocos2d
  */
 class BaseRenderComponent : public ActorComponent
 {
-	friend class Actor;					//For addChild() and removeFromParent().
+	friend class Actor;					//For vAddChild() and removeFromParent().
 	friend class BaseController;		//For getSceneNode().
 	friend class TransformComponent;	//For getSceneNode().
+	friend class ListViewRenderComponent;	//#TODO: For m_Node. Ugly and should be removed.
 
 public:
 	~BaseRenderComponent() = default;
@@ -52,15 +53,15 @@ protected:
 	//Concrete render components should create and retain their scene node here.
 	virtual bool vInit(const tinyxml2::XMLElement * xmlElement) = 0;
 
+	//Called by the owner Actor.
+	virtual void vAddChild(const BaseRenderComponent & child);
+	void removeFromParent();
+
 	cocos2d::Node *m_Node{ nullptr };
 
 private:
 	//Getter for underlying scene node. Should only be used by classes in BabyEngine.
 	cocos2d::Node * getSceneNode() const;
-
-	//Called by the owner Actor.
-	void addChild(const BaseRenderComponent & child);
-	void removeFromParent();
 };
 
 #endif // !__BASE_RENDER_COMPONENT__

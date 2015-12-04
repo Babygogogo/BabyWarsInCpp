@@ -130,7 +130,7 @@ void Actor::addChild(Actor & child)
 
 	//Deal with child's render component if present
 	if (auto childRenderComponent = child.pimpl->m_RenderComponent)
-		pimpl->m_RenderComponent->addChild(*childRenderComponent);
+		pimpl->m_RenderComponent->vAddChild(*childRenderComponent);
 }
 
 void Actor::removeFromParent()

@@ -291,11 +291,14 @@
     <ClCompile Include="..\Classes\BabyWars\Script\ActionListScript.cpp">
       <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\ActionListItemScript.cpp">
-      <Filter>src\BabyWars\Script</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToButton.cpp">
       <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataRequestChangeUnitState.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\CommandListItemScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -569,11 +572,17 @@
     <ClInclude Include="..\Classes\BabyWars\Script\ActionListScript.h">
       <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\ActionListItemScript.h">
-      <Filter>src\BabyWars\Script</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToButton.h">
       <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\GameCommand.h">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataRequestChangeUnitState.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\CommandListItemScript.h">
+      <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

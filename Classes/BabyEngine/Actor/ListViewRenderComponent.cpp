@@ -26,6 +26,11 @@ ListViewRenderComponent::~ListViewRenderComponent()
 	CC_SAFE_RELEASE_NULL(m_Node);
 }
 
+void ListViewRenderComponent::forceDoLayout()
+{
+	static_cast<cocos2d::ui::ListView *>(m_Node)->forceDoLayout();
+}
+
 bool ListViewRenderComponent::vInit(const tinyxml2::XMLElement * xmlElement)
 {
 	assert(!m_Node && "ListViewRenderComponent::vInit() the node is already initialized.");
@@ -37,6 +42,14 @@ bool ListViewRenderComponent::vInit(const tinyxml2::XMLElement * xmlElement)
 		utilities::setSceneNodePropertiesWithXML(m_Node, propertiesElement);
 
 	return true;
+}
+
+void ListViewRenderComponent::vAddChild(const BaseRenderComponent & child)
+{
+	auto childWidget = dynamic_cast<cocos2d::ui::Widget*>(child.m_Node);
+	assert(childWidget && "ListViewRenderComponent::vAddChild() the underlying scene node of the child is not a cocos2d::ui::Widget*.");
+
+	static_cast<cocos2d::ui::ListView*>(m_Node)->pushBackCustomItem(childWidget);
 }
 
 const std::string ListViewRenderComponent::Type{ "ListViewRenderComponent" };

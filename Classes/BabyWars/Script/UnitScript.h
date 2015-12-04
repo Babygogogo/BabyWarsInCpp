@@ -1,6 +1,8 @@
 #ifndef __UNIT_SCRIPT__
 #define __UNIT_SCRIPT__
 
+#include <memory>
+
 #include "../../BabyEngine/Actor/BaseScriptComponent.h"
 
 //Forward declaration.
@@ -8,6 +10,7 @@ class UnitData;
 struct GridIndex;
 class MovingPath;
 class EvtDataInputTouch;
+class GameCommand;
 enum class UnitState;
 
 class UnitScript : public BaseScriptComponent
@@ -21,6 +24,8 @@ public:
 	void loadUnit(tinyxml2::XMLElement * xmlElement);
 
 	const std::shared_ptr<UnitData> & getUnitData() const;
+
+	std::vector<GameCommand> getCommands() const;
 
 	//The setter also sets the position of the Unit according to the indexes.
 	void setGridIndexAndPosition(const GridIndex & gridIndex);
@@ -53,7 +58,7 @@ private:
 
 	//Implementation stuff.
 	struct UnitScriptImpl;
-	std::unique_ptr<UnitScriptImpl> pimpl;
+	std::shared_ptr<UnitScriptImpl> pimpl;
 };
 
 #endif // !__UNIT_SCRIPT__

@@ -86,7 +86,7 @@ void UnitMapScript::UnitMapScriptImpl::onUnitStateChangeEnd(const EvtDataUnitSta
 	}
 	else if (currentState == UnitState::MovingEnd) {
 		//#TODO: This is a hack which makes the unit in idle state after moving. Should be removed.
-		e.getUnitScript()->setState(UnitState::Idle);
+		//e.getUnitScript()->setState(UnitState::Idle);
 	}
 }
 

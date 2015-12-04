@@ -25,7 +25,7 @@ private:
 
 	//Implementation stuff.
 	struct ActionListScriptImpl;
-	std::unique_ptr<ActionListScriptImpl> pimpl;
+	std::shared_ptr<ActionListScriptImpl> pimpl;
 };
 
 #endif // __ActionListScript__

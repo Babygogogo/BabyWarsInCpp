@@ -22,8 +22,8 @@
 		<TransformComponent>
 			<Scale Value="0.95"/>
 		</TransformComponent>
-		<ActionListItemScript>
-		</ActionListItemScript>
+		<CommandListItemScript>
+		</CommandListItemScript>
 	</Components>
 	<ChildrenActors>
 	</ChildrenActors>

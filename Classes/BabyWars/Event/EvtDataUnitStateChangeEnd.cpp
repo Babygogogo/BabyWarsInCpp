@@ -2,6 +2,9 @@
 
 std::shared_ptr<UnitScript> EvtDataUnitStateChangeEnd::getUnitScript() const
 {
+	if (m_UnitScript.expired())
+		return nullptr;
+
 	return m_UnitScript.lock();
 }
 

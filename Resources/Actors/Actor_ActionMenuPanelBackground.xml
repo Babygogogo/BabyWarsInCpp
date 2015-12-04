@@ -7,7 +7,7 @@
 				<SpriteFrameName Value="Menu_Background_Red_01.png"/>
 			</SceneNode>
 			<SceneNodeProperties>
-				<Opacity Value="200">
+				<Opacity Value="160">
 					<!--The value is an int in [0, 255].-->
 				</Opacity>
 				<ContentSize Width="200" Height="400"/>

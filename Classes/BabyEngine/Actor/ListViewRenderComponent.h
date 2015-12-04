@@ -9,6 +9,8 @@ public:
 	ListViewRenderComponent();
 	~ListViewRenderComponent();
 
+	void forceDoLayout();
+
 	//The type name of this component. Must be the same as the class name.
 	static const std::string Type;
 	virtual const std::string & getType() const override;
@@ -22,6 +24,8 @@ public:
 private:
 	//Override functions.
 	virtual bool vInit(const tinyxml2::XMLElement * xmlElement) override;
+
+	virtual void vAddChild(const BaseRenderComponent & child) override;
 
 	//Implementation stuff.
 	struct ListViewRenderComponentImpl;

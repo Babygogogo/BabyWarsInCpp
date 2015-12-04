@@ -37,7 +37,7 @@ void BaseRenderComponent::stopAllActions()
 	m_Node->stopAllActions();
 }
 
-void BaseRenderComponent::addChild(const BaseRenderComponent & child)
+void BaseRenderComponent::vAddChild(const BaseRenderComponent & child)
 {
 	assert(m_Node && child.m_Node && "BaseRenderComponent::addChild() parent or child is not initialized!");
 
