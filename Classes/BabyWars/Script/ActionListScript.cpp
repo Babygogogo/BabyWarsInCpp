@@ -1,10 +1,11 @@
 #include <unordered_set>
 
+#include "ui/UIListView.h"
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Actor/Actor.h"
-#include "../../BabyEngine/Actor/ListViewRenderComponent.h"
+#include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/Event/EvtDataRequestDestroyActor.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
@@ -34,7 +35,7 @@ struct ActionListScript::ActionListScriptImpl
 	std::unordered_set<ActorID> m_ChildrenItemActorIDs;
 
 	std::weak_ptr<UnitScript> m_FocusedUnit;
-	std::weak_ptr<ListViewRenderComponent> m_RenderComponent;
+	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
 };
 
 void ActionListScript::ActionListScriptImpl::onUnitStateChangeEnd(const EvtDataUnitStateChangeEnd & e)
@@ -82,6 +83,8 @@ void ActionListScript::ActionListScriptImpl::showListForUnit(const std::shared_p
 
 		ownerActor->addChild(*listItem);
 		m_ChildrenItemActorIDs.emplace(listItem->getID());
+		auto listView = static_cast<cocos2d::ui::ListView*>(m_RenderComponent.lock()->getSceneNode());
+		listView->pushBackCustomItem(static_cast<cocos2d::ui::Widget*>(listItem->getRenderComponent()->getSceneNode()));
 	}
 
 	m_FocusedUnit = unit;
@@ -129,8 +132,8 @@ void ActionListScript::vPostInit()
 	pimpl->m_OwnerActor = m_OwnerActor;
 	auto ownerActor = m_OwnerActor.lock();
 
-	auto renderComponent = ownerActor->getRenderComponent<ListViewRenderComponent>();
-	assert(renderComponent && "ActionListScript::vPostInit() the actor has no list view render component.");
+	auto renderComponent = ownerActor->getRenderComponent();
+	assert(renderComponent && "ActionListScript::vPostInit() the actor has no render component.");
 	pimpl->m_RenderComponent = std::move(renderComponent);
 
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();

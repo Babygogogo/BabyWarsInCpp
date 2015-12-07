@@ -180,16 +180,10 @@
     <ClCompile Include="..\Classes\BabyEngine\Actor\TransformComponent.cpp">
       <Filter>src\BabyEngine\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Actor\BaseRenderComponent.cpp">
-      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.cpp">
       <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.cpp">
-      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Actor\SpriteRenderComponent.cpp">
       <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Graphic2D\BaseController.cpp">
@@ -252,9 +246,6 @@
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToRect.cpp">
       <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Actor\MenuRenderComponent.cpp">
-      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToVec2.cpp">
       <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
     </ClCompile>
@@ -285,9 +276,6 @@
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToListView.cpp">
       <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Actor\ListViewRenderComponent.cpp">
-      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Script\ActionListScript.cpp">
       <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
@@ -299,6 +287,12 @@
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Script\CommandListItemScript.cpp">
       <Filter>src\BabyWars\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\BaseRenderComponent.cpp">
+      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSceneNode.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -458,12 +452,6 @@
     <ClInclude Include="..\Classes\BabyEngine\Actor\TransformComponent.h">
       <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Actor\BaseRenderComponent.h">
-      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Actor\SpriteRenderComponent.h">
-      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.h">
       <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
     </ClInclude>
@@ -530,9 +518,6 @@
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToRect.h">
       <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Actor\MenuRenderComponent.h">
-      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToVec2.h">
       <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
     </ClInclude>
@@ -566,9 +551,6 @@
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToListView.h">
       <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Actor\ListViewRenderComponent.h">
-      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Script\ActionListScript.h">
       <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
@@ -583,6 +565,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Script\CommandListItemScript.h">
       <Filter>src\BabyWars\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\BaseRenderComponent.h">
+      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSceneNode.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

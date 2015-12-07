@@ -1,6 +1,8 @@
+#include "cocos2d.h"
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/Actor/Actor.h"
+#include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../../BabyEngine/Utilities/XMLToSize.h"
@@ -50,9 +52,15 @@ void ActionMenuPanelScript::vPostInit()
 {
 	auto ownerActor = m_OwnerActor.lock();
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
+	auto sceneNode = ownerActor->getRenderComponent()->getSceneNode();
 
-	ownerActor->addChild(*gameLogic->createActor(ActionMenuPanelScriptImpl::s_BackgroundActorPath.c_str()));
-	ownerActor->addChild(*gameLogic->createActor(ActionMenuPanelScriptImpl::s_ListActorPath.c_str()));
+	auto backgroundActor = gameLogic->createActor(ActionMenuPanelScriptImpl::s_BackgroundActorPath.c_str());
+	ownerActor->addChild(*backgroundActor);
+	sceneNode->addChild(backgroundActor->getRenderComponent()->getSceneNode());
+
+	auto listActor = gameLogic->createActor(ActionMenuPanelScriptImpl::s_ListActorPath.c_str());
+	ownerActor->addChild(*listActor);
+	sceneNode->addChild(listActor->getRenderComponent()->getSceneNode());
 }
 
 const std::string ActionMenuPanelScript::Type{ "ActionMenuPanelScript" };

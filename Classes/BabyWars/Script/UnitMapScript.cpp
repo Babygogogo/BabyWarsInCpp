@@ -2,6 +2,7 @@
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/Actor/Actor.h"
+#include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/Event/EvtDataInputTouch.h"
 #include "../../BabyEngine/Event/EvtDataInputDrag.h"
@@ -193,6 +194,7 @@ void UnitMapScript::loadUnitMap(const char * xmlPath)
 	//Some variables to make the job easier.
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
 	auto ownerActor = m_OwnerActor.lock();
+	auto selfSceneNode = ownerActor->getRenderComponent()->getSceneNode();
 	const auto unitsElement = rootElement->FirstChildElement("Unit");
 	const auto mapElement = rootElement->FirstChildElement("Map");
 
@@ -221,6 +223,7 @@ void UnitMapScript::loadUnitMap(const char * xmlPath)
 
 			//Add the unit actor and script to UnitMap.
 			ownerActor->addChild(*unitActor);
+			selfSceneNode->addChild(unitActor->getRenderComponent()->getSceneNode());
 		}
 
 		//Load the next row of the unit map.

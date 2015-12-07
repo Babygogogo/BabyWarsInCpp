@@ -1,6 +1,8 @@
+#include "cocos2d.h"
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/Actor/Actor.h"
+#include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../../BabyEngine/Utilities/XMLToSize.h"
@@ -48,9 +50,11 @@ void TerrainInfoPanelScript::vPostInit()
 {
 	auto ownerActor = m_OwnerActor.lock();
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
+	auto sceneNode = ownerActor->getRenderComponent()->getSceneNode();
 
 	auto backgroundActor = gameLogic->createActor(TerrainInfoPanelScriptImpl::s_BackgroundActorPath.c_str());
 	ownerActor->addChild(*backgroundActor);
+	sceneNode->addChild(backgroundActor->getRenderComponent()->getSceneNode());
 }
 
 const std::string TerrainInfoPanelScript::Type{ "TerrainInfoPanelScript" };

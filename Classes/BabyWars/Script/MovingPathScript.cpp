@@ -1,10 +1,10 @@
 #include <list>
-#include <unordered_set>
 
 #include "cocos2d.h"
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/Actor/Actor.h"
+#include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/Event/EvtDataInputDrag.h"
 #include "../../BabyEngine/Event/EvtDataRequestDestroyActor.h"
@@ -52,7 +52,7 @@ struct MovingPathScript::MovingPathScriptImpl
 	std::string m_MovingPathGridActorPath;
 
 	bool m_IsMakingPath{ false };
-	std::unordered_set<ActorID> m_ChildrenGridActorIDs;
+	std::vector<std::weak_ptr<Actor>> m_ChildrenGridActorIDs;
 	MovingPath m_MovingPath;
 	std::weak_ptr<const MovingArea> m_MovingArea;
 
@@ -150,10 +150,16 @@ void MovingPathScript::MovingPathScriptImpl::updateAndShowPath(const GridIndex &
 
 void MovingPathScript::MovingPathScriptImpl::clearPath()
 {
-	m_OwnerActor.lock()->removeAllChildren();
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
-	for (const auto & actorID : m_ChildrenGridActorIDs)
-		eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(actorID));
+	for (const auto & weakChild : m_ChildrenGridActorIDs) {
+		if (weakChild.expired()) {
+			continue;
+		}
+
+		auto strongChild = weakChild.lock();
+		eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(strongChild->getID()));
+		strongChild->getRenderComponent()->getSceneNode()->removeFromParent();
+	}
 
 	m_MovingPath.clear();
 	m_ChildrenGridActorIDs.clear();
@@ -203,6 +209,7 @@ MovingPath MovingPathScript::MovingPathScriptImpl::createPath(const MovingPath &
 void MovingPathScript::MovingPathScriptImpl::setChildrenGridActors(const MovingPath & path, Actor & self)
 {
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
+	auto selfSceneNode = self.getRenderComponent()->getSceneNode();
 
 	for (const auto & pathNode : path.getUnderlyingPath()) {
 		const auto & index = pathNode.m_GridIndex;
@@ -218,10 +225,12 @@ void MovingPathScript::MovingPathScriptImpl::setChildrenGridActors(const MovingP
 		//Create the grid actor and attach it to self.
 		auto gridActor = gameLogic->createActor(m_MovingPathGridActorPath.c_str());
 		auto gridScript = gridActor->getComponent<MovingPathGridScript>();
-		gridScript->setAppearanceAndPosition(index, previousDirection, nextDirection);
+		gridScript->setAppearanceWithPreviousAndNextDirection(previousDirection, nextDirection);
+		gridScript->setPositionWithGridIndex(index);
 
 		self.addChild(*gridActor);
-		m_ChildrenGridActorIDs.emplace(gridActor->getID());
+		m_ChildrenGridActorIDs.emplace_back(gridActor);
+		selfSceneNode->addChild(gridActor->getRenderComponent()->getSceneNode());
 	}
 }
 

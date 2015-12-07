@@ -2,6 +2,7 @@
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/Actor/Actor.h"
+#include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
@@ -59,6 +60,7 @@ void TileMapScript::loadTileMap(const char * xmlPath)
 	//Some variables to make the job easier.
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
 	auto ownerActor = m_OwnerActor.lock();
+	auto selfSceneNode = ownerActor->getRenderComponent()->getSceneNode();
 	const auto tilesElement = rootElement->FirstChildElement("Tile");
 	const auto mapElement = rootElement->FirstChildElement("Map");
 
@@ -87,6 +89,7 @@ void TileMapScript::loadTileMap(const char * xmlPath)
 
 			//Add the tile actor and script to TileMap.
 			ownerActor->addChild(*tileActor);
+			selfSceneNode->addChild(tileActor->getRenderComponent()->getSceneNode());
 			pimpl->m_TileMap[gridIndex] = tileScript;
 		}
 

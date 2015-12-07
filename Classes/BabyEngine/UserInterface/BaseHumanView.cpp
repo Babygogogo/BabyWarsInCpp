@@ -29,11 +29,7 @@ bool BaseHumanView::BaseHumanViewImpl::canSetAndRunSceneActor(const std::shared_
 	assert(m_Self.lock()->isAttachedToLogic() && "BaseHumanView::canSetAndRunSceneActor() the view is not attached to game logic.");
 
 	assert(actor && "BaseHumanView::canSetAndRunSceneActor() the actor is nullptr.");
-	assert(!actor->hasParent() && "BaseHumanView::canSetAndRunSceneActor() the actor has parent already.");
-	assert(!actor->isAttachedToHumanView() && "BaseHumanView::canSetAndRunSceneActor() the actor has been attached to view already.");
-
-	auto sceneRenderComponent = std::dynamic_pointer_cast<SceneRenderComponent>(actor->getRenderComponent());
-	assert(sceneRenderComponent && "BaseHumanView::canSetAndRunSceneActor() the actor has no scene render component.");
+	assert(actor->getRenderComponent<SceneRenderComponent>() && "BaseHumanView::canSetAndRunSceneActor() the actor has no scene render component.");
 
 	return true;
 }
@@ -61,17 +57,16 @@ bool BaseHumanView::setAndRunSceneActor(const std::shared_ptr<Actor> & actor)
 	if (!pimpl->canSetAndRunSceneActor(actor))
 		return false;
 
-	auto sceneRenderComponent = std::dynamic_pointer_cast<SceneRenderComponent>(actor->getRenderComponent());
+	auto sceneRenderComponent = actor->getRenderComponent<SceneRenderComponent>();
 	auto sceneToRun = sceneRenderComponent->getTransitionScene() ? sceneRenderComponent->getTransitionScene() : sceneRenderComponent->getScene();
 
-	if (pimpl->m_SceneActor.expired())
+	if (pimpl->m_SceneActor.expired()) {
 		cocos2d::Director::getInstance()->runWithScene(sceneToRun);
+	}
 	else {
-		pimpl->m_SceneActor.lock()->setHumanView(std::weak_ptr<BaseHumanView>());
 		cocos2d::Director::getInstance()->replaceScene(sceneToRun);
 	}
 
-	actor->setHumanView(pimpl->m_Self);
 	pimpl->m_SceneActor = actor;
 
 	return true;

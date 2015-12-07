@@ -2,6 +2,7 @@
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/Actor/Actor.h"
+#include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/Event/EvtDataInputDrag.h"
 #include "../../BabyEngine/Event/EvtDataInputTouch.h"
 #include "../../BabyEngine/Event/IEventDispatcher.h"
@@ -101,15 +102,18 @@ void WarSceneScript::vPostInit()
 	//////////////////////////////////////////////////////////////////////////
 	//Create and add child actors.
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
+	auto selfSceneNode = ownerActor->getRenderComponent()->getSceneNode();
 
 	//Create and add the war field.
 	auto warFieldActor = gameLogic->createActor(WarSceneScriptImpl::s_WarFieldActorPath.c_str());
 	pimpl->m_WarFieldScript = warFieldActor->getComponent<WarFieldScript>();
 	ownerActor->addChild(*warFieldActor);
+	selfSceneNode->addChild(warFieldActor->getRenderComponent()->getSceneNode());
 
 	auto warSceneHUDActor = gameLogic->createActor(WarSceneScriptImpl::s_WarSceneHUDActorPath.c_str());
 	pimpl->m_WarSceneHUDScript = warSceneHUDActor->getComponent<WarSceneHUDScript>();
 	ownerActor->addChild(*warSceneHUDActor);
+	selfSceneNode->addChild(warSceneHUDActor->getRenderComponent()->getSceneNode());
 
 	//#TODO: create and add, commander, weather and so on...
 

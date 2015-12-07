@@ -152,10 +152,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyEngine\Actor\BaseScriptComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Actor\FiniteTimeActionComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.cpp" />
-    <ClCompile Include="..\Classes\BabyEngine\Actor\ListViewRenderComponent.cpp" />
-    <ClCompile Include="..\Classes\BabyEngine\Actor\MenuRenderComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.cpp" />
-    <ClCompile Include="..\Classes\BabyEngine\Actor\SpriteRenderComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Actor\TransformComponent.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Event\EventDispatcher.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Event\EvtDataInputDrag.cpp" />
@@ -180,6 +177,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToRect.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToScale9Sprite.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToScene.cpp" />
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSceneNode.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSize.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSprite.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.cpp" />
@@ -232,11 +230,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyEngine\Actor\BaseScriptComponent.h" />
     <ClInclude Include="..\Classes\BabyEngine\Actor\FiniteTimeActionComponent.h" />
     <ClInclude Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.h" />
-    <ClInclude Include="..\Classes\BabyEngine\Actor\ListViewRenderComponent.h" />
-    <ClInclude Include="..\Classes\BabyEngine\Actor\MenuRenderComponent.h" />
     <ClInclude Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.h" />
     <ClInclude Include="..\Classes\BabyEngine\Actor\SoundPlayer.h" />
-    <ClInclude Include="..\Classes\BabyEngine\Actor\SpriteRenderComponent.h" />
     <ClInclude Include="..\Classes\BabyEngine\Actor\TransformComponent.h" />
     <ClInclude Include="..\Classes\BabyEngine\Event\BaseEventData.h" />
     <ClInclude Include="..\Classes\BabyEngine\Event\EventDispatcher.h" />
@@ -268,6 +263,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToRect.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToScale9Sprite.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToScene.h" />
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSceneNode.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSize.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSprite.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.h" />

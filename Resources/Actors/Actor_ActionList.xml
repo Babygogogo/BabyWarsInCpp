@@ -1,14 +1,14 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
 <Actor Type="ActionList" Resource="Actors\Actor_ActionList.xml">
 	<Components>
-		<ListViewRenderComponent>
-			<ListView>
+		<GeneralRenderComponent>
+			<SceneNode Type="ListView">
 				<ItemsMargin Value="5"/>
-			</ListView>
+			</SceneNode>
 			<SceneNodeProperties>
 				<ContentSize Width="180" Height="380"/>
 			</SceneNodeProperties>
-		</ListViewRenderComponent>
+		</GeneralRenderComponent>
 		<TransformComponent>
 			<Position X="-90" Y="-190"/>
 		</TransformComponent>

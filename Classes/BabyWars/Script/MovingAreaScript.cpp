@@ -1,10 +1,10 @@
-#include <map>
-#include <unordered_set>
-#include <list>
+#include <vector>
 
+#include "cocos2d.h"
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/Actor/Actor.h"
+#include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/Event/EvtDataRequestDestroyActor.h"
 #include "../../BabyEngine/Event/IEventDispatcher.h"
@@ -43,7 +43,7 @@ struct MovingAreaScript::MovingRangeScriptImpl
 	std::shared_ptr<MovingArea> m_MovingArea;
 
 	std::string m_MovingAreaGridActorPath;
-	std::unordered_set<ActorID> m_ChildrenGridActorIDs;
+	std::vector<std::weak_ptr<Actor>> m_ChildrenGridActors;
 
 	std::weak_ptr<Actor> m_OwnerActor;
 	std::weak_ptr<TransformComponent> m_TransformComponent;
@@ -94,14 +94,20 @@ void MovingAreaScript::MovingRangeScriptImpl::createAndShowArea(const std::weak_
 
 void MovingAreaScript::MovingRangeScriptImpl::clearArea()
 {
-	m_OwnerActor.lock()->removeAllChildren();
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
-	for (const auto & actorID : m_ChildrenGridActorIDs)
-		eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(actorID));
+	for (const auto & weakChild : m_ChildrenGridActors) {
+		if (weakChild.expired()) {
+			return;
+		}
+
+		auto strongChild = weakChild.lock();
+		eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(strongChild->getID()));
+		strongChild->getRenderComponent()->getSceneNode()->removeFromParent();
+	}
 
 	m_FocusUnit.reset();
 	m_MovingArea.reset();
-	m_ChildrenGridActorIDs.clear();
+	m_ChildrenGridActors.clear();
 }
 
 std::shared_ptr<MovingArea> MovingAreaScript::MovingRangeScriptImpl::createArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap) const
@@ -133,6 +139,7 @@ std::shared_ptr<MovingArea> MovingAreaScript::MovingRangeScriptImpl::createArea(
 void MovingAreaScript::MovingRangeScriptImpl::setChildrenGridActors(const MovingArea & movingArea, Actor & self)
 {
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
+	auto selfSceneNode = self.getRenderComponent()->getSceneNode();
 
 	for (const auto & index : movingArea.getAllIndexesInArea()) {
 		auto gridActor = gameLogic->createActor(m_MovingAreaGridActorPath.c_str());
@@ -140,7 +147,8 @@ void MovingAreaScript::MovingRangeScriptImpl::setChildrenGridActors(const Moving
 		gridScript->setGridIndexAndPosition(index);
 
 		self.addChild(*gridActor);
-		m_ChildrenGridActorIDs.emplace(gridActor->getID());
+		selfSceneNode->addChild(gridActor->getRenderComponent()->getSceneNode());
+		m_ChildrenGridActors.emplace_back(gridActor);
 	}
 }
 

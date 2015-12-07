@@ -2,7 +2,7 @@
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/Actor/Actor.h"
-#include "../../BabyEngine/Actor/SpriteRenderComponent.h"
+#include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../Resource/ResourceLoader.h"
@@ -15,13 +15,13 @@
 //////////////////////////////////////////////////////////////////////////
 struct TileScript::TileScriptImpl
 {
-	TileScriptImpl() {};
-	~TileScriptImpl() {};
+	TileScriptImpl() = default;
+	~TileScriptImpl() = default;
 
 	GridIndex m_GridIndex;
 	std::shared_ptr<TileData> m_TileData;
 
-	std::weak_ptr<SpriteRenderComponent> m_SpriteRenderComponent;
+	std::shared_ptr<BaseRenderComponent> m_RenderComponent;
 	std::weak_ptr<TransformComponent> m_TransformComponent;
 };
 
@@ -47,7 +47,8 @@ void TileScript::LoadTile(tinyxml2::XMLElement * xmlElement)
 
 	auto ownerActor = m_OwnerActor.lock();
 	//#TODO: This only shows the first first frame of the animation. Update the code and resources to show the whole animation.
-	pimpl->m_SpriteRenderComponent.lock()->setSpriteFrame(tileData->getAnimation()->getFrames().at(0)->getSpriteFrame());
+	auto sceneNode = static_cast<cocos2d::Sprite*>(pimpl->m_RenderComponent->getSceneNode());
+	sceneNode->setSpriteFrame(tileData->getAnimation()->getFrames().at(0)->getSpriteFrame());
 
 	//Scale the sprite so that it meets the real game grid size.
 	pimpl->m_TransformComponent.lock()->setScaleToSize(resourceLoader->getDesignGridSize());
@@ -87,9 +88,9 @@ void TileScript::vPostInit()
 {
 	auto ownerActor = m_OwnerActor.lock();
 
-	auto renderComponent = ownerActor->getRenderComponent<SpriteRenderComponent>();
+	auto renderComponent = ownerActor->getRenderComponent();
 	assert(renderComponent && "TileScript::vPostInit() the actor has no sprite render component.");
-	pimpl->m_SpriteRenderComponent = std::move(renderComponent);
+	pimpl->m_RenderComponent = std::move(renderComponent);
 
 	auto transformComponent = ownerActor->getComponent<TransformComponent>();
 	assert(transformComponent && "TileScript::vPostInit() the actor has no transform component.");

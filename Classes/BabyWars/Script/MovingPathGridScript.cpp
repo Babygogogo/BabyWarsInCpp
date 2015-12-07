@@ -2,7 +2,7 @@
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/Actor/Actor.h"
-#include "../../BabyEngine/Actor/SpriteRenderComponent.h"
+#include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../Resource/ResourceLoader.h"
@@ -33,7 +33,7 @@ struct MovingPathGridScript::MovingPathGridScriptImpl
 	static std::string s_SpriteFrameNameLineHorizontal;
 	static std::string s_SpriteFrameNameLineVertical;
 
-	std::weak_ptr<SpriteRenderComponent> m_SpriteRenderComponent;
+	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
 	std::weak_ptr<TransformComponent> m_TransformComponent;
 };
 
@@ -122,18 +122,21 @@ MovingPathGridScript::~MovingPathGridScript()
 {
 }
 
-void MovingPathGridScript::setAppearanceAndPosition(const GridIndex & index, AdjacentDirection previous, AdjacentDirection next)
+void MovingPathGridScript::setAppearanceWithPreviousAndNextDirection(AdjacentDirection previous, AdjacentDirection next)
 {
-	auto renderComponent = pimpl->m_SpriteRenderComponent.lock();
+	auto sceneNode = static_cast<cocos2d::Sprite*>(pimpl->m_RenderComponent.lock()->getSceneNode());
 	const auto & spriteFrameName = pimpl->getSpriteFrameName(previous, next);
 	if (spriteFrameName.empty()) {
-		renderComponent->setVisible(false);
+		sceneNode->setVisible(false);
 		return;
 	}
 
-	renderComponent->setSpriteFrame(cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFrameName));
+	sceneNode->setSpriteFrame(cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFrameName));
+}
 
-	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
+void MovingPathGridScript::setPositionWithGridIndex(const GridIndex & index)
+{
+	const auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
 	auto transformComponent = pimpl->m_TransformComponent.lock();
 	transformComponent->setPosition(index.toPosition(gridSize));
 	transformComponent->setScaleToSize(gridSize);
@@ -165,9 +168,9 @@ void MovingPathGridScript::vPostInit()
 {
 	auto ownerActor = m_OwnerActor.lock();
 
-	auto renderComponent = ownerActor->getRenderComponent<SpriteRenderComponent>();
+	auto renderComponent = ownerActor->getRenderComponent();
 	assert(renderComponent && "MovingPathGridScript::vPostInit() the actor has no render component.");
-	pimpl->m_SpriteRenderComponent = std::move(renderComponent);
+	pimpl->m_RenderComponent = std::move(renderComponent);
 
 	auto transformComponent = ownerActor->getComponent<TransformComponent>();
 	assert(transformComponent && "MovingPathGridScript::vPostInit() the actor has no transform component.");

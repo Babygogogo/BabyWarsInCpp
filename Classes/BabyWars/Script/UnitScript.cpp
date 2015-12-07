@@ -2,7 +2,7 @@
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/Actor/Actor.h"
-#include "../../BabyEngine/Actor/SpriteRenderComponent.h"
+#include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
@@ -43,7 +43,7 @@ struct UnitScript::UnitScriptImpl
 	std::shared_ptr<UnitData> m_UnitData;
 	UnitState m_State{ UnitState::Invalid };
 
-	std::weak_ptr<SpriteRenderComponent> m_SpriteRenderComponent;
+	std::shared_ptr<BaseRenderComponent> m_RenderComponent;
 	std::weak_ptr<TransformComponent> m_TransformComponent;
 };
 
@@ -86,12 +86,11 @@ void UnitScript::UnitScriptImpl::setState(UnitState state)
 
 void UnitScript::UnitScriptImpl::updateAppearanceAccordingToState(UnitState state)
 {
-	auto spriteRenderComponent = m_SpriteRenderComponent.lock();
 	if (state == UnitState::Active) {
-		spriteRenderComponent->runAction(m_ActiveAction);
+		m_RenderComponent->runAction(m_ActiveAction);
 	}
 	else {
-		spriteRenderComponent->stopAction(m_ActiveAction);
+		m_RenderComponent->stopAction(m_ActiveAction);
 		m_TransformComponent.lock()->setRotation(0);
 	}
 }
@@ -164,7 +163,8 @@ void UnitScript::loadUnit(tinyxml2::XMLElement * xmlElement)
 
 	auto ownerActor = m_OwnerActor.lock();
 	//#TODO: This only shows the first frame of the animation. Update the code to show the whole animation.
-	pimpl->m_SpriteRenderComponent.lock()->setSpriteFrame(unitData->getAnimation()->getFrames().at(0)->getSpriteFrame());
+	auto sceneNode = static_cast<cocos2d::Sprite*>(pimpl->m_RenderComponent->getSceneNode());
+	sceneNode->setSpriteFrame(unitData->getAnimation()->getFrames().at(0)->getSpriteFrame());
 
 	//Scale the sprite so that it meets the real game grid size.
 	pimpl->m_TransformComponent.lock()->setScaleToSize(resourceLoader->getDesignGridSize());
@@ -250,7 +250,7 @@ void UnitScript::moveAlongPath(const MovingPath & path)
 
 	pimpl->m_IndexBeforeMoving = pimpl->m_GridIndex;
 	pimpl->updateMoveAction(path);
-	pimpl->m_SpriteRenderComponent.lock()->runAction(pimpl->m_MoveAction);
+	pimpl->m_RenderComponent->runAction(pimpl->m_MoveAction);
 	setState(UnitState::Moving);
 }
 
@@ -261,7 +261,7 @@ void UnitScript::undoMove()
 		return;
 
 	if (pimpl->m_State == UnitState::Moving || pimpl->m_State == UnitState::MovingEnd) {
-		pimpl->m_SpriteRenderComponent.lock()->stopAction(pimpl->m_MoveAction);
+		pimpl->m_RenderComponent->stopAction(pimpl->m_MoveAction);
 		setGridIndexAndPosition(pimpl->m_IndexBeforeMoving);
 	}
 
@@ -278,9 +278,9 @@ void UnitScript::vPostInit()
 	auto ownerActor = m_OwnerActor.lock();
 	pimpl->m_Script = ownerActor->getComponent<UnitScript>();
 
-	auto renderComponent = ownerActor->getRenderComponent<SpriteRenderComponent>();
+	auto renderComponent = ownerActor->getRenderComponent();
 	assert(renderComponent && "UnitScript::vPostInit() the actor has no sprite render component.");
-	pimpl->m_SpriteRenderComponent = std::move(renderComponent);
+	pimpl->m_RenderComponent = std::move(renderComponent);
 
 	auto transformComponent = ownerActor->getComponent<TransformComponent>();
 	assert(transformComponent && "UnitScript::vPostInit() the actor has no transform component.");

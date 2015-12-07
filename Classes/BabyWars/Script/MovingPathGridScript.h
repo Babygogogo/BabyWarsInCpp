@@ -16,7 +16,8 @@ public:
 	static const std::string Type;
 	virtual const std::string & getType() const override;
 
-	void setAppearanceAndPosition(const GridIndex & index, AdjacentDirection previous, AdjacentDirection next);
+	void setAppearanceWithPreviousAndNextDirection(AdjacentDirection previous, AdjacentDirection next);
+	void setPositionWithGridIndex(const GridIndex & index);
 
 	//Disable copy/move ctor and operator=.
 	MovingPathGridScript(const MovingPathGridScript &) = delete;

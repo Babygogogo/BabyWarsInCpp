@@ -26,8 +26,17 @@ SceneRenderComponent::SceneRenderComponent() : pimpl{ std::make_unique<SceneRend
 
 SceneRenderComponent::~SceneRenderComponent()
 {
-	CC_SAFE_RELEASE_NULL(m_Node);
-	CC_SAFE_RELEASE_NULL(pimpl->m_TransitionScene);
+	if (m_Node) {
+		m_Node->removeFromParent();
+		m_Node->removeAllChildren();
+		CC_SAFE_RELEASE_NULL(m_Node);
+	}
+
+	if (pimpl->m_TransitionScene) {
+		pimpl->m_TransitionScene->removeFromParent();
+		pimpl->m_TransitionScene->removeAllChildren();
+		CC_SAFE_RELEASE_NULL(pimpl->m_TransitionScene);
+	}
 }
 
 cocos2d::Scene * SceneRenderComponent::getScene() const

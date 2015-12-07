@@ -75,9 +75,6 @@ public:
 		return std::dynamic_pointer_cast<T>(getRenderComponent());
 	}
 
-	bool isAttachedToHumanView() const;
-	std::shared_ptr<BaseHumanView> getHumanView() const;
-
 	//Stuff for organizing the Actors as trees.
 	bool hasParent() const;
 	std::shared_ptr<Actor> getParent() const;
@@ -117,9 +114,6 @@ private:
 	//Called by GameLogic on every game loop.
 	//Calles vUpdate() on every attached component.
 	void update(const std::chrono::milliseconds & delteTimeMs);
-
-	//Called by BaseHumanView when attached to view.
-	void setHumanView(std::weak_ptr<BaseHumanView> humanView);
 
 	//Implementation stuff.
 	struct ActorImpl;

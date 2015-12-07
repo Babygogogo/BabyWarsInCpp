@@ -72,19 +72,6 @@ std::shared_ptr<BaseRenderComponent> Actor::getRenderComponent() const
 	return pimpl->m_RenderComponent;
 }
 
-bool Actor::isAttachedToHumanView() const
-{
-	return !pimpl->m_HumanView.expired();
-}
-
-std::shared_ptr<BaseHumanView> Actor::getHumanView() const
-{
-	if (!isAttachedToHumanView())
-		return nullptr;
-
-	return pimpl->m_HumanView.lock();
-}
-
 bool Actor::hasParent() const
 {
 	return !pimpl->m_Parent.expired();
@@ -119,32 +106,23 @@ const std::unordered_map<ActorID, std::weak_ptr<Actor>> & Actor::getChildren() c
 
 void Actor::addChild(Actor & child)
 {
-	//If the child is not valid or has parent already, simply return.
-	if (child.hasParent())
+	if (child.hasParent()) {
 		return;
-	if (child.isAttachedToHumanView())
-		return;
+	}
 
 	child.pimpl->m_Parent = pimpl->m_Self;
 	pimpl->m_Children.emplace(child.getID(), child.pimpl->m_Self);
-
-	//Deal with child's render component if present
-	if (auto childRenderComponent = child.pimpl->m_RenderComponent)
-		pimpl->m_RenderComponent->vAddChild(*childRenderComponent);
 }
 
 void Actor::removeFromParent()
 {
-	if (!hasParent())
+	if (!hasParent()) {
 		return;
+	}
 
 	//Remove this from the parent's children list.
 	pimpl->m_Parent.lock()->pimpl->m_Children.erase(pimpl->m_ID);
 	pimpl->m_Parent.reset();
-
-	//Deal with child's render component if present.
-	if (pimpl->m_RenderComponent)
-		pimpl->m_RenderComponent->removeFromParent();
 }
 
 void Actor::removeAllChildren()
@@ -153,11 +131,7 @@ void Actor::removeAllChildren()
 		if (idChildPair.second.expired())
 			continue;
 
-		auto child = idChildPair.second.lock();
-		//Can't call child.removeFromParent() here because it modifies the pimpl->m_Children!
-		child->pimpl->m_Parent.reset();
-		if (auto childRenderComponent = child->getRenderComponent())
-			childRenderComponent->removeFromParent();
+		idChildPair.second.lock()->pimpl->m_Parent.reset();
 	}
 
 	pimpl->m_Children.clear();
@@ -211,9 +185,4 @@ void Actor::postInit()
 void Actor::update(const std::chrono::milliseconds & delteTimeMs)
 {
 	//#TODO: call update() on all components here.
-}
-
-void Actor::setHumanView(std::weak_ptr<BaseHumanView> humanView)
-{
-	pimpl->m_HumanView = humanView;
 }

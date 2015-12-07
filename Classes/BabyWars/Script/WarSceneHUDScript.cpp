@@ -1,6 +1,8 @@
+#include "cocos2d.h"
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/Actor/Actor.h"
+#include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "MoneyInfoPanelScript.h"
@@ -59,18 +61,22 @@ void WarSceneHUDScript::vPostInit()
 {
 	auto ownerActor = m_OwnerActor.lock();
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
+	auto selfSceneNode = ownerActor->getRenderComponent()->getSceneNode();
 
 	auto moneyInfoPanelActor = gameLogic->createActor(WarSceneHUDScriptImpl::s_MoneyInfoPanelActorPath.c_str());
 	pimpl->m_MoneyInfoPanelScript = moneyInfoPanelActor->getComponent<MoneyInfoPanelScript>();
 	ownerActor->addChild(*moneyInfoPanelActor);
+	selfSceneNode->addChild(moneyInfoPanelActor->getRenderComponent()->getSceneNode());
 
 	auto actionMenuPanelActor = gameLogic->createActor(WarSceneHUDScriptImpl::s_ActionMenuPanelActorPath.c_str());
 	pimpl->m_ActionMenuPanelScript = actionMenuPanelActor->getComponent<ActionMenuPanelScript>();
 	ownerActor->addChild(*actionMenuPanelActor);
+	selfSceneNode->addChild(actionMenuPanelActor->getRenderComponent()->getSceneNode());
 
 	auto terrainInfoPanelActor = gameLogic->createActor(WarSceneHUDScriptImpl::s_TerrainInfoPanelActorPath.c_str());
 	pimpl->m_TerrainInfoPanelScript = terrainInfoPanelActor->getComponent<TerrainInfoPanelScript>();
 	ownerActor->addChild(*terrainInfoPanelActor);
+	selfSceneNode->addChild(terrainInfoPanelActor->getRenderComponent()->getSceneNode());
 }
 
 const std::string WarSceneHUDScript::Type{ "WarSceneHUDScript" };
