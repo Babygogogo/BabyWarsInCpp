@@ -20,6 +20,7 @@ public:
 	};
 
 	MovingPath() = default;
+	MovingPath(const PathNode & node);
 	~MovingPath() = default;
 
 	MovingPath(const MovingPath &) = default;

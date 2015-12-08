@@ -21,17 +21,17 @@ struct TouchAndDragController::TouchAndDragControllerImpl
 	std::weak_ptr<Actor> m_TargetActor;
 
 	cocos2d::Vec2 m_TouchOneByOneBeganPosition;
-	cocos2d::EventListenerTouchOneByOne * m_TouchOneByOne{ cocos2d::EventListenerTouchOneByOne::create() };
+	cocos2d::EventListenerTouchOneByOne * m_TouchOneByOneListener{ cocos2d::EventListenerTouchOneByOne::create() };
 };
 
 TouchAndDragController::TouchAndDragControllerImpl::TouchAndDragControllerImpl()
 {
-	m_TouchOneByOne->retain();
+	m_TouchOneByOneListener->retain();
 
-	m_TouchOneByOne->onTouchBegan = [this](cocos2d::Touch * touch, cocos2d::Event * event) {
+	m_TouchOneByOneListener->onTouchBegan = [this](cocos2d::Touch * touch, cocos2d::Event * event) {
 		return !m_TargetActor.expired();
 	};
-	m_TouchOneByOne->onTouchMoved = [this](cocos2d::Touch * touch, cocos2d::Event * event) {
+	m_TouchOneByOneListener->onTouchMoved = [this](cocos2d::Touch * touch, cocos2d::Event * event) {
 		if (m_TargetActor.expired())
 			return;
 
@@ -42,7 +42,7 @@ TouchAndDragController::TouchAndDragControllerImpl::TouchAndDragControllerImpl()
 		}
 		SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataInputDrag>(m_TargetActor.lock()->getID(), touch->getLocation(), touch->getPreviousLocation(), dragState));
 	};
-	m_TouchOneByOne->onTouchEnded = [this](cocos2d::Touch * touch, cocos2d::Event * event) {
+	m_TouchOneByOneListener->onTouchEnded = [this](cocos2d::Touch * touch, cocos2d::Event * event) {
 		if (m_TargetActor.expired())
 			return;
 
@@ -57,7 +57,7 @@ TouchAndDragController::TouchAndDragControllerImpl::TouchAndDragControllerImpl()
 
 TouchAndDragController::TouchAndDragControllerImpl::~TouchAndDragControllerImpl()
 {
-	m_TouchOneByOne->release();
+	m_TouchOneByOneListener->release();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -86,7 +86,7 @@ void TouchAndDragController::vSetEnableDelegate(bool enable, cocos2d::Node * tar
 {
 	auto eventDispatcher = cocos2d::Director::getInstance()->getEventDispatcher();
 	if (enable)
-		eventDispatcher->addEventListenerWithSceneGraphPriority(pimpl->m_TouchOneByOne, targetSceneNode);
+		eventDispatcher->addEventListenerWithSceneGraphPriority(pimpl->m_TouchOneByOneListener, targetSceneNode);
 	else
-		eventDispatcher->removeEventListener(pimpl->m_TouchOneByOne);
+		eventDispatcher->removeEventListener(pimpl->m_TouchOneByOneListener);
 }

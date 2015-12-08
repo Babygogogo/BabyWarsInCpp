@@ -11,6 +11,10 @@
 					<CapInsets X="4" Y="6" Width="1" Height="1"/>
 				</NormalTexture>
 				<ZoomScale Value="0.05"/>
+				<TitleProperties>
+					<FontSize Value="25"/>
+					<TitleColor R="0" G="0" B="0"/>
+				</TitleProperties>
 			</SceneNode>
 			<SceneNodeProperties>
 				<Opacity Value="160">

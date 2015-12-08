@@ -21,7 +21,6 @@ public:
 	std::weak_ptr<Actor> m_Parent;
 	std::weak_ptr<Actor> m_Self;
 	std::unordered_map<ActorID, std::weak_ptr<Actor>> m_Children;
-	std::weak_ptr<BaseHumanView> m_HumanView;
 
 	std::string m_Type;
 	std::string m_ResourceFile;

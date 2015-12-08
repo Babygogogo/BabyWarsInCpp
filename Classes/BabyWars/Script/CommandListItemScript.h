@@ -4,6 +4,7 @@
 #include "../../BabyEngine/Actor/BaseScriptComponent.h"
 
 //Forward declaration.
+class EvtDataInputTouch;
 class GameCommand;
 
 class CommandListItemScript : public BaseScriptComponent
@@ -30,7 +31,7 @@ private:
 
 	//Implementation stuff.
 	struct CommandListItemScriptImpl;
-	std::unique_ptr<CommandListItemScriptImpl> pimpl;
+	std::shared_ptr<CommandListItemScriptImpl> pimpl;
 };
 
 #endif // __COMMAND_LIST_ITEM_SCRIPT__

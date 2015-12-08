@@ -3,6 +3,7 @@
 
 #include "XMLToButton.h"
 #include "XMLToRect.h"
+#include "XMLToColor3B.h"
 
 namespace utilities
 {
@@ -73,6 +74,25 @@ namespace utilities
 
 		button->setZoomScale(zoomScaleElement->FloatAttribute("Value"));
 	}
+
+	void setButtonTitlePropertiesWithXML(cocos2d::ui::Button * button, const tinyxml2::XMLElement * titlePropertiesElement)
+	{
+		if (!button || !titlePropertiesElement) {
+			return;
+		}
+
+		if (const auto fontNameElement = titlePropertiesElement->FirstChildElement("FontName")) {
+			button->setTitleFontName(fontNameElement->Attribute("Value"));
+		}
+
+		if (const auto fontSizeElement = titlePropertiesElement->FirstChildElement("FontSize")) {
+			button->setTitleFontSize(fontSizeElement->FloatAttribute("Value"));
+		}
+
+		if (const auto colorElement = titlePropertiesElement->FirstChildElement("TitleColor")) {
+			button->setTitleColor(XMLToColor3B(colorElement));
+		}
+	}
 }
 
 cocos2d::ui::Button * utilities::XMLToButton(const tinyxml2::XMLElement * xmlElement)
@@ -81,6 +101,7 @@ cocos2d::ui::Button * utilities::XMLToButton(const tinyxml2::XMLElement * xmlEle
 
 	setButtonTexturesWithXML(button, xmlElement);
 	setButtonZoomScaleWithXML(button, xmlElement->FirstChildElement("ZoomScale"));
+	setButtonTitlePropertiesWithXML(button, xmlElement->FirstChildElement("TitleProperties"));
 
 	return button;
 }

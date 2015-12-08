@@ -3,6 +3,11 @@
 
 #include "MovingPath.h"
 
+MovingPath::MovingPath(const PathNode & node)
+{
+	m_Path.push_back(node);
+}
+
 bool MovingPath::PathNode::operator==(const PathNode & rhs) const
 {
 	return m_GridIndex == rhs.m_GridIndex && m_RemainingMovementRange == rhs.m_RemainingMovementRange;

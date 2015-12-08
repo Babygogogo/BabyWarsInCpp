@@ -6,6 +6,7 @@
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../../BabyEngine/Utilities/XMLToSize.h"
+#include "ActionListScript.h"
 #include "ActionMenuPanelScript.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -18,6 +19,8 @@ struct ActionMenuPanelScript::ActionMenuPanelScriptImpl
 
 	static std::string s_BackgroundActorPath;
 	static std::string s_ListActorPath;
+
+	std::weak_ptr<ActionListScript> m_ListScript;
 };
 
 std::string ActionMenuPanelScript::ActionMenuPanelScriptImpl::s_BackgroundActorPath;
@@ -61,6 +64,7 @@ void ActionMenuPanelScript::vPostInit()
 	auto listActor = gameLogic->createActor(ActionMenuPanelScriptImpl::s_ListActorPath.c_str());
 	ownerActor->addChild(*listActor);
 	sceneNode->addChild(listActor->getRenderComponent()->getSceneNode());
+	pimpl->m_ListScript = listActor->getComponent<ActionListScript>();
 }
 
 const std::string ActionMenuPanelScript::Type{ "ActionMenuPanelScript" };

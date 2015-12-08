@@ -52,7 +52,9 @@ void WarSceneScript::WarSceneScriptImpl::onInputTouch(const IEventData & e)
 		return;
 
 	//#TODO: Dispatch the input event to children scripts.
-	m_WarFieldScript.lock()->onInputTouch(eventTouch);
+	if (m_WarFieldScript.lock()->onInputTouch(eventTouch)) {
+		return;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////

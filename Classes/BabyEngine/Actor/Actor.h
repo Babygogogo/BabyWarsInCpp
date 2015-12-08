@@ -38,7 +38,6 @@ class Actor final
 {
 	friend class BaseActorFactory;	//For init(), addComponent(), postInit().
 	friend class BaseGameLogic;		//For update().
-	friend class BaseHumanView;		//For setHumanView().
 
 public:
 	//Actor should be created by GameLogic using std::shared_ptr and destroyed by dispatching EvtDataRequestDestroyActor.

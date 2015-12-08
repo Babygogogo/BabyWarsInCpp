@@ -8,6 +8,11 @@ std::shared_ptr<const UnitScript> EvtDataUnitIndexChangeEnd::getUnit() const
 	return m_Unit.lock();
 }
 
+const GridIndex & EvtDataUnitIndexChangeEnd::getPreviousIndex() const
+{
+	return m_PreviousIndex;
+}
+
 const EventType EvtDataUnitIndexChangeEnd::s_EventType{ "EvtDataUnitIndexChangeEnd" };
 
 const EventType & EvtDataUnitIndexChangeEnd::vGetType() const

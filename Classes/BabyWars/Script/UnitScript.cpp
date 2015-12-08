@@ -6,7 +6,7 @@
 #include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
-#include "../Event/EvtDataRequestChangeUnitState.h"
+//#include "../Event/EvtDataRequestChangeUnitState.h"
 #include "../Event/EvtDataUnitStateChangeEnd.h"
 #include "../Event/EvtDataUnitIndexChangeEnd.h"
 #include "../Resource/ResourceLoader.h"
@@ -25,7 +25,7 @@ struct UnitScript::UnitScriptImpl
 	UnitScriptImpl();
 	~UnitScriptImpl();
 
-	void onRequestChangeUnitState(const EvtDataRequestChangeUnitState & e);
+	//void onRequestChangeUnitState(const EvtDataRequestChangeUnitState & e);
 
 	bool canSetState(UnitState state) const;
 	void setState(UnitState state);
@@ -35,37 +35,47 @@ struct UnitScript::UnitScriptImpl
 
 	//#TODO: This should be replaced to show the animation of the active unit.
 	cocos2d::Action * m_ActiveAction{ nullptr };
+	cocos2d::Action * m_MoveEndAction{ nullptr };
 	cocos2d::Action * m_MoveAction{ nullptr };
 
-	std::weak_ptr<UnitScript> m_Script;
 	GridIndex m_GridIndex;
 	GridIndex m_IndexBeforeMoving;
 	std::shared_ptr<UnitData> m_UnitData;
 	UnitState m_State{ UnitState::Invalid };
 
+	std::weak_ptr<UnitScript> m_Script;
 	std::shared_ptr<BaseRenderComponent> m_RenderComponent;
 	std::weak_ptr<TransformComponent> m_TransformComponent;
 };
 
 UnitScript::UnitScriptImpl::UnitScriptImpl()
 {
-	m_ActiveAction = cocos2d::RepeatForever::create(cocos2d::Sequence::create(cocos2d::RotateTo::create(0.2f, 30, 30), cocos2d::RotateTo::create(0.4f, -30, -30), cocos2d::RotateTo::create(0.2f, 0, 0), nullptr));
+	using namespace cocos2d;
+	m_ActiveAction = RepeatForever::create(Sequence::create(RotateTo::create(0.2f, 30, 30), RotateTo::create(0.4f, -30, -30), RotateTo::create(0.2f, 0, 0), nullptr));
 	m_ActiveAction->retain();
+
+	m_MoveEndAction = RepeatForever::create(Sequence::create(FadeTo::create(0.4f, 100), FadeTo::create(0.4f, 255), nullptr));
+	m_MoveEndAction->retain();
 }
 
 UnitScript::UnitScriptImpl::~UnitScriptImpl()
 {
 	CC_SAFE_RELEASE_NULL(m_ActiveAction);
+	CC_SAFE_RELEASE_NULL(m_MoveEndAction);
 	CC_SAFE_RELEASE_NULL(m_MoveAction);
 }
 
-void UnitScript::UnitScriptImpl::onRequestChangeUnitState(const EvtDataRequestChangeUnitState & e)
-{
-	const auto newState = e.getNewState();
-	if (canSetState(newState)) {
-		setState(newState);
-	}
-}
+//void UnitScript::UnitScriptImpl::onRequestChangeUnitState(const EvtDataRequestChangeUnitState & e)
+//{
+//	if (m_Script.expired() || m_Script.lock() != e.getUnitScript()) {
+//		return;
+//	}
+//
+//	const auto newState = e.getNewState();
+//	if (canSetState(newState)) {
+//		setState(newState);
+//	}
+//}
 
 bool UnitScript::UnitScriptImpl::canSetState(UnitState state) const
 {
@@ -86,12 +96,22 @@ void UnitScript::UnitScriptImpl::setState(UnitState state)
 
 void UnitScript::UnitScriptImpl::updateAppearanceAccordingToState(UnitState state)
 {
+	//Reset the appearance.
+	auto sceneNode = m_RenderComponent->getSceneNode();
+	sceneNode->setColor(cocos2d::Color3B(255, 255, 255));
+	m_RenderComponent->stopAction(m_ActiveAction);
+	m_TransformComponent.lock()->setRotation(0);
+	m_RenderComponent->stopAction(m_MoveEndAction);
+	sceneNode->setOpacity(255);
+
 	if (state == UnitState::Active) {
 		m_RenderComponent->runAction(m_ActiveAction);
 	}
-	else {
-		m_RenderComponent->stopAction(m_ActiveAction);
-		m_TransformComponent.lock()->setRotation(0);
+	else if (state == UnitState::MovingEnd) {
+		m_RenderComponent->runAction(m_MoveEndAction);
+	}
+	else if (state == UnitState::Waiting) {
+		m_RenderComponent->getSceneNode()->setColor(cocos2d::Color3B(150, 150, 150));
 	}
 }
 
@@ -108,7 +128,8 @@ void UnitScript::UnitScriptImpl::updateMoveAction(const MovingPath & path)
 	moveActionList.pushBack(cocos2d::CallFunc::create([script = m_Script, pathEndIndex = path.getBackNode().m_GridIndex]() {
 		if (!script.expired()) {
 			auto strongScript = script.lock();
-			strongScript->setGridIndexAndPosition(pathEndIndex);
+			strongScript->pimpl->m_GridIndex = pathEndIndex;
+			//strongScript->setGridIndexAndPosition(pathEndIndex);
 			strongScript->setState(UnitState::MovingEnd);
 		}
 	}));
@@ -134,20 +155,24 @@ bool UnitScript::onInputTouch(const EvtDataInputTouch & touch)
 	auto state = pimpl->m_State;
 	assert(pimpl->m_State != UnitState::Invalid && "UnitScript::onInputTouch() the state of the unit is invalid.");
 
-	if (state == UnitState::Active) {
-		setState(UnitState::Idle);
-		return true;
-	}
-	else if (state == UnitState::Idle) {
+	if (state == UnitState::Idle) {
 		setState(UnitState::Active);
 		return true;
 	}
-	//else if (state == UnitState::Moving) {
-	//	return false;
-	//}
-	//else if (state == UnitState::MovingEnd) {
-	//	return false;
-	//}
+	else if (state == UnitState::Active) {
+		moveAlongPath(MovingPath(MovingPath::PathNode(pimpl->m_GridIndex, pimpl->m_UnitData->getMovementRange())));
+		return true;
+	}
+	else if (state == UnitState::Moving) {
+		assert("UnitScript::onInputTouch() the unit is touched when moving. Moving unit is designed to ignore any touch, therefore this should not happen.");
+		return false;
+	}
+	else if (state == UnitState::MovingEnd) {
+		return false;
+	}
+	else if (state == UnitState::Waiting) {
+		return false;
+	}
 
 	return false;
 }
@@ -192,7 +217,10 @@ std::vector<GameCommand> UnitScript::getCommands() const
 
 	if (pimpl->m_State == UnitState::MovingEnd) {
 		commands.emplace_back("Wait", [unitScript = pimpl->m_Script]() {
-			SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataRequestChangeUnitState>(unitScript, UnitState::Waiting));
+			if (!unitScript.expired()) {
+				unitScript.lock()->setState(UnitState::Waiting);
+			}
+			//SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataRequestChangeUnitState>(unitScript, UnitState::Waiting));
 		});
 	}
 
@@ -202,8 +230,9 @@ std::vector<GameCommand> UnitScript::getCommands() const
 void UnitScript::setGridIndexAndPosition(const GridIndex & gridIndex)
 {
 	//Set the indexes and dispatch event.
+	auto previousIndex = pimpl->m_GridIndex;
 	pimpl->m_GridIndex = gridIndex;
-	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataUnitIndexChangeEnd>(pimpl->m_Script));
+	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataUnitIndexChangeEnd>(pimpl->m_Script, std::move(previousIndex)));
 
 	//Set the position of the node according to indexes.
 	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
@@ -250,8 +279,8 @@ void UnitScript::moveAlongPath(const MovingPath & path)
 
 	pimpl->m_IndexBeforeMoving = pimpl->m_GridIndex;
 	pimpl->updateMoveAction(path);
-	pimpl->m_RenderComponent->runAction(pimpl->m_MoveAction);
 	setState(UnitState::Moving);
+	pimpl->m_RenderComponent->runAction(pimpl->m_MoveAction);
 }
 
 void UnitScript::undoMove()
@@ -286,9 +315,10 @@ void UnitScript::vPostInit()
 	assert(transformComponent && "UnitScript::vPostInit() the actor has no transform component.");
 	pimpl->m_TransformComponent = std::move(transformComponent);
 
-	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
-	eventDispatcher->vAddListener(EvtDataRequestChangeUnitState::s_EventType, pimpl, [](const auto & e) {
-	});
+	//auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
+	//eventDispatcher->vAddListener(EvtDataRequestChangeUnitState::s_EventType, pimpl, [this](const auto & e) {
+	//	pimpl->onRequestChangeUnitState(static_cast<const EvtDataRequestChangeUnitState &>(e));
+	//});
 }
 
 const std::string UnitScript::Type = "UnitScript";

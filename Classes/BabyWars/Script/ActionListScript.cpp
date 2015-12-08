@@ -1,4 +1,4 @@
-#include <unordered_set>
+#include <vector>
 
 #include "ui/UIListView.h"
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
@@ -32,7 +32,8 @@ struct ActionListScript::ActionListScriptImpl
 	static std::string s_ListItemActorPath;
 
 	std::weak_ptr<Actor> m_OwnerActor;
-	std::unordered_set<ActorID> m_ChildrenItemActorIDs;
+	std::vector<std::weak_ptr<Actor>> m_ChildrenItemActors;
+	std::vector<std::weak_ptr<CommandListItemScript>> m_ChildrenItemScripts;
 
 	std::weak_ptr<UnitScript> m_FocusedUnit;
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
@@ -43,10 +44,8 @@ void ActionListScript::ActionListScriptImpl::onUnitStateChangeEnd(const EvtDataU
 	const auto currentState = e.getCurrentState();
 	if (currentState == UnitState::Idle) {
 		if (isListShownForUnit(e.getUnitScript())) {
-			return;
+			clearListForUnit();
 		}
-
-		clearListForUnit();
 	}
 	else if (currentState == UnitState::Moving) {
 		clearListForUnit();
@@ -71,19 +70,21 @@ bool ActionListScript::ActionListScriptImpl::isListShownForUnit(const std::share
 
 void ActionListScript::ActionListScriptImpl::showListForUnit(const std::shared_ptr<UnitScript> & unit)
 {
-	if (!unit)
+	if (!unit) {
 		return;
+	}
 
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
 	auto ownerActor = m_OwnerActor.lock();
+	auto listView = static_cast<cocos2d::ui::ListView*>(m_RenderComponent.lock()->getSceneNode());
 
 	for (const auto & command : unit->getCommands()) {
 		auto listItem = gameLogic->createActor(ActionListScriptImpl::s_ListItemActorPath.c_str());
 		listItem->getComponent<CommandListItemScript>()->initWithGameCommand(command);
 
 		ownerActor->addChild(*listItem);
-		m_ChildrenItemActorIDs.emplace(listItem->getID());
-		auto listView = static_cast<cocos2d::ui::ListView*>(m_RenderComponent.lock()->getSceneNode());
+		m_ChildrenItemActors.emplace_back(listItem);
+		m_ChildrenItemScripts.emplace_back(listItem->getComponent<CommandListItemScript>());
 		listView->pushBackCustomItem(static_cast<cocos2d::ui::Widget*>(listItem->getRenderComponent()->getSceneNode()));
 	}
 
@@ -92,13 +93,20 @@ void ActionListScript::ActionListScriptImpl::showListForUnit(const std::shared_p
 
 void ActionListScript::ActionListScriptImpl::clearListForUnit()
 {
-	//m_OwnerActor.lock()->removeAllChildren();
-	//auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
-	//for (const auto & actorID : m_ChildrenItemActorIDs)
-	//	eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(actorID));
+	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
+	for (const auto & weakChild : m_ChildrenItemActors) {
+		if (weakChild.expired()) {
+			continue;
+		}
 
-	//m_ChildrenItemActorIDs.clear();
-	//m_FocusedUnit.reset();
+		auto strongChild = weakChild.lock();
+		eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(strongChild->getID()));
+		strongChild->getRenderComponent()->getSceneNode()->removeFromParent();
+	}
+
+	m_ChildrenItemActors.clear();
+	m_ChildrenItemScripts.clear();
+	m_FocusedUnit.reset();
 }
 
 std::string ActionListScript::ActionListScriptImpl::s_ListItemActorPath;

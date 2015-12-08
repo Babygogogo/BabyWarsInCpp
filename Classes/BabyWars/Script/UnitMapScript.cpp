@@ -35,13 +35,13 @@ struct UnitMapScript::UnitMapScriptImpl
 	GridIndex toGridIndex(const cocos2d::Vec2 & positionInWindow) const;
 
 	std::shared_ptr<UnitScript> getUnit(const GridIndex & gridIndex) const;
-	std::shared_ptr<UnitScript> getFocusUnit() const;
+	std::shared_ptr<UnitScript> getFocusedUnit() const;
 	bool canUnitStayAtIndex(const UnitScript & unitScript, const GridIndex & gridIndex) const;
 
 	static std::string s_UnitActorPath;
 
 	Matrix2D<std::weak_ptr<UnitScript>> m_UnitMap;
-	std::weak_ptr<UnitScript> m_FocusUnit;
+	std::weak_ptr<UnitScript> m_FocusedUnit;
 
 	std::weak_ptr<TransformComponent> m_TransformComponent;
 };
@@ -50,7 +50,7 @@ std::string UnitMapScript::UnitMapScriptImpl::s_UnitActorPath;
 
 void UnitMapScript::UnitMapScriptImpl::onMakeMovingPathEnd(const EvtDataMakeMovingPathEnd & e)
 {
-	auto focusUnit = getFocusUnit();
+	auto focusUnit = getFocusedUnit();
 	assert(focusUnit && "UnitMapScriptImpl::onMakeMovingPathEnd() there is no focus unit.");
 
 	if (canUnitStayAtIndex(*focusUnit, e.getMovingPath().getBackNode().m_GridIndex)) {
@@ -67,32 +67,40 @@ void UnitMapScript::UnitMapScriptImpl::onUnitStateChangeEnd(const EvtDataUnitSta
 	}
 
 	if (currentState == UnitState::Active) {
-		if (auto focusUnit = getFocusUnit()) {
+		if (auto focusUnit = getFocusedUnit()) {
 			assert(focusUnit != e.getUnitScript() && "UnitMapScriptImpl::onUnitStateChangeEnd() the unit which is changed to be active is the focus unit.");
 			focusUnit->undoMove();
 		}
 
-		m_FocusUnit = e.getUnitScript();
+		m_FocusedUnit = e.getUnitScript();
 	}
 	else if (currentState == UnitState::Idle) {
-		if (getFocusUnit() == e.getUnitScript()) {
-			m_FocusUnit.reset();
+		if (getFocusedUnit() == e.getUnitScript()) {
+			m_FocusedUnit.reset();
 		}
 	}
 	else if (currentState == UnitState::Moving) {
-		auto focusUnit = getFocusUnit();
+		auto focusUnit = getFocusedUnit();
 		assert(focusUnit == e.getUnitScript() && "UnitMapScriptImpl::onUnitStateChangeEnd() the moving unit is not the focus unit.");
 
 		m_UnitMap[focusUnit->getGridIndex()].reset();
 	}
 	else if (currentState == UnitState::MovingEnd) {
-		//#TODO: This is a hack which makes the unit in idle state after moving. Should be removed.
-		//e.getUnitScript()->setState(UnitState::Idle);
+	}
+	else if (currentState == UnitState::Waiting) {
+		if (getFocusedUnit() == e.getUnitScript()) {
+			m_FocusedUnit.reset();
+		}
 	}
 }
 
 void UnitMapScript::UnitMapScriptImpl::onUnitIndexChangeEnd(const EvtDataUnitIndexChangeEnd & e)
 {
+	auto unitInPreviousIndex = getUnit(e.getPreviousIndex());
+	if (unitInPreviousIndex == e.getUnit()) {
+		m_UnitMap[e.getPreviousIndex()].reset();
+	}
+
 	const auto unit = e.getUnit();
 	m_UnitMap[unit->getGridIndex()] = unit;
 }
@@ -116,12 +124,12 @@ std::shared_ptr<UnitScript> UnitMapScript::UnitMapScriptImpl::getUnit(const Grid
 	return unitScript.lock();
 }
 
-std::shared_ptr<UnitScript> UnitMapScript::UnitMapScriptImpl::getFocusUnit() const
+std::shared_ptr<UnitScript> UnitMapScript::UnitMapScriptImpl::getFocusedUnit() const
 {
-	if (m_FocusUnit.expired())
+	if (m_FocusedUnit.expired())
 		return nullptr;
 
-	return m_FocusUnit.lock();
+	return m_FocusedUnit.lock();
 }
 
 bool UnitMapScript::UnitMapScriptImpl::canUnitStayAtIndex(const UnitScript & unitScript, const GridIndex & gridIndex) const
@@ -152,20 +160,14 @@ UnitMapScript::~UnitMapScript()
 
 bool UnitMapScript::onInputTouch(const EvtDataInputTouch & touch)
 {
-	auto focusUnit = pimpl->getFocusUnit();
-	auto touchUnit = pimpl->getUnit(pimpl->toGridIndex(touch.getPositionInWorld()));
-
-	if (!touchUnit) {
-		if (focusUnit) {
-			focusUnit->undoMove();
+	if (auto touchUnit = pimpl->getUnit(pimpl->toGridIndex(touch.getPositionInWorld()))) {
+		return touchUnit->onInputTouch(touch);
+	}
+	else {
+		if (auto focusedUnit = pimpl->getFocusedUnit()) {
+			focusedUnit->undoMove();
 			return true;
 		}
-
-		return false;
-	}
-
-	if (touchUnit->onInputTouch(touch)) {
-		return true;
 	}
 
 	return false;
