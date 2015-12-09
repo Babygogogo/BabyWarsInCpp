@@ -13,15 +13,15 @@
 #include "../Utilities/GameCommand.h"
 #include "UnitScript.h"
 #include "CommandListItemScript.h"
-#include "ActionListScript.h"
+#include "CommandListScript.h"
 
 //////////////////////////////////////////////////////////////////////////
-//Definition of ActionListScriptImpl.
+//Definition of CommandListScriptImpl.
 //////////////////////////////////////////////////////////////////////////
-struct ActionListScript::ActionListScriptImpl
+struct CommandListScript::CommandListScriptImpl
 {
-	ActionListScriptImpl() = default;
-	~ActionListScriptImpl() = default;
+	CommandListScriptImpl() = default;
+	~CommandListScriptImpl() = default;
 
 	void onUnitStateChangeEnd(const EvtDataUnitStateChangeEnd & e);
 
@@ -38,7 +38,7 @@ struct ActionListScript::ActionListScriptImpl
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
 };
 
-void ActionListScript::ActionListScriptImpl::onUnitStateChangeEnd(const EvtDataUnitStateChangeEnd & e)
+void CommandListScript::CommandListScriptImpl::onUnitStateChangeEnd(const EvtDataUnitStateChangeEnd & e)
 {
 	using State = UnitState::State;
 	const auto currentState = e.getCurrentState().getState();
@@ -59,7 +59,7 @@ void ActionListScript::ActionListScriptImpl::onUnitStateChangeEnd(const EvtDataU
 	}
 }
 
-bool ActionListScript::ActionListScriptImpl::isListShownForUnit(const std::shared_ptr<UnitScript> & unit) const
+bool CommandListScript::CommandListScriptImpl::isListShownForUnit(const std::shared_ptr<UnitScript> & unit) const
 {
 	if (m_FocusedUnit.expired()) {
 		return false;
@@ -68,7 +68,7 @@ bool ActionListScript::ActionListScriptImpl::isListShownForUnit(const std::share
 	return m_FocusedUnit.lock() == unit;
 }
 
-void ActionListScript::ActionListScriptImpl::showListForUnit(const std::shared_ptr<UnitScript> & unit)
+void CommandListScript::CommandListScriptImpl::showListForUnit(const std::shared_ptr<UnitScript> & unit)
 {
 	if (!unit) {
 		return;
@@ -79,7 +79,7 @@ void ActionListScript::ActionListScriptImpl::showListForUnit(const std::shared_p
 	auto listView = static_cast<cocos2d::ui::ListView*>(m_RenderComponent.lock()->getSceneNode());
 
 	for (const auto & command : unit->getCommands()) {
-		auto listItem = gameLogic->createActor(ActionListScriptImpl::s_ListItemActorPath.c_str());
+		auto listItem = gameLogic->createActor(CommandListScriptImpl::s_ListItemActorPath.c_str());
 		listItem->getComponent<CommandListItemScript>()->initWithGameCommand(command);
 
 		ownerActor->addChild(*listItem);
@@ -90,7 +90,7 @@ void ActionListScript::ActionListScriptImpl::showListForUnit(const std::shared_p
 	m_FocusedUnit = unit;
 }
 
-void ActionListScript::ActionListScriptImpl::clearListForUnit()
+void CommandListScript::CommandListScriptImpl::clearListForUnit()
 {
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
 	for (const auto & weakChild : m_ChildrenItemActors) {
@@ -107,39 +107,39 @@ void ActionListScript::ActionListScriptImpl::clearListForUnit()
 	m_FocusedUnit.reset();
 }
 
-std::string ActionListScript::ActionListScriptImpl::s_ListItemActorPath;
+std::string CommandListScript::CommandListScriptImpl::s_ListItemActorPath;
 
 //////////////////////////////////////////////////////////////////////////
-//Implementation of ActionListScript.
+//Implementation of CommandListScript.
 //////////////////////////////////////////////////////////////////////////
-ActionListScript::ActionListScript() : pimpl{ std::make_shared<ActionListScriptImpl>() }
+CommandListScript::CommandListScript() : pimpl{ std::make_shared<CommandListScriptImpl>() }
 {
 }
 
-ActionListScript::~ActionListScript()
+CommandListScript::~CommandListScript()
 {
 }
 
-bool ActionListScript::vInit(const tinyxml2::XMLElement *xmlElement)
+bool CommandListScript::vInit(const tinyxml2::XMLElement *xmlElement)
 {
 	static auto isStaticMemberInitialized = false;
 	if (isStaticMemberInitialized)
 		return true;
 
 	const auto relatedActorsElement = xmlElement->FirstChildElement("RelatedActorsPath");
-	ActionListScriptImpl::s_ListItemActorPath = relatedActorsElement->Attribute("ListItem");
+	CommandListScriptImpl::s_ListItemActorPath = relatedActorsElement->Attribute("ListItem");
 
 	isStaticMemberInitialized = true;
 	return true;
 }
 
-void ActionListScript::vPostInit()
+void CommandListScript::vPostInit()
 {
 	pimpl->m_OwnerActor = m_OwnerActor;
 	auto ownerActor = m_OwnerActor.lock();
 
 	auto renderComponent = ownerActor->getRenderComponent();
-	assert(renderComponent && "ActionListScript::vPostInit() the actor has no render component.");
+	assert(renderComponent && "CommandListScript::vPostInit() the actor has no render component.");
 	pimpl->m_RenderComponent = std::move(renderComponent);
 
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
@@ -148,9 +148,9 @@ void ActionListScript::vPostInit()
 	});
 }
 
-const std::string ActionListScript::Type{ "ActionListScript" };
+const std::string CommandListScript::Type{ "CommandListScript" };
 
-const std::string & ActionListScript::getType() const
+const std::string & CommandListScript::getType() const
 {
 	return Type;
 }

@@ -7,7 +7,7 @@
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "MoneyInfoPanelScript.h"
 #include "TerrainInfoPanelScript.h"
-#include "ActionMenuPanelScript.h"
+#include "CommandPanelScript.h"
 #include "WarSceneHUDScript.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -19,16 +19,16 @@ struct WarSceneHUDScript::WarSceneHUDScriptImpl
 	~WarSceneHUDScriptImpl() = default;
 
 	static std::string s_MoneyInfoPanelActorPath;
-	static std::string s_ActionMenuPanelActorPath;
+	static std::string s_CommandPanelActorPath;
 	static std::string s_TerrainInfoPanelActorPath;
 
 	std::weak_ptr<MoneyInfoPanelScript> m_MoneyInfoPanelScript;
-	std::weak_ptr<ActionMenuPanelScript> m_ActionMenuPanelScript;
+	std::weak_ptr<CommandPanelScript> m_CommandPanelScript;
 	std::weak_ptr<TerrainInfoPanelScript> m_TerrainInfoPanelScript;
 };
 
 std::string WarSceneHUDScript::WarSceneHUDScriptImpl::s_MoneyInfoPanelActorPath;
-std::string WarSceneHUDScript::WarSceneHUDScriptImpl::s_ActionMenuPanelActorPath;
+std::string WarSceneHUDScript::WarSceneHUDScriptImpl::s_CommandPanelActorPath;
 std::string WarSceneHUDScript::WarSceneHUDScriptImpl::s_TerrainInfoPanelActorPath;
 
 //////////////////////////////////////////////////////////////////////////
@@ -50,7 +50,7 @@ bool WarSceneHUDScript::vInit(const tinyxml2::XMLElement * xmlElement)
 
 	auto relatedActorsElement = xmlElement->FirstChildElement("RelatedActorsPath");
 	WarSceneHUDScriptImpl::s_MoneyInfoPanelActorPath = relatedActorsElement->Attribute("MoneyInfoPanel");
-	WarSceneHUDScriptImpl::s_ActionMenuPanelActorPath = relatedActorsElement->Attribute("ActionMenuPanel");
+	WarSceneHUDScriptImpl::s_CommandPanelActorPath = relatedActorsElement->Attribute("CommandPanel");
 	WarSceneHUDScriptImpl::s_TerrainInfoPanelActorPath = relatedActorsElement->Attribute("TerrainInfoPanel");
 
 	isStaticMemberInitialized = true;
@@ -68,8 +68,8 @@ void WarSceneHUDScript::vPostInit()
 	ownerActor->addChild(*moneyInfoPanelActor);
 	selfSceneNode->addChild(moneyInfoPanelActor->getRenderComponent()->getSceneNode());
 
-	auto actionMenuPanelActor = gameLogic->createActor(WarSceneHUDScriptImpl::s_ActionMenuPanelActorPath.c_str());
-	pimpl->m_ActionMenuPanelScript = actionMenuPanelActor->getComponent<ActionMenuPanelScript>();
+	auto actionMenuPanelActor = gameLogic->createActor(WarSceneHUDScriptImpl::s_CommandPanelActorPath.c_str());
+	pimpl->m_CommandPanelScript = actionMenuPanelActor->getComponent<CommandPanelScript>();
 	ownerActor->addChild(*actionMenuPanelActor);
 	selfSceneNode->addChild(actionMenuPanelActor->getRenderComponent()->getSceneNode());
 

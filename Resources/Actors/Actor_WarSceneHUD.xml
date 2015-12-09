@@ -8,7 +8,7 @@
 			<Position X="860" Y="270"/>
 		</TransformComponent>
 		<WarSceneHUDScript>
-			<RelatedActorsPath MoneyInfoPanel="Actors\Actor_MoneyInfoPanel.xml" ActionMenuPanel="Actors\Actor_ActionMenuPanel.xml" TerrainInfoPanel="Actors\Actor_TerrainInfoPanel.xml"/>
+			<RelatedActorsPath MoneyInfoPanel="Actors\Actor_MoneyInfoPanel.xml" CommandPanel="Actors\Actor_CommandPanel.xml" TerrainInfoPanel="Actors\Actor_TerrainInfoPanel.xml"/>
 		</WarSceneHUDScript>
 	</Components>
 	<ChildrenActors>

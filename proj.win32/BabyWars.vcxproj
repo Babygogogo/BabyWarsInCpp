@@ -198,8 +198,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyWars\Resource\TileData.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\UnitData.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\CommandListItemScript.cpp" />
-    <ClCompile Include="..\Classes\BabyWars\Script\ActionListScript.cpp" />
-    <ClCompile Include="..\Classes\BabyWars\Script\ActionMenuPanelScript.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Script\CommandListScript.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Script\CommandPanelScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\MoneyInfoPanelScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\MovingPathGridScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\MovingPathScript.cpp" />
@@ -288,8 +288,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitData.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitDataID.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\CommandListItemScript.h" />
-    <ClInclude Include="..\Classes\BabyWars\Script\ActionListScript.h" />
-    <ClInclude Include="..\Classes\BabyWars\Script\ActionMenuPanelScript.h" />
+    <ClInclude Include="..\Classes\BabyWars\Script\CommandListScript.h" />
+    <ClInclude Include="..\Classes\BabyWars\Script\CommandPanelScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\MoneyInfoPanelScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\MovingPathGridScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\MovingPathScript.h" />

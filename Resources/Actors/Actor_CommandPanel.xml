@@ -7,9 +7,9 @@
 		<TransformComponent>
 			<Position X="0" Y="-30"/>
 		</TransformComponent>
-		<ActionMenuPanelScript>
-			<RelatedActorsPath Background="Actors\Actor_ActionMenuPanelBackground.xml" ActionList="Actors\Actor_ActionList.xml"/>
-		</ActionMenuPanelScript>
+		<CommandPanelScript>
+			<RelatedActorsPath Background="Actors\Actor_ActionMenuPanelBackground.xml" CommandList="Actors\Actor_CommandList.xml"/>
+		</CommandPanelScript>
 	</Components>
 	<ChildrenActors>
 	</ChildrenActors>
