@@ -217,6 +217,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyWars\Utilities\GridIndex.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Utilities\MovingArea.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Utilities\MovingPath.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Utilities\UnitState.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>

@@ -294,6 +294,9 @@
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSceneNode.cpp">
       <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\UnitState.cpp">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">

@@ -6,6 +6,7 @@
 //Forward declaration.
 class TileMapScript;
 class UnitMapScript;
+class UnitScript;
 
 class MovingAreaScript : public BaseScriptComponent
 {
@@ -15,6 +16,10 @@ public:
 
 	void setTileMapScript(std::weak_ptr<const TileMapScript> && tileMapScript);
 	void setUnitMapScript(std::weak_ptr<const UnitMapScript> && unitMapScript);
+
+	bool isAreaShownForUnit(const UnitScript & unit) const;
+	void showAreaForUnit(const UnitScript & unit);
+	void clearAreaForUnit(const UnitScript & unit);
 
 	//Type name of the class. Used by the ActorFactory and can not be removed.
 	static const std::string Type;
@@ -32,8 +37,8 @@ private:
 	virtual void vPostInit() override;
 
 	//Implementation stuff.
-	struct MovingRangeScriptImpl;
-	std::shared_ptr<MovingRangeScriptImpl> pimpl;
+	struct MovingAreaScriptImpl;
+	std::shared_ptr<MovingAreaScriptImpl> pimpl;
 };
 
 #endif // !__MOVING_AREA_SCRIPT__

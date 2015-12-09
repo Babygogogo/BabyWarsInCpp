@@ -66,7 +66,8 @@ void UnitMapScript::UnitMapScriptImpl::onUnitStateChangeEnd(const EvtDataUnitSta
 		return;
 	}
 
-	if (currentState == UnitState::Active) {
+	using State = UnitState::State;
+	if (currentState.getState() == State::Active) {
 		if (auto focusUnit = getFocusedUnit()) {
 			assert(focusUnit != e.getUnitScript() && "UnitMapScriptImpl::onUnitStateChangeEnd() the unit which is changed to be active is the focus unit.");
 			focusUnit->undoMove();
@@ -74,20 +75,20 @@ void UnitMapScript::UnitMapScriptImpl::onUnitStateChangeEnd(const EvtDataUnitSta
 
 		m_FocusedUnit = e.getUnitScript();
 	}
-	else if (currentState == UnitState::Idle) {
+	else if (currentState.getState() == State::Idle) {
 		if (getFocusedUnit() == e.getUnitScript()) {
 			m_FocusedUnit.reset();
 		}
 	}
-	else if (currentState == UnitState::Moving) {
+	else if (currentState.getState() == State::Moving) {
 		auto focusUnit = getFocusedUnit();
 		assert(focusUnit == e.getUnitScript() && "UnitMapScriptImpl::onUnitStateChangeEnd() the moving unit is not the focus unit.");
 
 		m_UnitMap[focusUnit->getGridIndex()].reset();
 	}
-	else if (currentState == UnitState::MovingEnd) {
+	else if (currentState.getState() == State::MovingEnd) {
 	}
-	else if (currentState == UnitState::Waiting) {
+	else if (currentState.getState() == State::Waiting) {
 		if (getFocusedUnit() == e.getUnitScript()) {
 			m_FocusedUnit.reset();
 		}

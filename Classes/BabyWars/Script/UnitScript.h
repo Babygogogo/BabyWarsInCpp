@@ -11,7 +11,7 @@ struct GridIndex;
 class MovingPath;
 class EvtDataInputTouch;
 class GameCommand;
-enum class UnitState;
+class UnitState;
 
 class UnitScript : public BaseScriptComponent
 {

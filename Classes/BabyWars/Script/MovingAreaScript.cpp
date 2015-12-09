@@ -22,99 +22,87 @@
 #include "UnitScript.h"
 
 //////////////////////////////////////////////////////////////////////////
-//Definition of MovingRangeScriptImpl.
+//Definition of MovingAreaScriptImpl.
 //////////////////////////////////////////////////////////////////////////
-struct MovingAreaScript::MovingRangeScriptImpl
+struct MovingAreaScript::MovingAreaScriptImpl
 {
-	MovingRangeScriptImpl() = default;
-	~MovingRangeScriptImpl() = default;
+	MovingAreaScriptImpl() = default;
+	~MovingAreaScriptImpl() = default;
+
+	using GridActors = std::vector<std::weak_ptr<Actor>>;
+	struct MovingAreaStruct
+	{
+		MovingAreaStruct(std::shared_ptr<MovingArea> logicalArea, GridActors && gridActors) : m_LogicalArea{ std::move(logicalArea) }, m_GridActors{ std::move(gridActors) } {}
+
+		std::shared_ptr<MovingArea> m_LogicalArea;
+		GridActors m_GridActors;
+	};
 
 	void onUnitStateChangeEnd(const EvtDataUnitStateChangeEnd & e);
 
-	bool isAreaShownForUnit(const UnitScript & unitScript) const;
+	bool isAreaShownForUnit(const UnitScript & unit) const;
+	void createAndShowAreaForUnit(const UnitScript & unit);
+	void clearAndDestroyAreaForUnit(const UnitScript & unit);
 
-	void createAndShowArea(const std::weak_ptr<const UnitScript> activeUnit);
-	void clearArea();
+	std::shared_ptr<MovingArea> createLogicalArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap) const;
+	GridActors createGridActorsForLogicalArea(const MovingArea & logicalArea) const;
 
-	std::shared_ptr<MovingArea> createArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap) const;
-	void setChildrenGridActors(const MovingArea & movingArea, Actor & self);
+	void showAndAddChildGridActors(const GridActors & gridActors);
+	void hideAndRemoveChildGridActors(const GridActors & gridActors);
 
-	std::weak_ptr<const UnitScript> m_FocusUnit;
-	std::shared_ptr<MovingArea> m_MovingArea;
+	static std::string s_MovingAreaGridActorPath;
 
-	std::string m_MovingAreaGridActorPath;
-	std::vector<std::weak_ptr<Actor>> m_ChildrenGridActors;
+	std::map<const UnitScript *, MovingAreaStruct> m_MovingAreas;
 
 	std::weak_ptr<Actor> m_OwnerActor;
-	std::weak_ptr<TransformComponent> m_TransformComponent;
-
 	std::weak_ptr<const TileMapScript> m_TileMapScript;
 	std::weak_ptr<const UnitMapScript> m_UnitMapScript;
 };
 
-void MovingAreaScript::MovingRangeScriptImpl::onUnitStateChangeEnd(const EvtDataUnitStateChangeEnd & e)
+std::string MovingAreaScript::MovingAreaScriptImpl::s_MovingAreaGridActorPath;
+
+void MovingAreaScript::MovingAreaScriptImpl::onUnitStateChangeEnd(const EvtDataUnitStateChangeEnd & e)
 {
-	auto currentState = e.getCurrentState();
-	auto previousState = e.getPreviousState();
-	if (currentState == previousState) {
+	auto unitScript = e.getUnitScript();
+	assert(unitScript && "MovingAreaScriptImpl::onUnitStateChangeEnd() the unit is expired.");
+	e.getCurrentState().updateMovingArea(*m_OwnerActor.lock()->getComponent<MovingAreaScript>(), *unitScript);
+}
+
+bool MovingAreaScript::MovingAreaScriptImpl::isAreaShownForUnit(const UnitScript & unit) const
+{
+	return m_MovingAreas.find(&unit) != m_MovingAreas.end();
+}
+
+void MovingAreaScript::MovingAreaScriptImpl::createAndShowAreaForUnit(const UnitScript & unit)
+{
+	if (isAreaShownForUnit(unit)) {
 		return;
 	}
 
-	if (currentState == UnitState::Active) {
-		assert(!isAreaShownForUnit(*e.getUnitScript()) && "MovingRangeScriptImpl::onUnitStateChangeEnd() the moving area for the unit is already shown.");
+	auto logicalArea = createLogicalArea(unit, *m_TileMapScript.lock(), *m_UnitMapScript.lock());
+	auto gridActors = createGridActorsForLogicalArea(*logicalArea);
+	showAndAddChildGridActors(gridActors);
+	m_MovingAreas.emplace(std::make_pair(&unit, MovingAreaStruct(logicalArea, std::move(gridActors))));
 
-		clearArea();
-		createAndShowArea(e.getUnitScript());
-	}
-	else {
-		if (isAreaShownForUnit(*e.getUnitScript())) {
-			clearArea();
-		}
-	}
+	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataShowMovingAreaEnd>(logicalArea));
 }
 
-bool MovingAreaScript::MovingRangeScriptImpl::isAreaShownForUnit(const UnitScript & unitScript) const
+void MovingAreaScript::MovingAreaScriptImpl::clearAndDestroyAreaForUnit(const UnitScript & unit)
 {
-	if (m_FocusUnit.expired())
-		return false;
-
-	return m_FocusUnit.lock().get() == &unitScript;
-}
-
-void MovingAreaScript::MovingRangeScriptImpl::createAndShowArea(const std::weak_ptr<const UnitScript> activeUnit)
-{
-	assert(!activeUnit.expired() && "MovingRangeScriptImpl::showArea() the active unit is nullptr.");
-
-	m_FocusUnit = activeUnit;
-	m_MovingArea = createArea(*activeUnit.lock(), *m_TileMapScript.lock(), *m_UnitMapScript.lock());
-	setChildrenGridActors(*m_MovingArea, *m_OwnerActor.lock());
-
-	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataShowMovingAreaEnd>(m_MovingArea));
-}
-
-void MovingAreaScript::MovingRangeScriptImpl::clearArea()
-{
-	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
-	for (const auto & weakChild : m_ChildrenGridActors) {
-		if (weakChild.expired()) {
-			return;
-		}
-
-		auto strongChild = weakChild.lock();
-		eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(strongChild->getID()));
-		strongChild->getRenderComponent()->getSceneNode()->removeFromParent();
+	auto areaIter = m_MovingAreas.find(&unit);
+	if (areaIter == m_MovingAreas.end()) {
+		return;
 	}
 
-	m_FocusUnit.reset();
-	m_MovingArea.reset();
-	m_ChildrenGridActors.clear();
+	hideAndRemoveChildGridActors(areaIter->second.m_GridActors);
+	m_MovingAreas.erase(areaIter);
 }
 
-std::shared_ptr<MovingArea> MovingAreaScript::MovingRangeScriptImpl::createArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap) const
+std::shared_ptr<MovingArea> MovingAreaScript::MovingAreaScriptImpl::createLogicalArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap) const
 {
 	const auto originIndex = movingUnit.getGridIndex();
 	const auto & movementType = movingUnit.getUnitData()->getMovementType();
-	auto movingArea = std::make_shared<MovingArea>(movingUnit.getUnitData()->getMovementRange(), originIndex);
+	auto logicalArea = std::make_shared<MovingArea>(movingUnit.getUnitData()->getMovementRange(), originIndex);
 	auto visitedGridList = std::list<GridIndex>{ originIndex };
 
 	//Iterate through the visited list to see if the unit can move further. Uses BFS.
@@ -123,39 +111,71 @@ std::shared_ptr<MovingArea> MovingAreaScript::MovingRangeScriptImpl::createArea(
 			if (!tileMap.canPassThrough(movementType, nextIndex) || !unitMap.canPassThrough(movingUnit, nextIndex))
 				continue;
 
-			auto currentlyRemainingMovementRange = movingArea->getMovingInfo(currentIndex).m_MaxRemainingMovementRange;
+			auto currentlyRemainingMovementRange = logicalArea->getMovingInfo(currentIndex).m_MaxRemainingMovementRange;
 			auto movingCost = tileMap.getMovingCost(movementType, nextIndex);
 			auto movingInfo = MovingArea::MovingInfo(movingCost, currentlyRemainingMovementRange - movingCost, unitMap.canUnitStayAtIndex(movingUnit, nextIndex), currentIndex);
 
 			//Add the nextIndex into the visited list if we can update the area using the index.
-			if (movingArea->tryUpdateIndex(nextIndex, std::move(movingInfo)))
+			if (logicalArea->tryUpdateIndex(nextIndex, std::move(movingInfo)))
 				visitedGridList.emplace_back(std::move(nextIndex));
 		}
 	}
 
-	return movingArea;
+	return logicalArea;
 }
 
-void MovingAreaScript::MovingRangeScriptImpl::setChildrenGridActors(const MovingArea & movingArea, Actor & self)
+MovingAreaScript::MovingAreaScriptImpl::GridActors MovingAreaScript::MovingAreaScriptImpl::createGridActorsForLogicalArea(const MovingArea & logicalArea) const
 {
+	auto gridActors = GridActors{};
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
-	auto selfSceneNode = self.getRenderComponent()->getSceneNode();
 
-	for (const auto & index : movingArea.getAllIndexesInArea()) {
-		auto gridActor = gameLogic->createActor(m_MovingAreaGridActorPath.c_str());
+	for (const auto & index : logicalArea.getAllIndexesInArea()) {
+		auto gridActor = gameLogic->createActor(s_MovingAreaGridActorPath.c_str());
 		auto gridScript = gridActor->getComponent<MovingAreaGridScript>();
 		gridScript->setGridIndexAndPosition(index);
 
-		self.addChild(*gridActor);
-		selfSceneNode->addChild(gridActor->getRenderComponent()->getSceneNode());
-		m_ChildrenGridActors.emplace_back(gridActor);
+		gridActors.emplace_back(gridActor);
+	}
+
+	return gridActors;
+}
+
+void MovingAreaScript::MovingAreaScriptImpl::showAndAddChildGridActors(const GridActors & gridActors)
+{
+	auto ownerActor = m_OwnerActor.lock();
+	auto ownerSceneNode = ownerActor->getRenderComponent()->getSceneNode();
+
+	for (const auto & weakGridActor : gridActors) {
+		if (weakGridActor.expired()) {
+			continue;
+		}
+
+		auto strongGridActor = weakGridActor.lock();
+		ownerActor->addChild(*strongGridActor);
+		ownerSceneNode->addChild(strongGridActor->getRenderComponent()->getSceneNode());
+	}
+}
+
+void MovingAreaScript::MovingAreaScriptImpl::hideAndRemoveChildGridActors(const GridActors & gridActors)
+{
+	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
+
+	for (const auto & weakGridActor : gridActors) {
+		if (weakGridActor.expired()) {
+			continue;
+		}
+
+		auto strongGridActor = weakGridActor.lock();
+		strongGridActor->removeFromParent();
+		strongGridActor->getRenderComponent()->getSceneNode()->removeFromParent();
+		eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(strongGridActor->getID()));
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
 //Implementation of WorldScript.
 //////////////////////////////////////////////////////////////////////////
-MovingAreaScript::MovingAreaScript() : pimpl{ std::make_shared<MovingRangeScriptImpl>() }
+MovingAreaScript::MovingAreaScript() : pimpl{ std::make_shared<MovingAreaScriptImpl>() }
 {
 }
 
@@ -173,21 +193,38 @@ void MovingAreaScript::setUnitMapScript(std::weak_ptr<const UnitMapScript> && un
 	pimpl->m_UnitMapScript = std::move(unitMapScript);
 }
 
+bool MovingAreaScript::isAreaShownForUnit(const UnitScript & unit) const
+{
+	return pimpl->isAreaShownForUnit(unit);
+}
+
+void MovingAreaScript::showAreaForUnit(const UnitScript & unit)
+{
+	pimpl->createAndShowAreaForUnit(unit);
+}
+
+void MovingAreaScript::clearAreaForUnit(const UnitScript & unit)
+{
+	pimpl->clearAndDestroyAreaForUnit(unit);
+}
+
 bool MovingAreaScript::vInit(const tinyxml2::XMLElement * xmlElement)
 {
-	auto relatedActorsPath = xmlElement->FirstChildElement("RelatedActorsPath");
-	pimpl->m_MovingAreaGridActorPath = relatedActorsPath->Attribute("MovingAreaGrid");
+	static bool isStaticMemberInitialized = false;
+	if (isStaticMemberInitialized) {
+		return true;
+	}
 
+	auto relatedActorsPath = xmlElement->FirstChildElement("RelatedActorsPath");
+	MovingAreaScriptImpl::s_MovingAreaGridActorPath = relatedActorsPath->Attribute("MovingAreaGrid");
+
+	isStaticMemberInitialized = true;
 	return true;
 }
 
 void MovingAreaScript::vPostInit()
 {
 	pimpl->m_OwnerActor = m_OwnerActor;
-
-	auto transformComponent = m_OwnerActor.lock()->getComponent<TransformComponent>();
-	assert(transformComponent && "MovingAreaScript::vPostInit() the actor has no transform component");
-	pimpl->m_TransformComponent = std::move(transformComponent);
 
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
 	eventDispatcher->vAddListener(EvtDataUnitStateChangeEnd::s_EventType, pimpl, [this](const IEventData & e) {

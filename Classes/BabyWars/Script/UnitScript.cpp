@@ -41,7 +41,7 @@ struct UnitScript::UnitScriptImpl
 	GridIndex m_GridIndex;
 	GridIndex m_IndexBeforeMoving;
 	std::shared_ptr<UnitData> m_UnitData;
-	UnitState m_State{ UnitState::Invalid };
+	UnitState m_State;
 
 	std::weak_ptr<UnitScript> m_Script;
 	std::shared_ptr<BaseRenderComponent> m_RenderComponent;
@@ -104,13 +104,14 @@ void UnitScript::UnitScriptImpl::updateAppearanceAccordingToState(UnitState stat
 	m_RenderComponent->stopAction(m_MoveEndAction);
 	sceneNode->setOpacity(255);
 
-	if (state == UnitState::Active) {
+	using State = UnitState::State;
+	if (state.getState() == State::Active) {
 		m_RenderComponent->runAction(m_ActiveAction);
 	}
-	else if (state == UnitState::MovingEnd) {
+	else if (state.getState() == State::MovingEnd) {
 		m_RenderComponent->runAction(m_MoveEndAction);
 	}
-	else if (state == UnitState::Waiting) {
+	else if (state.getState() == State::Waiting) {
 		m_RenderComponent->getSceneNode()->setColor(cocos2d::Color3B(150, 150, 150));
 	}
 }
@@ -130,7 +131,7 @@ void UnitScript::UnitScriptImpl::updateMoveAction(const MovingPath & path)
 			auto strongScript = script.lock();
 			strongScript->pimpl->m_GridIndex = pathEndIndex;
 			//strongScript->setGridIndexAndPosition(pathEndIndex);
-			strongScript->setState(UnitState::MovingEnd);
+			strongScript->setState(UnitState(UnitState::State::MovingEnd));
 		}
 	}));
 
@@ -152,25 +153,26 @@ UnitScript::~UnitScript()
 
 bool UnitScript::onInputTouch(const EvtDataInputTouch & touch)
 {
-	auto state = pimpl->m_State;
-	assert(pimpl->m_State != UnitState::Invalid && "UnitScript::onInputTouch() the state of the unit is invalid.");
+	auto state = pimpl->m_State.getState();
+	using State = UnitState::State;
+	assert(state != State::Invalid && "UnitScript::onInputTouch() the state of the unit is invalid.");
 
-	if (state == UnitState::Idle) {
-		setState(UnitState::Active);
+	if (state == State::Idle) {
+		setState(UnitState(State::Active));
 		return true;
 	}
-	else if (state == UnitState::Active) {
+	else if (state == State::Active) {
 		moveAlongPath(MovingPath(MovingPath::PathNode(pimpl->m_GridIndex, pimpl->m_UnitData->getMovementRange())));
 		return true;
 	}
-	else if (state == UnitState::Moving) {
+	else if (state == State::Moving) {
 		assert("UnitScript::onInputTouch() the unit is touched when moving. Moving unit is designed to ignore any touch, therefore this should not happen.");
 		return false;
 	}
-	else if (state == UnitState::MovingEnd) {
+	else if (state == State::MovingEnd) {
 		return false;
 	}
-	else if (state == UnitState::Waiting) {
+	else if (state == State::Waiting) {
 		return false;
 	}
 
@@ -198,7 +200,7 @@ void UnitScript::loadUnit(tinyxml2::XMLElement * xmlElement)
 
 	//////////////////////////////////////////////////////////////////////////
 	//#TODO: Load more data, such as the hp, level and so on, from the xml.
-	pimpl->m_State = UnitState::Idle;
+	pimpl->m_State = UnitState(UnitState::State::Idle);
 }
 
 const std::shared_ptr<UnitData> & UnitScript::getUnitData() const
@@ -208,21 +210,23 @@ const std::shared_ptr<UnitData> & UnitScript::getUnitData() const
 
 std::vector<GameCommand> UnitScript::getCommands() const
 {
-	assert(pimpl->m_State != UnitState::Invalid && "UnitScript::getCommands() the unit is in invalid state.");
+	auto state = pimpl->m_State.getState();
+	using State = UnitState::State;
+	assert(state != State::Invalid && "UnitScript::getCommands() the unit is in invalid state.");
 	auto commands = std::vector<GameCommand>{};
 
-	if (pimpl->m_State == UnitState::Idle || pimpl->m_State == UnitState::Active || pimpl->m_State == UnitState::Moving || pimpl->m_State == UnitState::Waiting) {
+	if (state == State::Idle || state == State::Active || state == State::Moving || state == State::Waiting) {
 		return commands;
 	}
 
-	if (pimpl->m_State == UnitState::MovingEnd) {
+	if (state == State::MovingEnd) {
 		commands.emplace_back("Wait", [unitScript = pimpl->m_Script]() {
 			if (unitScript.expired()) {
 				return;
 			}
 
 			auto strongUnit = unitScript.lock();
-			strongUnit->setState(UnitState::Waiting);
+			strongUnit->setState(UnitState(State::Waiting));
 			strongUnit->setGridIndexAndPosition(strongUnit->getGridIndex());
 		});
 	}
@@ -276,28 +280,30 @@ bool UnitScript::canStayTogether(const UnitScript & otherUnit) const
 
 void UnitScript::moveAlongPath(const MovingPath & path)
 {
-	assert(pimpl->m_State == UnitState::Active && "UnitScript::moveAlongPath() the unit is not in active state.");
+	assert(pimpl->m_State.getState() == UnitState::State::Active && "UnitScript::moveAlongPath() the unit is not in active state.");
 	assert(path.getLength() != 0 && "UnitScript::moveAlongPath() the length of the path is 0.");
 	assert(path.getFrontNode().m_GridIndex == pimpl->m_GridIndex && "UnitScript::moveAlongPath() the unit is not at the starting grid of the path.");
 
 	pimpl->m_IndexBeforeMoving = pimpl->m_GridIndex;
 	pimpl->updateMoveAction(path);
-	setState(UnitState::Moving);
+	setState(UnitState(UnitState::State::Moving));
 	pimpl->m_RenderComponent->runAction(pimpl->m_MoveAction);
 }
 
 void UnitScript::undoMove()
 {
-	assert(pimpl->m_State != UnitState::Invalid && "UnitScript::undoMove() the unit is in invalid state.");
-	if (pimpl->m_State == UnitState::Idle || pimpl->m_State == UnitState::Waiting)
+	auto state = pimpl->m_State.getState();
+	using State = UnitState::State;
+	assert(state != State::Invalid && "UnitScript::undoMove() the unit is in invalid state.");
+	if (state == State::Idle || state == State::Waiting)
 		return;
 
-	if (pimpl->m_State == UnitState::Moving || pimpl->m_State == UnitState::MovingEnd) {
+	if (state == State::Moving || state == State::MovingEnd) {
 		pimpl->m_RenderComponent->stopAction(pimpl->m_MoveAction);
 		setGridIndexAndPosition(pimpl->m_IndexBeforeMoving);
 	}
 
-	setState(UnitState::Idle);
+	setState(UnitState(State::Idle));
 }
 
 bool UnitScript::vInit(const tinyxml2::XMLElement * xmlElement)

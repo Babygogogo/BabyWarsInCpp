@@ -40,20 +40,21 @@ struct ActionListScript::ActionListScriptImpl
 
 void ActionListScript::ActionListScriptImpl::onUnitStateChangeEnd(const EvtDataUnitStateChangeEnd & e)
 {
-	const auto currentState = e.getCurrentState();
-	if (currentState == UnitState::Idle) {
+	using State = UnitState::State;
+	const auto currentState = e.getCurrentState().getState();
+	if (currentState == State::Idle) {
 		if (isListShownForUnit(e.getUnitScript())) {
 			clearListForUnit();
 		}
 	}
-	else if (currentState == UnitState::Moving) {
+	else if (currentState == State::Moving) {
 		clearListForUnit();
 	}
-	else if (currentState == UnitState::MovingEnd) {
+	else if (currentState == State::MovingEnd) {
 		clearListForUnit();
 		showListForUnit(e.getUnitScript());
 	}
-	else if (currentState == UnitState::Waiting) {
+	else if (currentState == State::Waiting) {
 		clearListForUnit();
 	}
 }
