@@ -33,7 +33,6 @@ struct ActionListScript::ActionListScriptImpl
 
 	std::weak_ptr<Actor> m_OwnerActor;
 	std::vector<std::weak_ptr<Actor>> m_ChildrenItemActors;
-	std::vector<std::weak_ptr<CommandListItemScript>> m_ChildrenItemScripts;
 
 	std::weak_ptr<UnitScript> m_FocusedUnit;
 	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
@@ -84,7 +83,6 @@ void ActionListScript::ActionListScriptImpl::showListForUnit(const std::shared_p
 
 		ownerActor->addChild(*listItem);
 		m_ChildrenItemActors.emplace_back(listItem);
-		m_ChildrenItemScripts.emplace_back(listItem->getComponent<CommandListItemScript>());
 		listView->pushBackCustomItem(static_cast<cocos2d::ui::Widget*>(listItem->getRenderComponent()->getSceneNode()));
 	}
 
@@ -105,7 +103,6 @@ void ActionListScript::ActionListScriptImpl::clearListForUnit()
 	}
 
 	m_ChildrenItemActors.clear();
-	m_ChildrenItemScripts.clear();
 	m_FocusedUnit.reset();
 }
 

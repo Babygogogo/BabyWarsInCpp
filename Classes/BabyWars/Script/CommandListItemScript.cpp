@@ -4,7 +4,6 @@
 
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
-#include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/Event/EvtDataInputTouch.h"
 #include "../Utilities/GameCommand.h"
 #include "CommandListItemScript.h"
@@ -23,14 +22,11 @@ struct CommandListItemScript::CommandListItemScriptImpl
 	void setAppearance(const std::string & titleName);
 	void setTouchCallback(const GameCommand::Callback & callback);
 
-	bool isItemTouched(const EvtDataInputTouch & touch) const;
-
 	bool m_IsTouchMoved{ false };
 	GameCommand::Callback m_GameCommandCallback;
 	cocos2d::ui::Widget::ccWidgetTouchCallback m_TouchCallback;
 
 	std::weak_ptr<CommandListItemScriptImpl> m_Self;
-	std::shared_ptr<TransformComponent> m_TransformComponent;
 	std::shared_ptr<BaseRenderComponent> m_RenderComponent;
 };
 
@@ -39,10 +35,6 @@ void CommandListItemScript::CommandListItemScriptImpl::initWithNecessaryComponen
 	auto renderComponent = ownerActor.getRenderComponent();
 	assert(dynamic_cast<cocos2d::ui::Button*>(renderComponent->getSceneNode()) && "CommandListItemScript::initWithNecessaryComponents() the actor has no underlying cocos2d::ui::Button.");
 	m_RenderComponent = std::move(renderComponent);
-
-	auto transformComponent = ownerActor.getComponent<TransformComponent>();
-	assert(transformComponent && "CommandListItemScriptImpl::initWithNecessaryComponents() the actor has no transform component.");
-	m_TransformComponent = std::move(transformComponent);
 }
 
 void CommandListItemScript::CommandListItemScriptImpl::initTouchCallback()
@@ -92,12 +84,6 @@ void CommandListItemScript::CommandListItemScriptImpl::setAppearance(const std::
 void CommandListItemScript::CommandListItemScriptImpl::setTouchCallback(const GameCommand::Callback & callback)
 {
 	m_GameCommandCallback = callback;
-}
-
-bool CommandListItemScript::CommandListItemScriptImpl::isItemTouched(const EvtDataInputTouch & touch) const
-{
-	const auto touchPositionInItemSpace = m_TransformComponent->convertToLocalSpace(touch.getPositionInWorld());
-	return m_RenderComponent->getSceneNode()->getBoundingBox().containsPoint(touchPositionInItemSpace);
 }
 
 //////////////////////////////////////////////////////////////////////////

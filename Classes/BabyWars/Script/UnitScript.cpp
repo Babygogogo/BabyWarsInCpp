@@ -217,10 +217,13 @@ std::vector<GameCommand> UnitScript::getCommands() const
 
 	if (pimpl->m_State == UnitState::MovingEnd) {
 		commands.emplace_back("Wait", [unitScript = pimpl->m_Script]() {
-			if (!unitScript.expired()) {
-				unitScript.lock()->setState(UnitState::Waiting);
+			if (unitScript.expired()) {
+				return;
 			}
-			//SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataRequestChangeUnitState>(unitScript, UnitState::Waiting));
+
+			auto strongUnit = unitScript.lock();
+			strongUnit->setState(UnitState::Waiting);
+			strongUnit->setGridIndexAndPosition(strongUnit->getGridIndex());
 		});
 	}
 
