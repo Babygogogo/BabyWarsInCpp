@@ -44,11 +44,11 @@ struct MovingAreaScript::MovingAreaScriptImpl
 	void createAndShowAreaForUnit(const UnitScript & unit);
 	void clearAndDestroyAreaForUnit(const UnitScript & unit);
 
-	std::shared_ptr<MovingArea> createLogicalArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap) const;
-	GridActors createGridActorsForLogicalArea(const MovingArea & logicalArea) const;
+	std::shared_ptr<MovingArea> _createLogicalArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap) const;
+	GridActors _createGridActorsForLogicalArea(const MovingArea & logicalArea) const;
 
-	void showAndAddChildGridActors(const GridActors & gridActors);
-	void hideAndRemoveChildGridActors(const GridActors & gridActors);
+	void _showAndAddChildGridActors(const GridActors & gridActors);
+	void _hideAndRemoveChildGridActors(const GridActors & gridActors);
 
 	static std::string s_MovingAreaGridActorPath;
 
@@ -79,9 +79,9 @@ void MovingAreaScript::MovingAreaScriptImpl::createAndShowAreaForUnit(const Unit
 		return;
 	}
 
-	auto logicalArea = createLogicalArea(unit, *m_TileMapScript.lock(), *m_UnitMapScript.lock());
-	auto gridActors = createGridActorsForLogicalArea(*logicalArea);
-	showAndAddChildGridActors(gridActors);
+	auto logicalArea = _createLogicalArea(unit, *m_TileMapScript.lock(), *m_UnitMapScript.lock());
+	auto gridActors = _createGridActorsForLogicalArea(*logicalArea);
+	_showAndAddChildGridActors(gridActors);
 	m_MovingAreas.emplace(std::make_pair(&unit, MovingAreaStruct(logicalArea, std::move(gridActors))));
 
 	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataShowMovingAreaEnd>(logicalArea));
@@ -94,11 +94,11 @@ void MovingAreaScript::MovingAreaScriptImpl::clearAndDestroyAreaForUnit(const Un
 		return;
 	}
 
-	hideAndRemoveChildGridActors(areaIter->second.m_GridActors);
+	_hideAndRemoveChildGridActors(areaIter->second.m_GridActors);
 	m_MovingAreas.erase(areaIter);
 }
 
-std::shared_ptr<MovingArea> MovingAreaScript::MovingAreaScriptImpl::createLogicalArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap) const
+std::shared_ptr<MovingArea> MovingAreaScript::MovingAreaScriptImpl::_createLogicalArea(const UnitScript & movingUnit, const TileMapScript & tileMap, const UnitMapScript & unitMap) const
 {
 	const auto originIndex = movingUnit.getGridIndex();
 	const auto & movementType = movingUnit.getUnitData()->getMovementType();
@@ -124,7 +124,7 @@ std::shared_ptr<MovingArea> MovingAreaScript::MovingAreaScriptImpl::createLogica
 	return logicalArea;
 }
 
-MovingAreaScript::MovingAreaScriptImpl::GridActors MovingAreaScript::MovingAreaScriptImpl::createGridActorsForLogicalArea(const MovingArea & logicalArea) const
+MovingAreaScript::MovingAreaScriptImpl::GridActors MovingAreaScript::MovingAreaScriptImpl::_createGridActorsForLogicalArea(const MovingArea & logicalArea) const
 {
 	auto gridActors = GridActors{};
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
@@ -140,7 +140,7 @@ MovingAreaScript::MovingAreaScriptImpl::GridActors MovingAreaScript::MovingAreaS
 	return gridActors;
 }
 
-void MovingAreaScript::MovingAreaScriptImpl::showAndAddChildGridActors(const GridActors & gridActors)
+void MovingAreaScript::MovingAreaScriptImpl::_showAndAddChildGridActors(const GridActors & gridActors)
 {
 	auto ownerActor = m_OwnerActor.lock();
 	auto ownerSceneNode = ownerActor->getRenderComponent()->getSceneNode();
@@ -156,7 +156,7 @@ void MovingAreaScript::MovingAreaScriptImpl::showAndAddChildGridActors(const Gri
 	}
 }
 
-void MovingAreaScript::MovingAreaScriptImpl::hideAndRemoveChildGridActors(const GridActors & gridActors)
+void MovingAreaScript::MovingAreaScriptImpl::_hideAndRemoveChildGridActors(const GridActors & gridActors)
 {
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
 

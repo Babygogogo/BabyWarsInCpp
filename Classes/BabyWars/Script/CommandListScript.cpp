@@ -23,91 +23,107 @@ struct CommandListScript::CommandListScriptImpl
 	CommandListScriptImpl() = default;
 	~CommandListScriptImpl() = default;
 
+	using ItemActors = std::vector<std::weak_ptr<Actor>>;
+
 	void onUnitStateChangeEnd(const EvtDataUnitStateChangeEnd & e);
 
-	bool isListShownForUnit(const std::shared_ptr<UnitScript> & unit) const;
-	void showListForUnit(const std::shared_ptr<UnitScript> & unit);
-	void clearListForUnit();
+	bool isListShownForUnit(const UnitScript & unit) const;
+	void createAndShowListForUnit(const UnitScript & unit);
+	void clearAndDestroyListForUnit(const UnitScript & unit);
+
+	ItemActors _createItemActorsForUnit(const UnitScript & unit) const;
+	void _showAndAddChildItemActors(const ItemActors & itemActors);
+	void _hideAndRemoveChildItemActors(const ItemActors & itemActors);
 
 	static std::string s_ListItemActorPath;
 
-	std::weak_ptr<Actor> m_OwnerActor;
-	std::vector<std::weak_ptr<Actor>> m_ChildrenItemActors;
+	std::map<const UnitScript *, ItemActors> m_ChildrenItemActors;
 
-	std::weak_ptr<UnitScript> m_FocusedUnit;
-	std::weak_ptr<BaseRenderComponent> m_RenderComponent;
+	std::weak_ptr<Actor> m_OwnerActor;
 };
+
+std::string CommandListScript::CommandListScriptImpl::s_ListItemActorPath;
 
 void CommandListScript::CommandListScriptImpl::onUnitStateChangeEnd(const EvtDataUnitStateChangeEnd & e)
 {
-	using State = UnitState::State;
-	const auto currentState = e.getCurrentState().getState();
-	if (currentState == State::Idle) {
-		if (isListShownForUnit(e.getUnitScript())) {
-			clearListForUnit();
-		}
-	}
-	else if (currentState == State::Moving) {
-		clearListForUnit();
-	}
-	else if (currentState == State::MovingEnd) {
-		clearListForUnit();
-		showListForUnit(e.getUnitScript());
-	}
-	else if (currentState == State::Waiting) {
-		clearListForUnit();
-	}
+	auto unitScript = e.getUnitScript();
+	assert(unitScript && "CommandListScriptImpl::onUnitStateChangeEnd() the unit is expired.");
+	e.getCurrentState().updateCommandList(*m_OwnerActor.lock()->getComponent<CommandListScript>(), *unitScript);
 }
 
-bool CommandListScript::CommandListScriptImpl::isListShownForUnit(const std::shared_ptr<UnitScript> & unit) const
+bool CommandListScript::CommandListScriptImpl::isListShownForUnit(const UnitScript & unit) const
 {
-	if (m_FocusedUnit.expired()) {
-		return false;
-	}
-
-	return m_FocusedUnit.lock() == unit;
+	return m_ChildrenItemActors.find(&unit) != m_ChildrenItemActors.end();
 }
 
-void CommandListScript::CommandListScriptImpl::showListForUnit(const std::shared_ptr<UnitScript> & unit)
+void CommandListScript::CommandListScriptImpl::createAndShowListForUnit(const UnitScript & unit)
 {
-	if (!unit) {
+	if (isListShownForUnit(unit)) {
 		return;
 	}
 
-	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
-	auto ownerActor = m_OwnerActor.lock();
-	auto listView = static_cast<cocos2d::ui::ListView*>(m_RenderComponent.lock()->getSceneNode());
+	auto itemActors = _createItemActorsForUnit(unit);
+	_showAndAddChildItemActors(itemActors);
+	m_ChildrenItemActors.emplace(std::make_pair(&unit, std::move(itemActors)));
+}
 
-	for (const auto & command : unit->getCommands()) {
+void CommandListScript::CommandListScriptImpl::clearAndDestroyListForUnit(const UnitScript & unit)
+{
+	if (!isListShownForUnit(unit)) {
+		return;
+	}
+
+	auto itemActorsIter = m_ChildrenItemActors.find(&unit);
+	_hideAndRemoveChildItemActors(itemActorsIter->second);
+	m_ChildrenItemActors.erase(itemActorsIter);
+}
+
+CommandListScript::CommandListScriptImpl::ItemActors CommandListScript::CommandListScriptImpl::_createItemActorsForUnit(const UnitScript & unit) const
+{
+	auto itemActors = ItemActors{};
+	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
+
+	for (const auto & command : unit.getCommands()) {
 		auto listItem = gameLogic->createActor(CommandListScriptImpl::s_ListItemActorPath.c_str());
 		listItem->getComponent<CommandListItemScript>()->initWithGameCommand(command);
 
-		ownerActor->addChild(*listItem);
-		m_ChildrenItemActors.emplace_back(listItem);
-		listView->pushBackCustomItem(static_cast<cocos2d::ui::Widget*>(listItem->getRenderComponent()->getSceneNode()));
+		itemActors.emplace_back(listItem);
 	}
 
-	m_FocusedUnit = unit;
+	return itemActors;
 }
 
-void CommandListScript::CommandListScriptImpl::clearListForUnit()
+void CommandListScript::CommandListScriptImpl::_showAndAddChildItemActors(const ItemActors & itemActors)
 {
-	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
-	for (const auto & weakChild : m_ChildrenItemActors) {
-		if (weakChild.expired()) {
+	auto ownerActor = m_OwnerActor.lock();
+	auto listView = static_cast<cocos2d::ui::ListView*>(ownerActor->getRenderComponent()->getSceneNode());
+
+	for (const auto & itemActor : itemActors) {
+		if (itemActor.expired()) {
 			continue;
 		}
 
-		auto strongChild = weakChild.lock();
-		eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(strongChild->getID()));
-		strongChild->getRenderComponent()->getSceneNode()->removeFromParent();
+		auto strongItemActor = itemActor.lock();
+		ownerActor->addChild(*strongItemActor);
+		listView->pushBackCustomItem(static_cast<cocos2d::ui::Widget*>(strongItemActor->getRenderComponent()->getSceneNode()));
 	}
-
-	m_ChildrenItemActors.clear();
-	m_FocusedUnit.reset();
 }
 
-std::string CommandListScript::CommandListScriptImpl::s_ListItemActorPath;
+void CommandListScript::CommandListScriptImpl::_hideAndRemoveChildItemActors(const ItemActors & itemActors)
+{
+	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
+
+	for (const auto & weakItemActor : itemActors) {
+		if (weakItemActor.expired()) {
+			continue;
+		}
+
+		auto strongItemActor = weakItemActor.lock();
+		strongItemActor->removeFromParent();
+		strongItemActor->getRenderComponent()->getSceneNode()->removeFromParent();
+		eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(strongItemActor->getID()));
+	}
+}
 
 //////////////////////////////////////////////////////////////////////////
 //Implementation of CommandListScript.
@@ -118,6 +134,16 @@ CommandListScript::CommandListScript() : pimpl{ std::make_shared<CommandListScri
 
 CommandListScript::~CommandListScript()
 {
+}
+
+void CommandListScript::showListForUnit(const UnitScript & unit)
+{
+	pimpl->createAndShowListForUnit(unit);
+}
+
+void CommandListScript::clearListForUnit(const UnitScript & unit)
+{
+	pimpl->clearAndDestroyListForUnit(unit);
 }
 
 bool CommandListScript::vInit(const tinyxml2::XMLElement *xmlElement)
@@ -136,11 +162,6 @@ bool CommandListScript::vInit(const tinyxml2::XMLElement *xmlElement)
 void CommandListScript::vPostInit()
 {
 	pimpl->m_OwnerActor = m_OwnerActor;
-	auto ownerActor = m_OwnerActor.lock();
-
-	auto renderComponent = ownerActor->getRenderComponent();
-	assert(renderComponent && "CommandListScript::vPostInit() the actor has no render component.");
-	pimpl->m_RenderComponent = std::move(renderComponent);
 
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
 	eventDispatcher->vAddListener(EvtDataUnitStateChangeEnd::s_EventType, pimpl, [this](const auto & e) {
