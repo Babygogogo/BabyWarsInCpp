@@ -43,6 +43,7 @@ struct UnitMapScript::UnitMapScriptImpl
 	Matrix2D<std::weak_ptr<UnitScript>> m_UnitMap;
 	std::weak_ptr<UnitScript> m_FocusedUnit;
 
+	std::weak_ptr<Actor> m_OwnerActor;
 	std::weak_ptr<TransformComponent> m_TransformComponent;
 };
 
@@ -60,39 +61,7 @@ void UnitMapScript::UnitMapScriptImpl::onMakeMovingPathEnd(const EvtDataMakeMovi
 
 void UnitMapScript::UnitMapScriptImpl::onUnitStateChangeEnd(const EvtDataUnitStateChangeEnd & e)
 {
-	auto previousState = e.getPreviousState();
-	auto currentState = e.getCurrentState();
-	if (previousState == currentState) {
-		return;
-	}
-
-	using State = UnitState::State;
-	if (currentState.getState() == State::Active) {
-		if (auto focusUnit = getFocusedUnit()) {
-			assert(focusUnit != e.getUnitScript() && "UnitMapScriptImpl::onUnitStateChangeEnd() the unit which is changed to be active is the focus unit.");
-			focusUnit->undoMove();
-		}
-
-		m_FocusedUnit = e.getUnitScript();
-	}
-	else if (currentState.getState() == State::Idle) {
-		if (getFocusedUnit() == e.getUnitScript()) {
-			m_FocusedUnit.reset();
-		}
-	}
-	else if (currentState.getState() == State::Moving) {
-		auto focusUnit = getFocusedUnit();
-		assert(focusUnit == e.getUnitScript() && "UnitMapScriptImpl::onUnitStateChangeEnd() the moving unit is not the focus unit.");
-
-		m_UnitMap[focusUnit->getGridIndex()].reset();
-	}
-	else if (currentState.getState() == State::MovingEnd) {
-	}
-	else if (currentState.getState() == State::Waiting) {
-		if (getFocusedUnit() == e.getUnitScript()) {
-			m_FocusedUnit.reset();
-		}
-	}
+	e.getCurrentState().updateUnitMap(*m_OwnerActor.lock()->getComponent<UnitMapScript>(), e.getUnitScript());
 }
 
 void UnitMapScript::UnitMapScriptImpl::onUnitIndexChangeEnd(const EvtDataUnitIndexChangeEnd & e)
@@ -162,13 +131,14 @@ UnitMapScript::~UnitMapScript()
 bool UnitMapScript::onInputTouch(const EvtDataInputTouch & touch)
 {
 	if (auto touchUnit = pimpl->getUnit(pimpl->toGridIndex(touch.getPositionInWorld()))) {
-		return touchUnit->onInputTouch(touch);
-	}
-	else {
-		if (auto focusedUnit = pimpl->getFocusedUnit()) {
-			focusedUnit->undoMove();
+		if (touchUnit->onInputTouch(touch)) {
 			return true;
 		}
+	}
+
+	if (auto focusedUnit = pimpl->getFocusedUnit()) {
+		focusedUnit->undoMove();
+		return true;
 	}
 
 	return false;
@@ -234,6 +204,41 @@ void UnitMapScript::loadUnitMap(const char * xmlPath)
 	}
 }
 
+bool UnitMapScript::isUnitFocused(const UnitScript & unit) const
+{
+	if (pimpl->m_FocusedUnit.expired()) {
+		return false;
+	}
+
+	return pimpl->m_FocusedUnit.lock().get() == &unit;
+}
+
+std::shared_ptr<UnitScript> UnitMapScript::getFocusedUnit() const
+{
+	return pimpl->getFocusedUnit();
+}
+
+void UnitMapScript::setFocusedUnit(const std::shared_ptr<UnitScript> & focusedUnit)
+{
+	if (pimpl->getFocusedUnit() != focusedUnit) {
+		pimpl->m_FocusedUnit = focusedUnit;
+	}
+}
+
+void UnitMapScript::undoMoveForFocusedUnit()
+{
+	if (auto currentlyFocusedUnit = pimpl->getFocusedUnit()) {
+		currentlyFocusedUnit->undoMove();
+	}
+}
+
+void UnitMapScript::removeFocusedUnitIndexFromMap()
+{
+	if (auto currentlyFocusedUnit = pimpl->getFocusedUnit()) {
+		pimpl->m_UnitMap[currentlyFocusedUnit->getGridIndex()].reset();
+	}
+}
+
 Matrix2DDimension UnitMapScript::getMapDimension() const
 {
 	return pimpl->m_UnitMap.getDimension();
@@ -284,6 +289,7 @@ bool UnitMapScript::vInit(const tinyxml2::XMLElement * xmlElement)
 
 void UnitMapScript::vPostInit()
 {
+	pimpl->m_OwnerActor = m_OwnerActor;
 	auto ownerActor = m_OwnerActor.lock();
 
 	auto transformComponent = ownerActor->getComponent<TransformComponent>();

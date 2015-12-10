@@ -2,6 +2,7 @@
 #define __UNIT_SCRIPT__
 
 #include <memory>
+#include <vector>
 
 #include "../../BabyEngine/Actor/BaseScriptComponent.h"
 

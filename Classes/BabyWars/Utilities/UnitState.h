@@ -4,6 +4,7 @@
 //Forward declaration.
 class MovingAreaScript;
 class CommandListScript;
+class UnitMapScript;
 class UnitScript;
 
 class UnitState
@@ -34,6 +35,7 @@ public:
 
 	void updateMovingArea(MovingAreaScript & movingArea, const UnitScript & unit) const;
 	void updateCommandList(CommandListScript & commandList, const UnitScript & unit) const;
+	void updateUnitMap(UnitMapScript & unitMap, const std::shared_ptr<UnitScript> & unit) const;
 
 private:
 	State m_State{ State::Invalid };
