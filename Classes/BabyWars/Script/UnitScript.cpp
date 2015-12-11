@@ -28,24 +28,24 @@ struct UnitScript::UnitScriptImpl
 	//void onRequestChangeUnitState(const EvtDataRequestChangeUnitState & e);
 
 	bool canSetState(UnitState state) const;
-	void setState(UnitState state);
+	void setStateAndAppearanceAndQueueEvent(UnitState newState);
 
-	void updateAppearanceAccordingToState(UnitState state);
-	void updateMoveAction(const MovingPath & path);
+	void updateMovingActionForPath(const MovingPath & path);
+	cocos2d::Action * _createMovingActionForPath(const MovingPath & path) const;
 
 	//#TODO: This should be replaced to show the animation of the active unit.
 	cocos2d::Action * m_ActiveAction{ nullptr };
 	cocos2d::Action * m_MoveEndAction{ nullptr };
-	cocos2d::Action * m_MoveAction{ nullptr };
+	cocos2d::Action * m_MovingAction{ nullptr };
 
 	GridIndex m_GridIndex;
-	GridIndex m_IndexBeforeMoving;
+	GridIndex m_GridIndexBeforeMoving;
 	std::shared_ptr<UnitData> m_UnitData;
 	UnitState m_State;
 
 	std::weak_ptr<UnitScript> m_Script;
 	std::shared_ptr<BaseRenderComponent> m_RenderComponent;
-	std::weak_ptr<TransformComponent> m_TransformComponent;
+	std::shared_ptr<TransformComponent> m_TransformComponent;
 };
 
 UnitScript::UnitScriptImpl::UnitScriptImpl()
@@ -62,7 +62,7 @@ UnitScript::UnitScriptImpl::~UnitScriptImpl()
 {
 	CC_SAFE_RELEASE_NULL(m_ActiveAction);
 	CC_SAFE_RELEASE_NULL(m_MoveEndAction);
-	CC_SAFE_RELEASE_NULL(m_MoveAction);
+	CC_SAFE_RELEASE_NULL(m_MovingAction);
 }
 
 //void UnitScript::UnitScriptImpl::onRequestChangeUnitState(const EvtDataRequestChangeUnitState & e)
@@ -73,7 +73,7 @@ UnitScript::UnitScriptImpl::~UnitScriptImpl()
 //
 //	const auto newState = e.getNewState();
 //	if (canSetState(newState)) {
-//		setState(newState);
+//		setStateAndAppearanceAndQueueEvent(newState);
 //	}
 //}
 
@@ -82,44 +82,29 @@ bool UnitScript::UnitScriptImpl::canSetState(UnitState state) const
 	return true;
 }
 
-void UnitScript::UnitScriptImpl::setState(UnitState state)
+void UnitScript::UnitScriptImpl::setStateAndAppearanceAndQueueEvent(UnitState newState)
 {
-	if (m_State == state) {
+	if (m_State == newState) {
 		return;
 	}
 
-	auto changeStateEvent = std::make_unique<EvtDataUnitStateChangeEnd>(m_Script, m_State, state);
-	m_State = state;
-	updateAppearanceAccordingToState(state);
+	auto changeStateEvent = std::make_unique<EvtDataUnitStateChangeEnd>(m_Script, m_State, newState);
+	m_State.clearUnitAppearanceInState(*m_Script.lock());
+	newState.showUnitAppearanceInState(*m_Script.lock());
+	m_State = newState;
 	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::move(changeStateEvent));
 }
 
-void UnitScript::UnitScriptImpl::updateAppearanceAccordingToState(UnitState state)
+void UnitScript::UnitScriptImpl::updateMovingActionForPath(const MovingPath & path)
 {
-	//Reset the appearance.
-	auto sceneNode = m_RenderComponent->getSceneNode();
-	sceneNode->setColor(cocos2d::Color3B(255, 255, 255));
-	m_RenderComponent->stopAction(m_ActiveAction);
-	m_TransformComponent.lock()->setRotation(0);
-	m_RenderComponent->stopAction(m_MoveEndAction);
-	sceneNode->setOpacity(255);
-
-	using State = UnitState::State;
-	if (state.getState() == State::Active) {
-		m_RenderComponent->runAction(m_ActiveAction);
-	}
-	else if (state.getState() == State::MovingEnd) {
-		m_RenderComponent->runAction(m_MoveEndAction);
-	}
-	else if (state.getState() == State::Waiting) {
-		m_RenderComponent->getSceneNode()->setColor(cocos2d::Color3B(150, 150, 150));
-	}
+	CC_SAFE_RELEASE_NULL(m_MovingAction);
+	m_MovingAction = _createMovingActionForPath(path);
 }
 
-void UnitScript::UnitScriptImpl::updateMoveAction(const MovingPath & path)
+cocos2d::Action * UnitScript::UnitScriptImpl::_createMovingActionForPath(const MovingPath & path) const
 {
-	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
-	auto movingDurationPerGrid = 1 / m_UnitData->getAnimationMovingSpeedGridPerSec();
+	const auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
+	const auto movingDurationPerGrid = 1 / m_UnitData->getAnimationMovingSpeedGridPerSec();
 	const auto & underlyingPath = path.getUnderlyingPath();
 
 	auto moveActionList = cocos2d::Vector<cocos2d::FiniteTimeAction*>();
@@ -130,14 +115,11 @@ void UnitScript::UnitScriptImpl::updateMoveAction(const MovingPath & path)
 		if (!script.expired()) {
 			auto strongScript = script.lock();
 			strongScript->pimpl->m_GridIndex = pathEndIndex;
-			//strongScript->setGridIndexAndPosition(pathEndIndex);
-			strongScript->setState(UnitState(UnitState::State::MovingEnd));
+			strongScript->setStateAndAppearanceAndQueueEvent(UnitState(UnitState::State::MovingEnd));
 		}
 	}));
 
-	CC_SAFE_RELEASE_NULL(m_MoveAction);
-	m_MoveAction = cocos2d::Sequence::create(moveActionList);
-	m_MoveAction->retain();
+	return cocos2d::Sequence::create(moveActionList);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -153,30 +135,7 @@ UnitScript::~UnitScript()
 
 bool UnitScript::onInputTouch(const EvtDataInputTouch & touch)
 {
-	auto state = pimpl->m_State.getState();
-	using State = UnitState::State;
-	assert(state != State::Invalid && "UnitScript::onInputTouch() the state of the unit is invalid.");
-
-	if (state == State::Idle) {
-		setState(UnitState(State::Active));
-		return true;
-	}
-	else if (state == State::Active) {
-		moveAlongPath(MovingPath(MovingPath::PathNode(pimpl->m_GridIndex, pimpl->m_UnitData->getMovementRange())));
-		return true;
-	}
-	else if (state == State::Moving) {
-		assert("UnitScript::onInputTouch() the unit is touched when moving. Moving unit is designed to ignore any touch, therefore this should not happen.");
-		return false;
-	}
-	else if (state == State::MovingEnd) {
-		return false;
-	}
-	else if (state == State::Waiting) {
-		return false;
-	}
-
-	return false;
+	return pimpl->m_State.updateUnitOnTouch(*this);
 }
 
 void UnitScript::loadUnit(tinyxml2::XMLElement * xmlElement)
@@ -194,7 +153,7 @@ void UnitScript::loadUnit(tinyxml2::XMLElement * xmlElement)
 	sceneNode->setSpriteFrame(unitData->getAnimation()->getFrames().at(0)->getSpriteFrame());
 
 	//Scale the sprite so that it meets the real game grid size.
-	pimpl->m_TransformComponent.lock()->setScaleToSize(resourceLoader->getDesignGridSize());
+	pimpl->m_TransformComponent->setScaleToSize(resourceLoader->getDesignGridSize());
 
 	pimpl->m_UnitData = std::move(unitData);
 
@@ -210,40 +169,19 @@ const std::shared_ptr<UnitData> & UnitScript::getUnitData() const
 
 std::vector<GameCommand> UnitScript::getCommands() const
 {
-	auto state = pimpl->m_State.getState();
-	using State = UnitState::State;
-	assert(state != State::Invalid && "UnitScript::getCommands() the unit is in invalid state.");
-	auto commands = std::vector<GameCommand>{};
-
-	if (state == State::Idle || state == State::Active || state == State::Moving || state == State::Waiting) {
-		return commands;
-	}
-
-	if (state == State::MovingEnd) {
-		commands.emplace_back("Wait", [unitScript = pimpl->m_Script]() {
-			if (unitScript.expired()) {
-				return;
-			}
-
-			auto strongUnit = unitScript.lock();
-			strongUnit->setState(UnitState(State::Waiting));
-			strongUnit->setGridIndexAndPosition(strongUnit->getGridIndex());
-		});
-	}
-
-	return commands;
+	return pimpl->m_State.getCommandsForUnit(pimpl->m_Script.lock());
 }
 
 void UnitScript::setGridIndexAndPosition(const GridIndex & gridIndex)
 {
 	//Set the indexes and dispatch event.
 	auto previousIndex = pimpl->m_GridIndex;
-	pimpl->m_GridIndex = gridIndex;
+	pimpl->m_GridIndexBeforeMoving = pimpl->m_GridIndex = gridIndex;
 	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataUnitIndexChangeEnd>(pimpl->m_Script, std::move(previousIndex)));
 
 	//Set the position of the node according to indexes.
 	auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
-	pimpl->m_TransformComponent.lock()->setPosition(gridIndex.toPosition(gridSize));
+	pimpl->m_TransformComponent->setPosition(gridIndex.toPosition(gridSize));
 }
 
 GridIndex UnitScript::getGridIndex() const
@@ -261,9 +199,9 @@ UnitState UnitScript::getState() const
 	return pimpl->m_State;
 }
 
-void UnitScript::setState(UnitState state)
+void UnitScript::setStateAndAppearanceAndQueueEvent(UnitState state)
 {
-	pimpl->setState(state);
+	pimpl->setStateAndAppearanceAndQueueEvent(state);
 }
 
 bool UnitScript::canPassThrough(const UnitScript & otherUnit) const
@@ -280,30 +218,67 @@ bool UnitScript::canStayTogether(const UnitScript & otherUnit) const
 
 void UnitScript::moveAlongPath(const MovingPath & path)
 {
-	assert(pimpl->m_State.getState() == UnitState::State::Active && "UnitScript::moveAlongPath() the unit is not in active state.");
+	assert(pimpl->m_State.canMoveAlongPath() && "UnitScript::moveAlongPath() the unit is in a state that can't move along path.");
 	assert(path.getLength() != 0 && "UnitScript::moveAlongPath() the length of the path is 0.");
 	assert(path.getFrontNode().m_GridIndex == pimpl->m_GridIndex && "UnitScript::moveAlongPath() the unit is not at the starting grid of the path.");
 
-	pimpl->m_IndexBeforeMoving = pimpl->m_GridIndex;
-	pimpl->updateMoveAction(path);
-	setState(UnitState(UnitState::State::Moving));
-	pimpl->m_RenderComponent->runAction(pimpl->m_MoveAction);
+	pimpl->updateMovingActionForPath(path);
+	setStateAndAppearanceAndQueueEvent(UnitState(UnitState::State::Moving));
+}
+
+void UnitScript::moveInPlace()
+{
+	moveAlongPath(MovingPath(MovingPath::PathNode(pimpl->m_GridIndex, pimpl->m_UnitData->getMovementRange())));
 }
 
 void UnitScript::undoMove()
 {
-	auto state = pimpl->m_State.getState();
-	using State = UnitState::State;
-	assert(state != State::Invalid && "UnitScript::undoMove() the unit is in invalid state.");
-	if (state == State::Idle || state == State::Waiting)
-		return;
-
-	if (state == State::Moving || state == State::MovingEnd) {
-		pimpl->m_RenderComponent->stopAction(pimpl->m_MoveAction);
-		setGridIndexAndPosition(pimpl->m_IndexBeforeMoving);
+	if (pimpl->m_State.canUndoMove()) {
+		setStateAndAppearanceAndQueueEvent(UnitState(UnitState::State::Idle));
+		setGridIndexAndPosition(pimpl->m_GridIndexBeforeMoving);
 	}
+}
 
-	setState(UnitState(State::Idle));
+void UnitScript::showAppearanceInActiveState()
+{
+	pimpl->m_RenderComponent->runAction(pimpl->m_ActiveAction);
+}
+
+void UnitScript::clearAppearanceInActiveState()
+{
+	pimpl->m_RenderComponent->stopAction(pimpl->m_ActiveAction);
+	pimpl->m_TransformComponent->setRotation(0);
+}
+
+void UnitScript::showAppearanceInMovingState()
+{
+	pimpl->m_RenderComponent->runAction(pimpl->m_MovingAction);
+}
+
+void UnitScript::clearAppearanceInMovingState()
+{
+	pimpl->m_RenderComponent->stopAction(pimpl->m_MovingAction);
+}
+
+void UnitScript::showAppearanceInMovingEndState()
+{
+	pimpl->m_RenderComponent->runAction(pimpl->m_MoveEndAction);
+}
+
+void UnitScript::clearAppearanceInMovingEndState()
+{
+	pimpl->m_RenderComponent->stopAction(pimpl->m_MoveEndAction);
+	pimpl->m_RenderComponent->getSceneNode()->setOpacity(255);
+}
+
+void UnitScript::showAppearanceInWaitingState()
+{
+	pimpl->m_RenderComponent->getSceneNode()->setColor(cocos2d::Color3B(150, 150, 150));
+}
+
+void UnitScript::clearAppearanceInWaitingState()
+{
+	pimpl->m_RenderComponent->getSceneNode()->setColor(cocos2d::Color3B(255, 255, 255));
 }
 
 bool UnitScript::vInit(const tinyxml2::XMLElement * xmlElement)
