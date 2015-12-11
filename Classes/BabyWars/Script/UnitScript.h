@@ -13,6 +13,7 @@ class MovingPath;
 class EvtDataInputTouch;
 class GameCommand;
 class UnitState;
+enum class UnitStateTypeCode;
 
 class UnitScript : public BaseScriptComponent
 {
@@ -32,9 +33,9 @@ public:
 	void setGridIndexAndPosition(const GridIndex & gridIndex);
 	GridIndex getGridIndex() const;
 
-	bool canSetState(UnitState state) const;
-	UnitState getState() const;
-	void setStateAndAppearanceAndQueueEvent(UnitState state);
+	bool canSetState(UnitStateTypeCode stateCode) const;
+	UnitStateTypeCode getStateCode() const;
+	void setStateAndAppearanceAndQueueEvent(UnitStateTypeCode stateCode);
 
 	bool canPassThrough(const UnitScript & otherUnit) const;
 	bool canStayTogether(const UnitScript & otherUnit) const;

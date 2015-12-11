@@ -2,15 +2,16 @@
 
 std::shared_ptr<UnitScript> EvtDataRequestChangeUnitState::getUnitScript() const
 {
-	if (m_UnitScript.expired())
+	if (m_UnitScript.expired()) {
 		return nullptr;
+	}
 
 	return m_UnitScript.lock();
 }
 
-UnitState EvtDataRequestChangeUnitState::getNewState() const
+UnitStateTypeCode EvtDataRequestChangeUnitState::getNewStateCode() const
 {
-	return m_NewState;
+	return m_NewStateCode;
 }
 
 const EventType EvtDataRequestChangeUnitState::s_EventType{ "EvtDataRequestChangeUnitState" };

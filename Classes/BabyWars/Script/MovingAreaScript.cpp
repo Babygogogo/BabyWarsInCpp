@@ -65,7 +65,7 @@ void MovingAreaScript::MovingAreaScriptImpl::onUnitStateChangeEnd(const EvtDataU
 {
 	auto unitScript = e.getUnitScript();
 	assert(unitScript && "MovingAreaScriptImpl::onUnitStateChangeEnd() the unit is expired.");
-	e.getCurrentState().updateMovingArea(*m_OwnerActor.lock()->getComponent<MovingAreaScript>(), *unitScript);
+	e.getCurrentState()->vUpdateMovingArea(*m_OwnerActor.lock()->getComponent<MovingAreaScript>(), *unitScript);
 }
 
 bool MovingAreaScript::MovingAreaScriptImpl::isAreaShownForUnit(const UnitScript & unit) const

@@ -214,10 +214,16 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyWars\Script\WarSceneHUDScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\WarSceneScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\UserInterface\BabyWarsHumanView.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Utilities\ActiveUnitState.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Utilities\GridIndex.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Utilities\IdleUnitState.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Utilities\InvalidUnitState.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Utilities\MovingArea.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Utilities\MovingEndUnitState.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Utilities\MovingPath.cpp" />
-    <ClCompile Include="..\Classes\BabyWars\Utilities\UnitState.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Utilities\MovingUnitState.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Utilities\UnitStateFactory.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Utilities\WaitingUnitState.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -304,14 +310,22 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyWars\Script\WarSceneHUDScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\WarSceneScript.h" />
     <ClInclude Include="..\Classes\BabyWars\UserInterface\BabyWarsHumanView.h" />
+    <ClInclude Include="..\Classes\BabyWars\Utilities\ActiveUnitState.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\AdjacentDirection.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\GameCommand.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\GridIndex.h" />
+    <ClInclude Include="..\Classes\BabyWars\Utilities\IdleUnitState.h" />
+    <ClInclude Include="..\Classes\BabyWars\Utilities\InvalidUnitState.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\Matrix2D.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\Matrix2DDimension.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\MovingArea.h" />
+    <ClInclude Include="..\Classes\BabyWars\Utilities\MovingEndUnitState.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\MovingPath.h" />
+    <ClInclude Include="..\Classes\BabyWars\Utilities\MovingUnitState.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\UnitState.h" />
+    <ClInclude Include="..\Classes\BabyWars\Utilities\UnitStateFactory.h" />
+    <ClInclude Include="..\Classes\BabyWars\Utilities\UnitStateTypeCode.h" />
+    <ClInclude Include="..\Classes\BabyWars\Utilities\WaitingUnitState.h" />
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>

@@ -14,6 +14,8 @@
 #include "../Utilities/GridIndex.h"
 #include "../Utilities/MovingPath.h"
 #include "../Utilities/UnitState.h"
+#include "../Utilities/UnitStateTypeCode.h"
+#include "../Utilities/UnitStateFactory.h"
 #include "../Utilities/GameCommand.h"
 #include "UnitScript.h"
 
@@ -27,8 +29,8 @@ struct UnitScript::UnitScriptImpl
 
 	//void onRequestChangeUnitState(const EvtDataRequestChangeUnitState & e);
 
-	bool canSetState(UnitState state) const;
-	void setStateAndAppearanceAndQueueEvent(UnitState newState);
+	bool canSetState(UnitStateTypeCode stateCode) const;
+	void setStateAndAppearanceAndQueueEvent(UnitStateTypeCode newStateCode);
 
 	void updateMovingActionForPath(const MovingPath & path);
 	cocos2d::Action * _createMovingActionForPath(const MovingPath & path) const;
@@ -41,14 +43,14 @@ struct UnitScript::UnitScriptImpl
 	GridIndex m_GridIndex;
 	GridIndex m_GridIndexBeforeMoving;
 	std::shared_ptr<UnitData> m_UnitData;
-	UnitState m_State;
+	std::shared_ptr<UnitState> m_State;
 
 	std::weak_ptr<UnitScript> m_Script;
 	std::shared_ptr<BaseRenderComponent> m_RenderComponent;
 	std::shared_ptr<TransformComponent> m_TransformComponent;
 };
 
-UnitScript::UnitScriptImpl::UnitScriptImpl()
+UnitScript::UnitScriptImpl::UnitScriptImpl() : m_State{ utilities::createUnitState(UnitStateTypeCode::Invalid) }
 {
 	using namespace cocos2d;
 	m_ActiveAction = RepeatForever::create(Sequence::create(RotateTo::create(0.2f, 30, 30), RotateTo::create(0.4f, -30, -30), RotateTo::create(0.2f, 0, 0), nullptr));
@@ -77,20 +79,22 @@ UnitScript::UnitScriptImpl::~UnitScriptImpl()
 //	}
 //}
 
-bool UnitScript::UnitScriptImpl::canSetState(UnitState state) const
+bool UnitScript::UnitScriptImpl::canSetState(UnitStateTypeCode stateCode) const
 {
 	return true;
 }
 
-void UnitScript::UnitScriptImpl::setStateAndAppearanceAndQueueEvent(UnitState newState)
+void UnitScript::UnitScriptImpl::setStateAndAppearanceAndQueueEvent(UnitStateTypeCode newStateCode)
 {
-	if (m_State == newState) {
+	if (m_State->vGetStateTypeCode() == newStateCode) {
 		return;
 	}
 
+	auto newState = utilities::createUnitState(newStateCode);
+	m_State->vClearUnitAppearanceInState(*m_Script.lock());
+	newState->vShowUnitAppearanceInState(*m_Script.lock());
+
 	auto changeStateEvent = std::make_unique<EvtDataUnitStateChangeEnd>(m_Script, m_State, newState);
-	m_State.clearUnitAppearanceInState(*m_Script.lock());
-	newState.showUnitAppearanceInState(*m_Script.lock());
 	m_State = newState;
 	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::move(changeStateEvent));
 }
@@ -115,7 +119,7 @@ cocos2d::Action * UnitScript::UnitScriptImpl::_createMovingActionForPath(const M
 		if (!script.expired()) {
 			auto strongScript = script.lock();
 			strongScript->pimpl->m_GridIndex = pathEndIndex;
-			strongScript->setStateAndAppearanceAndQueueEvent(UnitState(UnitState::State::MovingEnd));
+			strongScript->setStateAndAppearanceAndQueueEvent(UnitStateTypeCode::MovingEnd);
 		}
 	}));
 
@@ -135,7 +139,7 @@ UnitScript::~UnitScript()
 
 bool UnitScript::onInputTouch(const EvtDataInputTouch & touch)
 {
-	return pimpl->m_State.updateUnitOnTouch(*this);
+	return pimpl->m_State->vUpdateUnitOnTouch(*this);
 }
 
 void UnitScript::loadUnit(tinyxml2::XMLElement * xmlElement)
@@ -159,7 +163,7 @@ void UnitScript::loadUnit(tinyxml2::XMLElement * xmlElement)
 
 	//////////////////////////////////////////////////////////////////////////
 	//#TODO: Load more data, such as the hp, level and so on, from the xml.
-	pimpl->m_State = UnitState(UnitState::State::Idle);
+	pimpl->m_State = utilities::createUnitState(UnitStateTypeCode::Idle);
 }
 
 const std::shared_ptr<UnitData> & UnitScript::getUnitData() const
@@ -169,7 +173,7 @@ const std::shared_ptr<UnitData> & UnitScript::getUnitData() const
 
 std::vector<GameCommand> UnitScript::getCommands() const
 {
-	return pimpl->m_State.getCommandsForUnit(pimpl->m_Script.lock());
+	return pimpl->m_State->vGetCommandsForUnit(pimpl->m_Script.lock());
 }
 
 void UnitScript::setGridIndexAndPosition(const GridIndex & gridIndex)
@@ -189,19 +193,19 @@ GridIndex UnitScript::getGridIndex() const
 	return pimpl->m_GridIndex;
 }
 
-bool UnitScript::canSetState(UnitState state) const
+bool UnitScript::canSetState(UnitStateTypeCode stateCode) const
 {
-	return pimpl->canSetState(state);
+	return pimpl->canSetState(stateCode);
 }
 
-UnitState UnitScript::getState() const
+UnitStateTypeCode UnitScript::getStateCode() const
 {
-	return pimpl->m_State;
+	return pimpl->m_State->vGetStateTypeCode();
 }
 
-void UnitScript::setStateAndAppearanceAndQueueEvent(UnitState state)
+void UnitScript::setStateAndAppearanceAndQueueEvent(UnitStateTypeCode stateCode)
 {
-	pimpl->setStateAndAppearanceAndQueueEvent(state);
+	pimpl->setStateAndAppearanceAndQueueEvent(stateCode);
 }
 
 bool UnitScript::canPassThrough(const UnitScript & otherUnit) const
@@ -218,12 +222,12 @@ bool UnitScript::canStayTogether(const UnitScript & otherUnit) const
 
 void UnitScript::moveAlongPath(const MovingPath & path)
 {
-	assert(pimpl->m_State.canMoveAlongPath() && "UnitScript::moveAlongPath() the unit is in a state that can't move along path.");
+	assert(pimpl->m_State->vCanMoveAlongPath() && "UnitScript::moveAlongPath() the unit is in a state that can't move along path.");
 	assert(path.getLength() != 0 && "UnitScript::moveAlongPath() the length of the path is 0.");
 	assert(path.getFrontNode().m_GridIndex == pimpl->m_GridIndex && "UnitScript::moveAlongPath() the unit is not at the starting grid of the path.");
 
 	pimpl->updateMovingActionForPath(path);
-	setStateAndAppearanceAndQueueEvent(UnitState(UnitState::State::Moving));
+	setStateAndAppearanceAndQueueEvent(UnitStateTypeCode::Moving);
 }
 
 void UnitScript::moveInPlace()
@@ -233,8 +237,8 @@ void UnitScript::moveInPlace()
 
 void UnitScript::undoMove()
 {
-	if (pimpl->m_State.canUndoMove()) {
-		setStateAndAppearanceAndQueueEvent(UnitState(UnitState::State::Idle));
+	if (pimpl->m_State->vCanUndoMove()) {
+		setStateAndAppearanceAndQueueEvent(UnitStateTypeCode::Idle);
 		setGridIndexAndPosition(pimpl->m_GridIndexBeforeMoving);
 	}
 }

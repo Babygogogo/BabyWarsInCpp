@@ -48,7 +48,7 @@ void CommandListScript::CommandListScriptImpl::onUnitStateChangeEnd(const EvtDat
 {
 	auto unitScript = e.getUnitScript();
 	assert(unitScript && "CommandListScriptImpl::onUnitStateChangeEnd() the unit is expired.");
-	e.getCurrentState().updateCommandList(*m_OwnerActor.lock()->getComponent<CommandListScript>(), *unitScript);
+	e.getCurrentState()->vUpdateCommandList(*m_OwnerActor.lock()->getComponent<CommandListScript>(), *unitScript);
 }
 
 bool CommandListScript::CommandListScriptImpl::isListShownForUnit(const UnitScript & unit) const

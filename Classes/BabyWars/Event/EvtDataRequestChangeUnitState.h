@@ -4,18 +4,18 @@
 #include <memory>
 
 #include "../../BabyEngine/Event/BaseEventData.h"
-#include "../Utilities/UnitState.h"
+#include "../Utilities/UnitStateTypeCode.h"
 
 class UnitScript;
 
 class EvtDataRequestChangeUnitState : public BaseEventData
 {
 public:
-	EvtDataRequestChangeUnitState(std::weak_ptr<UnitScript> unitScript, UnitState newState) : m_UnitScript{ std::move(unitScript) }, m_NewState{ newState } {}
+	EvtDataRequestChangeUnitState(std::weak_ptr<UnitScript> unitScript, UnitStateTypeCode newStateCode) : m_UnitScript{ std::move(unitScript) }, m_NewStateCode{ newStateCode } {}
 	virtual ~EvtDataRequestChangeUnitState() = default;
 
 	std::shared_ptr<UnitScript> getUnitScript() const;
-	UnitState getNewState() const;
+	UnitStateTypeCode getNewStateCode() const;
 
 	static const EventType s_EventType;
 	virtual const EventType & vGetType() const override;
@@ -28,7 +28,7 @@ public:
 
 private:
 	std::weak_ptr<UnitScript> m_UnitScript;
-	UnitState m_NewState;
+	UnitStateTypeCode m_NewStateCode;
 };
 
 #endif // !__EVENT_DATA_REQUEST_CHANGE_UNIT_STATE__

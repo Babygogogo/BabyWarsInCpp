@@ -67,6 +67,9 @@
     <Filter Include="src\BabyEngine\Utilities\XMLSerialization">
       <UniqueIdentifier>{4c00a287-a0a0-4ab4-86b7-c41f6fb20b8c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\BabyWars\Utilities\UnitState">
+      <UniqueIdentifier>{3d8871af-a093-418c-a2a2-d0c39032eacb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -288,14 +291,32 @@
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSceneNode.cpp">
       <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\UnitState.cpp">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Script\CommandListScript.cpp">
       <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Script\CommandPanelScript.cpp">
       <Filter>src\BabyWars\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\UnitStateFactory.cpp">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\InvalidUnitState.cpp">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\IdleUnitState.cpp">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\ActiveUnitState.cpp">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\MovingUnitState.cpp">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\MovingEndUnitState.cpp">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\WaitingUnitState.cpp">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -542,9 +563,6 @@
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataUnitStateChangeEnd.h">
       <Filter>src\BabyWars\Event</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\UnitState.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataUnitIndexChangeEnd.h">
       <Filter>src\BabyWars\Event</Filter>
     </ClInclude>
@@ -574,6 +592,33 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Script\CommandPanelScript.h">
       <Filter>src\BabyWars\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\UnitState.h">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\InvalidUnitState.h">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\UnitStateTypeCode.h">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\UnitStateFactory.h">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\IdleUnitState.h">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\ActiveUnitState.h">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\MovingUnitState.h">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\MovingEndUnitState.h">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\WaitingUnitState.h">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
