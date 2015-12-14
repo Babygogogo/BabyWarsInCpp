@@ -9,6 +9,7 @@
 #include "FiniteTimeActionComponent.h"
 #include "GeneralRenderComponent.h"
 #include "SceneRenderComponent.h"
+#include "ActionComponent.h"
 #include "TransformComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -174,6 +175,7 @@ void BaseActorFactory::registerGeneralComponents()
 	registerComponent<GeneralRenderComponent>();
 	registerComponent<SceneRenderComponent>();
 	registerComponent<TransformComponent>();
+	registerComponent<ActionComponent>();
 	registerComponent<FiniteTimeActionComponent>();
 }
 

@@ -43,11 +43,6 @@ public:
 	//Warning: You should not call retain(), release(), or any functions that change the lifetime of the node.
 	cocos2d::Node * getSceneNode() const;
 
-	//#TODO: Functions about action should be refactored (maybe extract to a ActionComponent).
-	void runAction(cocos2d::Action * action);
-	void stopAction(cocos2d::Action * action);
-	void stopAllActions();
-
 	//Disable copy/move constructor and operator=.
 	BaseRenderComponent(const BaseRenderComponent &) = delete;
 	BaseRenderComponent(BaseRenderComponent &&) = delete;

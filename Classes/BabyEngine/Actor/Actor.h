@@ -65,7 +65,7 @@ public:
 	//Warning: Prefer using std::weak_ptr if you need ownership. See the comment for Actor class for details.
 	std::shared_ptr<BaseRenderComponent> getRenderComponent() const;
 
-	//Convenient function for getting concrete render component, which automatically downcast the teturned pointer.
+	//Convenient function for getting concrete render component, which automatically downcast the returned pointer.
 	//Returns nullptr if no such component attached.
 	//Warning: Prefer using std::weak_ptr if you need ownership. See the comment for Actor class for details.
 	template<typename T>

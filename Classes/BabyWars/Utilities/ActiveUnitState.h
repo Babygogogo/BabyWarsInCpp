@@ -6,8 +6,8 @@
 class ActiveUnitState : public UnitState
 {
 public:
-	ActiveUnitState() = default;
-	~ActiveUnitState() = default;
+	ActiveUnitState();
+	~ActiveUnitState();
 
 	//Disable copy/move constructor and operator=.
 	ActiveUnitState(const ActiveUnitState &) = delete;
@@ -30,6 +30,10 @@ private:
 	virtual bool vCanUndoMove() const override;
 
 	virtual std::vector<GameCommand> vGetCommandsForUnit(const std::shared_ptr<UnitScript> & targetUnit) const override;
+
+	//Implementation stuff.
+	struct ActiveUnitStateImpl;
+	std::unique_ptr<ActiveUnitStateImpl> pimpl;
 };
 
 #endif // !__ACTIVE_UNIT_STATE__

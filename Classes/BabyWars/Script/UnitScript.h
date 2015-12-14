@@ -44,16 +44,6 @@ public:
 	void moveInPlace();
 	void undoMove();
 
-	//#TODO: These stuff about changing the appearance in different state should be refactored.
-	void showAppearanceInActiveState();
-	void clearAppearanceInActiveState();
-	void showAppearanceInMovingState();
-	void clearAppearanceInMovingState();
-	void showAppearanceInMovingEndState();
-	void clearAppearanceInMovingEndState();
-	void showAppearanceInWaitingState();
-	void clearAppearanceInWaitingState();
-
 	//Type name of the class. Used by the ActorFactory and can not be removed.
 	static const std::string Type;
 	virtual const std::string & getType() const override;

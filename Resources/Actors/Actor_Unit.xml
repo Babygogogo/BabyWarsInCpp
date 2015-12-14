@@ -5,6 +5,7 @@
 			<SceneNode Type="Sprite"/>
 		</GeneralRenderComponent>
 		<TransformComponent/>
+		<ActionComponent/>
 		<UnitScript/>
 	</Components>
 	<ChildrenActors>

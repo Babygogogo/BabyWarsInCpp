@@ -38,12 +38,10 @@ bool MovingUnitState::vUpdateUnitOnTouch(UnitScript & unit) const
 
 void MovingUnitState::vShowUnitAppearanceInState(UnitScript & unit) const
 {
-	unit.showAppearanceInMovingState();
 }
 
 void MovingUnitState::vClearUnitAppearanceInState(UnitScript & unit) const
 {
-	unit.clearAppearanceInMovingState();
 }
 
 bool MovingUnitState::vCanMoveAlongPath() const

@@ -2,6 +2,7 @@
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/Actor/Actor.h"
+#include "../../BabyEngine/Actor/ActionComponent.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/Actor/TransformComponent.h"
 #include "../../BabyEngine/Event/IEventDispatcher.h"
@@ -30,14 +31,13 @@ struct UnitScript::UnitScriptImpl
 	//void onRequestChangeUnitState(const EvtDataRequestChangeUnitState & e);
 
 	bool canSetState(UnitStateTypeCode stateCode) const;
+	void setState(std::shared_ptr<UnitState> && state);
 	void setStateAndAppearanceAndQueueEvent(UnitStateTypeCode newStateCode);
 
 	void updateMovingActionForPath(const MovingPath & path);
 	cocos2d::Action * _createMovingActionForPath(const MovingPath & path) const;
 
 	//#TODO: This should be replaced to show the animation of the active unit.
-	cocos2d::Action * m_ActiveAction{ nullptr };
-	cocos2d::Action * m_MoveEndAction{ nullptr };
 	cocos2d::Action * m_MovingAction{ nullptr };
 
 	GridIndex m_GridIndex;
@@ -48,22 +48,15 @@ struct UnitScript::UnitScriptImpl
 	std::weak_ptr<UnitScript> m_Script;
 	std::shared_ptr<BaseRenderComponent> m_RenderComponent;
 	std::shared_ptr<TransformComponent> m_TransformComponent;
+	std::shared_ptr<ActionComponent> m_ActionComponent;
 };
 
 UnitScript::UnitScriptImpl::UnitScriptImpl() : m_State{ utilities::createUnitState(UnitStateTypeCode::Invalid) }
 {
-	using namespace cocos2d;
-	m_ActiveAction = RepeatForever::create(Sequence::create(RotateTo::create(0.2f, 30, 30), RotateTo::create(0.4f, -30, -30), RotateTo::create(0.2f, 0, 0), nullptr));
-	m_ActiveAction->retain();
-
-	m_MoveEndAction = RepeatForever::create(Sequence::create(FadeTo::create(0.4f, 100), FadeTo::create(0.4f, 255), nullptr));
-	m_MoveEndAction->retain();
 }
 
 UnitScript::UnitScriptImpl::~UnitScriptImpl()
 {
-	CC_SAFE_RELEASE_NULL(m_ActiveAction);
-	CC_SAFE_RELEASE_NULL(m_MoveEndAction);
 	CC_SAFE_RELEASE_NULL(m_MovingAction);
 }
 
@@ -84,6 +77,18 @@ bool UnitScript::UnitScriptImpl::canSetState(UnitStateTypeCode stateCode) const
 	return true;
 }
 
+void UnitScript::UnitScriptImpl::setState(std::shared_ptr<UnitState> && state)
+{
+	assert(state && "UnitScriptImpl::setState() the state is nullptr.");
+
+	if (m_State->vGetStateTypeCode() != state->vGetStateTypeCode()) {
+		auto unitScript = m_Script.lock();
+		m_State->onUnitExitState(*unitScript);
+		m_State = std::move(state);
+		m_State->onUnitEnterState(*unitScript);
+	}
+}
+
 void UnitScript::UnitScriptImpl::setStateAndAppearanceAndQueueEvent(UnitStateTypeCode newStateCode)
 {
 	if (m_State->vGetStateTypeCode() == newStateCode) {
@@ -91,11 +96,8 @@ void UnitScript::UnitScriptImpl::setStateAndAppearanceAndQueueEvent(UnitStateTyp
 	}
 
 	auto newState = utilities::createUnitState(newStateCode);
-	m_State->vClearUnitAppearanceInState(*m_Script.lock());
-	newState->vShowUnitAppearanceInState(*m_Script.lock());
-
 	auto changeStateEvent = std::make_unique<EvtDataUnitStateChangeEnd>(m_Script, m_State, newState);
-	m_State = newState;
+	setState(std::move(newState));
 	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::move(changeStateEvent));
 }
 
@@ -103,6 +105,7 @@ void UnitScript::UnitScriptImpl::updateMovingActionForPath(const MovingPath & pa
 {
 	CC_SAFE_RELEASE_NULL(m_MovingAction);
 	m_MovingAction = _createMovingActionForPath(path);
+	m_MovingAction->retain();
 }
 
 cocos2d::Action * UnitScript::UnitScriptImpl::_createMovingActionForPath(const MovingPath & path) const
@@ -227,6 +230,7 @@ void UnitScript::moveAlongPath(const MovingPath & path)
 	assert(path.getFrontNode().m_GridIndex == pimpl->m_GridIndex && "UnitScript::moveAlongPath() the unit is not at the starting grid of the path.");
 
 	pimpl->updateMovingActionForPath(path);
+	pimpl->m_ActionComponent->runAction(pimpl->m_MovingAction);
 	setStateAndAppearanceAndQueueEvent(UnitStateTypeCode::Moving);
 }
 
@@ -238,51 +242,10 @@ void UnitScript::moveInPlace()
 void UnitScript::undoMove()
 {
 	if (pimpl->m_State->vCanUndoMove()) {
-		setStateAndAppearanceAndQueueEvent(UnitStateTypeCode::Idle);
+		pimpl->m_ActionComponent->stopAction(pimpl->m_MovingAction);
 		setGridIndexAndPosition(pimpl->m_GridIndexBeforeMoving);
+		setStateAndAppearanceAndQueueEvent(UnitStateTypeCode::Idle);
 	}
-}
-
-void UnitScript::showAppearanceInActiveState()
-{
-	pimpl->m_RenderComponent->runAction(pimpl->m_ActiveAction);
-}
-
-void UnitScript::clearAppearanceInActiveState()
-{
-	pimpl->m_RenderComponent->stopAction(pimpl->m_ActiveAction);
-	pimpl->m_TransformComponent->setRotation(0);
-}
-
-void UnitScript::showAppearanceInMovingState()
-{
-	pimpl->m_RenderComponent->runAction(pimpl->m_MovingAction);
-}
-
-void UnitScript::clearAppearanceInMovingState()
-{
-	pimpl->m_RenderComponent->stopAction(pimpl->m_MovingAction);
-}
-
-void UnitScript::showAppearanceInMovingEndState()
-{
-	pimpl->m_RenderComponent->runAction(pimpl->m_MoveEndAction);
-}
-
-void UnitScript::clearAppearanceInMovingEndState()
-{
-	pimpl->m_RenderComponent->stopAction(pimpl->m_MoveEndAction);
-	pimpl->m_RenderComponent->getSceneNode()->setOpacity(255);
-}
-
-void UnitScript::showAppearanceInWaitingState()
-{
-	pimpl->m_RenderComponent->getSceneNode()->setColor(cocos2d::Color3B(150, 150, 150));
-}
-
-void UnitScript::clearAppearanceInWaitingState()
-{
-	pimpl->m_RenderComponent->getSceneNode()->setColor(cocos2d::Color3B(255, 255, 255));
 }
 
 bool UnitScript::vInit(const tinyxml2::XMLElement * xmlElement)
@@ -292,16 +255,16 @@ bool UnitScript::vInit(const tinyxml2::XMLElement * xmlElement)
 
 void UnitScript::vPostInit()
 {
-	auto ownerActor = m_OwnerActor.lock();
-	pimpl->m_Script = ownerActor->getComponent<UnitScript>();
+	pimpl->m_Script = getComponent<UnitScript>();
 
-	auto renderComponent = ownerActor->getRenderComponent();
-	assert(renderComponent && "UnitScript::vPostInit() the actor has no sprite render component.");
-	pimpl->m_RenderComponent = std::move(renderComponent);
+	pimpl->m_RenderComponent = getRenderComponent();
+	assert(pimpl->m_RenderComponent && "UnitScript::vPostInit() the actor has no render component.");
 
-	auto transformComponent = ownerActor->getComponent<TransformComponent>();
-	assert(transformComponent && "UnitScript::vPostInit() the actor has no transform component.");
-	pimpl->m_TransformComponent = std::move(transformComponent);
+	pimpl->m_TransformComponent = getComponent<TransformComponent>();
+	assert(pimpl->m_TransformComponent && "UnitScript::vPostInit() the actor has no transform component.");
+
+	pimpl->m_ActionComponent = getComponent<ActionComponent>();
+	assert(pimpl->m_ActionComponent && "UnitScript::vPostInit() the actor has no action component.");
 
 	//auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
 	//eventDispatcher->vAddListener(EvtDataRequestChangeUnitState::s_EventType, pimpl, [this](const auto & e) {

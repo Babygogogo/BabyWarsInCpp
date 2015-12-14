@@ -9,6 +9,7 @@ namespace tinyxml2
 {
 	class XMLElement;
 }
+class BaseRenderComponent;
 
 /*!
  * \brief The base class of every components and scripts.
@@ -20,11 +21,38 @@ namespace tinyxml2
  */
 class ActorComponent
 {
-	friend class Actor;
-	friend class BaseActorFactory;
+	friend class Actor;				//For vPostInit().
+	friend class BaseActorFactory;	//For vInit(), setOwnerActor().
 
 public:
-	virtual ~ActorComponent();
+	virtual ~ActorComponent() = default;
+
+	//Get an attached component by its type name. Returns nullptr if no such component attached.
+	//Warning: Prefer using std::weak_ptr if you need ownership. See the comment for Actor class for details.
+	std::shared_ptr<ActorComponent> getComponent(const std::string & type) const;
+
+	//Convenient function for getting component, which automatically downcast the returned pointer.
+	//Returns nullptr if no such component attached.
+	//Warning: Prefer using std::weak_ptr if you need ownership. See the comment for Actor class for details.
+	template<typename T>
+	std::shared_ptr<T> getComponent() const	//T should derive from ActorComponent
+	{
+		return std::dynamic_pointer_cast<T>(getComponent(T::Type));
+	}
+
+	//Convenient function for getting the base of render component. An actor can have no more than one concrete render component.
+	//If there is no render component attached, nullptr is returned.
+	//Warning: Prefer using std::weak_ptr if you need ownership. See the comment for Actor class for details.
+	std::shared_ptr<BaseRenderComponent> getRenderComponent() const;
+
+	//Convenient function for getting concrete render component, which automatically downcast the returned pointer.
+	//Returns nullptr if no such component attached.
+	//Warning: Prefer using std::weak_ptr if you need ownership. See the comment for Actor class for details.
+	template<typename T>
+	std::shared_ptr<T> getRenderComponent() const	//T should derive from BaseRenderComponent.
+	{
+		return std::dynamic_pointer_cast<T>(getRenderComponent());
+	}
 
 	virtual const std::string & getType() const = 0;
 

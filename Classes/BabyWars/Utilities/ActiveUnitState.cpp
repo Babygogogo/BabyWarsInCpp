@@ -1,5 +1,10 @@
 #include <cassert>
 
+#include "cocos2d.h"
+
+#include "../../BabyEngine/Actor/BaseRenderComponent.h"
+#include "../../BabyEngine/Actor/TransformComponent.h"
+#include "../../BabyEngine/Actor/ActionComponent.h"
 #include "../Script/MovingAreaScript.h"
 #include "../Script/UnitMapScript.h"
 #include "../Script/CommandListScript.h"
@@ -7,6 +12,40 @@
 #include "GameCommand.h"
 #include "UnitStateTypeCode.h"
 #include "ActiveUnitState.h"
+
+//////////////////////////////////////////////////////////////////////////
+//Definition of ActiveUnitStateImpl.
+//////////////////////////////////////////////////////////////////////////
+struct ActiveUnitState::ActiveUnitStateImpl
+{
+	ActiveUnitStateImpl();
+	~ActiveUnitStateImpl();
+
+	cocos2d::Action * m_Action{ nullptr };
+};
+
+ActiveUnitState::ActiveUnitStateImpl::ActiveUnitStateImpl()
+{
+	using namespace cocos2d;
+	m_Action = RepeatForever::create(Sequence::create(RotateTo::create(0.2f, 30, 30), RotateTo::create(0.4f, -30, -30), RotateTo::create(0.2f, 0, 0), nullptr));
+	m_Action->retain();
+}
+
+ActiveUnitState::ActiveUnitStateImpl::~ActiveUnitStateImpl()
+{
+	CC_SAFE_RELEASE_NULL(m_Action);
+}
+
+//////////////////////////////////////////////////////////////////////////
+//Implementation of ActiveUnitScript.
+//////////////////////////////////////////////////////////////////////////
+ActiveUnitState::ActiveUnitState() : pimpl{ std::make_unique<ActiveUnitStateImpl>() }
+{
+}
+
+ActiveUnitState::~ActiveUnitState()
+{
+}
 
 UnitStateTypeCode ActiveUnitState::vGetStateTypeCode() const
 {
@@ -40,12 +79,13 @@ bool ActiveUnitState::vUpdateUnitOnTouch(UnitScript & unit) const
 
 void ActiveUnitState::vShowUnitAppearanceInState(UnitScript & unit) const
 {
-	unit.showAppearanceInActiveState();
+	unit.getComponent<ActionComponent>()->runAction(pimpl->m_Action);
 }
 
 void ActiveUnitState::vClearUnitAppearanceInState(UnitScript & unit) const
 {
-	unit.clearAppearanceInActiveState();
+	unit.getComponent<ActionComponent>()->stopAction(pimpl->m_Action);
+	unit.getComponent<TransformComponent>()->setRotation(0);
 }
 
 bool ActiveUnitState::vCanMoveAlongPath() const

@@ -75,7 +75,7 @@ bool FiniteTimeActionComponent::FiniteTimeActionComponentImpl::runNextAction(boo
 	m_CurrentAction = m_ActionList.front();
 	m_ActionList.pop_front();
 
-	m_OwnerActor.lock()->getRenderComponent()->runAction(m_CurrentAction);
+	m_OwnerActor.lock()->getRenderComponent()->getSceneNode()->runAction(m_CurrentAction);
 
 	return true;
 }
@@ -150,7 +150,7 @@ void FiniteTimeActionComponent::stopAndClearAllActions()
 	while (!pimpl->m_ActionList.empty())
 		pimpl->popFrontAction();
 
-	m_OwnerActor.lock()->getRenderComponent()->stopAllActions();
+	m_OwnerActor.lock()->getRenderComponent()->getSceneNode()->stopAllActions();
 
 	pimpl->eraseCurrentAction();
 }

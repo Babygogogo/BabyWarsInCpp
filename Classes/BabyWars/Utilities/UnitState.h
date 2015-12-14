@@ -19,6 +19,9 @@ public:
 
 	virtual UnitStateTypeCode vGetStateTypeCode() const = 0;
 
+	void onUnitEnterState(UnitScript & unit) const;
+	void onUnitExitState(UnitScript & unit) const;
+
 	virtual void vUpdateMovingArea(MovingAreaScript & movingArea, const UnitScript & unit) const = 0;
 	virtual void vUpdateCommandList(CommandListScript & commandList, const UnitScript & unit) const = 0;
 	virtual void vUpdateUnitMap(UnitMapScript & unitMap, const std::shared_ptr<UnitScript> & unit) const = 0;

@@ -1,5 +1,8 @@
 #include <cassert>
 
+#include "cocos2d.h"
+
+#include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../Script/MovingAreaScript.h"
 #include "../Script/CommandListScript.h"
 #include "../Script/UnitMapScript.h"
@@ -38,12 +41,12 @@ bool WaitingUnitState::vUpdateUnitOnTouch(UnitScript & unit) const
 
 void WaitingUnitState::vShowUnitAppearanceInState(UnitScript & unit) const
 {
-	unit.showAppearanceInWaitingState();
+	unit.getRenderComponent()->getSceneNode()->setColor(cocos2d::Color3B(150, 150, 150));
 }
 
 void WaitingUnitState::vClearUnitAppearanceInState(UnitScript & unit) const
 {
-	unit.clearAppearanceInWaitingState();
+	unit.getRenderComponent()->getSceneNode()->setColor(cocos2d::Color3B(255, 255, 255));
 }
 
 bool WaitingUnitState::vCanMoveAlongPath() const

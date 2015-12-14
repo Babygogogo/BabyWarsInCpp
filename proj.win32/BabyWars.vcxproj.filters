@@ -318,6 +318,12 @@
     <ClCompile Include="..\Classes\BabyWars\Utilities\WaitingUnitState.cpp">
       <Filter>src\BabyWars\Utilities\UnitState</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\UnitState.cpp">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\ActionComponent.cpp">
+      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -619,6 +625,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Utilities\WaitingUnitState.h">
       <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\ActionComponent.h">
+      <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
