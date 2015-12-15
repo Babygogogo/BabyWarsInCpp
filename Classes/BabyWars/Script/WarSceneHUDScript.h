@@ -3,11 +3,15 @@
 
 #include "../../BabyEngine/Actor/BaseScriptComponent.h"
 
+class EvtDataInputTouch;
+
 class WarSceneHUDScript : public BaseScriptComponent
 {
 public:
 	WarSceneHUDScript();
 	~WarSceneHUDScript();
+
+	bool onInputTouch(const EvtDataInputTouch & touch);
 
 	//Type name of the class. Used by the ActorFactory and can not be removed.
 	static const std::string Type;

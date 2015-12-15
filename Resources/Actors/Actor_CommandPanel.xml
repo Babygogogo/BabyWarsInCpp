@@ -5,7 +5,7 @@
 			<SceneNode Type="Node"/>
 		</GeneralRenderComponent>
 		<TransformComponent>
-			<Position X="0" Y="-30"/>
+			<Position X="860" Y="240"/>
 		</TransformComponent>
 		<CommandPanelScript>
 			<RelatedActorsPath Background="Actors\Actor_ActionMenuPanelBackground.xml" CommandList="Actors\Actor_CommandList.xml"/>

@@ -5,7 +5,7 @@
 			<SceneNode Type="Node"/>
 		</GeneralRenderComponent>
 		<TransformComponent>
-			<Position X="0" Y="-250"/>
+			<Position X="860" Y="20"/>
 		</TransformComponent>
 		<TerrainInfoPanelScript>
 			<RelatedActorsPath Background="Actors\Actor_TerrainInfoPanelBackground.xml"/>

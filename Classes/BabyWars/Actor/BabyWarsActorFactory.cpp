@@ -1,11 +1,15 @@
 #include "BabyWarsActorFactory.h"
 
+#include "../Script/BeginTurnEffectScript.h"
 #include "../Script/CommandListItemScript.h"
 #include "../Script/CommandListScript.h"
 #include "../Script/CommandPanelScript.h"
+#include "../Script/PlayerManagerScript.h"
+#include "../Script/PlayerScript.h"
 #include "../Script/TileMapScript.h"
 #include "../Script/TileScript.h"
 #include "../Script/TerrainInfoPanelScript.h"
+#include "../Script/TurnManagerScript.h"
 #include "../Script/UnitMapScript.h"
 #include "../Script/UnitScript.h"
 #include "../Script/WarSceneScript.h"
@@ -20,15 +24,19 @@
 void BabyWarsActorFactory::vRegisterSpecificComponents()
 {
 	//#TODO: Update the register calls whenever the game-specific actor components are changed.
+	registerComponent<BeginTurnEffectScript>();
 	registerComponent<CommandListItemScript>();
 	registerComponent<CommandListScript>();
 	registerComponent<CommandPanelScript>();
 	registerComponent<MovingPathScript>();
 	registerComponent<MovingPathGridScript>();
 	registerComponent<MoneyInfoPanelScript>();
+	registerComponent<PlayerManagerScript>();
+	registerComponent<PlayerScript>();
 	registerComponent<TileMapScript>();
 	registerComponent<TileScript>();
 	registerComponent<TerrainInfoPanelScript>();
+	registerComponent<TurnManagerScript>();
 	registerComponent<UnitMapScript>();
 	registerComponent<UnitScript>();
 	registerComponent<WarSceneScript>();

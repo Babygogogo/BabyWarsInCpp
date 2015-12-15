@@ -4,11 +4,8 @@
 		<GeneralRenderComponent>
 			<SceneNode Type="Node"/>
 		</GeneralRenderComponent>
-		<TransformComponent>
-			<Position X="860" Y="270"/>
-		</TransformComponent>
 		<WarSceneHUDScript>
-			<RelatedActorsPath MoneyInfoPanel="Actors\Actor_MoneyInfoPanel.xml" CommandPanel="Actors\Actor_CommandPanel.xml" TerrainInfoPanel="Actors\Actor_TerrainInfoPanel.xml"/>
+			<RelatedActorsPath BeginTurnEffect="Actors\Actor_BeginTurnEffect.xml" MoneyInfoPanel="Actors\Actor_MoneyInfoPanel.xml" CommandPanel="Actors\Actor_CommandPanel.xml" TerrainInfoPanel="Actors\Actor_TerrainInfoPanel.xml"/>
 		</WarSceneHUDScript>
 	</Components>
 	<ChildrenActors>

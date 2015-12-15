@@ -1,0 +1,9 @@
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<Actor Type="TurnManager" Resource="Actors\Actor_TurnManager.xml">
+	<Components>
+		<TurnManagerScript>
+		</TurnManagerScript>
+	</Components>
+	<ChildrenActors>
+	</ChildrenActors>
+</Actor>

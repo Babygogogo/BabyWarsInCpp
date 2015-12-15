@@ -10,7 +10,7 @@
 			</TransitionScene>
 		</SceneRenderComponent>
 		<WarSceneScript>
-			<RelatedActorsPath WarField="Actors\Actor_WarField.xml" WarSceneHUD="Actors\Actor_WarSceneHUD.xml"/>
+			<RelatedActorsPath WarField="Actors\Actor_WarField.xml" WarSceneHUD="Actors\Actor_WarSceneHUD.xml" PlayerManager="Actors\Actor_PlayerManager.xml" TurnManager="Actors\Actor_TurnManager.xml"/>
 		</WarSceneScript>
 	</Components>
 	<ChildrenActors>

@@ -1,0 +1,10 @@
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<Actor Type="PlayerManager" Resource="Actors\Actor_PlayerManager.xml">
+	<Components>
+		<PlayerManagerScript>
+			<RelatedActorsPath Player="Actors\Actor_Player.xml"/>
+		</PlayerManagerScript>
+	</Components>
+	<ChildrenActors>
+	</ChildrenActors>
+</Actor>

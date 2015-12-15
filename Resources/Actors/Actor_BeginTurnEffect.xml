@@ -1,0 +1,19 @@
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<Actor Type="BeginTurnEffect" Resource="Actors\Actor_BeginTurnEffect.xml">
+	<Components>
+		<GeneralRenderComponent>
+			<SceneNode Type="Label">
+				<CreateWithSystemFont FontSize="40" FontName="Verdana-Bold" Text="asdf"/>
+			</SceneNode>
+			<SceneNodeProperties>
+				<Color R="0" G="0" B="0"/>
+			</SceneNodeProperties>
+		</GeneralRenderComponent>
+		<TransformComponent>
+			<Position X="480" Y="270"/>
+		</TransformComponent>
+		<BeginTurnEffectScript/>
+	</Components>
+	<ChildrenActors>
+	</ChildrenActors>
+</Actor>

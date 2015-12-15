@@ -61,7 +61,9 @@ void UnitMapScript::UnitMapScriptImpl::onMakeMovingPathEnd(const EvtDataMakeMovi
 
 void UnitMapScript::UnitMapScriptImpl::onUnitStateChangeEnd(const EvtDataUnitStateChangeEnd & e)
 {
-	e.getCurrentState()->vUpdateUnitMap(*m_OwnerActor.lock()->getComponent<UnitMapScript>(), e.getUnitScript());
+	if (auto currentState = e.getCurrentState()) {
+		currentState->vUpdateUnitMap(*m_OwnerActor.lock()->getComponent<UnitMapScript>(), e.getUnitScript());
+	}
 }
 
 void UnitMapScript::UnitMapScriptImpl::onUnitIndexChangeEnd(const EvtDataUnitIndexChangeEnd & e)

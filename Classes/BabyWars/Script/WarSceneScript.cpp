@@ -8,6 +8,8 @@
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
+#include "PlayerManagerScript.h"
+#include "TurnManagerScript.h"
 #include "WarFieldScript.h"
 #include "WarSceneHUDScript.h"
 #include "WarSceneScript.h"
@@ -25,15 +27,21 @@ struct WarSceneScript::WarSceneScriptImpl
 
 	static std::string s_WarFieldActorPath;
 	static std::string s_WarSceneHUDActorPath;
+	static std::string s_PlayerManagerActorPath;
+	static std::string s_TurnManagerActorPath;
 
 	ActorID m_ActorID{ INVALID_ACTOR_ID };
 
 	std::weak_ptr<WarFieldScript> m_WarFieldScript;
 	std::weak_ptr<WarSceneHUDScript> m_WarSceneHUDScript;
+	std::weak_ptr<PlayerManagerScript> m_PlayerManagerScript;
+	std::weak_ptr<TurnManagerScript> m_TurnManagerScript;
 };
 
 std::string WarSceneScript::WarSceneScriptImpl::s_WarFieldActorPath;
 std::string WarSceneScript::WarSceneScriptImpl::s_WarSceneHUDActorPath;
+std::string WarSceneScript::WarSceneScriptImpl::s_PlayerManagerActorPath;
+std::string WarSceneScript::WarSceneScriptImpl::s_TurnManagerActorPath;
 
 void WarSceneScript::WarSceneScriptImpl::onInputDrag(const IEventData & e)
 {
@@ -52,6 +60,9 @@ void WarSceneScript::WarSceneScriptImpl::onInputTouch(const IEventData & e)
 		return;
 
 	//#TODO: Dispatch the input event to children scripts.
+	if (m_WarSceneHUDScript.lock()->onInputTouch(eventTouch)) {
+		return;
+	}
 	if (m_WarFieldScript.lock()->onInputTouch(eventTouch)) {
 		return;
 	}
@@ -76,7 +87,10 @@ void WarSceneScript::loadWarScene(const char * xmlPath)
 	const auto rootElement = xmlDoc.RootElement();
 	assert(rootElement && "WarSceneScript::loadWarScene() failed to load xml file.");
 
-	//Load everything on the scene.
+	//Load everything in the scene.
+	pimpl->m_PlayerManagerScript.lock()->loadPlayers(rootElement->FirstChildElement("PlayerManager"));
+	pimpl->m_TurnManagerScript.lock()->loadTurn(rootElement->FirstChildElement("TurnManager"));
+
 	auto dataPathElement = rootElement->FirstChildElement("DataPath");
 	pimpl->m_WarFieldScript.lock()->loadWarField(dataPathElement);
 	//#TODO: Load weather, commander, ...
@@ -91,6 +105,8 @@ bool WarSceneScript::vInit(const tinyxml2::XMLElement * xmlElement)
 	auto relatedActorElement = xmlElement->FirstChildElement("RelatedActorsPath");
 	WarSceneScriptImpl::s_WarFieldActorPath = relatedActorElement->Attribute("WarField");
 	WarSceneScriptImpl::s_WarSceneHUDActorPath = relatedActorElement->Attribute("WarSceneHUD");
+	WarSceneScriptImpl::s_PlayerManagerActorPath = relatedActorElement->Attribute("PlayerManager");
+	WarSceneScriptImpl::s_TurnManagerActorPath = relatedActorElement->Attribute("TurnManager");
 
 	isStaticInitialized = true;
 	return true;
@@ -117,6 +133,15 @@ void WarSceneScript::vPostInit()
 	ownerActor->addChild(*warSceneHUDActor);
 	selfSceneNode->addChild(warSceneHUDActor->getRenderComponent()->getSceneNode());
 
+	auto playerManagerActor = gameLogic->createActor(WarSceneScriptImpl::s_PlayerManagerActorPath.c_str());
+	pimpl->m_PlayerManagerScript = playerManagerActor->getComponent<PlayerManagerScript>();
+	ownerActor->addChild(*playerManagerActor);
+
+	auto turnManagerActor = gameLogic->createActor(WarSceneScriptImpl::s_TurnManagerActorPath.c_str());
+	pimpl->m_TurnManagerScript = turnManagerActor->getComponent<TurnManagerScript>();
+	pimpl->m_TurnManagerScript.lock()->setPlayerManager(pimpl->m_PlayerManagerScript.lock());
+	ownerActor->addChild(*turnManagerActor);
+
 	//#TODO: create and add, commander, weather and so on...
 
 	//////////////////////////////////////////////////////////////////////////
@@ -130,9 +155,10 @@ void WarSceneScript::vPostInit()
 	});
 
 	//////////////////////////////////////////////////////////////////////////
-	//Load the test warScene.
+	//Load and run the test warScene.
 	//#TODO: Only for testing and should be removed.
 	loadWarScene("Data\\WarScene\\WarSceneData_TestWarScene.xml");
+	pimpl->m_TurnManagerScript.lock()->run();
 }
 
 const std::string WarSceneScript::Type = "WarSceneScript";

@@ -5,7 +5,7 @@
 			<SceneNode Type="Node"/>
 		</GeneralRenderComponent>
 		<TransformComponent>
-			<Position X="0" Y="220"/>
+			<Position X="860" Y="490"/>
 		</TransformComponent>
 		<MoneyInfoPanelScript>
 			<RelatedActorsPath Background="Actors\Actor_MoneyInfoPanelBackground.xml"/>

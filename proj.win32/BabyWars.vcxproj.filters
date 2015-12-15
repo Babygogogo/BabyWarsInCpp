@@ -324,6 +324,24 @@
     <ClCompile Include="..\Classes\BabyEngine\Actor\ActionComponent.cpp">
       <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\PlayerManagerScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\PlayerScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\TurnManagerScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataLoadWarSceneEnd.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataBeginTurn.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\BeginTurnEffectScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -628,6 +646,27 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Actor\ActionComponent.h">
       <Filter>src\BabyEngine\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\PlayerManagerScript.h">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\PlayerScript.h">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\PlayerID.h">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\TurnManagerScript.h">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataLoadWarSceneEnd.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataBeginTurn.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\BeginTurnEffectScript.h">
+      <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

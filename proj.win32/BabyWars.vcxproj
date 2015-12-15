@@ -188,6 +188,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToVec2.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Actor\BabyWarsActorFactory.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataActivateUnitEnd.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataBeginTurn.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataLoadWarSceneEnd.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataRequestChangeUnitState.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataUnitIndexChangeEnd.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataDragScene.cpp" />
@@ -198,6 +200,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyWars\Resource\ResourceLoader.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\TileData.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\UnitData.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Script\BeginTurnEffectScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\CommandListItemScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\CommandListScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\CommandPanelScript.cpp" />
@@ -206,9 +209,12 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyWars\Script\MovingPathScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\MovingAreaGridScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\MovingAreaScript.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Script\PlayerManagerScript.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Script\PlayerScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\TerrainInfoPanelScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\TileMapScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\TileScript.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Script\TurnManagerScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\UnitMapScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\UnitScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\WarFieldScript.cpp" />
@@ -284,6 +290,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToVec2.h" />
     <ClInclude Include="..\Classes\BabyWars\Actor\BabyWarsActorFactory.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataActivateUnitEnd.h" />
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataBeginTurn.h" />
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataLoadWarSceneEnd.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataRequestChangeUnitState.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataUnitIndexChangeEnd.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataDragScene.h" />
@@ -296,6 +304,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyWars\Resource\TileDataID.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitData.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitDataID.h" />
+    <ClInclude Include="..\Classes\BabyWars\Script\BeginTurnEffectScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\CommandListItemScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\CommandListScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\CommandPanelScript.h" />
@@ -304,9 +313,12 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyWars\Script\MovingPathScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\MovingAreaGridScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\MovingAreaScript.h" />
+    <ClInclude Include="..\Classes\BabyWars\Script\PlayerManagerScript.h" />
+    <ClInclude Include="..\Classes\BabyWars\Script\PlayerScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\TerrainInfoPanelScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\TileMapScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\TileScript.h" />
+    <ClInclude Include="..\Classes\BabyWars\Script\TurnManagerScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\UnitMapScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\UnitScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\WarFieldScript.h" />
@@ -325,6 +337,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyWars\Utilities\MovingEndUnitState.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\MovingPath.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\MovingUnitState.h" />
+    <ClInclude Include="..\Classes\BabyWars\Utilities\PlayerID.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\UnitState.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\UnitStateFactory.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\UnitStateTypeCode.h" />
