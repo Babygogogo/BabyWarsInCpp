@@ -80,9 +80,13 @@ public:
 	bool isAncestorOf(const Actor & child) const;
 	const std::unordered_map<ActorID, std::weak_ptr<Actor>> & getChildren() const;
 
-	//If the child has a render component, it will also be added to the parent's render component.
-	//If the child has a parent already, nothing happens.
+	//If the child has a render component with a scene node, the scene node will also be attached to the parent's scene node (if exists) by default.
+	//Asserts if the child has a parent already.
 	void addChild(Actor & child);
+
+	//If the child has a render component with a scene node, the scene node will also be removed from the parent's scene node (if exists) by default.
+	//If the child is not a child of this, nothing happens.
+	void removeChild(Actor & child);
 	//If the actor has a render component, it will also be removed from its parent's render component.
 	//If the actor has no parent, nothing happens.
 	//This function doesn't destroy parent nor self.

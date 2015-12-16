@@ -351,6 +351,9 @@
     <ClCompile Include="..\Classes\BabyWars\Script\BeginTurnEffectLabelScript.cpp">
       <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSceneNodeAddChildCallback.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -679,6 +682,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Script\BeginTurnEffectLabelScript.h">
       <Filter>src\BabyWars\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSceneNodeAddChildCallback.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

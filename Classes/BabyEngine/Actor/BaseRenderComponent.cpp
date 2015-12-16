@@ -12,6 +12,11 @@ cocos2d::Node * BaseRenderComponent::getSceneNode() const
 	return m_Node;
 }
 
+void BaseRenderComponent::setOnOwnerActorAddChildCallback(OwnerActorAddChildCallback && callback)
+{
+	m_OnOwnerActorAddChildCallback = std::move(callback);
+}
+
 void BaseRenderComponent::onOwnerActorAddChild(Actor & child)
 {
 	assert(m_Node && "BaseRenderComponent::onOwnerActorAddChild() the underlying scene node is not initialized.");
@@ -19,20 +24,18 @@ void BaseRenderComponent::onOwnerActorAddChild(Actor & child)
 		return;
 	}
 
-	auto listView = dynamic_cast<cocos2d::ui::ListView*>(m_Node);
-	auto childNode = child.getRenderComponent()->getSceneNode();
-	auto childWidget = dynamic_cast<cocos2d::ui::Widget*>(childNode);
-
-	if (listView && childWidget) {
-		listView->pushBackCustomItem(childWidget);
+	if (m_OnOwnerActorAddChildCallback) {
+		m_OnOwnerActorAddChildCallback(m_Node, child.getRenderComponent()->getSceneNode());
 	}
 	else {
-		m_Node->addChild(childNode);
+		m_Node->addChild(child.getRenderComponent()->getSceneNode());
 	}
 }
 
-void BaseRenderComponent::onOwnerActorRemoveFromParent()
+void BaseRenderComponent::onOwnerActorRemoveChild(Actor & child)
 {
 	assert(m_Node && "BaseRenderComponent::onOwnerActorAddChild() the underlying scene node is not initialized.");
-	m_Node->removeFromParent();
+	if (const auto childRenderComponent = child.getRenderComponent()) {
+		m_Node->removeChild(childRenderComponent->getSceneNode());
+	}
 }

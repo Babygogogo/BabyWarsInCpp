@@ -8,6 +8,7 @@
 			<SceneNodeProperties>
 				<ContentSize Width="180" Height="380"/>
 			</SceneNodeProperties>
+			<SceneNodeAddChildCallback ParentType="ListView" ChildType="Widget" Method="pushBackCustomItem"/>
 		</GeneralRenderComponent>
 		<TransformComponent>
 			<Position X="-90" Y="-190"/>

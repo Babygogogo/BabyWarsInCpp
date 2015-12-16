@@ -6,6 +6,7 @@
 #include "GeneralRenderComponent.h"
 #include "../Utilities/XMLToSceneNode.h"
 #include "../Utilities/SetSceneNodePropertiesWithXML.h"
+#include "../Utilities/XMLToSceneNodeAddChildCallback.h"
 
 //////////////////////////////////////////////////////////////////////////
 //Implementation of GeneralRenderComponent.
@@ -37,6 +38,10 @@ bool GeneralRenderComponent::vInit(const tinyxml2::XMLElement * xmlElement)
 
 	if (auto propertiesElement = xmlElement->FirstChildElement("SceneNodeProperties")) {
 		utilities::setSceneNodePropertiesWithXML(m_Node, propertiesElement);
+	}
+
+	if (auto addChildCallbackElement = xmlElement->FirstChildElement("SceneNodeAddChildCallback")) {
+		setOnOwnerActorAddChildCallback(utilities::XMLToSceneNodeAddChildCallback(addChildCallbackElement));
 	}
 
 	return true;

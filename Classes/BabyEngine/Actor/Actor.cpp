@@ -116,28 +116,41 @@ void Actor::addChild(Actor & child)
 	}
 }
 
+void Actor::removeChild(Actor & child)
+{
+	if (!child.hasParent() || child.getParent().get() != this) {
+		return;
+	}
+
+	child.pimpl->m_Parent.reset();
+	pimpl->m_Children.erase(child.getID());
+
+	//Deal with render component.
+	if (pimpl->m_RenderComponent) {
+		pimpl->m_RenderComponent->onOwnerActorRemoveChild(child);
+	}
+}
+
 void Actor::removeFromParent()
 {
 	if (!hasParent()) {
 		return;
 	}
 
-	//Remove this from the parent's children list.
-	pimpl->m_Parent.lock()->pimpl->m_Children.erase(pimpl->m_ID);
-	pimpl->m_Parent.reset();
-
-	//Deal with render component.
-	if (pimpl->m_RenderComponent) {
-		pimpl->m_RenderComponent->onOwnerActorRemoveFromParent();
-	}
+	getParent()->removeChild(*this);
 }
 
 void Actor::removeAllChildren()
 {
-	const auto childrenCopy = pimpl->m_Children;	//Avoid the invalidation of the iterators for pimpl->m_Children when calling child.removeFromParent().
-	for (const auto & idChildPair : childrenCopy) {
+	for (const auto & idChildPair : pimpl->m_Children) {
 		if (!idChildPair.second.expired()) {
-			idChildPair.second.lock()->removeFromParent();
+			auto child = idChildPair.second.lock();
+			child->pimpl->m_Parent.reset();
+
+			//Deal with render component.
+			if (pimpl->m_RenderComponent) {
+				pimpl->m_RenderComponent->onOwnerActorRemoveChild(*child);
+			}
 		}
 	}
 

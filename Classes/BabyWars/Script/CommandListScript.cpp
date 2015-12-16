@@ -120,7 +120,7 @@ void CommandListScript::CommandListScriptImpl::_hideAndRemoveChildItemActors(con
 
 		auto strongItemActor = weakItemActor.lock();
 		strongItemActor->removeFromParent();
-		strongItemActor->getRenderComponent()->getSceneNode()->removeFromParent();
+		//strongItemActor->getRenderComponent()->getSceneNode()->removeFromParent();
 		eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(strongItemActor->getID()));
 	}
 }
