@@ -49,7 +49,7 @@ public:
 
 	//Create an object. This function return the pointer of the Base class which can be downcast by client code.
 	//If no type is registered with the name, nullptr is returned.
-	std::unique_ptr<Base> createUnique(const std::string & name)
+	std::unique_ptr<Base> createUnique(const std::string & name) const
 	{
 		auto findIter = m_CreatorMap.find(name);
 		if (findIter != m_CreatorMap.end())
@@ -58,7 +58,7 @@ public:
 		return nullptr;
 	}
 
-	std::shared_ptr<Base> createShared(const std::string & name)
+	std::shared_ptr<Base> createShared(const std::string & name) const
 	{
 		auto findIter = m_CreatorMap.find(name);
 		if (findIter != m_CreatorMap.end())
@@ -71,7 +71,7 @@ private:
 	struct CreatorStruct
 	{
 		CreatorStruct(UniqueCreator && uniqueCreator, SharedCreator && sharedCreator) :
-			createUnique{ std::move(uniqueCreator) }, createShared{ std::move(sharedCreator) }{}
+			createUnique{ std::move(uniqueCreator) }, createShared{ std::move(sharedCreator) } {}
 
 		UniqueCreator createUnique;
 		SharedCreator createShared;

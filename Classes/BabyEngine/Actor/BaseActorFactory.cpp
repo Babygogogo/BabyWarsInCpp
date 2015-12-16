@@ -13,53 +13,166 @@
 #include "TransformComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
-//Definition of ActorFactory::ActorFactoryImpl.
+//Definition of ActorFactory::BaseActorFactoryImpl.
 //////////////////////////////////////////////////////////////////////////
-struct BaseActorFactory::ActorFactoryImpl
+struct BaseActorFactory::BaseActorFactoryImpl
 {
-	ActorFactoryImpl() = default;
-	~ActorFactoryImpl() = default;
+	BaseActorFactoryImpl() = default;
+	~BaseActorFactoryImpl() = default;
 
-	std::shared_ptr<ActorComponent> createComponent(tinyxml2::XMLElement * componentElement);
-	void postInitActor(std::shared_ptr<Actor> & actor);
+	std::shared_ptr<Actor> createSingleActorWithComponents(const tinyxml2::XMLElement * actorElement);
+	bool _addChildrenActors(Actor & parent, std::vector<std::shared_ptr<Actor>> & parentActors, std::vector<std::shared_ptr<Actor>> && childrenActors) const;
 
-	ActorID getNextID() const;
-	void updateID();
+	std::shared_ptr<Actor> _createEmptyActor(const tinyxml2::XMLElement * actorElement);
+	bool _createAndAttachAllComponentsToActor(const std::shared_ptr<Actor> & actor, const tinyxml2::XMLElement * componentsElement) const;
+	bool __createAndAttachOneComponentToActor(const std::shared_ptr<Actor> & actor, const tinyxml2::XMLElement * componentElement) const;
+	std::shared_ptr<ActorComponent> ___createComponent(const tinyxml2::XMLElement * componentElement) const;
+
+	void _modifyActor(const std::shared_ptr<Actor> & actor, const tinyxml2::XMLElement * overrides) const;
+	void __modifyComponentsForActor(const std::shared_ptr<Actor> & actor, const tinyxml2::XMLElement * componentsElement) const;
+	void _postInitActor(Actor & actor);
+
+	ActorID getAvaliableActorID() const;
+	void updateActorID();
 
 	ActorID m_currentID{ INVALID_ACTOR_ID };
 	GenericFactory<ActorComponent> m_ComponentFactory;
 };
 
-std::shared_ptr<ActorComponent> BaseActorFactory::ActorFactoryImpl::createComponent(tinyxml2::XMLElement * componentElement)
+std::shared_ptr<Actor> BaseActorFactory::BaseActorFactoryImpl::createSingleActorWithComponents(const tinyxml2::XMLElement * actorElement)
+{
+	assert(actorElement && "BaseActorFactoryImpl::createSingleActorWithComponents() the actor element is nullptr.");
+
+	auto actor = _createEmptyActor(actorElement);
+	if (!actor) {
+		return nullptr;
+	}
+
+	if (!_createAndAttachAllComponentsToActor(actor, actorElement->FirstChildElement("Components"))) {
+		return nullptr;
+	}
+
+	_postInitActor(*actor);
+
+	return actor;
+}
+
+bool BaseActorFactory::BaseActorFactoryImpl::_addChildrenActors(Actor & parent, std::vector<std::shared_ptr<Actor>> & parentActors, std::vector<std::shared_ptr<Actor>> && childrenActors) const
+{
+	if (childrenActors.empty()) {
+		return false;
+	}
+
+	parent.addChild(*childrenActors[0]);
+	for (auto && childActor : std::move(childrenActors)) {
+		parentActors.emplace_back(std::move(childActor));
+	}
+
+	return true;
+}
+
+std::shared_ptr<Actor> BaseActorFactory::BaseActorFactoryImpl::_createEmptyActor(const tinyxml2::XMLElement * actorElement)
+{
+	auto actor = std::make_shared<Actor>();
+	if (!actor || !actor->init(getAvaliableActorID(), actor, actorElement)) {
+		cocos2d::log("BaseActorFactoryImpl::createSingleActorWithComponents() failed to create or init the actor itself (not the components).");
+		return nullptr;
+	}
+
+	updateActorID();
+	return actor;
+}
+
+bool BaseActorFactory::BaseActorFactoryImpl::_createAndAttachAllComponentsToActor(const std::shared_ptr<Actor> & actor, const tinyxml2::XMLElement * componentsElement) const
+{
+	assert(actor && "BaseActorFactoryImpl::_createAndAttachAllComponentsToActor() the actor is nullptr.");
+
+	if (!componentsElement) {
+		cocos2d::log("BaseActorFactoryImpl::_createAndAttachAllComponentsToActor() the components element is nullptr, possibly because it's not specified in the actor xml.");
+		return true;
+	}
+
+	for (auto singleComponentElement = componentsElement->FirstChildElement(); singleComponentElement; singleComponentElement = singleComponentElement->NextSiblingElement()) {
+		if (!__createAndAttachOneComponentToActor(actor, singleComponentElement)) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool BaseActorFactory::BaseActorFactoryImpl::__createAndAttachOneComponentToActor(const std::shared_ptr<Actor> & actor, const tinyxml2::XMLElement * componentElement) const
+{
+	assert(actor && "BaseActorFactoryImpl::__createAndAttachOneComponentToActor() the actor is nullptr.");
+	assert(componentElement && "BaseActorFactoryImpl::__createAndAttachOneComponentToActor() the component element is nullptr.");
+
+	if (auto component = ___createComponent(componentElement)) {
+		component->setOwner(actor);
+		actor->addComponent(std::move(component));
+
+		return true;
+	}
+
+	return false;
+}
+
+std::shared_ptr<ActorComponent> BaseActorFactory::BaseActorFactoryImpl::___createComponent(const tinyxml2::XMLElement * componentElement) const
 {
 	auto componentType = componentElement->Value();
 	auto component = m_ComponentFactory.createShared(componentType);
 
-	//Assert if can't create the component.
-	assert(component && "BaseActorFactoryImpl::createComponent() can't find or create the ActorComponent as the xml indicated.");
+	assert(component && "BaseActorFactoryImpl::___createComponent() can't find or create the ActorComponent as the xml indicated, possibly because the component is not registered to the factory.");
 
-	//Try to initialize the component. If it fails, log and return nullptr.
 	if (!component->vInit(componentElement)) {
-		cocos2d::log("ActorFactoryImpl::createComponent failed to initialize a(n) %s", componentType);
+		cocos2d::log("BaseActorFactoryImpl::___createComponent failed to initialize a(n) %s", componentType);
 		return nullptr;
 	}
 
-	//The component is created and initialized successfully.
 	return component;
 }
 
-void BaseActorFactory::ActorFactoryImpl::postInitActor(std::shared_ptr<Actor> & actor)
+void BaseActorFactory::BaseActorFactoryImpl::_modifyActor(const std::shared_ptr<Actor> & actor, const tinyxml2::XMLElement * overrides) const
 {
-	//If you want to post-init the components in some order, do it here.
-	actor->postInit();
+	if (!overrides) {
+		return;
+	}
+
+	assert(actor && "BaseActorFactoryImpl::_modifyActor() the actor is nullptr.");
+	__modifyComponentsForActor(actor, overrides->FirstChildElement("Components"));
 }
 
-ActorID BaseActorFactory::ActorFactoryImpl::getNextID() const
+void BaseActorFactory::BaseActorFactoryImpl::__modifyComponentsForActor(const std::shared_ptr<Actor> & actor, const tinyxml2::XMLElement * componentsElement) const
+{
+	if (!actor || !componentsElement) {
+		return;
+	}
+
+	// Loop through each child element and load the component
+	for (auto componentElement = componentsElement->FirstChildElement(); componentElement; componentElement = componentElement->NextSiblingElement()) {
+		if (auto existingComponent = actor->getComponent(componentElement->Value())) {
+			//If there is a component of the same type already, re-initialize it.
+			existingComponent->vInit(componentElement);
+			existingComponent->vOnChanged();
+		}
+		else {
+			//Else, create a new component and attach to actor.
+			__createAndAttachOneComponentToActor(actor, componentElement);
+		}
+	}
+}
+
+void BaseActorFactory::BaseActorFactoryImpl::_postInitActor(Actor & actor)
+{
+	//If you want to post-init the components in some order, do it here.
+	actor.postInit();
+}
+
+ActorID BaseActorFactory::BaseActorFactoryImpl::getAvaliableActorID() const
 {
 	return m_currentID + 1;
 }
 
-void BaseActorFactory::ActorFactoryImpl::updateID()
+void BaseActorFactory::BaseActorFactoryImpl::updateActorID()
 {
 	++m_currentID;
 }
@@ -67,7 +180,7 @@ void BaseActorFactory::ActorFactoryImpl::updateID()
 //////////////////////////////////////////////////////////////////////////
 //Implementation of ActorFactory.
 //////////////////////////////////////////////////////////////////////////
-BaseActorFactory::BaseActorFactory() : pimpl{ std::make_unique<ActorFactoryImpl>() }
+BaseActorFactory::BaseActorFactory() : pimpl{ std::make_unique<BaseActorFactoryImpl>() }
 {
 }
 
@@ -88,85 +201,45 @@ std::vector<std::shared_ptr<Actor>> BaseActorFactory::createActorAndChildren(con
 	xmlDoc.LoadFile(resourceFile);
 	const auto rootElement = xmlDoc.RootElement();
 	if (!rootElement) {
-		cocos2d::log("ActorFactory::createActor failed to load resource file %s", resourceFile);
+		cocos2d::log("BaseActorFactory::createActorAndChildren() failed to load resource file %s", resourceFile);
 		return{};
 	}
 
-	//Create and init the parent actor. If failed, log and return an empty vector.
-	auto parentActor = std::make_shared<Actor>();
-	if (!parentActor || !parentActor->init(pimpl->getNextID(), parentActor, rootElement)) {
-		cocos2d::log("ActorFactory::createActor failed to create or init an actor.");
+	return createActorAndChildren(rootElement, overrides);
+}
+
+std::vector<std::shared_ptr<Actor>> BaseActorFactory::createActorAndChildren(tinyxml2::XMLElement * actorElement, tinyxml2::XMLElement * overrides /*= nullptr*/)
+{
+	assert(actorElement && "BaseActorFactory::createActorAndChildren() the resource element is nullptr.");
+
+	auto parentActor = pimpl->createSingleActorWithComponents(actorElement);
+	if (!parentActor) {
 		return{};
 	}
 
-	//Update the m_NextID in case that the components tries to create an actor, invalidating the id.
-	pimpl->updateID();
-
-	//Loop through each component element, create components and attach them to actor.
-	if (auto componentsElement = rootElement->FirstChildElement("Components")) {
-		for (auto componentElement = componentsElement->FirstChildElement(); componentElement; componentElement = componentElement->NextSiblingElement()) {
-			auto component = pimpl->createComponent(componentElement);
-
-			//If failed to create a component, return an empty vector because the actor will be partially complete and may cause more troubles than goods.
-			if (!component)
-				return{};
-
-			//The component is created successfully so add it to the actor.
-			component->setOwner(parentActor);
-			parentActor->addComponent(std::move(component));
-		}
-	}
-
-	//The parent actor is created completely. Place it in the returning vector.
 	auto actorVector = std::vector<std::shared_ptr<Actor>>{ parentActor };
-
 	//Loop through each child actor element, create children actors and attach them to the parent actor.
-	if (auto childrenElement = rootElement->FirstChildElement("ChildrenActors")) {
-		for (auto childElement = childrenElement->FirstChildElement("Resource"); childElement; childElement = childElement->NextSiblingElement()) {
-			//Create the child actors according to 'childElement'. If failed, skip it.
-			auto childActors = createActorAndChildren(childElement->Attribute("File"));
-			if (childActors.empty())
-				continue;
+	if (auto childrenElement = actorElement->FirstChildElement("ChildrenActors")) {
+		for (auto childResourceElement = childrenElement->FirstChildElement("Resource"); childResourceElement; childResourceElement = childResourceElement->NextSiblingElement("Resource")) {
+			if (!pimpl->_addChildrenActors(*parentActor, actorVector, createActorAndChildren(childResourceElement->Attribute("File")))) {
+				return{};
+			}
+		}
 
-			//The child actors is created. Attach the first one to the parent actor, and add child actors to the returning vector.
-			parentActor->addChild(*childActors[0]);
-			for (auto && childActor : childActors)
-				actorVector.emplace_back(std::move(childActor));
+		for (auto childActorElement = childrenElement->FirstChildElement("Actor"); childActorElement; childActorElement = childActorElement->NextSiblingElement("Actor")) {
+			if (!pimpl->_addChildrenActors(*parentActor, actorVector, createActorAndChildren(childActorElement))) {
+				return{};
+			}
 		}
 	}
 
-	//Modify the actor using data in the overrides and then post-init it.
 	modifyActor(parentActor, overrides);
-	pimpl->postInitActor(parentActor);
-
 	return actorVector;
 }
 
 void BaseActorFactory::modifyActor(const std::shared_ptr<Actor> & actor, tinyxml2::XMLElement *overrides)
 {
-	if (!actor || !overrides)
-		return;
-
-	// Loop through each child element and load the component
-	if (auto componentsElement = overrides->FirstChildElement("Components")) {
-		for (auto componentElement = componentsElement->FirstChildElement(); componentElement; componentElement = componentElement->NextSiblingElement()) {
-			auto component = actor->getComponent(componentElement->Value());
-
-			//If there is a component of the same type already, re-initialize it.
-			if (component) {
-				component->vInit(componentElement);
-				component->vOnChanged();
-			}
-			else {
-				//Else, create a new component and attach to actor.
-				auto newComponent = pimpl->createComponent(componentElement);
-				if (newComponent) {
-					component->setOwner(actor);
-					actor->addComponent(std::move(newComponent));
-				}
-			}
-		}
-	}
+	pimpl->_modifyActor(actor, overrides);
 }
 
 void BaseActorFactory::registerGeneralComponents()

@@ -101,7 +101,7 @@ public:
 private:
 	//Called by ActorFactory right after the actor is created and before any component is attached.
 	//Loads the basic data of the actor from the xmlElement. Doesn't create or attach any component.
-	bool init(ActorID id, const std::shared_ptr<Actor> & selfPtr, tinyxml2::XMLElement *xmlElement);
+	bool init(ActorID id, const std::shared_ptr<Actor> & selfPtr, const tinyxml2::XMLElement * xmlElement);
 
 	//Called by ActorFactory after init() and before postInit().
 	void addComponent(std::shared_ptr<ActorComponent> && component);

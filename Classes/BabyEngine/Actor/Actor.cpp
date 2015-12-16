@@ -136,7 +136,7 @@ void Actor::removeAllChildren()
 	pimpl->m_Children.clear();
 }
 
-bool Actor::init(ActorID id, const std::shared_ptr<Actor> & selfPtr, tinyxml2::XMLElement *xmlElement)
+bool Actor::init(ActorID id, const std::shared_ptr<Actor> & selfPtr, const tinyxml2::XMLElement * xmlElement)
 {
 	if (id == 0 || !xmlElement)
 		return false;

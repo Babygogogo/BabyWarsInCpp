@@ -37,9 +37,10 @@ public:
 
 	//Create an Actor and its children actors. The resourceFile is the file name of the corresponding .xml file.
 	//modifyActor() will be called after the creation of the actors.
-	//If fail to create any actor, an empty vector is returned.
+	//If fail to create any of the actors, an empty vector is returned.
 	//Otherwise, an vector of created actors is returned. The front actor in the vector is the most parent one.
 	std::vector<std::shared_ptr<Actor>> createActorAndChildren(const char *resourceFile, tinyxml2::XMLElement *overrides = nullptr);
+	std::vector<std::shared_ptr<Actor>> createActorAndChildren(tinyxml2::XMLElement * actorElement, tinyxml2::XMLElement * overrides = nullptr);
 
 	//Modify an Actor with some xml data.
 	//It will re-initialize its components and/or attach new ones to it.
@@ -58,7 +59,7 @@ protected:
 	virtual void vRegisterSpecificComponents() = 0;
 
 	template<class ConcreteActorComponent>
-	void registerComponent(){
+	void registerComponent() {
 		registerComponentHelper(ConcreteActorComponent::Type, std::make_unique<ConcreteActorComponent>, std::make_shared<ConcreteActorComponent>);
 	}
 
@@ -66,8 +67,8 @@ private:
 	void registerComponentHelper(const std::string & typeName, std::function<std::unique_ptr<ActorComponent>()> makeUnique, std::function<std::shared_ptr<ActorComponent>()> makeShared);
 
 	//Implementation stuff.
-	struct ActorFactoryImpl;
-	std::unique_ptr<ActorFactoryImpl> pimpl;
+	struct BaseActorFactoryImpl;
+	std::unique_ptr<BaseActorFactoryImpl> pimpl;
 };
 
 #endif // !__BASE_ACTOR_FACTORY__

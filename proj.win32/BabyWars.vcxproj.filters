@@ -70,6 +70,12 @@
     <Filter Include="src\BabyWars\Utilities\UnitState">
       <UniqueIdentifier>{3d8871af-a093-418c-a2a2-d0c39032eacb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\BabyEngine\Utilities\XMLSerialization\SceneNode">
+      <UniqueIdentifier>{7eca0ee7-43cd-406f-b237-79f71d2d6461}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyEngine\Utilities\XMLSerialization\BasicTypes">
+      <UniqueIdentifier>{02e6a97d-ba46-4344-a086-6c41d7f14230}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -192,39 +198,6 @@
     <ClCompile Include="..\Classes\BabyEngine\Graphic2D\BaseController.cpp">
       <Filter>src\BabyEngine\Graphic2D</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\SetSceneNodePropertiesWithXML.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToLabel.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToLayer.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToMenu.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToMenuItemImage.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToNode.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToParticleExplosion.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToScene.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSprite.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Event\EvtDataInputTouch.cpp">
       <Filter>src\BabyEngine\Event</Filter>
     </ClCompile>
@@ -243,23 +216,11 @@
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPathEnd.cpp">
       <Filter>src\BabyWars\Event</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToScale9Sprite.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToRect.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToVec2.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Script\WarSceneHUDScript.cpp">
       <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Script\MoneyInfoPanelScript.cpp">
       <Filter>src\BabyWars\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSize.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Script\TerrainInfoPanelScript.cpp">
       <Filter>src\BabyWars\Script</Filter>
@@ -273,12 +234,6 @@
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataUnitIndexChangeEnd.cpp">
       <Filter>src\BabyWars\Event</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToListView.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToButton.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataRequestChangeUnitState.cpp">
       <Filter>src\BabyWars\Event</Filter>
     </ClCompile>
@@ -287,9 +242,6 @@
     </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Actor\BaseRenderComponent.cpp">
       <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSceneNode.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Script\CommandListScript.cpp">
       <Filter>src\BabyWars\Script</Filter>
@@ -341,6 +293,60 @@
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Script\BeginTurnEffectScript.cpp">
       <Filter>src\BabyWars\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToButton.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\SetSceneNodePropertiesWithXML.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToLabel.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToLayer.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToListView.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToMenu.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToMenuItemImage.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToNode.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToParticleExplosion.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSceneNode.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToScene.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToScale9Sprite.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSprite.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToRect.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSize.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToVec2.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -509,39 +515,6 @@
     <ClInclude Include="..\Classes\BabyEngine\Graphic2D\BaseController.h">
       <Filter>src\BabyEngine\Graphic2D</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\SetSceneNodePropertiesWithXML.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToLabel.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToLayer.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToMenu.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToMenuItemImage.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToNode.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToParticleExplosion.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToScene.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSprite.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Event\EvtDataInputTouch.h">
       <Filter>src\BabyEngine\Event</Filter>
     </ClInclude>
@@ -560,23 +533,11 @@
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPathEnd.h">
       <Filter>src\BabyWars\Event</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToScale9Sprite.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToRect.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToVec2.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Script\WarSceneHUDScript.h">
       <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Script\MoneyInfoPanelScript.h">
       <Filter>src\BabyWars\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSize.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Script\TerrainInfoPanelScript.h">
       <Filter>src\BabyWars\Script</Filter>
@@ -590,12 +551,6 @@
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataUnitIndexChangeEnd.h">
       <Filter>src\BabyWars\Event</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToListView.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToButton.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Utilities\GameCommand.h">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
@@ -607,9 +562,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Actor\BaseRenderComponent.h">
       <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSceneNode.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Script\CommandListScript.h">
       <Filter>src\BabyWars\Script</Filter>
@@ -667,6 +619,60 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Script\BeginTurnEffectScript.h">
       <Filter>src\BabyWars\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToButton.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\SetSceneNodePropertiesWithXML.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToLabel.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToLayer.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToListView.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToMenu.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToMenuItemImage.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToNode.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToParticleExplosion.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSceneNode.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToScene.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToScale9Sprite.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSprite.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToRect.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSize.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToVec2.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
