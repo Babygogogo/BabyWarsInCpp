@@ -230,7 +230,7 @@ void MovingPathScript::MovingPathScriptImpl::setChildrenGridActors(const MovingP
 
 		self.addChild(*gridActor);
 		m_ChildrenGridActorIDs.emplace_back(gridActor);
-		selfSceneNode->addChild(gridActor->getRenderComponent()->getSceneNode());
+		//selfSceneNode->addChild(gridActor->getRenderComponent()->getSceneNode());
 	}
 }
 

@@ -213,13 +213,13 @@ void WarFieldScript::vPostInit()
 	auto tileMapActor = gameLogic->createActor(WarFieldScriptImpl::s_TileMapActorPath.c_str());
 	pimpl->m_ChildTileMapScript = tileMapActor->getComponent<TileMapScript>();
 	ownerActor->addChild(*tileMapActor);
-	selfSceneNode->addChild(tileMapActor->getRenderComponent()->getSceneNode());
+	//selfSceneNode->addChild(tileMapActor->getRenderComponent()->getSceneNode());
 
 	//Create and add the unit map.
 	auto unitMapActor = gameLogic->createActor(WarFieldScriptImpl::s_UnitMapActorPath.c_str());
 	pimpl->m_ChildUnitMapScript = unitMapActor->getComponent<UnitMapScript>();
 	ownerActor->addChild(*unitMapActor);
-	selfSceneNode->addChild(unitMapActor->getRenderComponent()->getSceneNode());
+	//selfSceneNode->addChild(unitMapActor->getRenderComponent()->getSceneNode());
 
 	//Create and add the moving area.
 	auto movingAreaActor = gameLogic->createActor(WarFieldScriptImpl::s_MovingAreaActorPath.c_str());
@@ -228,13 +228,13 @@ void WarFieldScript::vPostInit()
 	movingAreaScript->setUnitMapScript(pimpl->m_ChildUnitMapScript);
 	pimpl->m_ChildMovingAreaScript = std::move(movingAreaScript);
 	ownerActor->addChild(*movingAreaActor);
-	selfSceneNode->addChild(movingAreaActor->getRenderComponent()->getSceneNode());
+	//selfSceneNode->addChild(movingAreaActor->getRenderComponent()->getSceneNode());
 
 	//Create and add the moving path.
 	auto movingPathActor = gameLogic->createActor(WarFieldScriptImpl::s_MovingPathActorPath.c_str());
 	pimpl->m_ChildMovingPathScript = movingPathActor->getComponent<MovingPathScript>();
 	ownerActor->addChild(*movingPathActor);
-	selfSceneNode->addChild(movingPathActor->getRenderComponent()->getSceneNode());
+	//selfSceneNode->addChild(movingPathActor->getRenderComponent()->getSceneNode());
 
 	//#TODO: create and add weather and so on...
 }

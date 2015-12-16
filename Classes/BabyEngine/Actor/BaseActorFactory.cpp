@@ -21,7 +21,7 @@ struct BaseActorFactory::BaseActorFactoryImpl
 	~BaseActorFactoryImpl() = default;
 
 	std::shared_ptr<Actor> createSingleActorWithComponents(const tinyxml2::XMLElement * actorElement);
-	bool _addChildrenActors(Actor & parent, std::vector<std::shared_ptr<Actor>> & parentActors, std::vector<std::shared_ptr<Actor>> && childrenActors) const;
+	bool addChildrenActors(Actor & parent, std::vector<std::shared_ptr<Actor>> & parentActors, std::vector<std::shared_ptr<Actor>> && childrenActors) const;
 
 	std::shared_ptr<Actor> _createEmptyActor(const tinyxml2::XMLElement * actorElement);
 	bool _createAndAttachAllComponentsToActor(const std::shared_ptr<Actor> & actor, const tinyxml2::XMLElement * componentsElement) const;
@@ -57,7 +57,7 @@ std::shared_ptr<Actor> BaseActorFactory::BaseActorFactoryImpl::createSingleActor
 	return actor;
 }
 
-bool BaseActorFactory::BaseActorFactoryImpl::_addChildrenActors(Actor & parent, std::vector<std::shared_ptr<Actor>> & parentActors, std::vector<std::shared_ptr<Actor>> && childrenActors) const
+bool BaseActorFactory::BaseActorFactoryImpl::addChildrenActors(Actor & parent, std::vector<std::shared_ptr<Actor>> & parentActors, std::vector<std::shared_ptr<Actor>> && childrenActors) const
 {
 	if (childrenActors.empty()) {
 		return false;
@@ -194,7 +194,7 @@ void BaseActorFactory::init()
 	vRegisterSpecificComponents();
 }
 
-std::vector<std::shared_ptr<Actor>> BaseActorFactory::createActorAndChildren(const char *resourceFile, tinyxml2::XMLElement *overrides /*= nullptr*/)
+std::vector<std::shared_ptr<Actor>> BaseActorFactory::createActorAndChildren(const char *resourceFile, const tinyxml2::XMLElement *overrides /*= nullptr*/)
 {
 	//Load the resource file. If failed, log and return an empty vector.
 	tinyxml2::XMLDocument xmlDoc;
@@ -208,7 +208,7 @@ std::vector<std::shared_ptr<Actor>> BaseActorFactory::createActorAndChildren(con
 	return createActorAndChildren(rootElement, overrides);
 }
 
-std::vector<std::shared_ptr<Actor>> BaseActorFactory::createActorAndChildren(tinyxml2::XMLElement * actorElement, tinyxml2::XMLElement * overrides /*= nullptr*/)
+std::vector<std::shared_ptr<Actor>> BaseActorFactory::createActorAndChildren(const tinyxml2::XMLElement * actorElement, const tinyxml2::XMLElement * overrides /*= nullptr*/)
 {
 	assert(actorElement && "BaseActorFactory::createActorAndChildren() the resource element is nullptr.");
 
@@ -221,13 +221,13 @@ std::vector<std::shared_ptr<Actor>> BaseActorFactory::createActorAndChildren(tin
 	//Loop through each child actor element, create children actors and attach them to the parent actor.
 	if (auto childrenElement = actorElement->FirstChildElement("ChildrenActors")) {
 		for (auto childResourceElement = childrenElement->FirstChildElement("Resource"); childResourceElement; childResourceElement = childResourceElement->NextSiblingElement("Resource")) {
-			if (!pimpl->_addChildrenActors(*parentActor, actorVector, createActorAndChildren(childResourceElement->Attribute("File")))) {
+			if (!pimpl->addChildrenActors(*parentActor, actorVector, createActorAndChildren(childResourceElement->Attribute("File")))) {
 				return{};
 			}
 		}
 
 		for (auto childActorElement = childrenElement->FirstChildElement("Actor"); childActorElement; childActorElement = childActorElement->NextSiblingElement("Actor")) {
-			if (!pimpl->_addChildrenActors(*parentActor, actorVector, createActorAndChildren(childActorElement))) {
+			if (!pimpl->addChildrenActors(*parentActor, actorVector, createActorAndChildren(childActorElement))) {
 				return{};
 			}
 		}
@@ -237,7 +237,7 @@ std::vector<std::shared_ptr<Actor>> BaseActorFactory::createActorAndChildren(tin
 	return actorVector;
 }
 
-void BaseActorFactory::modifyActor(const std::shared_ptr<Actor> & actor, tinyxml2::XMLElement *overrides)
+void BaseActorFactory::modifyActor(const std::shared_ptr<Actor> & actor, const tinyxml2::XMLElement *overrides)
 {
 	pimpl->_modifyActor(actor, overrides);
 }

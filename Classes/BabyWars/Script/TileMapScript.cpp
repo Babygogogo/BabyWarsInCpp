@@ -89,7 +89,7 @@ void TileMapScript::loadTileMap(const char * xmlPath)
 
 			//Add the tile actor and script to TileMap.
 			ownerActor->addChild(*tileActor);
-			selfSceneNode->addChild(tileActor->getRenderComponent()->getSceneNode());
+			//selfSceneNode->addChild(tileActor->getRenderComponent()->getSceneNode());
 			pimpl->m_TileMap[gridIndex] = tileScript;
 		}
 

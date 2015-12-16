@@ -22,11 +22,7 @@ struct BeginTurnEffectScript::BeginTurnEffectScriptImpl
 
 void BeginTurnEffectScript::BeginTurnEffectScriptImpl::onBeginTurn(const EvtDataBeginTurn & e)
 {
-	auto label = static_cast<cocos2d::Label*>(m_RenderComponent->getSceneNode());
-	auto text = std::string("Turn: ") + std::to_string(e.getTurnIndex()) + " Player: " + std::to_string(e.getPlayerID());
-
-	label->setString(text);
-	label->setVisible(true);
+	m_RenderComponent->getSceneNode()->setVisible(true);
 }
 
 //////////////////////////////////////////////////////////////////////////

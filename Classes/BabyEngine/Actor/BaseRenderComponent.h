@@ -36,6 +36,8 @@ namespace cocos2d
  */
 class BaseRenderComponent : public ActorComponent
 {
+	friend class Actor;		//For onOwnerActorAddChild(), onOwnerActorRemoveFromParent().
+
 public:
 	~BaseRenderComponent() = default;
 
@@ -56,6 +58,10 @@ protected:
 	virtual bool vInit(const tinyxml2::XMLElement * xmlElement) = 0;
 
 	cocos2d::Node *m_Node{ nullptr };
+
+private:
+	void onOwnerActorAddChild(Actor & child);
+	void onOwnerActorRemoveFromParent();
 };
 
 #endif // !__BASE_RENDER_COMPONENT__

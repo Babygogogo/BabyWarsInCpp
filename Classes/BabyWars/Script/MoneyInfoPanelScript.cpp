@@ -53,7 +53,7 @@ void MoneyInfoPanelScript::vPostInit()
 
 	auto backgroundActor = gameLogic->createActor(MoneyInfoPanelScriptImpl::s_BackgroundActorPath.c_str());
 	ownerActor->addChild(*backgroundActor);
-	sceneNode->addChild(backgroundActor->getRenderComponent()->getSceneNode());
+	//sceneNode->addChild(backgroundActor->getRenderComponent()->getSceneNode());
 }
 
 const std::string MoneyInfoPanelScript::Type{ "MoneyInfoPanelScript" };

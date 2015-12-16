@@ -80,22 +80,22 @@ void WarSceneHUDScript::vPostInit()
 	auto beginTurnEffectActor = gameLogic->createActor(WarSceneHUDScriptImpl::s_BeginTurnEffectActorPath.c_str());
 	pimpl->m_BeginTurnEffectScript = beginTurnEffectActor->getComponent<BeginTurnEffectScript>();
 	ownerActor->addChild(*beginTurnEffectActor);
-	selfSceneNode->addChild(beginTurnEffectActor->getRenderComponent()->getSceneNode());
+	//selfSceneNode->addChild(beginTurnEffectActor->getRenderComponent()->getSceneNode());
 
 	auto moneyInfoPanelActor = gameLogic->createActor(WarSceneHUDScriptImpl::s_MoneyInfoPanelActorPath.c_str());
 	pimpl->m_MoneyInfoPanelScript = moneyInfoPanelActor->getComponent<MoneyInfoPanelScript>();
 	ownerActor->addChild(*moneyInfoPanelActor);
-	selfSceneNode->addChild(moneyInfoPanelActor->getRenderComponent()->getSceneNode());
+	//selfSceneNode->addChild(moneyInfoPanelActor->getRenderComponent()->getSceneNode());
 
 	auto actionMenuPanelActor = gameLogic->createActor(WarSceneHUDScriptImpl::s_CommandPanelActorPath.c_str());
 	pimpl->m_CommandPanelScript = actionMenuPanelActor->getComponent<CommandPanelScript>();
 	ownerActor->addChild(*actionMenuPanelActor);
-	selfSceneNode->addChild(actionMenuPanelActor->getRenderComponent()->getSceneNode());
+	//selfSceneNode->addChild(actionMenuPanelActor->getRenderComponent()->getSceneNode());
 
 	auto terrainInfoPanelActor = gameLogic->createActor(WarSceneHUDScriptImpl::s_TerrainInfoPanelActorPath.c_str());
 	pimpl->m_TerrainInfoPanelScript = terrainInfoPanelActor->getComponent<TerrainInfoPanelScript>();
 	ownerActor->addChild(*terrainInfoPanelActor);
-	selfSceneNode->addChild(terrainInfoPanelActor->getRenderComponent()->getSceneNode());
+	//selfSceneNode->addChild(terrainInfoPanelActor->getRenderComponent()->getSceneNode());
 }
 
 const std::string WarSceneHUDScript::Type{ "WarSceneHUDScript" };

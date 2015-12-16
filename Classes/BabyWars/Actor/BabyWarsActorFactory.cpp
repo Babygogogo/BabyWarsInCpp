@@ -1,6 +1,7 @@
 #include "BabyWarsActorFactory.h"
 
 #include "../Script/BeginTurnEffectScript.h"
+#include "../Script/BeginTurnEffectLabelScript.h"
 #include "../Script/CommandListItemScript.h"
 #include "../Script/CommandListScript.h"
 #include "../Script/CommandPanelScript.h"
@@ -24,6 +25,7 @@
 void BabyWarsActorFactory::vRegisterSpecificComponents()
 {
 	//#TODO: Update the register calls whenever the game-specific actor components are changed.
+	registerComponent<BeginTurnEffectLabelScript>();
 	registerComponent<BeginTurnEffectScript>();
 	registerComponent<CommandListItemScript>();
 	registerComponent<CommandListScript>();

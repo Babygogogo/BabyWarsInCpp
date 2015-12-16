@@ -152,7 +152,7 @@ void MovingAreaScript::MovingAreaScriptImpl::_showAndAddChildGridActors(const Gr
 
 		auto strongGridActor = weakGridActor.lock();
 		ownerActor->addChild(*strongGridActor);
-		ownerSceneNode->addChild(strongGridActor->getRenderComponent()->getSceneNode());
+		//ownerSceneNode->addChild(strongGridActor->getRenderComponent()->getSceneNode());
 	}
 }
 

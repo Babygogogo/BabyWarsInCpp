@@ -198,7 +198,7 @@ void UnitMapScript::loadUnitMap(const char * xmlPath)
 
 			//Add the unit actor and script to UnitMap.
 			ownerActor->addChild(*unitActor);
-			selfSceneNode->addChild(unitActor->getRenderComponent()->getSceneNode());
+			//selfSceneNode->addChild(unitActor->getRenderComponent()->getSceneNode());
 		}
 
 		//Load the next row of the unit map.

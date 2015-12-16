@@ -105,7 +105,7 @@ void CommandListScript::CommandListScriptImpl::_showAndAddChildItemActors(const 
 
 		auto strongItemActor = itemActor.lock();
 		ownerActor->addChild(*strongItemActor);
-		listView->pushBackCustomItem(static_cast<cocos2d::ui::Widget*>(strongItemActor->getRenderComponent()->getSceneNode()));
+		//listView->pushBackCustomItem(static_cast<cocos2d::ui::Widget*>(strongItemActor->getRenderComponent()->getSceneNode()));
 	}
 }
 

@@ -59,11 +59,11 @@ void CommandPanelScript::vPostInit()
 
 	auto backgroundActor = gameLogic->createActor(CommandPanelScriptImpl::s_BackgroundActorPath.c_str());
 	ownerActor->addChild(*backgroundActor);
-	sceneNode->addChild(backgroundActor->getRenderComponent()->getSceneNode());
+	//sceneNode->addChild(backgroundActor->getRenderComponent()->getSceneNode());
 
 	auto listActor = gameLogic->createActor(CommandPanelScriptImpl::s_ListActorPath.c_str());
 	ownerActor->addChild(*listActor);
-	sceneNode->addChild(listActor->getRenderComponent()->getSceneNode());
+	//sceneNode->addChild(listActor->getRenderComponent()->getSceneNode());
 	pimpl->m_ListScript = listActor->getComponent<CommandListScript>();
 }
 

@@ -200,6 +200,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyWars\Resource\ResourceLoader.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\TileData.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\UnitData.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Script\BeginTurnEffectLabelScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\BeginTurnEffectScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\CommandListItemScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\CommandListScript.cpp" />
@@ -304,6 +305,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyWars\Resource\TileDataID.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitData.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitDataID.h" />
+    <ClInclude Include="..\Classes\BabyWars\Script\BeginTurnEffectLabelScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\BeginTurnEffectScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\CommandListItemScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\CommandListScript.h" />

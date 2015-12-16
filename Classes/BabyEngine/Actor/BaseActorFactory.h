@@ -39,12 +39,12 @@ public:
 	//modifyActor() will be called after the creation of the actors.
 	//If fail to create any of the actors, an empty vector is returned.
 	//Otherwise, an vector of created actors is returned. The front actor in the vector is the most parent one.
-	std::vector<std::shared_ptr<Actor>> createActorAndChildren(const char *resourceFile, tinyxml2::XMLElement *overrides = nullptr);
-	std::vector<std::shared_ptr<Actor>> createActorAndChildren(tinyxml2::XMLElement * actorElement, tinyxml2::XMLElement * overrides = nullptr);
+	std::vector<std::shared_ptr<Actor>> createActorAndChildren(const char *resourceFile, const tinyxml2::XMLElement *overrides = nullptr);
+	std::vector<std::shared_ptr<Actor>> createActorAndChildren(const tinyxml2::XMLElement * actorElement, const tinyxml2::XMLElement * overrides = nullptr);
 
 	//Modify an Actor with some xml data.
 	//It will re-initialize its components and/or attach new ones to it.
-	void modifyActor(const std::shared_ptr<Actor> & actor, tinyxml2::XMLElement *overrides);
+	void modifyActor(const std::shared_ptr<Actor> & actor, const tinyxml2::XMLElement *overrides);
 
 	//Disable copy/move constructor and operator=.
 	BaseActorFactory(const BaseActorFactory&) = delete;

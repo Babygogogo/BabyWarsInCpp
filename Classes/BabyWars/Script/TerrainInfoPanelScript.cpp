@@ -54,7 +54,7 @@ void TerrainInfoPanelScript::vPostInit()
 
 	auto backgroundActor = gameLogic->createActor(TerrainInfoPanelScriptImpl::s_BackgroundActorPath.c_str());
 	ownerActor->addChild(*backgroundActor);
-	sceneNode->addChild(backgroundActor->getRenderComponent()->getSceneNode());
+	//sceneNode->addChild(backgroundActor->getRenderComponent()->getSceneNode());
 }
 
 const std::string TerrainInfoPanelScript::Type{ "TerrainInfoPanelScript" };

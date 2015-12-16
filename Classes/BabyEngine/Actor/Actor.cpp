@@ -105,12 +105,15 @@ const std::unordered_map<ActorID, std::weak_ptr<Actor>> & Actor::getChildren() c
 
 void Actor::addChild(Actor & child)
 {
-	if (child.hasParent()) {
-		return;
-	}
+	assert(!child.hasParent() && "Actor::addChild() the child actor already has a parent.");
 
 	child.pimpl->m_Parent = pimpl->m_Self;
 	pimpl->m_Children.emplace(child.getID(), child.pimpl->m_Self);
+
+	//Deal with render component.
+	if (pimpl->m_RenderComponent) {
+		pimpl->m_RenderComponent->onOwnerActorAddChild(child);
+	}
 }
 
 void Actor::removeFromParent()
@@ -122,15 +125,20 @@ void Actor::removeFromParent()
 	//Remove this from the parent's children list.
 	pimpl->m_Parent.lock()->pimpl->m_Children.erase(pimpl->m_ID);
 	pimpl->m_Parent.reset();
+
+	//Deal with render component.
+	if (pimpl->m_RenderComponent) {
+		pimpl->m_RenderComponent->onOwnerActorRemoveFromParent();
+	}
 }
 
 void Actor::removeAllChildren()
 {
-	for (const auto & idChildPair : pimpl->m_Children) {
-		if (idChildPair.second.expired())
-			continue;
-
-		idChildPair.second.lock()->pimpl->m_Parent.reset();
+	const auto childrenCopy = pimpl->m_Children;	//Avoid the invalidation of the iterators for pimpl->m_Children when calling child.removeFromParent().
+	for (const auto & idChildPair : childrenCopy) {
+		if (!idChildPair.second.expired()) {
+			idChildPair.second.lock()->removeFromParent();
+		}
 	}
 
 	pimpl->m_Children.clear();

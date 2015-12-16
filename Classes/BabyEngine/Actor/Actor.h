@@ -89,7 +89,7 @@ public:
 	void removeFromParent();
 	//The render components of the children (if exist) will be removed from the one of this actor (if exist).
 	//If the actor has no child, nothing happens.
-	//This function doesn't destroy self nor children.
+	//This function doesn't destroy the actor itself nor its children.
 	void removeAllChildren();
 
 	//Disable copy/move constructor and operator=.

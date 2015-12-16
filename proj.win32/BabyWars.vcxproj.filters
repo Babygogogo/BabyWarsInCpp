@@ -348,6 +348,9 @@
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToVec2.cpp">
       <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\BeginTurnEffectLabelScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -673,6 +676,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToVec2.h">
       <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\BeginTurnEffectLabelScript.h">
+      <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

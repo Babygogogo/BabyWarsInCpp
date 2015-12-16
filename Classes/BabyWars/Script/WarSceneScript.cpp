@@ -126,12 +126,12 @@ void WarSceneScript::vPostInit()
 	auto warFieldActor = gameLogic->createActor(WarSceneScriptImpl::s_WarFieldActorPath.c_str());
 	pimpl->m_WarFieldScript = warFieldActor->getComponent<WarFieldScript>();
 	ownerActor->addChild(*warFieldActor);
-	selfSceneNode->addChild(warFieldActor->getRenderComponent()->getSceneNode());
+	//selfSceneNode->addChild(warFieldActor->getRenderComponent()->getSceneNode());
 
 	auto warSceneHUDActor = gameLogic->createActor(WarSceneScriptImpl::s_WarSceneHUDActorPath.c_str());
 	pimpl->m_WarSceneHUDScript = warSceneHUDActor->getComponent<WarSceneHUDScript>();
 	ownerActor->addChild(*warSceneHUDActor);
-	selfSceneNode->addChild(warSceneHUDActor->getRenderComponent()->getSceneNode());
+	//selfSceneNode->addChild(warSceneHUDActor->getRenderComponent()->getSceneNode());
 
 	auto playerManagerActor = gameLogic->createActor(WarSceneScriptImpl::s_PlayerManagerActorPath.c_str());
 	pimpl->m_PlayerManagerScript = playerManagerActor->getComponent<PlayerManagerScript>();
