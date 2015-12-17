@@ -140,9 +140,9 @@ UnitScript::~UnitScript()
 {
 }
 
-bool UnitScript::onInputTouch(const EvtDataInputTouch & touch)
+bool UnitScript::onInputTouch(const EvtDataInputTouch & touch, const std::shared_ptr<UnitScript> & touchedUnit)
 {
-	return pimpl->m_State->vUpdateUnitOnTouch(*this);
+	return pimpl->m_State->vUpdateUnitOnTouch(*this, touchedUnit);
 }
 
 void UnitScript::loadUnit(tinyxml2::XMLElement * xmlElement)
@@ -239,7 +239,7 @@ void UnitScript::moveInPlace()
 	moveAlongPath(MovingPath(MovingPath::PathNode(pimpl->m_GridIndex, pimpl->m_UnitData->getMovementRange())));
 }
 
-void UnitScript::undoMove()
+void UnitScript::undoMoveAndSetToIdleState()
 {
 	if (pimpl->m_State->vCanUndoMove()) {
 		pimpl->m_ActionComponent->stopAction(pimpl->m_MovingAction);

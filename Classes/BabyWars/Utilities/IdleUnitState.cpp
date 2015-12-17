@@ -27,15 +27,19 @@ void IdleUnitState::vUpdateUnitMap(UnitMapScript & unitMap, const std::shared_pt
 {
 	assert(unit && "UnitState::vUpdateUnitMap() the unit is expired.");
 	if (unitMap.isUnitFocused(*unit)) {
-		unitMap.undoMoveForFocusedUnit();
+		unitMap.undoMoveAndSetToIdleStateForFocusedUnit();
 		unitMap.setFocusedUnit(nullptr);
 	}
 }
 
-bool IdleUnitState::vUpdateUnitOnTouch(UnitScript & unit) const
+bool IdleUnitState::vUpdateUnitOnTouch(UnitScript & unit, const std::shared_ptr<UnitScript> & touchedUnit) const
 {
-	unit.setStateAndAppearanceAndQueueEvent(UnitStateTypeCode::Active);
-	return true;
+	if (touchedUnit.get() == &unit) {
+		unit.setStateAndAppearanceAndQueueEvent(UnitStateTypeCode::Active);
+		return true;
+	}
+
+	return false;
 }
 
 void IdleUnitState::vShowUnitAppearanceInState(UnitScript & unit) const

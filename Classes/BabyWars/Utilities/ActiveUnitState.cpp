@@ -66,14 +66,20 @@ void ActiveUnitState::vUpdateUnitMap(UnitMapScript & unitMap, const std::shared_
 {
 	assert(unit && "UnitState::vUpdateUnitMap() the unit is expired.");
 	if (!unitMap.isUnitFocused(*unit)) {
-		unitMap.undoMoveForFocusedUnit();
+		unitMap.undoMoveAndSetToIdleStateForFocusedUnit();
 		unitMap.setFocusedUnit(unit);
 	}
 }
 
-bool ActiveUnitState::vUpdateUnitOnTouch(UnitScript & unit) const
+bool ActiveUnitState::vUpdateUnitOnTouch(UnitScript & unit, const std::shared_ptr<UnitScript> & touchedUnit) const
 {
-	unit.moveInPlace();
+	if (touchedUnit.get() == &unit) {
+		unit.moveInPlace();
+	}
+	else {
+		unit.undoMoveAndSetToIdleState();
+	}
+
 	return true;
 }
 

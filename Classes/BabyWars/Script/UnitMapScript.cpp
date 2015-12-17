@@ -132,15 +132,13 @@ UnitMapScript::~UnitMapScript()
 
 bool UnitMapScript::onInputTouch(const EvtDataInputTouch & touch)
 {
-	if (auto touchUnit = pimpl->getUnit(pimpl->toGridIndex(touch.getPositionInWorld()))) {
-		if (touchUnit->onInputTouch(touch)) {
-			return true;
-		}
-	}
+	auto touchedUnit = pimpl->getUnit(pimpl->toGridIndex(touch.getPositionInWorld()));
 
 	if (auto focusedUnit = pimpl->getFocusedUnit()) {
-		focusedUnit->undoMove();
-		return true;
+		return focusedUnit->onInputTouch(touch, touchedUnit);
+	}
+	else if (touchedUnit) {
+		return touchedUnit->onInputTouch(touch, touchedUnit);
 	}
 
 	return false;
@@ -227,10 +225,10 @@ void UnitMapScript::setFocusedUnit(const std::shared_ptr<UnitScript> & focusedUn
 	}
 }
 
-void UnitMapScript::undoMoveForFocusedUnit()
+void UnitMapScript::undoMoveAndSetToIdleStateForFocusedUnit()
 {
 	if (auto currentlyFocusedUnit = pimpl->getFocusedUnit()) {
-		currentlyFocusedUnit->undoMove();
+		currentlyFocusedUnit->undoMoveAndSetToIdleState();
 	}
 }
 

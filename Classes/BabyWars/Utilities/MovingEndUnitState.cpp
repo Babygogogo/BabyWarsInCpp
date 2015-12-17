@@ -66,9 +66,10 @@ void MovingEndUnitState::vUpdateUnitMap(UnitMapScript & unitMap, const std::shar
 {
 }
 
-bool MovingEndUnitState::vUpdateUnitOnTouch(UnitScript & unit) const
+bool MovingEndUnitState::vUpdateUnitOnTouch(UnitScript & unit, const std::shared_ptr<UnitScript> & touchedUnit) const
 {
-	return false;
+	unit.undoMoveAndSetToIdleState();
+	return true;
 }
 
 void MovingEndUnitState::vShowUnitAppearanceInState(UnitScript & unit) const

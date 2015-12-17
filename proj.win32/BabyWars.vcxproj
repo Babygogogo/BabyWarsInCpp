@@ -190,7 +190,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToVec2.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Actor\BabyWarsActorFactory.cpp" />
-    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataActivateUnitEnd.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataGameCommandGenerated.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataBeginTurn.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataLoadWarSceneEnd.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataRequestChangeUnitState.cpp" />
@@ -296,7 +296,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyEngine\Utilities\StringToVector.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToVec2.h" />
     <ClInclude Include="..\Classes\BabyWars\Actor\BabyWarsActorFactory.h" />
-    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataActivateUnitEnd.h" />
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataGameCommandGenerated.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataBeginTurn.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataLoadWarSceneEnd.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataRequestChangeUnitState.h" />

@@ -22,7 +22,6 @@ struct CommandListItemScript::CommandListItemScriptImpl
 	void setAppearance(const std::string & titleName);
 	void setTouchCallback(const GameCommand::Callback & callback);
 
-	bool m_IsTouchMoved{ false };
 	GameCommand::Callback m_GameCommandCallback;
 	cocos2d::ui::Widget::ccWidgetTouchCallback m_TouchCallback;
 
@@ -49,25 +48,16 @@ void CommandListItemScript::CommandListItemScriptImpl::initTouchCallback()
 			break;
 
 		case TouchEventType::MOVED:
-			if (!scriptImpl.expired()) {
-				scriptImpl.lock()->m_IsTouchMoved = true;
-			}
 			break;
 
 		case TouchEventType::CANCELED:
 			break;
 
 		case TouchEventType::ENDED:
-			if (scriptImpl.expired()) {
-				return;
+			if (!scriptImpl.expired()) {
+				scriptImpl.lock()->m_GameCommandCallback();
 			}
 
-			auto strongScriptImpl = scriptImpl.lock();
-			if (!strongScriptImpl->m_IsTouchMoved) {
-				strongScriptImpl->m_GameCommandCallback();
-			}
-
-			strongScriptImpl->m_IsTouchMoved = false;
 			break;
 		}
 	};

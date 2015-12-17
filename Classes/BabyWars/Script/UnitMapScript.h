@@ -26,7 +26,7 @@ public:
 	std::shared_ptr<UnitScript> getFocusedUnit() const;
 	void setFocusedUnit(const std::shared_ptr<UnitScript> & focusedUnit);
 
-	void undoMoveForFocusedUnit();
+	void undoMoveAndSetToIdleStateForFocusedUnit();
 	void removeFocusedUnitIndexFromMap();
 
 	//Getter of the size of the unit map.

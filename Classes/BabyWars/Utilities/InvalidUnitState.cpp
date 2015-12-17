@@ -24,7 +24,7 @@ void InvalidUnitState::vUpdateUnitMap(UnitMapScript & unitMap, const std::shared
 	assert("UnitState::vUpdateUnitMap() the unit state is invalid.");
 }
 
-bool InvalidUnitState::vUpdateUnitOnTouch(UnitScript & unit) const
+bool InvalidUnitState::vUpdateUnitOnTouch(UnitScript & unit, const std::shared_ptr<UnitScript> & touchedUnit) const
 {
 	assert("UnitState::updateUnit() the unit state is invalid.");
 	return false;

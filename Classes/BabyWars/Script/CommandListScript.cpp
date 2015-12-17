@@ -10,6 +10,7 @@
 #include "../../BabyEngine/Event/EvtDataRequestDestroyActor.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../Event/EvtDataUnitStateChangeEnd.h"
+#include "../Event/EvtDataGameCommandGenerated.h"
 #include "../Utilities/GameCommand.h"
 #include "UnitScript.h"
 #include "CommandListItemScript.h"
@@ -26,18 +27,21 @@ struct CommandListScript::CommandListScriptImpl
 	using ItemActors = std::vector<std::weak_ptr<Actor>>;
 
 	void onUnitStateChangeEnd(const EvtDataUnitStateChangeEnd & e);
+	void onGameCommandsGenerated(const EvtDataGameCommandGenerated & e);
 
 	bool isListShownForUnit(const UnitScript & unit) const;
 	void createAndShowListForUnit(const UnitScript & unit);
 	void clearAndDestroyListForUnit(const UnitScript & unit);
 
+	ItemActors _createItemActorsForGameCommands(const std::vector<GameCommand> & gameCommands) const;
 	ItemActors _createItemActorsForUnit(const UnitScript & unit) const;
-	void _showAndAddChildItemActors(const ItemActors & itemActors);
-	void _hideAndRemoveChildItemActors(const ItemActors & itemActors);
+	void _showAndAddChildrenItemActors(const ItemActors & itemActors);
+	void _hideAndRemoveChildrenItemActors(const ItemActors & itemActors);
 
 	static std::string s_ListItemActorPath;
 
-	std::map<const UnitScript *, ItemActors> m_ChildrenItemActors;
+	std::map<const UnitScript *, ItemActors> m_ChildrenItemActorsForUnit;
+	ItemActors m_ChildrenItemActors;
 
 	std::weak_ptr<Actor> m_OwnerActor;
 };
@@ -51,9 +55,19 @@ void CommandListScript::CommandListScriptImpl::onUnitStateChangeEnd(const EvtDat
 	e.getCurrentState()->vUpdateCommandList(*m_OwnerActor.lock()->getComponent<CommandListScript>(), *unitScript);
 }
 
+void CommandListScript::CommandListScriptImpl::onGameCommandsGenerated(const EvtDataGameCommandGenerated & e)
+{
+	_hideAndRemoveChildrenItemActors(m_ChildrenItemActors);
+
+	if (const auto gameCommands = e.getGameCommands()) {
+		m_ChildrenItemActors = _createItemActorsForGameCommands(*gameCommands);
+		_showAndAddChildrenItemActors(m_ChildrenItemActors);
+	}
+}
+
 bool CommandListScript::CommandListScriptImpl::isListShownForUnit(const UnitScript & unit) const
 {
-	return m_ChildrenItemActors.find(&unit) != m_ChildrenItemActors.end();
+	return m_ChildrenItemActorsForUnit.find(&unit) != m_ChildrenItemActorsForUnit.end();
 }
 
 void CommandListScript::CommandListScriptImpl::createAndShowListForUnit(const UnitScript & unit)
@@ -63,8 +77,8 @@ void CommandListScript::CommandListScriptImpl::createAndShowListForUnit(const Un
 	}
 
 	auto itemActors = _createItemActorsForUnit(unit);
-	_showAndAddChildItemActors(itemActors);
-	m_ChildrenItemActors.emplace(std::make_pair(&unit, std::move(itemActors)));
+	_showAndAddChildrenItemActors(itemActors);
+	m_ChildrenItemActorsForUnit.emplace(std::make_pair(&unit, std::move(itemActors)));
 }
 
 void CommandListScript::CommandListScriptImpl::clearAndDestroyListForUnit(const UnitScript & unit)
@@ -73,17 +87,22 @@ void CommandListScript::CommandListScriptImpl::clearAndDestroyListForUnit(const 
 		return;
 	}
 
-	auto itemActorsIter = m_ChildrenItemActors.find(&unit);
-	_hideAndRemoveChildItemActors(itemActorsIter->second);
-	m_ChildrenItemActors.erase(itemActorsIter);
+	auto itemActorsIter = m_ChildrenItemActorsForUnit.find(&unit);
+	_hideAndRemoveChildrenItemActors(itemActorsIter->second);
+	m_ChildrenItemActorsForUnit.erase(itemActorsIter);
 }
 
 CommandListScript::CommandListScriptImpl::ItemActors CommandListScript::CommandListScriptImpl::_createItemActorsForUnit(const UnitScript & unit) const
 {
+	return _createItemActorsForGameCommands(unit.getCommands());
+}
+
+CommandListScript::CommandListScriptImpl::ItemActors CommandListScript::CommandListScriptImpl::_createItemActorsForGameCommands(const std::vector<GameCommand> & gameCommands) const
+{
 	auto itemActors = ItemActors{};
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
 
-	for (const auto & command : unit.getCommands()) {
+	for (const auto & command : gameCommands) {
 		auto listItem = gameLogic->createActor(CommandListScriptImpl::s_ListItemActorPath.c_str());
 		listItem->getComponent<CommandListItemScript>()->initWithGameCommand(command);
 
@@ -93,35 +112,28 @@ CommandListScript::CommandListScriptImpl::ItemActors CommandListScript::CommandL
 	return itemActors;
 }
 
-void CommandListScript::CommandListScriptImpl::_showAndAddChildItemActors(const ItemActors & itemActors)
+void CommandListScript::CommandListScriptImpl::_showAndAddChildrenItemActors(const ItemActors & itemActors)
 {
 	auto ownerActor = m_OwnerActor.lock();
-	auto listView = static_cast<cocos2d::ui::ListView*>(ownerActor->getRenderComponent()->getSceneNode());
 
 	for (const auto & itemActor : itemActors) {
-		if (itemActor.expired()) {
-			continue;
+		if (!itemActor.expired()) {
+			ownerActor->addChild(*itemActor.lock());
 		}
-
-		auto strongItemActor = itemActor.lock();
-		ownerActor->addChild(*strongItemActor);
-		//listView->pushBackCustomItem(static_cast<cocos2d::ui::Widget*>(strongItemActor->getRenderComponent()->getSceneNode()));
 	}
 }
 
-void CommandListScript::CommandListScriptImpl::_hideAndRemoveChildItemActors(const ItemActors & itemActors)
+void CommandListScript::CommandListScriptImpl::_hideAndRemoveChildrenItemActors(const ItemActors & itemActors)
 {
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
+	auto ownerActor = m_OwnerActor.lock();
 
 	for (const auto & weakItemActor : itemActors) {
-		if (weakItemActor.expired()) {
-			continue;
+		if (!weakItemActor.expired()) {
+			auto strongItemActor = weakItemActor.lock();
+			ownerActor->removeChild(*strongItemActor);
+			eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(strongItemActor->getID()));
 		}
-
-		auto strongItemActor = weakItemActor.lock();
-		strongItemActor->removeFromParent();
-		//strongItemActor->getRenderComponent()->getSceneNode()->removeFromParent();
-		eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(strongItemActor->getID()));
 	}
 }
 
@@ -166,6 +178,9 @@ void CommandListScript::vPostInit()
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
 	eventDispatcher->vAddListener(EvtDataUnitStateChangeEnd::s_EventType, pimpl, [this](const auto & e) {
 		pimpl->onUnitStateChangeEnd(static_cast<const EvtDataUnitStateChangeEnd &>(e));
+	});
+	eventDispatcher->vAddListener(EvtDataGameCommandGenerated::s_EventType, pimpl, [this](const auto & e) {
+		pimpl->onGameCommandsGenerated(static_cast<const EvtDataGameCommandGenerated &>(e));
 	});
 }
 

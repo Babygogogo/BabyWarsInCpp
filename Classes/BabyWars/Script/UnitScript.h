@@ -21,7 +21,7 @@ public:
 	UnitScript();
 	~UnitScript();
 
-	bool onInputTouch(const EvtDataInputTouch & touch);
+	bool onInputTouch(const EvtDataInputTouch & touch, const std::shared_ptr<UnitScript> & touchedUnit);
 
 	void loadUnit(tinyxml2::XMLElement * xmlElement);
 
@@ -42,7 +42,7 @@ public:
 
 	void moveAlongPath(const MovingPath & path);
 	void moveInPlace();
-	void undoMove();
+	void undoMoveAndSetToIdleState();
 
 	//Type name of the class. Used by the ActorFactory and can not be removed.
 	static const std::string Type;

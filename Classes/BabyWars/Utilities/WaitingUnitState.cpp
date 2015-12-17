@@ -34,7 +34,7 @@ void WaitingUnitState::vUpdateUnitMap(UnitMapScript & unitMap, const std::shared
 	}
 }
 
-bool WaitingUnitState::vUpdateUnitOnTouch(UnitScript & unit) const
+bool WaitingUnitState::vUpdateUnitOnTouch(UnitScript & unit, const std::shared_ptr<UnitScript> & touchedUnit) const
 {
 	return false;
 }

@@ -31,9 +31,10 @@ void MovingUnitState::vUpdateUnitMap(UnitMapScript & unitMap, const std::shared_
 	unitMap.removeFocusedUnitIndexFromMap();
 }
 
-bool MovingUnitState::vUpdateUnitOnTouch(UnitScript & unit) const
+bool MovingUnitState::vUpdateUnitOnTouch(UnitScript & unit, const std::shared_ptr<UnitScript> & touchedUnit) const
 {
-	return false;
+	unit.undoMoveAndSetToIdleState();
+	return true;
 }
 
 void MovingUnitState::vShowUnitAppearanceInState(UnitScript & unit) const

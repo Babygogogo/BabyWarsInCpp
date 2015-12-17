@@ -26,7 +26,7 @@ public:
 	virtual void vUpdateCommandList(CommandListScript & commandList, const UnitScript & unit) const = 0;
 	virtual void vUpdateUnitMap(UnitMapScript & unitMap, const std::shared_ptr<UnitScript> & unit) const = 0;
 
-	virtual bool vUpdateUnitOnTouch(UnitScript & unit) const = 0;
+	virtual bool vUpdateUnitOnTouch(UnitScript & unit, const std::shared_ptr<UnitScript> & touchedUnit) const = 0;
 	virtual void vShowUnitAppearanceInState(UnitScript & unit) const = 0;
 	virtual void vClearUnitAppearanceInState(UnitScript & unit) const = 0;
 
