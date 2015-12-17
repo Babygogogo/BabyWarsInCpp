@@ -3,16 +3,22 @@
 	<Components>
 		<GeneralRenderComponent>
 			<SceneNode Type="Node"/>
+			<SceneNodeProperties>
+				<Opacity Value="0" IsCascadeEnabled="true">
+					<!--The value is an int in [0, 255].-->
+				</Opacity>
+			</SceneNodeProperties>
 		</GeneralRenderComponent>
 		<TransformComponent>
 			<Position X="480" Y="270"/>
 		</TransformComponent>
+		<ActionComponent/>
 		<BeginTurnEffectScript>
 			<AppearingAction>
-				
+				<FadeTo Duration="0.5" Opacity="255"/>
 			</AppearingAction>
 			<DisappearingAction>
-			
+				<FadeTo Duration="0.5" Opacity="0"/>
 			</DisappearingAction>
 		</BeginTurnEffectScript>
 	</Components>

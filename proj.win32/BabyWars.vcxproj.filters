@@ -76,6 +76,9 @@
     <Filter Include="src\BabyEngine\Utilities\XMLSerialization\BasicTypes">
       <UniqueIdentifier>{02e6a97d-ba46-4344-a086-6c41d7f14230}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\BabyEngine\Utilities\XMLSerialization\Action">
+      <UniqueIdentifier>{18030660-c91b-453b-ab4d-f6d5114daaed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -273,9 +276,6 @@
     <ClCompile Include="..\Classes\BabyWars\Utilities\UnitState.cpp">
       <Filter>src\BabyWars\Utilities\UnitState</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Actor\ActionComponent.cpp">
-      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Script\PlayerManagerScript.cpp">
       <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
@@ -353,6 +353,15 @@
     </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSceneNodeAddChildCallback.cpp">
       <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\ActionComponent.cpp">
+      <Filter>src\BabyEngine\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToFadeTo.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToFiniteTimeAction.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\Action</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -685,6 +694,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSceneNodeAddChildCallback.h">
       <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToFadeTo.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToFiniteTimeAction.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\Action</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

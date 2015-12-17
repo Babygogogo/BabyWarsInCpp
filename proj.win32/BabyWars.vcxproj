@@ -167,7 +167,9 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyEngine\UserInterface\BaseGameView.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\UserInterface\BaseHumanView.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\SetSceneNodePropertiesWithXML.cpp" />
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToFiniteTimeAction.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToButton.cpp" />
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToFadeTo.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToListView.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToParticleExplosion.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToLabel.cpp" />
@@ -269,8 +271,10 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyEngine\UserInterface\GameViewID.h" />
     <ClInclude Include="..\Classes\BabyEngine\UserInterface\BaseGameView.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\SetSceneNodePropertiesWithXML.h" />
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToFiniteTimeAction.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToButton.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.h" />
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToFadeTo.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToLabel.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToLayer.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToListView.h" />

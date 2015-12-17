@@ -12,7 +12,9 @@ void utilities::setSceneNodePropertiesWithXML(cocos2d::Node * sceneNode, const t
 
 	if (const auto opacityElement = xmlElement->FirstChildElement("Opacity")) {
 		sceneNode->setOpacity(opacityElement->IntAttribute("Value"));
+		sceneNode->setCascadeOpacityEnabled(opacityElement->BoolAttribute("IsCascadeEnabled"));
 	}
+
 	if (const auto contentSizeElement = xmlElement->FirstChildElement("ContentSize")) {
 		sceneNode->setContentSize(XMLToSize(contentSizeElement));
 	}
