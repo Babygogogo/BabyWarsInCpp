@@ -14,11 +14,6 @@ void InvalidUnitState::vUpdateMovingArea(MovingAreaScript & movingArea, const Un
 	assert("UnitState::vUpdateMovingArea() the unit state is invalid.");
 }
 
-void InvalidUnitState::vUpdateCommandList(CommandListScript & commandList, const UnitScript & unit) const
-{
-	assert("UnitState::vUpdateCommandList() the unit state is invalid.");
-}
-
 void InvalidUnitState::vUpdateUnitMap(UnitMapScript & unitMap, const std::shared_ptr<UnitScript> & unit) const
 {
 	assert("UnitState::vUpdateUnitMap() the unit state is invalid.");
@@ -52,8 +47,8 @@ bool InvalidUnitState::vCanUndoMove() const
 	return false;
 }
 
-std::vector<GameCommand> InvalidUnitState::vGetCommandsForUnit(const std::shared_ptr<UnitScript> & targetUnit) const
+std::vector<GameCommand> InvalidUnitState::vGenerateGameCommandsForUnit(const std::shared_ptr<UnitScript> & targetUnit) const
 {
-	assert("UnitState::vGetCommandsForUnit() the unit state is invalid.");
+	assert("UnitState::vGenerateGameCommandsForUnit() the unit state is invalid.");
 	return{};
 }

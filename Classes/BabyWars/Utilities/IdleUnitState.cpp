@@ -2,7 +2,6 @@
 
 #include "../Script/UnitMapScript.h"
 #include "../Script/MovingAreaScript.h"
-#include "../Script/CommandListScript.h"
 #include "../Script/UnitScript.h"
 #include "GameCommand.h"
 #include "UnitStateTypeCode.h"
@@ -16,11 +15,6 @@ UnitStateTypeCode IdleUnitState::vGetStateTypeCode() const
 void IdleUnitState::vUpdateMovingArea(MovingAreaScript & movingArea, const UnitScript & unit) const
 {
 	movingArea.clearAreaForUnit(unit);
-}
-
-void IdleUnitState::vUpdateCommandList(CommandListScript & commandList, const UnitScript & unit) const
-{
-	commandList.clearListForUnit(unit);
 }
 
 void IdleUnitState::vUpdateUnitMap(UnitMapScript & unitMap, const std::shared_ptr<UnitScript> & unit) const
@@ -60,7 +54,7 @@ bool IdleUnitState::vCanUndoMove() const
 	return false;
 }
 
-std::vector<GameCommand> IdleUnitState::vGetCommandsForUnit(const std::shared_ptr<UnitScript> & targetUnit) const
+std::vector<GameCommand> IdleUnitState::vGenerateGameCommandsForUnit(const std::shared_ptr<UnitScript> & targetUnit) const
 {
 	return{};
 }

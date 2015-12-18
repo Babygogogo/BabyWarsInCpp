@@ -7,7 +7,6 @@
 #include "../../BabyEngine/Actor/ActionComponent.h"
 #include "../Script/MovingAreaScript.h"
 #include "../Script/UnitMapScript.h"
-#include "../Script/CommandListScript.h"
 #include "../Script/UnitScript.h"
 #include "GameCommand.h"
 #include "UnitStateTypeCode.h"
@@ -57,11 +56,6 @@ void ActiveUnitState::vUpdateMovingArea(MovingAreaScript & movingArea, const Uni
 	movingArea.showAreaForUnit(unit);
 }
 
-void ActiveUnitState::vUpdateCommandList(CommandListScript & commandList, const UnitScript & unit) const
-{
-	commandList.clearListForUnit(unit);
-}
-
 void ActiveUnitState::vUpdateUnitMap(UnitMapScript & unitMap, const std::shared_ptr<UnitScript> & unit) const
 {
 	assert(unit && "UnitState::vUpdateUnitMap() the unit is expired.");
@@ -104,7 +98,7 @@ bool ActiveUnitState::vCanUndoMove() const
 	return true;
 }
 
-std::vector<GameCommand> ActiveUnitState::vGetCommandsForUnit(const std::shared_ptr<UnitScript> & targetUnit) const
+std::vector<GameCommand> ActiveUnitState::vGenerateGameCommandsForUnit(const std::shared_ptr<UnitScript> & targetUnit) const
 {
 	return{};
 }

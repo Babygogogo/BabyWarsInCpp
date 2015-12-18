@@ -4,7 +4,6 @@
 
 #include "../../BabyEngine/Actor/ActionComponent.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
-#include "../Script/CommandListScript.h"
 #include "../Script/MovingAreaScript.h"
 #include "../Script/UnitScript.h"
 #include "GridIndex.h"
@@ -57,11 +56,6 @@ void MovingEndUnitState::vUpdateMovingArea(MovingAreaScript & movingArea, const 
 	movingArea.clearAreaForUnit(unit);
 }
 
-void MovingEndUnitState::vUpdateCommandList(CommandListScript & commandList, const UnitScript & unit) const
-{
-	commandList.showListForUnit(unit);
-}
-
 void MovingEndUnitState::vUpdateUnitMap(UnitMapScript & unitMap, const std::shared_ptr<UnitScript> & unit) const
 {
 }
@@ -93,9 +87,9 @@ bool MovingEndUnitState::vCanUndoMove() const
 	return true;
 }
 
-std::vector<GameCommand> MovingEndUnitState::vGetCommandsForUnit(const std::shared_ptr<UnitScript> & targetUnit) const
+std::vector<GameCommand> MovingEndUnitState::vGenerateGameCommandsForUnit(const std::shared_ptr<UnitScript> & targetUnit) const
 {
-	assert(targetUnit && "UnitState::vGetCommandsForUnit() the target unit is expired.");
+	assert(targetUnit && "UnitState::vGenerateGameCommandsForUnit() the target unit is expired.");
 	auto commands = std::vector<GameCommand>{};
 	auto unitScript = std::weak_ptr<UnitScript>(targetUnit);
 

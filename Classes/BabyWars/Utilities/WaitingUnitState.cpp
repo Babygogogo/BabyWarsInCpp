@@ -4,7 +4,6 @@
 
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../Script/MovingAreaScript.h"
-#include "../Script/CommandListScript.h"
 #include "../Script/UnitMapScript.h"
 #include "../Script/UnitScript.h"
 #include "GameCommand.h"
@@ -19,11 +18,6 @@ UnitStateTypeCode WaitingUnitState::vGetStateTypeCode() const
 void WaitingUnitState::vUpdateMovingArea(MovingAreaScript & movingArea, const UnitScript & unit) const
 {
 	movingArea.clearAreaForUnit(unit);
-}
-
-void WaitingUnitState::vUpdateCommandList(CommandListScript & commandList, const UnitScript & unit) const
-{
-	commandList.clearListForUnit(unit);
 }
 
 void WaitingUnitState::vUpdateUnitMap(UnitMapScript & unitMap, const std::shared_ptr<UnitScript> & unit) const
@@ -59,7 +53,7 @@ bool WaitingUnitState::vCanUndoMove() const
 	return false;
 }
 
-std::vector<GameCommand> WaitingUnitState::vGetCommandsForUnit(const std::shared_ptr<UnitScript> & targetUnit) const
+std::vector<GameCommand> WaitingUnitState::vGenerateGameCommandsForUnit(const std::shared_ptr<UnitScript> & targetUnit) const
 {
 	return{};
 }

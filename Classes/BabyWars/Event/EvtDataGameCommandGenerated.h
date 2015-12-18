@@ -11,10 +11,10 @@ class GameCommand;
 class EvtDataGameCommandGenerated : public BaseEventData
 {
 public:
-	EvtDataGameCommandGenerated(std::weak_ptr<const std::vector<GameCommand>> gameCommands) : m_GameCommands{ std::move(gameCommands) } {}
+	EvtDataGameCommandGenerated(std::vector<GameCommand> && gameCommands) : m_GameCommands{ std::move(gameCommands) } {}
 	virtual ~EvtDataGameCommandGenerated() = default;
 
-	std::shared_ptr<const std::vector<GameCommand>> getGameCommands() const;
+	const std::vector<GameCommand> & getGameCommands() const;
 
 	static const EventType s_EventType;
 	virtual const EventType & vGetType() const override;
@@ -26,7 +26,7 @@ public:
 	EvtDataGameCommandGenerated & operator=(EvtDataGameCommandGenerated &&) = delete;
 
 private:
-	std::weak_ptr<const std::vector<GameCommand>> m_GameCommands;
+	const std::vector<GameCommand> m_GameCommands;
 };
 
 #endif // !__EVENT_DATA_ACTIVATE_UNIT_END__

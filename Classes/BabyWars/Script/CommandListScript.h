@@ -3,17 +3,11 @@
 
 #include "../../BabyEngine/Actor/BaseScriptComponent.h"
 
-//Forward declaration.
-class UnitScript;
-
 class CommandListScript : public BaseScriptComponent
 {
 public:
 	CommandListScript();
 	~CommandListScript();
-
-	void showListForUnit(const UnitScript & unit);
-	void clearListForUnit(const UnitScript & unit);
 
 	//Type name of the class. Used by the ActorFactory and can not be removed.
 	static const std::string Type;

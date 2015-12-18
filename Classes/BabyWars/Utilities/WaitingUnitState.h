@@ -19,7 +19,6 @@ private:
 	virtual UnitStateTypeCode vGetStateTypeCode() const override;
 
 	virtual void vUpdateMovingArea(MovingAreaScript & movingArea, const UnitScript & unit) const override;
-	virtual void vUpdateCommandList(CommandListScript & commandList, const UnitScript & unit) const override;
 	virtual void vUpdateUnitMap(UnitMapScript & unitMap, const std::shared_ptr<UnitScript> & unit) const override;
 
 	virtual bool vUpdateUnitOnTouch(UnitScript & unit, const std::shared_ptr<UnitScript> & touchedUnit) const override;
@@ -29,7 +28,7 @@ private:
 	virtual bool vCanMoveAlongPath() const override;
 	virtual bool vCanUndoMove() const override;
 
-	virtual std::vector<GameCommand> vGetCommandsForUnit(const std::shared_ptr<UnitScript> & targetUnit) const override;
+	virtual std::vector<GameCommand> vGenerateGameCommandsForUnit(const std::shared_ptr<UnitScript> & targetUnit) const override;
 };
 
 #endif // !__WAITING_UNIT_STATE__

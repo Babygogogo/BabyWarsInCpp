@@ -10,6 +10,7 @@
 //#include "../Event/EvtDataRequestChangeUnitState.h"
 #include "../Event/EvtDataUnitStateChangeEnd.h"
 #include "../Event/EvtDataUnitIndexChangeEnd.h"
+#include "../Event/EvtDataGameCommandGenerated.h"
 #include "../Resource/ResourceLoader.h"
 #include "../Resource/UnitData.h"
 #include "../Utilities/GridIndex.h"
@@ -86,6 +87,9 @@ void UnitScript::UnitScriptImpl::setState(std::shared_ptr<UnitState> && state)
 		m_State->onUnitExitState(*unitScript);
 		m_State = std::move(state);
 		m_State->onUnitEnterState(*unitScript);
+
+		auto gameCommandEvent = std::make_unique<EvtDataGameCommandGenerated>(m_State->vGenerateGameCommandsForUnit(m_Script.lock()));
+		SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::move(gameCommandEvent));
 	}
 }
 
@@ -172,11 +176,6 @@ void UnitScript::loadUnit(tinyxml2::XMLElement * xmlElement)
 const std::shared_ptr<UnitData> & UnitScript::getUnitData() const
 {
 	return pimpl->m_UnitData;
-}
-
-std::vector<GameCommand> UnitScript::getCommands() const
-{
-	return pimpl->m_State->vGetCommandsForUnit(pimpl->m_Script.lock());
 }
 
 void UnitScript::setGridIndexAndPosition(const GridIndex & gridIndex)

@@ -27,8 +27,6 @@ public:
 
 	const std::shared_ptr<UnitData> & getUnitData() const;
 
-	std::vector<GameCommand> getCommands() const;
-
 	//The setter also sets the position of the Unit according to the indexes.
 	void setGridIndexAndPosition(const GridIndex & gridIndex);
 	GridIndex getGridIndex() const;

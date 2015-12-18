@@ -6,7 +6,6 @@
 
 //Forward declaration.
 class MovingAreaScript;
-class CommandListScript;
 class UnitMapScript;
 class UnitScript;
 class GameCommand;
@@ -23,7 +22,6 @@ public:
 	void onUnitExitState(UnitScript & unit) const;
 
 	virtual void vUpdateMovingArea(MovingAreaScript & movingArea, const UnitScript & unit) const = 0;
-	virtual void vUpdateCommandList(CommandListScript & commandList, const UnitScript & unit) const = 0;
 	virtual void vUpdateUnitMap(UnitMapScript & unitMap, const std::shared_ptr<UnitScript> & unit) const = 0;
 
 	virtual bool vUpdateUnitOnTouch(UnitScript & unit, const std::shared_ptr<UnitScript> & touchedUnit) const = 0;
@@ -33,7 +31,7 @@ public:
 	virtual bool vCanMoveAlongPath() const = 0;
 	virtual bool vCanUndoMove() const = 0;
 
-	virtual std::vector<GameCommand> vGetCommandsForUnit(const std::shared_ptr<UnitScript> & targetUnit) const = 0;
+	virtual std::vector<GameCommand> vGenerateGameCommandsForUnit(const std::shared_ptr<UnitScript> & targetUnit) const = 0;
 };
 
 #endif // !__UNIT_STATE__

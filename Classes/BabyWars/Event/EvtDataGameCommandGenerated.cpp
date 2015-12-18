@@ -1,12 +1,9 @@
 #include "EvtDataGameCommandGenerated.h"
+#include "../Utilities/GameCommand.h"
 
-std::shared_ptr<const std::vector<GameCommand>> EvtDataGameCommandGenerated::getGameCommands() const
+const std::vector<GameCommand> & EvtDataGameCommandGenerated::getGameCommands() const
 {
-	if (m_GameCommands.expired()) {
-		return nullptr;
-	}
-
-	return m_GameCommands.lock();
+	return m_GameCommands;
 }
 
 const EventType EvtDataGameCommandGenerated::s_EventType{ "EvtDataGameCommandGenerated" };
