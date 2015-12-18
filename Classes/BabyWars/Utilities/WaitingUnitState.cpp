@@ -10,9 +10,52 @@
 #include "UnitStateTypeCode.h"
 #include "WaitingUnitState.h"
 
+//////////////////////////////////////////////////////////////////////////
+//Definition of WaitingUnitStateImpl.
+//////////////////////////////////////////////////////////////////////////
+struct WaitingUnitState::WaitingUnitStateImpl
+{
+	WaitingUnitStateImpl() = default;
+	~WaitingUnitStateImpl() = default;
+
+	void showUnitAppearanceInState(UnitScript & unit) const;
+	void clearUnitAppearanceInState(UnitScript & unit) const;
+};
+
+void WaitingUnitState::WaitingUnitStateImpl::showUnitAppearanceInState(UnitScript & unit) const
+{
+	unit.getRenderComponent()->getSceneNode()->setColor(cocos2d::Color3B(150, 150, 150));
+}
+
+void WaitingUnitState::WaitingUnitStateImpl::clearUnitAppearanceInState(UnitScript & unit) const
+{
+	unit.getRenderComponent()->getSceneNode()->setColor(cocos2d::Color3B(255, 255, 255));
+}
+
+//////////////////////////////////////////////////////////////////////////
+//Implementation of WaitingUnitState.
+//////////////////////////////////////////////////////////////////////////
+WaitingUnitState::WaitingUnitState() : pimpl{ std::make_unique<WaitingUnitStateImpl>() }
+{
+}
+
+WaitingUnitState::~WaitingUnitState()
+{
+}
+
 UnitStateTypeCode WaitingUnitState::vGetStateTypeCode() const
 {
 	return UnitStateTypeCode::Waiting;
+}
+
+void WaitingUnitState::onUnitEnterState(UnitScript & unit) const
+{
+	pimpl->showUnitAppearanceInState(unit);
+}
+
+void WaitingUnitState::onUnitExitState(UnitScript & unit) const
+{
+	pimpl->clearUnitAppearanceInState(unit);
 }
 
 void WaitingUnitState::vUpdateMovingArea(MovingAreaScript & movingArea, const UnitScript & unit) const
@@ -31,16 +74,6 @@ void WaitingUnitState::vUpdateUnitMap(UnitMapScript & unitMap, const std::shared
 bool WaitingUnitState::vUpdateUnitOnTouch(UnitScript & unit, const std::shared_ptr<UnitScript> & touchedUnit) const
 {
 	return false;
-}
-
-void WaitingUnitState::vShowUnitAppearanceInState(UnitScript & unit) const
-{
-	unit.getRenderComponent()->getSceneNode()->setColor(cocos2d::Color3B(150, 150, 150));
-}
-
-void WaitingUnitState::vClearUnitAppearanceInState(UnitScript & unit) const
-{
-	unit.getRenderComponent()->getSceneNode()->setColor(cocos2d::Color3B(255, 255, 255));
 }
 
 bool WaitingUnitState::vCanMoveAlongPath() const

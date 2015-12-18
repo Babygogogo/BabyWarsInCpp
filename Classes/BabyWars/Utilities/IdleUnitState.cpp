@@ -12,6 +12,14 @@ UnitStateTypeCode IdleUnitState::vGetStateTypeCode() const
 	return UnitStateTypeCode::Idle;
 }
 
+void IdleUnitState::onUnitEnterState(UnitScript & unit) const
+{
+}
+
+void IdleUnitState::onUnitExitState(UnitScript & unit) const
+{
+}
+
 void IdleUnitState::vUpdateMovingArea(MovingAreaScript & movingArea, const UnitScript & unit) const
 {
 	movingArea.clearAreaForUnit(unit);
@@ -34,14 +42,6 @@ bool IdleUnitState::vUpdateUnitOnTouch(UnitScript & unit, const std::shared_ptr<
 	}
 
 	return false;
-}
-
-void IdleUnitState::vShowUnitAppearanceInState(UnitScript & unit) const
-{
-}
-
-void IdleUnitState::vClearUnitAppearanceInState(UnitScript & unit) const
-{
 }
 
 bool IdleUnitState::vCanMoveAlongPath() const

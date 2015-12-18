@@ -19,6 +19,9 @@ struct MovingEndUnitState::MovingEndUnitStateImpl
 	MovingEndUnitStateImpl();
 	~MovingEndUnitStateImpl();
 
+	void showUnitAppearanceInState(UnitScript & unit) const;
+	void clearUnitAppearanceInState(UnitScript & unit) const;
+
 	cocos2d::Action * m_Action{ nullptr };
 };
 
@@ -33,6 +36,17 @@ MovingEndUnitState::MovingEndUnitStateImpl::MovingEndUnitStateImpl()
 MovingEndUnitState::MovingEndUnitStateImpl::~MovingEndUnitStateImpl()
 {
 	CC_SAFE_RELEASE_NULL(m_Action);
+}
+
+void MovingEndUnitState::MovingEndUnitStateImpl::showUnitAppearanceInState(UnitScript & unit) const
+{
+	unit.getComponent<ActionComponent>()->runAction(m_Action);
+}
+
+void MovingEndUnitState::MovingEndUnitStateImpl::clearUnitAppearanceInState(UnitScript & unit) const
+{
+	unit.getComponent<ActionComponent>()->stopAction(m_Action);
+	unit.getRenderComponent()->getSceneNode()->setOpacity(255);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -51,6 +65,16 @@ UnitStateTypeCode MovingEndUnitState::vGetStateTypeCode() const
 	return UnitStateTypeCode::MovingEnd;
 }
 
+void MovingEndUnitState::onUnitEnterState(UnitScript & unit) const
+{
+	pimpl->showUnitAppearanceInState(unit);
+}
+
+void MovingEndUnitState::onUnitExitState(UnitScript & unit) const
+{
+	pimpl->clearUnitAppearanceInState(unit);
+}
+
 void MovingEndUnitState::vUpdateMovingArea(MovingAreaScript & movingArea, const UnitScript & unit) const
 {
 	movingArea.clearAreaForUnit(unit);
@@ -64,17 +88,6 @@ bool MovingEndUnitState::vUpdateUnitOnTouch(UnitScript & unit, const std::shared
 {
 	unit.undoMoveAndSetToIdleState();
 	return true;
-}
-
-void MovingEndUnitState::vShowUnitAppearanceInState(UnitScript & unit) const
-{
-	unit.getComponent<ActionComponent>()->runAction(pimpl->m_Action);
-}
-
-void MovingEndUnitState::vClearUnitAppearanceInState(UnitScript & unit) const
-{
-	unit.getComponent<ActionComponent>()->stopAction(pimpl->m_Action);
-	unit.getRenderComponent()->getSceneNode()->setOpacity(255);
 }
 
 bool MovingEndUnitState::vCanMoveAlongPath() const

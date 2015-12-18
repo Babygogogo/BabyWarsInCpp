@@ -9,6 +9,16 @@ UnitStateTypeCode InvalidUnitState::vGetStateTypeCode() const
 	return UnitStateTypeCode::Invalid;
 }
 
+void InvalidUnitState::onUnitEnterState(UnitScript & unit) const
+{
+	assert("InvalidUnitState::onUnitEnterState() the state is invalid.");
+}
+
+void InvalidUnitState::onUnitExitState(UnitScript & unit) const
+{
+	assert("InvalidUnitState::onUnitExitState() the state is invalid.");
+}
+
 void InvalidUnitState::vUpdateMovingArea(MovingAreaScript & movingArea, const UnitScript & unit) const
 {
 	assert("UnitState::vUpdateMovingArea() the unit state is invalid.");
@@ -23,16 +33,6 @@ bool InvalidUnitState::vUpdateUnitOnTouch(UnitScript & unit, const std::shared_p
 {
 	assert("UnitState::updateUnit() the unit state is invalid.");
 	return false;
-}
-
-void InvalidUnitState::vShowUnitAppearanceInState(UnitScript & unit) const
-{
-	assert("UnitState::vShowUnitAppearanceInState() the unit state is invalid.");
-}
-
-void InvalidUnitState::vClearUnitAppearanceInState(UnitScript & unit) const
-{
-	assert("UnitState::vClearUnitAppearanceInState() the unit state is invalid.");
 }
 
 bool InvalidUnitState::vCanMoveAlongPath() const

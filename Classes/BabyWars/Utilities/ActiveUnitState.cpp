@@ -20,6 +20,9 @@ struct ActiveUnitState::ActiveUnitStateImpl
 	ActiveUnitStateImpl();
 	~ActiveUnitStateImpl();
 
+	void showUnitAppearanceInState(UnitScript & unit) const;
+	void clearUnitAppearanceInState(UnitScript & unit) const;
+
 	cocos2d::Action * m_Action{ nullptr };
 };
 
@@ -33,6 +36,17 @@ ActiveUnitState::ActiveUnitStateImpl::ActiveUnitStateImpl()
 ActiveUnitState::ActiveUnitStateImpl::~ActiveUnitStateImpl()
 {
 	CC_SAFE_RELEASE_NULL(m_Action);
+}
+
+void ActiveUnitState::ActiveUnitStateImpl::showUnitAppearanceInState(UnitScript & unit) const
+{
+	unit.getComponent<ActionComponent>()->runAction(m_Action);
+}
+
+void ActiveUnitState::ActiveUnitStateImpl::clearUnitAppearanceInState(UnitScript & unit) const
+{
+	unit.getComponent<ActionComponent>()->stopAction(m_Action);
+	unit.getComponent<TransformComponent>()->setRotation(0);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -49,6 +63,16 @@ ActiveUnitState::~ActiveUnitState()
 UnitStateTypeCode ActiveUnitState::vGetStateTypeCode() const
 {
 	return UnitStateTypeCode::Active;
+}
+
+void ActiveUnitState::onUnitEnterState(UnitScript & unit) const
+{
+	pimpl->showUnitAppearanceInState(unit);
+}
+
+void ActiveUnitState::onUnitExitState(UnitScript & unit) const
+{
+	pimpl->clearUnitAppearanceInState(unit);
 }
 
 void ActiveUnitState::vUpdateMovingArea(MovingAreaScript & movingArea, const UnitScript & unit) const
@@ -75,17 +99,6 @@ bool ActiveUnitState::vUpdateUnitOnTouch(UnitScript & unit, const std::shared_pt
 	}
 
 	return true;
-}
-
-void ActiveUnitState::vShowUnitAppearanceInState(UnitScript & unit) const
-{
-	unit.getComponent<ActionComponent>()->runAction(pimpl->m_Action);
-}
-
-void ActiveUnitState::vClearUnitAppearanceInState(UnitScript & unit) const
-{
-	unit.getComponent<ActionComponent>()->stopAction(pimpl->m_Action);
-	unit.getComponent<TransformComponent>()->setRotation(0);
 }
 
 bool ActiveUnitState::vCanMoveAlongPath() const

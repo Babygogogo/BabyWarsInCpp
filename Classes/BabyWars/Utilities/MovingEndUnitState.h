@@ -18,12 +18,13 @@ public:
 private:
 	virtual UnitStateTypeCode vGetStateTypeCode() const override;
 
+	virtual void onUnitEnterState(UnitScript & unit) const override;
+	virtual void onUnitExitState(UnitScript & unit) const override;
+
 	virtual void vUpdateMovingArea(MovingAreaScript & movingArea, const UnitScript & unit) const override;
 	virtual void vUpdateUnitMap(UnitMapScript & unitMap, const std::shared_ptr<UnitScript> & unit) const override;
 
 	virtual bool vUpdateUnitOnTouch(UnitScript & unit, const std::shared_ptr<UnitScript> & touchedUnit) const override;
-	virtual void vShowUnitAppearanceInState(UnitScript & unit) const override;
-	virtual void vClearUnitAppearanceInState(UnitScript & unit) const override;
 
 	virtual bool vCanMoveAlongPath() const override;
 	virtual bool vCanUndoMove() const override;
