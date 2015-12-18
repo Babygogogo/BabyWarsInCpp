@@ -1,6 +1,5 @@
 #include <cassert>
 
-#include "../Script/UnitMapScript.h"
 #include "../Script/MovingAreaScript.h"
 #include "../Script/UnitScript.h"
 #include "GameCommand.h"
@@ -20,18 +19,14 @@ void IdleUnitState::onUnitExitState(UnitScript & unit) const
 {
 }
 
+bool IdleUnitState::vIsNeedFocusForUnitMap() const
+{
+	return false;
+}
+
 void IdleUnitState::vUpdateMovingArea(MovingAreaScript & movingArea, const UnitScript & unit) const
 {
 	movingArea.clearAreaForUnit(unit);
-}
-
-void IdleUnitState::vUpdateUnitMap(UnitMapScript & unitMap, const std::shared_ptr<UnitScript> & unit) const
-{
-	assert(unit && "UnitState::vUpdateUnitMap() the unit is expired.");
-	if (unitMap.isUnitFocused(*unit)) {
-		unitMap.undoMoveAndSetToIdleStateForFocusedUnit();
-		unitMap.setFocusedUnit(nullptr);
-	}
 }
 
 bool IdleUnitState::vUpdateUnitOnTouch(UnitScript & unit, const std::shared_ptr<UnitScript> & touchedUnit) const

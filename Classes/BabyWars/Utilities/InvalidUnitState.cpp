@@ -19,14 +19,15 @@ void InvalidUnitState::onUnitExitState(UnitScript & unit) const
 	assert("InvalidUnitState::onUnitExitState() the state is invalid.");
 }
 
+bool InvalidUnitState::vIsNeedFocusForUnitMap() const
+{
+	assert("InvalidUnitState::vIsNeedFocusForUnitMap() the state is invalid.");
+	return false;
+}
+
 void InvalidUnitState::vUpdateMovingArea(MovingAreaScript & movingArea, const UnitScript & unit) const
 {
 	assert("UnitState::vUpdateMovingArea() the unit state is invalid.");
-}
-
-void InvalidUnitState::vUpdateUnitMap(UnitMapScript & unitMap, const std::shared_ptr<UnitScript> & unit) const
-{
-	assert("UnitState::vUpdateUnitMap() the unit state is invalid.");
 }
 
 bool InvalidUnitState::vUpdateUnitOnTouch(UnitScript & unit, const std::shared_ptr<UnitScript> & touchedUnit) const

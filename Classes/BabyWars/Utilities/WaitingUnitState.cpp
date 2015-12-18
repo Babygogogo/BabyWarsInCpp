@@ -4,7 +4,6 @@
 
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../Script/MovingAreaScript.h"
-#include "../Script/UnitMapScript.h"
 #include "../Script/UnitScript.h"
 #include "GameCommand.h"
 #include "UnitStateTypeCode.h"
@@ -58,17 +57,14 @@ void WaitingUnitState::onUnitExitState(UnitScript & unit) const
 	pimpl->clearUnitAppearanceInState(unit);
 }
 
+bool WaitingUnitState::vIsNeedFocusForUnitMap() const
+{
+	return false;
+}
+
 void WaitingUnitState::vUpdateMovingArea(MovingAreaScript & movingArea, const UnitScript & unit) const
 {
 	movingArea.clearAreaForUnit(unit);
-}
-
-void WaitingUnitState::vUpdateUnitMap(UnitMapScript & unitMap, const std::shared_ptr<UnitScript> & unit) const
-{
-	assert(unit && "UnitState::vUpdateUnitMap() the unit is expired.");
-	if (unitMap.isUnitFocused(*unit)) {
-		unitMap.setFocusedUnit(nullptr);
-	}
 }
 
 bool WaitingUnitState::vUpdateUnitOnTouch(UnitScript & unit, const std::shared_ptr<UnitScript> & touchedUnit) const

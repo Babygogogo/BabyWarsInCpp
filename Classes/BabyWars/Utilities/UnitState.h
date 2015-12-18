@@ -6,7 +6,6 @@
 
 //Forward declaration.
 class MovingAreaScript;
-class UnitMapScript;
 class UnitScript;
 class GameCommand;
 enum class UnitStateTypeCode;
@@ -21,8 +20,9 @@ public:
 	virtual void onUnitEnterState(UnitScript & unit) const = 0;
 	virtual void onUnitExitState(UnitScript & unit) const = 0;
 
+	virtual bool vIsNeedFocusForUnitMap() const = 0;
+
 	virtual void vUpdateMovingArea(MovingAreaScript & movingArea, const UnitScript & unit) const = 0;
-	virtual void vUpdateUnitMap(UnitMapScript & unitMap, const std::shared_ptr<UnitScript> & unit) const = 0;
 
 	virtual bool vUpdateUnitOnTouch(UnitScript & unit, const std::shared_ptr<UnitScript> & touchedUnit) const = 0;
 

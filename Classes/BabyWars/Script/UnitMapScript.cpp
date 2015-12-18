@@ -61,8 +61,24 @@ void UnitMapScript::UnitMapScriptImpl::onMakeMovingPathEnd(const EvtDataMakeMovi
 
 void UnitMapScript::UnitMapScriptImpl::onUnitStateChangeEnd(const EvtDataUnitStateChangeEnd & e)
 {
-	if (auto currentState = e.getCurrentState()) {
-		currentState->vUpdateUnitMap(*m_OwnerActor.lock()->getComponent<UnitMapScript>(), e.getUnitScript());
+	auto changedUnit = e.getUnitScript();
+	assert(changedUnit && "UnitMapScriptImpl::onUnitStateChangeEnd() the unit is expired.");
+	auto currentState = e.getCurrentState();
+	assert(currentState && "UnitMapScriptImpl::onUnitStateChangeEnd() the current unit state is expired.");
+
+	if (currentState->vIsNeedFocusForUnitMap()) {
+		if (auto currentlyFocusedUnit = getFocusedUnit()) {
+			assert(currentlyFocusedUnit == changedUnit && "UnitMapScriptImpl::onUnitStateChangeEnd() there is already a focused unit when another unit needs to be focused.");
+		}
+		else {
+			m_FocusedUnit = changedUnit;
+		}
+	}
+	else {
+		if (auto currentlyFocusedUnit = getFocusedUnit()) {
+			assert(currentlyFocusedUnit == changedUnit && "UnitMapScriptImpl::onUnitStateChangeEnd() there is already a focused unit which is not the same as the unit that needs to be unfocused.");
+			m_FocusedUnit.reset();
+		}
 	}
 }
 
@@ -201,41 +217,6 @@ void UnitMapScript::loadUnitMap(const char * xmlPath)
 
 		//Load the next row of the unit map.
 		rowElement = rowElement->NextSiblingElement();
-	}
-}
-
-bool UnitMapScript::isUnitFocused(const UnitScript & unit) const
-{
-	if (pimpl->m_FocusedUnit.expired()) {
-		return false;
-	}
-
-	return pimpl->m_FocusedUnit.lock().get() == &unit;
-}
-
-std::shared_ptr<UnitScript> UnitMapScript::getFocusedUnit() const
-{
-	return pimpl->getFocusedUnit();
-}
-
-void UnitMapScript::setFocusedUnit(const std::shared_ptr<UnitScript> & focusedUnit)
-{
-	if (pimpl->getFocusedUnit() != focusedUnit) {
-		pimpl->m_FocusedUnit = focusedUnit;
-	}
-}
-
-void UnitMapScript::undoMoveAndSetToIdleStateForFocusedUnit()
-{
-	if (auto currentlyFocusedUnit = pimpl->getFocusedUnit()) {
-		currentlyFocusedUnit->undoMoveAndSetToIdleState();
-	}
-}
-
-void UnitMapScript::removeFocusedUnitIndexFromMap()
-{
-	if (auto currentlyFocusedUnit = pimpl->getFocusedUnit()) {
-		pimpl->m_UnitMap[currentlyFocusedUnit->getGridIndex()].reset();
 	}
 }
 

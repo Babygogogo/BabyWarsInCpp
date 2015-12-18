@@ -22,13 +22,6 @@ public:
 	//Load a unit map with a xml file. Create unit and unit actors if needed.
 	void loadUnitMap(const char * xmlPath);
 
-	bool isUnitFocused(const UnitScript & unit) const;
-	std::shared_ptr<UnitScript> getFocusedUnit() const;
-	void setFocusedUnit(const std::shared_ptr<UnitScript> & focusedUnit);
-
-	void undoMoveAndSetToIdleStateForFocusedUnit();
-	void removeFocusedUnitIndexFromMap();
-
 	//Getter of the size of the unit map.
 	Matrix2DDimension getMapDimension() const;
 

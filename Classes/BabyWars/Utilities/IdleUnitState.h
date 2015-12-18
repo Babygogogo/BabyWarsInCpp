@@ -21,8 +21,9 @@ private:
 	virtual void onUnitEnterState(UnitScript & unit) const override;
 	virtual void onUnitExitState(UnitScript & unit) const override;
 
+	virtual bool vIsNeedFocusForUnitMap() const override;
+
 	virtual void vUpdateMovingArea(MovingAreaScript & movingArea, const UnitScript & unit) const override;
-	virtual void vUpdateUnitMap(UnitMapScript & unitMap, const std::shared_ptr<UnitScript> & unit) const override;
 
 	virtual bool vUpdateUnitOnTouch(UnitScript & unit, const std::shared_ptr<UnitScript> & touchedUnit) const override;
 

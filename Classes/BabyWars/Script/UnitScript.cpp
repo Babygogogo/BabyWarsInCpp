@@ -181,7 +181,7 @@ const std::shared_ptr<UnitData> & UnitScript::getUnitData() const
 void UnitScript::setGridIndexAndPosition(const GridIndex & gridIndex)
 {
 	//Set the indexes and dispatch event.
-	auto previousIndex = pimpl->m_GridIndex;
+	auto previousIndex = pimpl->m_GridIndexBeforeMoving;
 	pimpl->m_GridIndexBeforeMoving = pimpl->m_GridIndex = gridIndex;
 	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataUnitIndexChangeEnd>(pimpl->m_Script, std::move(previousIndex)));
 

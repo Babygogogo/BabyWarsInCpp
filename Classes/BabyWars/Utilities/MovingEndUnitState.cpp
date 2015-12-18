@@ -75,13 +75,14 @@ void MovingEndUnitState::onUnitExitState(UnitScript & unit) const
 	pimpl->clearUnitAppearanceInState(unit);
 }
 
+bool MovingEndUnitState::vIsNeedFocusForUnitMap() const
+{
+	return true;
+}
+
 void MovingEndUnitState::vUpdateMovingArea(MovingAreaScript & movingArea, const UnitScript & unit) const
 {
 	movingArea.clearAreaForUnit(unit);
-}
-
-void MovingEndUnitState::vUpdateUnitMap(UnitMapScript & unitMap, const std::shared_ptr<UnitScript> & unit) const
-{
 }
 
 bool MovingEndUnitState::vUpdateUnitOnTouch(UnitScript & unit, const std::shared_ptr<UnitScript> & touchedUnit) const

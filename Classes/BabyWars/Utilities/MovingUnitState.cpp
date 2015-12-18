@@ -2,7 +2,6 @@
 
 #include "../Script/MovingAreaScript.h"
 #include "../Script/UnitScript.h"
-#include "../Script/UnitMapScript.h"
 #include "GameCommand.h"
 #include "UnitStateTypeCode.h"
 #include "MovingUnitState.h"
@@ -20,17 +19,14 @@ void MovingUnitState::onUnitExitState(UnitScript & unit) const
 {
 }
 
+bool MovingUnitState::vIsNeedFocusForUnitMap() const
+{
+	return true;
+}
+
 void MovingUnitState::vUpdateMovingArea(MovingAreaScript & movingArea, const UnitScript & unit) const
 {
 	movingArea.clearAreaForUnit(unit);
-}
-
-void MovingUnitState::vUpdateUnitMap(UnitMapScript & unitMap, const std::shared_ptr<UnitScript> & unit) const
-{
-	assert(unit && "UnitState::vUpdateUnitMap() the unit is expired.");
-	assert(unitMap.isUnitFocused(*unit) && "UnitState::vUpdateUnitMap() the moving unit is not the focused unit in map.");
-
-	unitMap.removeFocusedUnitIndexFromMap();
 }
 
 bool MovingUnitState::vUpdateUnitOnTouch(UnitScript & unit, const std::shared_ptr<UnitScript> & touchedUnit) const
