@@ -390,6 +390,15 @@
     <ClCompile Include="..\Classes\BabyWars\Script\TurnManagerScript.cpp">
       <Filter>src\BabyWars\Script\WarScene\TurnManager</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataTurnEnded.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataBeginTurnEffectDisappeared.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataAllUnitsUnfocused.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -727,6 +736,15 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Script\TurnManagerScript.h">
       <Filter>src\BabyWars\Script\WarScene\TurnManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataTurnEnded.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataBeginTurnEffectDisappeared.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataAllUnitsUnfocused.h">
+      <Filter>src\BabyWars\Event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

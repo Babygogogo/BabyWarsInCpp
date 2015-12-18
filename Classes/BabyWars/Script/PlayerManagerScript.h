@@ -12,8 +12,10 @@ public:
 
 	void loadPlayers(const tinyxml2::XMLElement * xmlElement);
 
-	bool hasPlayerWithID(PlayerID id) const;
+	bool hasPlayerID(PlayerID id) const;
+	bool hasPlayerNextOfID(PlayerID id) const;
 	PlayerID getFirstPlayerID() const;
+	PlayerID getNextPlayerID(PlayerID currentPlayerID) const;
 
 	//Type name of the class. Used by the ActorFactory and can not be removed.
 	static const std::string Type;

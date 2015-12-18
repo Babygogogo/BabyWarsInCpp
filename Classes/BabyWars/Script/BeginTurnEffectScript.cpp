@@ -7,6 +7,7 @@
 #include "../../BabyEngine/Actor/ActionComponent.h"
 #include "../../BabyEngine/Utilities/XMLToFiniteTimeAction.h"
 #include "../Event/EvtDataBeginTurn.h"
+#include "../Event/EvtDataBeginTurnEffectDisappeared.h"
 #include "BeginTurnEffectScript.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -71,6 +72,7 @@ void BeginTurnEffectScript::BeginTurnEffectScriptImpl::initDisappearingAction(co
 
 	auto setVisibleFunc = cocos2d::CallFuncN::create([](auto node) {
 		node->setVisible(false);
+		SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataBeginTurnEffectDisappeared>());
 	});
 
 	if (disappearingActionElement) {

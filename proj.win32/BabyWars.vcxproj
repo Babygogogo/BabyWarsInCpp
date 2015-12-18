@@ -190,10 +190,13 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToVec2.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Actor\BabyWarsActorFactory.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataAllUnitsUnfocused.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataBeginTurnEffectDisappeared.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataGameCommandGenerated.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataBeginTurn.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataLoadWarSceneEnd.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataRequestChangeUnitState.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataTurnEnded.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataUnitIndexChangeEnd.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataDragScene.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPathEnd.cpp" />
@@ -296,10 +299,13 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyEngine\Utilities\StringToVector.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToVec2.h" />
     <ClInclude Include="..\Classes\BabyWars\Actor\BabyWarsActorFactory.h" />
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataAllUnitsUnfocused.h" />
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataBeginTurnEffectDisappeared.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataGameCommandGenerated.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataBeginTurn.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataLoadWarSceneEnd.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataRequestChangeUnitState.h" />
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataTurnEnded.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataUnitIndexChangeEnd.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataDragScene.h" />
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPathEnd.h" />

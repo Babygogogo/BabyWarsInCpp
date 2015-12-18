@@ -13,6 +13,7 @@
 #include "../Event/EvtDataUnitStateChangeEnd.h"
 #include "../Event/EvtDataUnitIndexChangeEnd.h"
 #include "../Event/EvtDataMakeMovingPathEnd.h"
+#include "../Event/EvtDataAllUnitsUnfocused.h"
 #include "../Resource/ResourceLoader.h"
 #include "../Utilities/GridIndex.h"
 #include "../Utilities/Matrix2D.h"
@@ -78,6 +79,7 @@ void UnitMapScript::UnitMapScriptImpl::onUnitStateChangeEnd(const EvtDataUnitSta
 		if (auto currentlyFocusedUnit = getFocusedUnit()) {
 			assert(currentlyFocusedUnit == changedUnit && "UnitMapScriptImpl::onUnitStateChangeEnd() there is already a focused unit which is not the same as the unit that needs to be unfocused.");
 			m_FocusedUnit.reset();
+			SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataAllUnitsUnfocused>());
 		}
 	}
 }
