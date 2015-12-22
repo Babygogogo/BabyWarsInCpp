@@ -106,6 +106,9 @@
     <Filter Include="src\BabyWars\Script\WarScene\TurnManager">
       <UniqueIdentifier>{34425d66-04aa-42fd-880d-76a7a4ff5225}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\BabyWars\Utilities\TurnPhase">
+      <UniqueIdentifier>{9353b8a3-4141-4bec-8cdd-505abce3ccbf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -390,14 +393,38 @@
     <ClCompile Include="..\Classes\BabyWars\Script\TurnManagerScript.cpp">
       <Filter>src\BabyWars\Script\WarScene\TurnManager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataTurnEnded.cpp">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataBeginTurnEffectDisappeared.cpp">
       <Filter>src\BabyWars\Event</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Event\EvtDataAllUnitsUnfocused.cpp">
       <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\TurnAndPlayerLabelScript.cpp">
+      <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\InvalidTurnPhase.cpp">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\TurnPhaseFactory.cpp">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\BeginningTurnPhase.cpp">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataTurnPhaseChanged.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataRequestChangeTurnPhase.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\StandbyTurnPhase.cpp">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\MainTurnPhase.cpp">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\EndTurnPhase.cpp">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -737,14 +764,47 @@
     <ClInclude Include="..\Classes\BabyWars\Script\TurnManagerScript.h">
       <Filter>src\BabyWars\Script\WarScene\TurnManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataTurnEnded.h">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataBeginTurnEffectDisappeared.h">
       <Filter>src\BabyWars\Event</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Event\EvtDataAllUnitsUnfocused.h">
       <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\TurnAndPlayerLabelScript.h">
+      <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\TurnPhase.h">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\TurnPhaseTypeCode.h">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\InvalidTurnPhase.h">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\TurnPhaseFactory.h">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\BeginningTurnPhase.h">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\TurnIndex.h">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataTurnPhaseChanged.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataRequestChangeTurnPhase.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\StandbyTurnPhase.h">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\MainTurnPhase.h">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\EndTurnPhase.h">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

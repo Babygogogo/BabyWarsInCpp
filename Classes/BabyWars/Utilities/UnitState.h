@@ -17,8 +17,8 @@ public:
 
 	virtual UnitStateTypeCode vGetStateTypeCode() const = 0;
 
-	virtual void onUnitEnterState(UnitScript & unit) const = 0;
-	virtual void onUnitExitState(UnitScript & unit) const = 0;
+	virtual void vOnEnterState(UnitScript & unit) const = 0;
+	virtual void vOnExitState(UnitScript & unit) const = 0;
 
 	virtual bool vIsNeedFocusForUnitMap() const = 0;
 

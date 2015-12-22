@@ -84,9 +84,9 @@ void UnitScript::UnitScriptImpl::setState(std::shared_ptr<UnitState> && state)
 
 	if (m_State->vGetStateTypeCode() != state->vGetStateTypeCode()) {
 		auto unitScript = m_Script.lock();
-		m_State->onUnitExitState(*unitScript);
+		m_State->vOnExitState(*unitScript);
 		m_State = std::move(state);
-		m_State->onUnitEnterState(*unitScript);
+		m_State->vOnEnterState(*unitScript);
 
 		auto gameCommandEvent = std::make_unique<EvtDataGameCommandGenerated>(m_State->vGenerateGameCommandsForUnit(m_Script.lock()));
 		SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::move(gameCommandEvent));
@@ -95,14 +95,11 @@ void UnitScript::UnitScriptImpl::setState(std::shared_ptr<UnitState> && state)
 
 void UnitScript::UnitScriptImpl::setStateAndAppearanceAndQueueEvent(UnitStateTypeCode newStateCode)
 {
-	if (m_State->vGetStateTypeCode() == newStateCode) {
-		return;
+	if (m_State->vGetStateTypeCode() != newStateCode) {
+		setState(utilities::createUnitState(newStateCode));
+		auto changeStateEvent = std::make_unique<EvtDataUnitStateChangeEnd>(m_Script, m_State);
+		SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::move(changeStateEvent));
 	}
-
-	auto newState = utilities::createUnitState(newStateCode);
-	auto changeStateEvent = std::make_unique<EvtDataUnitStateChangeEnd>(m_Script, m_State, newState);
-	setState(std::move(newState));
-	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::move(changeStateEvent));
 }
 
 void UnitScript::UnitScriptImpl::updateMovingActionForPath(const MovingPath & path)

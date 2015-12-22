@@ -18,6 +18,7 @@
 #include "../Utilities/GridIndex.h"
 #include "../Utilities/Matrix2D.h"
 #include "../Utilities/MovingPath.h"
+#include "../Utilities/UnitState.h"
 #include "UnitMapScript.h"
 #include "UnitScript.h"
 

@@ -64,12 +64,12 @@ UnitStateTypeCode ActiveUnitState::vGetStateTypeCode() const
 	return UnitStateTypeCode::Active;
 }
 
-void ActiveUnitState::onUnitEnterState(UnitScript & unit) const
+void ActiveUnitState::vOnEnterState(UnitScript & unit) const
 {
 	pimpl->showUnitAppearanceInState(unit);
 }
 
-void ActiveUnitState::onUnitExitState(UnitScript & unit) const
+void ActiveUnitState::vOnExitState(UnitScript & unit) const
 {
 	pimpl->clearUnitAppearanceInState(unit);
 }

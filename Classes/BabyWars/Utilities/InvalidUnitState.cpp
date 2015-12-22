@@ -9,14 +9,14 @@ UnitStateTypeCode InvalidUnitState::vGetStateTypeCode() const
 	return UnitStateTypeCode::Invalid;
 }
 
-void InvalidUnitState::onUnitEnterState(UnitScript & unit) const
+void InvalidUnitState::vOnEnterState(UnitScript & unit) const
 {
-	assert("InvalidUnitState::onUnitEnterState() the state is invalid.");
+	assert("InvalidUnitState::vOnEnterState() the state is invalid.");
 }
 
-void InvalidUnitState::onUnitExitState(UnitScript & unit) const
+void InvalidUnitState::vOnExitState(UnitScript & unit) const
 {
-	assert("InvalidUnitState::onUnitExitState() the state is invalid.");
+	assert("InvalidUnitState::vOnExitState() the state is invalid.");
 }
 
 bool InvalidUnitState::vIsNeedFocusForUnitMap() const

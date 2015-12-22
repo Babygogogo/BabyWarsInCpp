@@ -9,6 +9,6 @@
 		</Player>
 	</PlayerManager>
 	<TurnManager>
-		<CurrentTurn TurnIndex="1" PlayerID="1"/>
+		<CurrentTurn TurnIndex="1" TurnPhase="Beginning" PlayerID="1"/>
 	</TurnManager>
 </WarScene>

@@ -11,11 +11,11 @@ UnitStateTypeCode MovingUnitState::vGetStateTypeCode() const
 	return UnitStateTypeCode::Moving;
 }
 
-void MovingUnitState::onUnitEnterState(UnitScript & unit) const
+void MovingUnitState::vOnEnterState(UnitScript & unit) const
 {
 }
 
-void MovingUnitState::onUnitExitState(UnitScript & unit) const
+void MovingUnitState::vOnExitState(UnitScript & unit) const
 {
 }
 

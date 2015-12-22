@@ -6,8 +6,10 @@
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
 #include "../../BabyEngine/Actor/ActionComponent.h"
 #include "../../BabyEngine/Utilities/XMLToFiniteTimeAction.h"
-#include "../Event/EvtDataBeginTurn.h"
-#include "../Event/EvtDataBeginTurnEffectDisappeared.h"
+#include "../Event/EvtDataTurnPhaseChanged.h"
+#include "../Event/EvtDataRequestChangeTurnPhase.h"
+#include "../Utilities/TurnPhaseTypeCode.h"
+#include "../Utilities/TurnPhase.h"
 #include "BeginTurnEffectScript.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -18,7 +20,8 @@ struct BeginTurnEffectScript::BeginTurnEffectScriptImpl
 	BeginTurnEffectScriptImpl() = default;
 	~BeginTurnEffectScriptImpl();
 
-	void onBeginTurn(const EvtDataBeginTurn & e);
+	//void onBeginTurn(const EvtDataBeginTurn & e);
+	void onTurnPhaseChanged(const EvtDataTurnPhaseChanged & e);
 
 	void initAppearingAction(const tinyxml2::XMLElement * appearingActionElement);
 	void initDisappearingAction(const tinyxml2::XMLElement * disappearingActionElement);
@@ -37,11 +40,13 @@ BeginTurnEffectScript::BeginTurnEffectScriptImpl::~BeginTurnEffectScriptImpl()
 	CC_SAFE_RELEASE_NULL(m_DisappearingAction);
 }
 
-void BeginTurnEffectScript::BeginTurnEffectScriptImpl::onBeginTurn(const EvtDataBeginTurn & e)
+void BeginTurnEffectScript::BeginTurnEffectScriptImpl::onTurnPhaseChanged(const EvtDataTurnPhaseChanged & e)
 {
-	if (!m_IsDisplaying) {
-		m_ActionComponent->runAction(m_AppearingAction);
+	auto currentPhase = e.getCurrentTurnPhase();
 
+	if (currentPhase && currentPhase->vGetTypeCode() == TurnPhaseTypeCode::Beginning) {
+		assert(!m_IsDisplaying && "BeginTurnEffectScriptImpl::onTurnPhaseChanged() the effect is displaying when the turn begins, which should not happen.");
+		m_ActionComponent->runAction(m_AppearingAction);
 		m_IsDisplaying = true;
 	}
 }
@@ -72,7 +77,7 @@ void BeginTurnEffectScript::BeginTurnEffectScriptImpl::initDisappearingAction(co
 
 	auto setVisibleFunc = cocos2d::CallFuncN::create([](auto node) {
 		node->setVisible(false);
-		SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataBeginTurnEffectDisappeared>());
+		SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataRequestChangeTurnPhase>(TurnPhaseTypeCode::Standby));
 	});
 
 	if (disappearingActionElement) {
@@ -130,8 +135,8 @@ void BeginTurnEffectScript::vPostInit()
 	pimpl->m_ActionComponent = getComponent<ActionComponent>();
 
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
-	eventDispatcher->vAddListener(EvtDataBeginTurn::s_EventType, pimpl, [this](const IEventData & e) {
-		pimpl->onBeginTurn(static_cast<const EvtDataBeginTurn &>(e));
+	eventDispatcher->vAddListener(EvtDataTurnPhaseChanged::s_EventType, pimpl, [this](const auto & e) {
+		pimpl->onTurnPhaseChanged(static_cast<const EvtDataTurnPhaseChanged &>(e));
 	});
 }
 

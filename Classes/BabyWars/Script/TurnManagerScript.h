@@ -1,8 +1,12 @@
-#ifndef __TURN_MANAGER__
-#define __TURN_MANAGER__
+#ifndef __TURN_MANAGER_SCRIPT__
+#define __TURN_MANAGER_SCRIPT__
 
 #include "../../BabyEngine/Actor/BaseScriptComponent.h"
+#include "../Utilities/PlayerID.h"
+#include "../Utilities/TurnIndex.h"
 
+//Forward declaration.
+enum class TurnPhaseTypeCode;
 class PlayerManagerScript;
 
 class TurnManagerScript : public BaseScriptComponent
@@ -11,11 +15,17 @@ public:
 	TurnManagerScript();
 	~TurnManagerScript();
 
-	void loadTurn(const tinyxml2::XMLElement * xmlElement);
+	void setPlayerManager(const std::shared_ptr<PlayerManagerScript> & playerManagerScript);
 
+	void loadTurn(const tinyxml2::XMLElement * xmlElement);
 	void run();
 
-	void setPlayerManager(const std::shared_ptr<PlayerManagerScript> & playerManagerScript);
+	void updateTurnIndexAndPlayerIdForNewTurn();
+
+	//void setPhaseAndQueueEvent(TurnPhaseTypeCode typeCode);
+	PlayerID getCurrentPlayerID() const;
+	TurnIndex getCurrentTurnIndex() const;
+	TurnPhaseTypeCode getCurrentPhaseTypeCode() const;
 
 	//Type name of the class. Used by the ActorFactory and can not be removed.
 	static const std::string Type;
@@ -36,4 +46,4 @@ private:
 	std::shared_ptr<TurnManagerScriptImpl> pimpl;
 };
 
-#endif // __TURN_MANAGER__
+#endif // __TURN_MANAGER_SCRIPT__

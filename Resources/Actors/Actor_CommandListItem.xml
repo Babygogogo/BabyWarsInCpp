@@ -17,7 +17,7 @@
 				</TitleProperties>
 			</SceneNode>
 			<SceneNodeProperties>
-				<Opacity Value="160">
+				<Opacity Value="140">
 					<!--The value is an int in [0, 255].-->
 				</Opacity>
 				<ContentSize Width="180" Height="40"/>

@@ -4,7 +4,8 @@
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
-#include "../Event/EvtDataBeginTurn.h"
+#include "../Event/EvtDataTurnPhaseChanged.h"
+#include "TurnManagerScript.h"
 #include "BeginTurnEffectLabelScript.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -15,16 +16,18 @@ struct BeginTurnEffectLabelScript::BeginTurnEffectLabelScriptImpl
 	BeginTurnEffectLabelScriptImpl() = default;
 	~BeginTurnEffectLabelScriptImpl() = default;
 
-	void onBeginTurn(const EvtDataBeginTurn & e);
+	void onTurnPhaseChanged(const EvtDataTurnPhaseChanged & e);
 
 	std::shared_ptr<BaseRenderComponent> m_RenderComponent;
 };
 
-void BeginTurnEffectLabelScript::BeginTurnEffectLabelScriptImpl::onBeginTurn(const EvtDataBeginTurn & e)
+void BeginTurnEffectLabelScript::BeginTurnEffectLabelScriptImpl::onTurnPhaseChanged(const EvtDataTurnPhaseChanged & e)
 {
-	auto label = static_cast<cocos2d::Label*>(m_RenderComponent->getSceneNode());
-	const auto text = std::string("Turn: ") + std::to_string(e.getTurnIndex()) + "  Player: " + std::to_string(e.getPlayerID());
+	const auto turnManager = e.getTurnManagerScript();
+	assert(turnManager && "BeginTurnEffectLabelScriptImpl::onTurnPhaseChanged() the turn manager script is nullptr.");
 
+	auto label = static_cast<cocos2d::Label*>(m_RenderComponent->getSceneNode());
+	const auto text = std::string("Turn: ") + std::to_string(turnManager->getCurrentTurnIndex()) + "  Player: " + std::to_string(turnManager->getCurrentPlayerID());
 	label->setString(text);
 }
 
@@ -49,8 +52,8 @@ void BeginTurnEffectLabelScript::vPostInit()
 	pimpl->m_RenderComponent = getRenderComponent();
 
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
-	eventDispatcher->vAddListener(EvtDataBeginTurn::s_EventType, pimpl, [this](const IEventData & e) {
-		pimpl->onBeginTurn(static_cast<const EvtDataBeginTurn &>(e));
+	eventDispatcher->vAddListener(EvtDataTurnPhaseChanged::s_EventType, pimpl, [this](const auto & e) {
+		pimpl->onTurnPhaseChanged(static_cast<const EvtDataTurnPhaseChanged &>(e));
 	});
 }
 

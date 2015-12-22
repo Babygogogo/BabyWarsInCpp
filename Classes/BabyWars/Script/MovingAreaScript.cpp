@@ -15,6 +15,7 @@
 #include "../Resource/UnitData.h"
 #include "../Utilities/GridIndex.h"
 #include "../Utilities/MovingArea.h"
+#include "../Utilities/UnitState.h"
 #include "MovingAreaGridScript.h"
 #include "MovingAreaScript.h"
 #include "TileMapScript.h"

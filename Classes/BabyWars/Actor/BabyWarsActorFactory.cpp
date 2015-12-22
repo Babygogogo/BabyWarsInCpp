@@ -11,6 +11,7 @@
 #include "../Script/TileScript.h"
 #include "../Script/TerrainInfoPanelScript.h"
 #include "../Script/TurnManagerScript.h"
+#include "../Script/TurnAndPlayerLabelScript.h"
 #include "../Script/UnitMapScript.h"
 #include "../Script/UnitScript.h"
 #include "../Script/WarSceneScript.h"
@@ -39,6 +40,7 @@ void BabyWarsActorFactory::vRegisterSpecificComponents()
 	registerComponent<TileScript>();
 	registerComponent<TerrainInfoPanelScript>();
 	registerComponent<TurnManagerScript>();
+	registerComponent<TurnAndPlayerLabelScript>();
 	registerComponent<UnitMapScript>();
 	registerComponent<UnitScript>();
 	registerComponent<WarSceneScript>();

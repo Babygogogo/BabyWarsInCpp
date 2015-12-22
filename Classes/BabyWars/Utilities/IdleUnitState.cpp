@@ -11,11 +11,11 @@ UnitStateTypeCode IdleUnitState::vGetStateTypeCode() const
 	return UnitStateTypeCode::Idle;
 }
 
-void IdleUnitState::onUnitEnterState(UnitScript & unit) const
+void IdleUnitState::vOnEnterState(UnitScript & unit) const
 {
 }
 
-void IdleUnitState::onUnitExitState(UnitScript & unit) const
+void IdleUnitState::vOnExitState(UnitScript & unit) const
 {
 }
 

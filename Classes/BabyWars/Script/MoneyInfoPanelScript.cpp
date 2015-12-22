@@ -15,11 +15,7 @@ struct MoneyInfoPanelScript::MoneyInfoPanelScriptImpl
 {
 	MoneyInfoPanelScriptImpl() = default;
 	~MoneyInfoPanelScriptImpl() = default;
-
-	static std::string s_BackgroundActorPath;
 };
-
-std::string MoneyInfoPanelScript::MoneyInfoPanelScriptImpl::s_BackgroundActorPath;
 
 //////////////////////////////////////////////////////////////////////////
 //Implementation of MoneyInfoPanelScript.
@@ -38,22 +34,12 @@ bool MoneyInfoPanelScript::vInit(const tinyxml2::XMLElement * xmlElement)
 	if (isStaticMemberInitialized)
 		return true;
 
-	auto relatedActorsElement = xmlElement->FirstChildElement("RelatedActorsPath");
-	MoneyInfoPanelScriptImpl::s_BackgroundActorPath = relatedActorsElement->Attribute("Background");
-
 	isStaticMemberInitialized = true;
 	return true;
 }
 
 void MoneyInfoPanelScript::vPostInit()
 {
-	auto ownerActor = m_OwnerActor.lock();
-	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
-	auto sceneNode = ownerActor->getRenderComponent()->getSceneNode();
-
-	auto backgroundActor = gameLogic->createActor(MoneyInfoPanelScriptImpl::s_BackgroundActorPath.c_str());
-	ownerActor->addChild(*backgroundActor);
-	//sceneNode->addChild(backgroundActor->getRenderComponent()->getSceneNode());
 }
 
 const std::string MoneyInfoPanelScript::Type{ "MoneyInfoPanelScript" };

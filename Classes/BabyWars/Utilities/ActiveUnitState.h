@@ -18,8 +18,8 @@ public:
 private:
 	virtual UnitStateTypeCode vGetStateTypeCode() const override;
 
-	virtual void onUnitEnterState(UnitScript & unit) const override;
-	virtual void onUnitExitState(UnitScript & unit) const override;
+	virtual void vOnEnterState(UnitScript & unit) const override;
+	virtual void vOnExitState(UnitScript & unit) const override;
 
 	virtual bool vIsNeedFocusForUnitMap() const override;
 

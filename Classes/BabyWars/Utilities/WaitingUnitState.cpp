@@ -47,12 +47,12 @@ UnitStateTypeCode WaitingUnitState::vGetStateTypeCode() const
 	return UnitStateTypeCode::Waiting;
 }
 
-void WaitingUnitState::onUnitEnterState(UnitScript & unit) const
+void WaitingUnitState::vOnEnterState(UnitScript & unit) const
 {
 	pimpl->showUnitAppearanceInState(unit);
 }
 
-void WaitingUnitState::onUnitExitState(UnitScript & unit) const
+void WaitingUnitState::vOnExitState(UnitScript & unit) const
 {
 	pimpl->clearUnitAppearanceInState(unit);
 }

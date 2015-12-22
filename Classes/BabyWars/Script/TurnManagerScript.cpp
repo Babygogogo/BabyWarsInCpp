@@ -4,13 +4,14 @@
 
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
-#include "../Event/EvtDataBeginTurn.h"
-#include "../Event/EvtDataTurnEnded.h"
 #include "../Event/EvtDataAllUnitsUnfocused.h"
-#include "../Event/EvtDataBeginTurnEffectDisappeared.h"
 #include "../Event/EvtDataGameCommandGenerated.h"
+#include "../Event/EvtDataRequestChangeTurnPhase.h"
+#include "../Event/EvtDataTurnPhaseChanged.h"
 #include "../Utilities/GameCommand.h"
-#include "../Utilities/PlayerID.h"
+#include "../Utilities/TurnPhase.h"
+#include "../Utilities/TurnPhaseFactory.h"
+#include "../Utilities/TurnPhaseTypeCode.h"
 #include "PlayerManagerScript.h"
 #include "TurnManagerScript.h"
 
@@ -22,58 +23,61 @@ struct TurnManagerScript::TurnManagerScriptImpl
 	TurnManagerScriptImpl() = default;
 	~TurnManagerScriptImpl() = default;
 
-	void onTurnEnded(const EvtDataTurnEnded & e);
-	void onBeginTurnEffectDisappeared(const EvtDataBeginTurnEffectDisappeared & e);
+	void onRequestChangeTurnPhase(const EvtDataRequestChangeTurnPhase & e);
 	void onAllUnitsUnfocused(const EvtDataAllUnitsUnfocused & e);
+
+	void setPhaseAndQueueEvent(TurnPhaseTypeCode typeCode);
+	void queueEventTurnPhaseChanged() const;
 
 	bool isTurnIndexValid() const;
 	bool isPlayerIdValid() const;
+	bool isTurnPhaseValid() const;
 
-	bool hasNextPlayerID(PlayerID currentPlayerID) const;
-	PlayerID getNextPlayerID(PlayerID currentPlayerID) const;
-	PlayerID getFirstPlayerID() const;
-	int getNextTurnIndex(int currentTurnIndex) const;
+	bool updateTurnIndexAndPlayerIdForNewTurn();
+	TurnIndex getNextTurnIndex(TurnIndex currentTurnIndex) const;
 
-	void initAsFirstTurnForFirstPlayer();
+	void setPhase(std::shared_ptr<TurnPhase> && turnPhase);
 
 	std::vector<GameCommand> generateGameCommands() const;
 
-	int m_CurrentTurnIndex{};
+	TurnIndex m_CurrentTurnIndex{ INVALID_TURN_INDEX };
 	PlayerID m_CurrentPlayerID{ INVALID_PLAYER_ID };
 
+	std::shared_ptr<TurnPhase> m_TurnPhase{ utilities::createTurnPhaseWithTypeCode(TurnPhaseTypeCode::Invalid) };
+
+	std::weak_ptr<TurnManagerScript> m_SelfScript;
 	std::weak_ptr<PlayerManagerScript> m_PlayerManagerScript;
 };
 
-void TurnManagerScript::TurnManagerScriptImpl::onTurnEnded(const EvtDataTurnEnded & e)
+void TurnManagerScript::TurnManagerScriptImpl::onRequestChangeTurnPhase(const EvtDataRequestChangeTurnPhase & e)
 {
-	assert(m_CurrentPlayerID == e.getPlayerID() && "TurnManagerScriptImpl::onTurnEnded() the player id is not the same.");
-	assert(m_CurrentTurnIndex == e.getTurnIndex() && "TurnManagerScriptImpl::onTurnEnded() the turn index is not the same.");
+	assert(m_TurnPhase && "TurnManagerScriptImpl::onRequestChangeTurnPhase() the current turn phase is nullptr.");
+	const auto newPhaseTypeCode = e.getTurnPhaseTypeCode();
+	if (m_TurnPhase->vCanEnterNewPhase(newPhaseTypeCode)) {
+		setPhaseAndQueueEvent(newPhaseTypeCode);
 
-	if (hasNextPlayerID(m_CurrentPlayerID)) {
-		m_CurrentPlayerID = getNextPlayerID(m_CurrentPlayerID);
+		auto eventGameCommandGenerated = std::make_unique<EvtDataGameCommandGenerated>(m_TurnPhase->vGenerateGameCommands());
+		SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::move(eventGameCommandGenerated));
 	}
-	else {
-		m_CurrentPlayerID = getFirstPlayerID();
-		m_CurrentTurnIndex = getNextTurnIndex(m_CurrentTurnIndex);
-	}
-
-	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
-	eventDispatcher->vQueueEvent(std::make_unique<EvtDataGameCommandGenerated>(std::vector<GameCommand>{}));
-
-	auto beginTurnEvent = std::make_unique<EvtDataBeginTurn>(m_CurrentTurnIndex, m_CurrentPlayerID);
-	eventDispatcher->vQueueEvent(std::move(beginTurnEvent));
-}
-
-void TurnManagerScript::TurnManagerScriptImpl::onBeginTurnEffectDisappeared(const EvtDataBeginTurnEffectDisappeared & e)
-{
-	auto commandGeneratedEvent = std::make_unique<EvtDataGameCommandGenerated>(generateGameCommands());
-	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::move(commandGeneratedEvent));
 }
 
 void TurnManagerScript::TurnManagerScriptImpl::onAllUnitsUnfocused(const EvtDataAllUnitsUnfocused & e)
 {
 	auto commandGeneratedEvent = std::make_unique<EvtDataGameCommandGenerated>(generateGameCommands());
 	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::move(commandGeneratedEvent));
+}
+
+void TurnManagerScript::TurnManagerScriptImpl::setPhaseAndQueueEvent(TurnPhaseTypeCode typeCode)
+{
+	if (m_TurnPhase->vGetTypeCode() != typeCode) {
+		setPhase(utilities::createTurnPhaseWithTypeCode(typeCode));
+		queueEventTurnPhaseChanged();
+	}
+}
+
+void TurnManagerScript::TurnManagerScriptImpl::queueEventTurnPhaseChanged() const
+{
+	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataTurnPhaseChanged>(m_SelfScript, m_TurnPhase));
 }
 
 bool TurnManagerScript::TurnManagerScriptImpl::isTurnIndexValid() const
@@ -87,35 +91,38 @@ bool TurnManagerScript::TurnManagerScriptImpl::isPlayerIdValid() const
 	return m_PlayerManagerScript.lock()->hasPlayerID(m_CurrentPlayerID);
 }
 
-bool TurnManagerScript::TurnManagerScriptImpl::hasNextPlayerID(PlayerID currentPlayerID) const
+bool TurnManagerScript::TurnManagerScriptImpl::isTurnPhaseValid() const
 {
-	assert(!m_PlayerManagerScript.expired() && "TurnManagerScriptImpl::hasNextPlayerID() the player manager is expired.");
-	return m_PlayerManagerScript.lock()->hasPlayerNextOfID(currentPlayerID);
+	return m_TurnPhase && m_TurnPhase->vGetTypeCode() != TurnPhaseTypeCode::Invalid;
 }
 
-PlayerID TurnManagerScript::TurnManagerScriptImpl::getNextPlayerID(PlayerID currentPlayerID) const
+bool TurnManagerScript::TurnManagerScriptImpl::updateTurnIndexAndPlayerIdForNewTurn()
 {
-	assert(!m_PlayerManagerScript.expired() && "TurnManagerScriptImpl::getNextPlayerID() the player manager is expired.");
-	return m_PlayerManagerScript.lock()->getNextPlayerID(currentPlayerID);
+	assert(!m_PlayerManagerScript.expired() && "TurnManagerScriptImpl::updateTurnIndexAndPlayerIdForNewTurn() the player manager script is expired.");
+	auto playerManager = m_PlayerManagerScript.lock();
+
+	if (playerManager->hasPlayerNextOfID(m_CurrentPlayerID)) {
+		m_CurrentPlayerID = playerManager->getNextPlayerID(m_CurrentPlayerID);
+	}
+	else {
+		m_CurrentPlayerID = playerManager->getFirstPlayerID();
+		m_CurrentTurnIndex = getNextTurnIndex(m_CurrentTurnIndex);
+	}
+
+	//#TODO: Return false if can't update the values.
+	return true;
 }
 
-PlayerID TurnManagerScript::TurnManagerScriptImpl::getFirstPlayerID() const
-{
-	assert(!m_PlayerManagerScript.expired() && "TurnManagerScriptImpl::getFirstPlayerID() the player manager is expired.");
-	return m_PlayerManagerScript.lock()->getFirstPlayerID();
-}
-
-int TurnManagerScript::TurnManagerScriptImpl::getNextTurnIndex(int currentTurnIndex) const
+TurnIndex TurnManagerScript::TurnManagerScriptImpl::getNextTurnIndex(TurnIndex currentTurnIndex) const
 {
 	return currentTurnIndex + 1;
 }
 
-void TurnManagerScript::TurnManagerScriptImpl::initAsFirstTurnForFirstPlayer()
+void TurnManagerScript::TurnManagerScriptImpl::setPhase(std::shared_ptr<TurnPhase> && turnPhase)
 {
-	assert(!m_PlayerManagerScript.expired() && "TurnManagerScriptImpl::initAsFirstTurnForFirstPlayer() the player manager script is expired or not set.");
-
-	m_CurrentTurnIndex = 1;
-	m_CurrentPlayerID = m_PlayerManagerScript.lock()->getFirstPlayerID();
+	assert(turnPhase && "TurnManagerScriptImpl::setPhase() the phase is nullptr.");
+	m_TurnPhase = turnPhase;
+	m_TurnPhase->vOnEnterPhase(*m_SelfScript.lock());
 }
 
 std::vector<GameCommand> TurnManagerScript::TurnManagerScriptImpl::generateGameCommands() const
@@ -123,8 +130,7 @@ std::vector<GameCommand> TurnManagerScript::TurnManagerScriptImpl::generateGameC
 	auto commands = std::vector<GameCommand>{};
 
 	commands.emplace_back("End Turn", [turnIndex = m_CurrentTurnIndex, playerID = m_CurrentPlayerID]() {
-		auto turnEndedEvent = std::make_unique<EvtDataTurnEnded>(turnIndex, playerID);
-		SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::move(turnEndedEvent));
+		SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataRequestChangeTurnPhase>(TurnPhaseTypeCode::End));
 	});
 
 	return commands;
@@ -153,20 +159,43 @@ void TurnManagerScript::loadTurn(const tinyxml2::XMLElement * xmlElement)
 	const auto currentTurnElement = xmlElement->FirstChildElement("CurrentTurn");
 	pimpl->m_CurrentTurnIndex = currentTurnElement->IntAttribute("TurnIndex");
 	pimpl->m_CurrentPlayerID = currentTurnElement->IntAttribute("PlayerID");
+	pimpl->m_TurnPhase = utilities::createTurnPhaseWithXML(currentTurnElement);
 }
 
 void TurnManagerScript::run()
 {
-	if (!pimpl->isTurnIndexValid()) {
-		pimpl->initAsFirstTurnForFirstPlayer();
-	}
-
 	assert(pimpl->isTurnIndexValid() && "TurnManagerScript::run() the turn index is invalid.");
 	assert(pimpl->isPlayerIdValid() && "TurnManagerScript::run() the player id is invalid.");
+	assert(pimpl->isTurnPhaseValid() && "TurnManagerScript::run() the turn phase is invalid.");
 
-	auto beginTurnEvent = std::make_unique<EvtDataBeginTurn>(pimpl->m_CurrentTurnIndex, pimpl->m_CurrentPlayerID);
-	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::move(beginTurnEvent));
+	pimpl->queueEventTurnPhaseChanged();
 }
+
+void TurnManagerScript::updateTurnIndexAndPlayerIdForNewTurn()
+{
+	pimpl->updateTurnIndexAndPlayerIdForNewTurn();
+}
+
+PlayerID TurnManagerScript::getCurrentPlayerID() const
+{
+	return pimpl->m_CurrentPlayerID;
+}
+
+TurnIndex TurnManagerScript::getCurrentTurnIndex() const
+{
+	return pimpl->m_CurrentTurnIndex;
+}
+
+TurnPhaseTypeCode TurnManagerScript::getCurrentPhaseTypeCode() const
+{
+	assert(pimpl->m_TurnPhase && "TurnManagerScript::getCurrentPhaseTypeCode() the turn phase is nullptr.");
+	return pimpl->m_TurnPhase->vGetTypeCode();
+}
+
+//void TurnManagerScript::setPhaseAndQueueEvent(TurnPhaseTypeCode typeCode)
+//{
+//	pimpl->setPhaseAndQueueEvent(typeCode);
+//}
 
 bool TurnManagerScript::vInit(const tinyxml2::XMLElement *xmlElement)
 {
@@ -175,12 +204,11 @@ bool TurnManagerScript::vInit(const tinyxml2::XMLElement *xmlElement)
 
 void TurnManagerScript::vPostInit()
 {
+	pimpl->m_SelfScript = getComponent<TurnManagerScript>();
+
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
-	eventDispatcher->vAddListener(EvtDataTurnEnded::s_EventType, pimpl, [this](const auto & e) {
-		pimpl->onTurnEnded(static_cast<const EvtDataTurnEnded &>(e));
-	});
-	eventDispatcher->vAddListener(EvtDataBeginTurnEffectDisappeared::s_EventType, pimpl, [this](const auto & e) {
-		pimpl->onBeginTurnEffectDisappeared(static_cast<const EvtDataBeginTurnEffectDisappeared &>(e));
+	eventDispatcher->vAddListener(EvtDataRequestChangeTurnPhase::s_EventType, pimpl, [this](const auto & e) {
+		pimpl->onRequestChangeTurnPhase(static_cast<const EvtDataRequestChangeTurnPhase &>(e));
 	});
 	eventDispatcher->vAddListener(EvtDataAllUnitsUnfocused::s_EventType, pimpl, [this](const auto & e) {
 		pimpl->onAllUnitsUnfocused(static_cast<const EvtDataAllUnitsUnfocused &>(e));

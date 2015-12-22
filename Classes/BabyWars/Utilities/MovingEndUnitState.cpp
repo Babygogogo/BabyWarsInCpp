@@ -65,12 +65,12 @@ UnitStateTypeCode MovingEndUnitState::vGetStateTypeCode() const
 	return UnitStateTypeCode::MovingEnd;
 }
 
-void MovingEndUnitState::onUnitEnterState(UnitScript & unit) const
+void MovingEndUnitState::vOnEnterState(UnitScript & unit) const
 {
 	pimpl->showUnitAppearanceInState(unit);
 }
 
-void MovingEndUnitState::onUnitExitState(UnitScript & unit) const
+void MovingEndUnitState::vOnExitState(UnitScript & unit) const
 {
 	pimpl->clearUnitAppearanceInState(unit);
 }

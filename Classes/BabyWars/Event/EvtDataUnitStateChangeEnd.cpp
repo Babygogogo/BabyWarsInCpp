@@ -8,15 +8,6 @@ std::shared_ptr<UnitScript> EvtDataUnitStateChangeEnd::getUnitScript() const
 	return m_UnitScript.lock();
 }
 
-std::shared_ptr<UnitState> EvtDataUnitStateChangeEnd::getPreviousState() const
-{
-	if (m_PreviousState.expired()) {
-		return nullptr;
-	}
-
-	return m_PreviousState.lock();
-}
-
 std::shared_ptr<UnitState> EvtDataUnitStateChangeEnd::getCurrentState() const
 {
 	if (m_CurrentState.expired()) {
