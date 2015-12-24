@@ -131,7 +131,7 @@ MovingAreaScript::MovingAreaScriptImpl::GridActors MovingAreaScript::MovingAreaS
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
 
 	for (const auto & index : logicalArea.getAllIndexesInArea()) {
-		auto gridActor = gameLogic->createActor(s_MovingAreaGridActorPath.c_str());
+		auto gridActor = gameLogic->createActorAndChildren(s_MovingAreaGridActorPath.c_str());
 		auto gridScript = gridActor->getComponent<MovingAreaGridScript>();
 		gridScript->setGridIndexAndPosition(index);
 

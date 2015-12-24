@@ -28,9 +28,9 @@ struct BaseActorFactory::BaseActorFactoryImpl
 	bool __createAndAttachOneComponentToActor(const std::shared_ptr<Actor> & actor, const tinyxml2::XMLElement * componentElement) const;
 	std::shared_ptr<ActorComponent> ___createComponent(const tinyxml2::XMLElement * componentElement) const;
 
-	void _modifyActor(const std::shared_ptr<Actor> & actor, const tinyxml2::XMLElement * overrides) const;
-	void __modifyComponentsForActor(const std::shared_ptr<Actor> & actor, const tinyxml2::XMLElement * componentsElement) const;
-	void _postInitActor(Actor & actor);
+	void modifyActor(const std::shared_ptr<Actor> & actor, const tinyxml2::XMLElement * overrides) const;
+	void _modifyComponentsForActor(const std::shared_ptr<Actor> & actor, const tinyxml2::XMLElement * componentsElement) const;
+	void postInitActor(Actor & actor);
 
 	ActorID getAvaliableActorID() const;
 	void updateActorID();
@@ -51,8 +51,6 @@ std::shared_ptr<Actor> BaseActorFactory::BaseActorFactoryImpl::createSingleActor
 	if (!_createAndAttachAllComponentsToActor(actor, actorElement->FirstChildElement("Components"))) {
 		return nullptr;
 	}
-
-	_postInitActor(*actor);
 
 	return actor;
 }
@@ -131,17 +129,17 @@ std::shared_ptr<ActorComponent> BaseActorFactory::BaseActorFactoryImpl::___creat
 	return component;
 }
 
-void BaseActorFactory::BaseActorFactoryImpl::_modifyActor(const std::shared_ptr<Actor> & actor, const tinyxml2::XMLElement * overrides) const
+void BaseActorFactory::BaseActorFactoryImpl::modifyActor(const std::shared_ptr<Actor> & actor, const tinyxml2::XMLElement * overrides) const
 {
 	if (!overrides) {
 		return;
 	}
 
-	assert(actor && "BaseActorFactoryImpl::_modifyActor() the actor is nullptr.");
-	__modifyComponentsForActor(actor, overrides->FirstChildElement("Components"));
+	assert(actor && "BaseActorFactoryImpl::modifyActor() the actor is nullptr.");
+	_modifyComponentsForActor(actor, overrides->FirstChildElement("Components"));
 }
 
-void BaseActorFactory::BaseActorFactoryImpl::__modifyComponentsForActor(const std::shared_ptr<Actor> & actor, const tinyxml2::XMLElement * componentsElement) const
+void BaseActorFactory::BaseActorFactoryImpl::_modifyComponentsForActor(const std::shared_ptr<Actor> & actor, const tinyxml2::XMLElement * componentsElement) const
 {
 	if (!actor || !componentsElement) {
 		return;
@@ -161,7 +159,7 @@ void BaseActorFactory::BaseActorFactoryImpl::__modifyComponentsForActor(const st
 	}
 }
 
-void BaseActorFactory::BaseActorFactoryImpl::_postInitActor(Actor & actor)
+void BaseActorFactory::BaseActorFactoryImpl::postInitActor(Actor & actor)
 {
 	//If you want to post-init the components in some order, do it here.
 	actor.postInit();
@@ -233,13 +231,15 @@ std::vector<std::shared_ptr<Actor>> BaseActorFactory::createActorAndChildren(con
 		}
 	}
 
-	modifyActor(parentActor, overrides);
+	pimpl->modifyActor(parentActor, overrides);
+	pimpl->postInitActor(*parentActor);
+
 	return actorVector;
 }
 
 void BaseActorFactory::modifyActor(const std::shared_ptr<Actor> & actor, const tinyxml2::XMLElement *overrides)
 {
-	pimpl->_modifyActor(actor, overrides);
+	pimpl->modifyActor(actor, overrides);
 }
 
 void BaseActorFactory::registerGeneralComponents()

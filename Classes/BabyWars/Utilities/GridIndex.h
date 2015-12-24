@@ -4,9 +4,14 @@
 #include <vector>
 
 //Forward declaration.
-namespace cocos2d {
+namespace cocos2d
+{
 	class Vec2;
 	class Size;
+}
+namespace tinyxml2
+{
+	class XMLElement;
 }
 enum class AdjacentDirection;
 
@@ -22,6 +27,7 @@ struct GridIndex
 
 	GridIndex(int rowIndex, int colIndex);
 	GridIndex(const cocos2d::Vec2 & position, const cocos2d::Size & gridSize);
+	GridIndex(const tinyxml2::XMLElement * xmlElement);
 
 	//////////////////////////////////////////////////////////////////////////
 	//Operators.

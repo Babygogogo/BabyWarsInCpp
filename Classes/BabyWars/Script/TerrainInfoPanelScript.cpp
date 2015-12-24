@@ -52,7 +52,7 @@ void TerrainInfoPanelScript::vPostInit()
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
 	auto sceneNode = ownerActor->getRenderComponent()->getSceneNode();
 
-	auto backgroundActor = gameLogic->createActor(TerrainInfoPanelScriptImpl::s_BackgroundActorPath.c_str());
+	auto backgroundActor = gameLogic->createActorAndChildren(TerrainInfoPanelScriptImpl::s_BackgroundActorPath.c_str());
 	ownerActor->addChild(*backgroundActor);
 	//sceneNode->addChild(backgroundActor->getRenderComponent()->getSceneNode());
 }

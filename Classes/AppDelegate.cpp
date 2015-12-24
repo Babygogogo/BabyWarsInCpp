@@ -51,7 +51,7 @@ void AppDelegate::AppDelegateImpl::initGame()
 	humanView->init(humanView);
 	gameLogic->setHumanView(humanView);
 
-	auto initialActor = gameLogic->createActor(resourceLoader->getInitialScenePath().c_str());
+	auto initialActor = gameLogic->createActorAndChildren(resourceLoader->getInitialScenePath().c_str());
 	auto warSceneController = std::make_unique<TouchAndDragController>();
 	warSceneController->setTarget(initialActor);
 	warSceneController->setEnable(true);

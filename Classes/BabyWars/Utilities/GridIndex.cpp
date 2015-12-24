@@ -1,4 +1,5 @@
 #include "cocos2d.h"
+#include "cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "GridIndex.h"
 #include "AdjacentDirection.h"
@@ -27,6 +28,15 @@ GridIndex::GridIndex(const cocos2d::Vec2 & position, const cocos2d::Size & gridS
 
 	rowIndex = static_cast<int>(position.y / gridSize.height);
 	colIndex = static_cast<int>(position.x / gridSize.width);
+}
+
+GridIndex::GridIndex(const tinyxml2::XMLElement * xmlElement)
+{
+	assert(xmlElement && "GridIndex::GridIndex() the xml element is nullptr.");
+	if (xmlElement) {
+		rowIndex = xmlElement->IntAttribute("Row");
+		colIndex = xmlElement->IntAttribute("Column");
+	}
 }
 
 bool GridIndex::operator==(const GridIndex & rhs) const

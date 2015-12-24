@@ -123,21 +123,21 @@ void WarSceneScript::vPostInit()
 	auto selfSceneNode = ownerActor->getRenderComponent()->getSceneNode();
 
 	//Create and add the war field.
-	auto warFieldActor = gameLogic->createActor(WarSceneScriptImpl::s_WarFieldActorPath.c_str());
+	auto warFieldActor = gameLogic->createActorAndChildren(WarSceneScriptImpl::s_WarFieldActorPath.c_str());
 	pimpl->m_WarFieldScript = warFieldActor->getComponent<WarFieldScript>();
 	ownerActor->addChild(*warFieldActor);
 	//selfSceneNode->addChild(warFieldActor->getRenderComponent()->getSceneNode());
 
-	auto warSceneHUDActor = gameLogic->createActor(WarSceneScriptImpl::s_WarSceneHUDActorPath.c_str());
+	auto warSceneHUDActor = gameLogic->createActorAndChildren(WarSceneScriptImpl::s_WarSceneHUDActorPath.c_str());
 	pimpl->m_WarSceneHUDScript = warSceneHUDActor->getComponent<WarSceneHUDScript>();
 	ownerActor->addChild(*warSceneHUDActor);
 	//selfSceneNode->addChild(warSceneHUDActor->getRenderComponent()->getSceneNode());
 
-	auto playerManagerActor = gameLogic->createActor(WarSceneScriptImpl::s_PlayerManagerActorPath.c_str());
+	auto playerManagerActor = gameLogic->createActorAndChildren(WarSceneScriptImpl::s_PlayerManagerActorPath.c_str());
 	pimpl->m_PlayerManagerScript = playerManagerActor->getComponent<PlayerManagerScript>();
 	ownerActor->addChild(*playerManagerActor);
 
-	auto turnManagerActor = gameLogic->createActor(WarSceneScriptImpl::s_TurnManagerActorPath.c_str());
+	auto turnManagerActor = gameLogic->createActorAndChildren(WarSceneScriptImpl::s_TurnManagerActorPath.c_str());
 	pimpl->m_TurnManagerScript = turnManagerActor->getComponent<TurnManagerScript>();
 	pimpl->m_TurnManagerScript.lock()->setPlayerManager(pimpl->m_PlayerManagerScript.lock());
 	ownerActor->addChild(*turnManagerActor);

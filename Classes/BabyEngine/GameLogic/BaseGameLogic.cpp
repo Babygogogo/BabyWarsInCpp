@@ -4,6 +4,8 @@
 #include <mutex>
 #include <functional>
 
+#include "cocos2d/external/tinyxml2/tinyxml2.h"
+
 #include "BaseGameLogic.h"
 #include "../Actor/Actor.h"
 #include "../Actor/BaseActorFactory.h"
@@ -147,23 +149,30 @@ std::shared_ptr<Actor> BaseGameLogic::getActor(ActorID actorId) const
 	return actorIter->second;
 }
 
-std::shared_ptr<Actor> BaseGameLogic::createActor(const char *resourceFile, tinyxml2::XMLElement *overrides /*= nullptr*/)
+std::shared_ptr<Actor> BaseGameLogic::createActorAndChildren(const char * resourceFile, const tinyxml2::XMLElement * overrides /*= nullptr*/)
 {
-	//Try to create the actor.
-	auto newActors = pimpl->m_ActorFactory->createActorAndChildren(resourceFile, overrides);
+	//Load the resource file. Assert if failed.
+	tinyxml2::XMLDocument xmlDoc;
+	xmlDoc.LoadFile(resourceFile);
+	const auto rootElement = xmlDoc.RootElement();
+	assert(rootElement && "BaseGameLogic::createActorAndChildren() can't load the xml file.");
 
-	//Failed to create the actor; return nullptr.
+	return createActorAndChildren(rootElement, overrides);
+}
+
+std::shared_ptr<Actor> BaseGameLogic::createActorAndChildren(const tinyxml2::XMLElement * actorElement, const tinyxml2::XMLElement * overrides /*= nullptr*/)
+{
+	auto newActors = pimpl->m_ActorFactory->createActorAndChildren(actorElement, overrides);
 	if (newActors.empty()) {
-		static const auto nullActor = std::shared_ptr<Actor>(nullptr);
-		return nullActor;
+		return nullptr;
 	}
 
 	//Succeed to create the actor. Add it to actor map and return it.
 	//std::map::emplace doesn't invalidate any iterators so it's safe to ignore the lock.
 	auto parentActor = newActors[0];
-	for (auto && newActor : newActors) {
+	for (auto && newActor : std::move(newActors)) {
 		auto emplaceResult = pimpl->m_Actors.emplace(std::make_pair(newActor->getID(), std::move(newActor)));
-		assert(emplaceResult.second && "GameLogic::createActor() fail to emplace a new actor into the actor list.");
+		assert(emplaceResult.second && "GameLogic::createActorAndChildren() fail to emplace a new actor into the actor list.");
 	}
 
 	return parentActor;

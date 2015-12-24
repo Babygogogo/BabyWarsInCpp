@@ -19,6 +19,7 @@
 #include "../Utilities/UnitStateTypeCode.h"
 #include "../Utilities/UnitStateFactory.h"
 #include "../Utilities/GameCommand.h"
+#include "../Utilities/XMLToUnitStateTypeCode.h"
 #include "UnitScript.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -30,6 +31,9 @@ struct UnitScript::UnitScriptImpl
 	~UnitScriptImpl();
 
 	//void onRequestChangeUnitState(const EvtDataRequestChangeUnitState & e);
+
+	void loadUnitDataFromXML(const tinyxml2::XMLElement * xmlElement);
+	void initAppearance();
 
 	bool canSetState(UnitStateTypeCode stateCode) const;
 	void setState(std::shared_ptr<UnitState> && state);
@@ -73,6 +77,26 @@ UnitScript::UnitScriptImpl::~UnitScriptImpl()
 //	}
 //}
 
+void UnitScript::UnitScriptImpl::loadUnitDataFromXML(const tinyxml2::XMLElement * xmlElement)
+{
+	assert(xmlElement && "UnitScriptImpl::loadUnitDataFromXML() the xml element is nullptr.");
+	const auto unitDataID = xmlElement->IntAttribute("ID");
+	m_UnitData = SingletonContainer::getInstance()->get<ResourceLoader>()->getUnitData(unitDataID);
+	assert(m_UnitData && "UnitScriptImpl::loadUnitDataFromXML() can't get the unit data with the id that specified in the xml, possibly because the id is invalid.");
+}
+
+void UnitScript::UnitScriptImpl::initAppearance()
+{
+	const auto resourceLoader = SingletonContainer::getInstance()->get<ResourceLoader>();
+
+	//#TODO: This only shows the first frame of the animation. Update the code to show the whole animation.
+	auto sceneNode = static_cast<cocos2d::Sprite*>(m_RenderComponent->getSceneNode());
+	sceneNode->setSpriteFrame(m_UnitData->getAnimation()->getFrames().at(0)->getSpriteFrame());
+
+	//Scale the sprite so that it meets the real game grid size.
+	m_TransformComponent->setScaleToSize(resourceLoader->getDesignGridSize());
+}
+
 bool UnitScript::UnitScriptImpl::canSetState(UnitStateTypeCode stateCode) const
 {
 	return true;
@@ -95,7 +119,7 @@ void UnitScript::UnitScriptImpl::setState(std::shared_ptr<UnitState> && state)
 
 void UnitScript::UnitScriptImpl::setStateAndAppearanceAndQueueEvent(UnitStateTypeCode newStateCode)
 {
-	if (m_State->vGetStateTypeCode() != newStateCode) {
+	if (!m_State || m_State->vGetStateTypeCode() != newStateCode) {
 		setState(utilities::createUnitState(newStateCode));
 		auto changeStateEvent = std::make_unique<EvtDataUnitStateChangeEnd>(m_Script, m_State);
 		SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::move(changeStateEvent));
@@ -146,28 +170,18 @@ bool UnitScript::onInputTouch(const EvtDataInputTouch & touch, const std::shared
 	return pimpl->m_State->vUpdateUnitOnTouch(*this, touchedUnit);
 }
 
-void UnitScript::loadUnit(tinyxml2::XMLElement * xmlElement)
+void UnitScript::loadUnit(const tinyxml2::XMLElement * xmlElement)
 {
 	//////////////////////////////////////////////////////////////////////////
 	//Load and set the unit data.
-	auto unitDataID = xmlElement->IntAttribute("UnitDataID");
-	const auto resourceLoader = SingletonContainer::getInstance()->get<ResourceLoader>();
-	auto unitData = resourceLoader->getUnitData(unitDataID);
-	assert(unitData && "UnitScript::setUnitData() with nullptr.");
+	pimpl->loadUnitDataFromXML(xmlElement->FirstChildElement("UnitData"));
+	pimpl->initAppearance();
 
-	auto ownerActor = m_OwnerActor.lock();
-	//#TODO: This only shows the first frame of the animation. Update the code to show the whole animation.
-	auto sceneNode = static_cast<cocos2d::Sprite*>(pimpl->m_RenderComponent->getSceneNode());
-	sceneNode->setSpriteFrame(unitData->getAnimation()->getFrames().at(0)->getSpriteFrame());
-
-	//Scale the sprite so that it meets the real game grid size.
-	pimpl->m_TransformComponent->setScaleToSize(resourceLoader->getDesignGridSize());
-
-	pimpl->m_UnitData = std::move(unitData);
+	setStateAndAppearanceAndQueueEvent(utilities::XMLToUnitStateTypeCode(xmlElement->FirstChildElement("State")));
+	setGridIndexAndPosition(GridIndex(xmlElement->FirstChildElement("GridIndex")));
 
 	//////////////////////////////////////////////////////////////////////////
 	//#TODO: Load more data, such as the hp, level and so on, from the xml.
-	pimpl->m_State = utilities::createUnitState(UnitStateTypeCode::Idle);
 }
 
 const std::shared_ptr<UnitData> & UnitScript::getUnitData() const

@@ -77,22 +77,22 @@ void WarSceneHUDScript::vPostInit()
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
 	auto selfSceneNode = ownerActor->getRenderComponent()->getSceneNode();
 
-	auto beginTurnEffectActor = gameLogic->createActor(WarSceneHUDScriptImpl::s_BeginTurnEffectActorPath.c_str());
+	auto beginTurnEffectActor = gameLogic->createActorAndChildren(WarSceneHUDScriptImpl::s_BeginTurnEffectActorPath.c_str());
 	pimpl->m_BeginTurnEffectScript = beginTurnEffectActor->getComponent<BeginTurnEffectScript>();
 	ownerActor->addChild(*beginTurnEffectActor);
 	//selfSceneNode->addChild(beginTurnEffectActor->getRenderComponent()->getSceneNode());
 
-	auto moneyInfoPanelActor = gameLogic->createActor(WarSceneHUDScriptImpl::s_MoneyInfoPanelActorPath.c_str());
+	auto moneyInfoPanelActor = gameLogic->createActorAndChildren(WarSceneHUDScriptImpl::s_MoneyInfoPanelActorPath.c_str());
 	pimpl->m_MoneyInfoPanelScript = moneyInfoPanelActor->getComponent<MoneyInfoPanelScript>();
 	ownerActor->addChild(*moneyInfoPanelActor);
 	//selfSceneNode->addChild(moneyInfoPanelActor->getRenderComponent()->getSceneNode());
 
-	auto actionMenuPanelActor = gameLogic->createActor(WarSceneHUDScriptImpl::s_CommandPanelActorPath.c_str());
+	auto actionMenuPanelActor = gameLogic->createActorAndChildren(WarSceneHUDScriptImpl::s_CommandPanelActorPath.c_str());
 	pimpl->m_CommandPanelScript = actionMenuPanelActor->getComponent<CommandPanelScript>();
 	ownerActor->addChild(*actionMenuPanelActor);
 	//selfSceneNode->addChild(actionMenuPanelActor->getRenderComponent()->getSceneNode());
 
-	auto terrainInfoPanelActor = gameLogic->createActor(WarSceneHUDScriptImpl::s_TerrainInfoPanelActorPath.c_str());
+	auto terrainInfoPanelActor = gameLogic->createActorAndChildren(WarSceneHUDScriptImpl::s_TerrainInfoPanelActorPath.c_str());
 	pimpl->m_TerrainInfoPanelScript = terrainInfoPanelActor->getComponent<TerrainInfoPanelScript>();
 	ownerActor->addChild(*terrainInfoPanelActor);
 	//selfSceneNode->addChild(terrainInfoPanelActor->getRenderComponent()->getSceneNode());

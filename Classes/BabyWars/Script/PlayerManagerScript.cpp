@@ -61,7 +61,7 @@ void PlayerManagerScript::loadPlayers(const tinyxml2::XMLElement * xmlElement)
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
 
 	for (auto playerElement = xmlElement->FirstChildElement("Player"); playerElement; playerElement = playerElement->NextSiblingElement("Player")) {
-		auto playerActor = gameLogic->createActor(PlayerManagerScriptImpl::s_PlayerActorPath.c_str());
+		auto playerActor = gameLogic->createActorAndChildren(PlayerManagerScriptImpl::s_PlayerActorPath.c_str());
 
 		auto playerScript = playerActor->getComponent<PlayerScript>();
 		playerScript->loadPlayer(playerElement);

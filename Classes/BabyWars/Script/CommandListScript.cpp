@@ -51,7 +51,7 @@ CommandListScript::CommandListScriptImpl::ItemActors CommandListScript::CommandL
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
 
 	for (const auto & command : gameCommands) {
-		auto listItem = gameLogic->createActor(CommandListScriptImpl::s_ListItemActorPath.c_str());
+		auto listItem = gameLogic->createActorAndChildren(CommandListScriptImpl::s_ListItemActorPath.c_str());
 		listItem->getComponent<CommandListItemScript>()->initWithGameCommand(command);
 
 		itemActors.emplace_back(listItem);

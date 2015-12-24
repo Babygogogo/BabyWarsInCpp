@@ -25,7 +25,7 @@ class BaseActorFactory;
  * \details
  *	Inherit from this class to make a game-specific logic. The inherited class should be singleton.
  *	By now, its main job is to maintain actors and game views.
- *	You can create actors by calling createActor(). But to destroy actors, you must dispatch events.
+ *	You can create actors by calling createActorAndChildren(). But to destroy actors, you must dispatch events.
  *	Avoid owning any std::shared_ptr<Actor> outside this class, otherwise it will be hard to destory that actor.
  *	For simplicity, the logic can own one (and only) human view.
  *
@@ -49,10 +49,11 @@ public:
 	//Get actor with an id. You will get nullptr if the id is not in use.
 	std::shared_ptr<Actor> getActor(ActorID actorId) const;
 
-	//Create an actor with a .xml file. The actors will be add into the internal actor list.
+	//Create an actor with a .xml file or xml element. The actor will be add into the internal actor list.
 	//Children actors will also be created and added into the internal actor list if the xml file specified.
 	//In this case, the most parent actor will be returned.
-	std::shared_ptr<Actor> createActor(const char *resourceFile, tinyxml2::XMLElement *overrides = nullptr);
+	std::shared_ptr<Actor> createActorAndChildren(const char * resourceFile, const tinyxml2::XMLElement * overrides = nullptr);
+	std::shared_ptr<Actor> createActorAndChildren(const tinyxml2::XMLElement * actorElement, const tinyxml2::XMLElement * overrides = nullptr);
 
 	//There's no destroyActor() here. To destroy an actor, you must dispatch an EvtDataRequestDestroyActor with the id of that actor.
 	//Warning: If you own a std::shared_ptr<Actor> corresponding to the id outside this class, the destruction is not guaranteed to happen.

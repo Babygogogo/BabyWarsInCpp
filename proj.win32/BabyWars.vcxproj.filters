@@ -109,6 +109,12 @@
     <Filter Include="src\BabyWars\Utilities\TurnPhase">
       <UniqueIdentifier>{9353b8a3-4141-4bec-8cdd-505abce3ccbf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\BabyWars\Utilities\XMLSerialization">
+      <UniqueIdentifier>{67f2e8c7-dfbe-44d4-9b70-2b285f41e113}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyWars\Utilities\XMLSerialization\Actor">
+      <UniqueIdentifier>{39477e40-7e5a-4125-9f85-3238f1d5038f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -425,6 +431,15 @@
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Utilities\EndTurnPhase.cpp">
       <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\Matrix2DDimension.cpp">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToActorUnit.cpp">
+      <Filter>src\BabyWars\Utilities\XMLSerialization\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToUnitStateTypeCode.cpp">
+      <Filter>src\BabyWars\Utilities\XMLSerialization</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -805,6 +820,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Utilities\EndTurnPhase.h">
       <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToActorUnit.h">
+      <Filter>src\BabyWars\Utilities\XMLSerialization\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToUnitStateTypeCode.h">
+      <Filter>src\BabyWars\Utilities\XMLSerialization</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -21,6 +21,7 @@ public:
 
 	//Load a unit map with a xml file. Create unit and unit actors if needed.
 	void loadUnitMap(const char * xmlPath);
+	void loadUnitMap(const tinyxml2::XMLElement * unitMapElement);
 
 	//Getter of the size of the unit map.
 	Matrix2DDimension getMapDimension() const;

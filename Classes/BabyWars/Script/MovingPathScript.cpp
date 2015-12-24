@@ -223,7 +223,7 @@ void MovingPathScript::MovingPathScriptImpl::setChildrenGridActors(const MovingP
 			nextDirection = path.getNextNodeOf(index).m_GridIndex.getAdjacentDirectionOf(index);
 
 		//Create the grid actor and attach it to self.
-		auto gridActor = gameLogic->createActor(m_MovingPathGridActorPath.c_str());
+		auto gridActor = gameLogic->createActorAndChildren(m_MovingPathGridActorPath.c_str());
 		auto gridScript = gridActor->getComponent<MovingPathGridScript>();
 		gridScript->setAppearanceWithPreviousAndNextDirection(previousDirection, nextDirection);
 		gridScript->setPositionWithGridIndex(index);

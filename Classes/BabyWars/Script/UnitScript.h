@@ -23,7 +23,7 @@ public:
 
 	bool onInputTouch(const EvtDataInputTouch & touch, const std::shared_ptr<UnitScript> & touchedUnit);
 
-	void loadUnit(tinyxml2::XMLElement * xmlElement);
+	void loadUnit(const tinyxml2::XMLElement * xmlElement);
 
 	const std::shared_ptr<UnitData> & getUnitData() const;
 

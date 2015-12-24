@@ -81,7 +81,7 @@ void TileMapScript::loadTileMap(const char * xmlPath)
 				continue;
 
 			//Create a new tile actor and initialize it with the id and indexes.
-			auto tileActor = gameLogic->createActor(TileMapScriptImpl::s_TileActorPath.c_str());
+			auto tileActor = gameLogic->createActorAndChildren(TileMapScriptImpl::s_TileActorPath.c_str());
 			auto tileScript = tileActor->getComponent<TileScript>();
 			tileScript->LoadTile(tileElement);
 			const auto gridIndex = GridIndex(rowIndex, colIndex);
