@@ -92,9 +92,6 @@ void UnitScript::UnitScriptImpl::initAppearance()
 	//#TODO: This only shows the first frame of the animation. Update the code to show the whole animation.
 	auto sceneNode = static_cast<cocos2d::Sprite*>(m_RenderComponent->getSceneNode());
 	sceneNode->setSpriteFrame(m_UnitData->getAnimation()->getFrames().at(0)->getSpriteFrame());
-
-	//Scale the sprite so that it meets the real game grid size.
-	m_TransformComponent->setScaleToSize(resourceLoader->getDesignGridSize());
 }
 
 bool UnitScript::UnitScriptImpl::canSetState(UnitStateTypeCode stateCode) const

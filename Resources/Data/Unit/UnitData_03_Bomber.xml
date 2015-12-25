@@ -3,7 +3,7 @@
 	<Movement Range="7" Type="Flying"/>
 	<Animation>
 		<Normal>
-			<Frame Name="Unit_Bomber_01.png" DelaySec="99999"/>
+			<Frame Name="Unit_Orange_Bomber_01.png" DelaySec="99999"/>
 		</Normal>
 		<MovingSpeed Value="8">
 			<!-- The value is a float which indicates how many grids the unit can move across in a second. -->

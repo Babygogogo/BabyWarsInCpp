@@ -50,9 +50,6 @@ void TileScript::LoadTile(tinyxml2::XMLElement * xmlElement)
 	auto sceneNode = static_cast<cocos2d::Sprite*>(pimpl->m_RenderComponent->getSceneNode());
 	sceneNode->setSpriteFrame(tileData->getAnimation()->getFrames().at(0)->getSpriteFrame());
 
-	//Scale the sprite so that it meets the real game grid size.
-	pimpl->m_TransformComponent.lock()->setScaleToSize(resourceLoader->getDesignGridSize());
-
 	pimpl->m_TileData = std::move(tileData);
 
 	//////////////////////////////////////////////////////////////////////////

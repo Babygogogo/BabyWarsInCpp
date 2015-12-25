@@ -3,7 +3,7 @@
 	<Movement Range="5" Type="Sailing"/>
 	<Animation>
 		<Normal>
-			<Frame Name="Unit_Battleship_01.png" DelaySec="99999"/>
+			<Frame Name="Unit_Orange_Battleship_01.png" DelaySec="99999"/>
 		</Normal>
 		<MovingSpeed Value="6">
 			<!-- The value is a float which indicates how many grids the unit can move across in a second. -->

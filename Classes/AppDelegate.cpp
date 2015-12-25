@@ -136,22 +136,22 @@ bool AppDelegate::applicationDidFinishLaunching()
 
 	// Set the design resolution
 	glview->setDesignResolutionSize(designResolution.width, designResolution.height, ResolutionPolicy::NO_BORDER);
-	Size frameSize = glview->getFrameSize();
-	// if the frame's height is larger than the height of medium size.
-	if (frameSize.height > mediumResolutionSize.height)
-	{
-		director->setContentScaleFactor(MIN(largeResolutionSize.height / designResolution.height, largeResolutionSize.width / designResolution.width));
-	}
-	// if the frame's height is larger than the height of small size.
-	else if (frameSize.height > smallResolutionSize.height)
-	{
-		director->setContentScaleFactor(MIN(mediumResolutionSize.height / designResolution.height, mediumResolutionSize.width / designResolution.width));
-	}
-	// if the frame's height is smaller than the height of medium size.
-	else
-	{
-		director->setContentScaleFactor(MIN(smallResolutionSize.height / designResolution.height, smallResolutionSize.width / designResolution.width));
-	}
+	//Size frameSize = glview->getFrameSize();
+	//// if the frame's height is larger than the height of medium size.
+	//if (frameSize.height > mediumResolutionSize.height)
+	//{
+	//	director->setContentScaleFactor(MIN(largeResolutionSize.height / designResolution.height, largeResolutionSize.width / designResolution.width));
+	//}
+	//// if the frame's height is larger than the height of small size.
+	//else if (frameSize.height > smallResolutionSize.height)
+	//{
+	//	director->setContentScaleFactor(MIN(mediumResolutionSize.height / designResolution.height, mediumResolutionSize.width / designResolution.width));
+	//}
+	//// if the frame's height is smaller than the height of medium size.
+	//else
+	//{
+	//	director->setContentScaleFactor(MIN(smallResolutionSize.height / designResolution.height, smallResolutionSize.width / designResolution.width));
+	//}
 
 	register_all_packages();
 

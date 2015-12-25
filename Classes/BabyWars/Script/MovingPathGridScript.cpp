@@ -139,7 +139,6 @@ void MovingPathGridScript::setPositionWithGridIndex(const GridIndex & index)
 	const auto gridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
 	auto transformComponent = pimpl->m_TransformComponent.lock();
 	transformComponent->setPosition(index.toPosition(gridSize));
-	transformComponent->setScaleToSize(gridSize);
 }
 
 bool MovingPathGridScript::vInit(const tinyxml2::XMLElement * xmlElement)

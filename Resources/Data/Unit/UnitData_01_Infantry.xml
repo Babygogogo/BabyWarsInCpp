@@ -3,7 +3,7 @@
 	<Movement Range="3" Type="Infantry"/>
 	<Animation>
 		<Normal>
-			<Frame Name="Unit_Infantry_01.png" DelaySec="99999"/>
+			<Frame Name="Unit_Orange_Infantry_01.png" DelaySec="99999"/>
 		</Normal>
 		<MovingSpeed Value="4">
 			<!-- The value is a float which indicates how many grids the unit can move across in a second. -->

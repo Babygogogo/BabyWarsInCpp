@@ -55,8 +55,6 @@ void MovingAreaGridScript::vPostInit()
 	auto transformComponent = ownerActor->getComponent<TransformComponent>();
 	assert(transformComponent && "MovingAreaGridScript::vPostInit() the actor has no tranform component.");
 	pimpl->m_TransformComponent = transformComponent;
-
-	transformComponent->setScaleToSize(SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize());
 }
 
 const std::string MovingAreaGridScript::Type = "MovingAreaGridScript";

@@ -21,6 +21,12 @@
 		</Unit>
 		<Unit ActorPath="Actors\Units\Actor_Battleship.xml">
 			<UnitData ID="4"/>
+			<GridIndex Row="7" Column="12"/>
+			<PlayerID Value="1"/>
+			<State Value="Idle"/>
+		</Unit>
+		<Unit ActorPath="Actors\Units\Actor_Battleship.xml">
+			<UnitData ID="4"/>
 			<GridIndex Row="7" Column="9"/>
 			<PlayerID Value="1"/>
 			<State Value="Idle"/>
