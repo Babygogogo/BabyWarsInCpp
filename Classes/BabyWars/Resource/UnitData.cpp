@@ -16,11 +16,10 @@ struct UnitData::UnitDataImpl
 	UnitDataImpl() = default;
 	~UnitDataImpl() = default;
 
-	UnitDataID m_ID{ 0 };
-	std::string m_Type;
+	UnitDataType m_Type;
 
 	UnitAnimation m_Animation;
-	float m_MovingSpeedGridPerSec{};
+	float m_MovingSpeedGridsPerSec{};
 
 	int m_Movement{};
 	std::string m_MovementType;
@@ -37,36 +36,24 @@ UnitData::~UnitData()
 {
 }
 
-void UnitData::initialize(const char * xmlPath)
+void UnitData::init(const tinyxml2::XMLElement * xmlElement)
 {
-	//Load the xml file.
-	tinyxml2::XMLDocument xmlDoc;
-	xmlDoc.LoadFile(xmlPath);
-	const auto rootElement = xmlDoc.RootElement();
-	assert(rootElement && "UnitData::initialize() failed to load xml file.");
-
-	//Load ID and type name.
-	pimpl->m_ID = rootElement->IntAttribute("ID");
-	pimpl->m_Type = rootElement->Attribute("Type");
+	assert(xmlElement && "UnitData::init() the xml element is nullptr.");
+	pimpl->m_Type = xmlElement->Attribute("Type");
 
 	//Load movement data.
-	auto movementElement = rootElement->FirstChildElement("Movement");
+	auto movementElement = xmlElement->FirstChildElement("Movement");
 	pimpl->m_Movement = movementElement->IntAttribute("Range");
 	pimpl->m_MovementType = movementElement->Attribute("Type");
 
 	//Load animations.
-	pimpl->m_Animation.loadAnimation(rootElement->FirstChildElement("Animation"));
+	pimpl->m_Animation.loadAnimation(xmlElement->FirstChildElement("Animation"));
 
 	//Load other animation data.
-	pimpl->m_MovingSpeedGridPerSec = rootElement->FirstChildElement("MovingSpeed")->FloatAttribute("Value");
+	pimpl->m_MovingSpeedGridsPerSec = xmlElement->FirstChildElement("MovingSpeed")->FloatAttribute("Value");
 }
 
-UnitDataID UnitData::getID() const
-{
-	return pimpl->m_ID;
-}
-
-std::string UnitData::getType() const
+const UnitDataType & UnitData::getType() const
 {
 	return pimpl->m_Type;
 }
@@ -88,5 +75,5 @@ cocos2d::Animation * UnitData::getAnimation() const
 
 float UnitData::getAnimationMovingSpeedGridPerSec() const
 {
-	return pimpl->m_MovingSpeedGridPerSec;
+	return pimpl->m_MovingSpeedGridsPerSec;
 }

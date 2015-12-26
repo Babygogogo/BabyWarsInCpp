@@ -10,12 +10,14 @@
 //////////////////////////////////////////////////////////////////////////
 struct ResourceLoader::ResourceLoaderImpl
 {
-	ResourceLoaderImpl() {};
-	~ResourceLoaderImpl() {};
+	ResourceLoaderImpl() = default;
+	~ResourceLoaderImpl() = default;
 
 	void loadTextures(const char * listPath);
 	void loadTileDatas(const char * xmlPath);
 	void loadUnitDatas(const char * xmlPath);
+
+	std::shared_ptr<UnitData> createUnitDataFromXML(const char * xmlPath) const;
 
 	cocos2d::Size m_DesignResolution;
 	cocos2d::Size m_DesignGridSize;
@@ -25,7 +27,7 @@ struct ResourceLoader::ResourceLoaderImpl
 
 	cocos2d::Size m_TileSize;
 	std::unordered_map<TileDataID, std::shared_ptr<TileData>> m_TileDatas;
-	std::unordered_map<UnitDataID, std::shared_ptr<UnitData>> m_UnitDatas;
+	std::unordered_map<UnitDataType, std::shared_ptr<UnitData>> m_UnitDatas;
 };
 
 void ResourceLoader::ResourceLoaderImpl::loadTextures(const char * listPath)
@@ -64,13 +66,23 @@ void ResourceLoader::ResourceLoaderImpl::loadUnitDatas(const char * xmlPath)
 	//Iterate through the list and load each UnitData.
 	const auto listElement = rootElement->FirstChildElement("List");
 	for (auto tileDataElement = listElement->FirstChildElement("UnitDataPath"); tileDataElement; tileDataElement = tileDataElement->NextSiblingElement()) {
-		auto unitData = std::make_shared<UnitData>();
-		unitData->initialize(tileDataElement->Attribute("Value"));
+		auto unitData = createUnitDataFromXML(tileDataElement->Attribute("Value"));
+		assert(m_UnitDatas.find(unitData->getType()) == m_UnitDatas.end() && "ResourceLoaderImpl::loadUnitDatas() load two UnitData with a same ID.");
 
-		assert(m_UnitDatas.find(unitData->getID()) == m_UnitDatas.end() && "ResourceLoaderImpl::loadUnitDatas() load two UnitData with a same ID.");
-
-		m_UnitDatas.emplace(unitData->getID(), std::move(unitData));
+		m_UnitDatas.emplace(unitData->getType(), std::move(unitData));
 	}
+}
+
+std::shared_ptr<UnitData> ResourceLoader::ResourceLoaderImpl::createUnitDataFromXML(const char * xmlPath) const
+{
+	tinyxml2::XMLDocument xmlDoc;
+	xmlDoc.LoadFile(xmlPath);
+	const auto rootElement = xmlDoc.RootElement();
+	assert(rootElement && "ResourceLoaderImpl::createUnitDataFromXML() failed to load xml file.");
+
+	auto unitData = std::make_shared<UnitData>();
+	unitData->init(rootElement);
+	return unitData;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -150,7 +162,7 @@ std::shared_ptr<TileData> ResourceLoader::getTileData(TileDataID id) const
 	return pimpl->m_TileDatas[id];
 }
 
-std::shared_ptr<UnitData> ResourceLoader::getUnitData(UnitDataID id) const
+std::shared_ptr<UnitData> ResourceLoader::getUnitData(UnitDataType id) const
 {
 	assert(pimpl->m_UnitDatas.find(id) != pimpl->m_UnitDatas.end() && "ResourceLoader::getUnitData() with an invalid ID.");
 

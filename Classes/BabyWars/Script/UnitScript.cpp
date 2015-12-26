@@ -80,8 +80,7 @@ UnitScript::UnitScriptImpl::~UnitScriptImpl()
 void UnitScript::UnitScriptImpl::loadUnitDataFromXML(const tinyxml2::XMLElement * xmlElement)
 {
 	assert(xmlElement && "UnitScriptImpl::loadUnitDataFromXML() the xml element is nullptr.");
-	const auto unitDataID = xmlElement->IntAttribute("ID");
-	m_UnitData = SingletonContainer::getInstance()->get<ResourceLoader>()->getUnitData(unitDataID);
+	m_UnitData = SingletonContainer::getInstance()->get<ResourceLoader>()->getUnitData(xmlElement->Attribute("Type"));
 	assert(m_UnitData && "UnitScriptImpl::loadUnitDataFromXML() can't get the unit data with the id that specified in the xml, possibly because the id is invalid.");
 }
 
@@ -171,7 +170,7 @@ void UnitScript::loadUnit(const tinyxml2::XMLElement * xmlElement)
 {
 	//////////////////////////////////////////////////////////////////////////
 	//Load and set the unit data.
-	pimpl->loadUnitDataFromXML(xmlElement->FirstChildElement("UnitData"));
+	//pimpl->loadUnitDataFromXML(xmlElement->FirstChildElement("UnitData"));
 	pimpl->initAppearance();
 
 	setStateAndAppearanceAndQueueEvent(utilities::XMLToUnitStateTypeCode(xmlElement->FirstChildElement("State")));
@@ -257,6 +256,7 @@ void UnitScript::undoMoveAndSetToIdleState()
 
 bool UnitScript::vInit(const tinyxml2::XMLElement * xmlElement)
 {
+	pimpl->loadUnitDataFromXML(xmlElement->FirstChildElement("UnitData"));
 	return true;
 }
 

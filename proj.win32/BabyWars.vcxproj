@@ -333,7 +333,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyWars\Resource\TileDataID.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitAnimation.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitData.h" />
-    <ClInclude Include="..\Classes\BabyWars\Resource\UnitDataID.h" />
+    <ClInclude Include="..\Classes\BabyWars\Resource\UnitDataType.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\BeginTurnEffectLabelScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\BeginTurnEffectScript.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\CommandListItemScript.h" />

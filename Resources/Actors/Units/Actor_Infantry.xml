@@ -6,7 +6,9 @@
 		</GeneralRenderComponent>
 		<TransformComponent/>
 		<ActionComponent/>
-		<UnitScript/>
+		<UnitScript>
+			<UnitData Type="Infantry"/>
+		</UnitScript>
 	</Components>
 	<ChildrenActors>
 	</ChildrenActors>

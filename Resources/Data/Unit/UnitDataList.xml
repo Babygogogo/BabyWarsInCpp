@@ -1,9 +1,9 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
 <UnitDataList>
 	<List>
-		<UnitDataPath Value="Data\Unit\UnitData_01_Infantry.xml"/>
-		<UnitDataPath Value="Data\Unit\UnitData_02_Tank.xml"/>
-		<UnitDataPath Value="Data\Unit\UnitData_03_Bomber.xml"/>
-		<UnitDataPath Value="Data\Unit\UnitData_04_Battleship.xml"/>
+		<UnitDataPath Value="Data\Unit\UnitData_Infantry.xml"/>
+		<UnitDataPath Value="Data\Unit\UnitData_Tank.xml"/>
+		<UnitDataPath Value="Data\Unit\UnitData_Bomber.xml"/>
+		<UnitDataPath Value="Data\Unit\UnitData_Battleship.xml"/>
 	</List>
 </UnitDataList>

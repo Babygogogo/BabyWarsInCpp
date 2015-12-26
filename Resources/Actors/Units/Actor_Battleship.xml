@@ -1,12 +1,14 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
-<Actor Type="Infantry" Resource="Actors\Units\Actor_Infantry.xml">
+<Actor Type="Battleship" Resource="Actors\Units\Actor_Battleship.xml">
 	<Components>
 		<GeneralRenderComponent>
 			<SceneNode Type="Sprite"/>
 		</GeneralRenderComponent>
 		<TransformComponent/>
 		<ActionComponent/>
-		<UnitScript/>
+		<UnitScript>
+			<UnitData Type="Battleship"/>
+		</UnitScript>
 	</Components>
 	<ChildrenActors>
 	</ChildrenActors>

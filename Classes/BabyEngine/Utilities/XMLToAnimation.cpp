@@ -17,5 +17,5 @@ cocos2d::Animation * utilities::XMLToAnimation(const tinyxml2::XMLElement * xmlE
 		animationFrames.pushBack(cocos2d::AnimationFrame::create(spriteFrame, delaySec, cocos2d::ValueMap()));
 	}
 
-	return cocos2d::Animation::create(animationFrames, 1);
+	return cocos2d::Animation::create(animationFrames, 1, xmlElement->IntAttribute("LoopCount"));
 }

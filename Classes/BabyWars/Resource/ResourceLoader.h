@@ -5,7 +5,7 @@
 #include <string>
 
 #include "TileDataID.h"
-#include "UnitDataID.h"
+#include "UnitDataType.h"
 
 //Forward declaration.
 namespace cocos2d {
@@ -42,7 +42,7 @@ public:
 	cocos2d::Size getDesignGridSize() const;
 
 	std::shared_ptr<TileData> getTileData(TileDataID id) const;
-	std::shared_ptr<UnitData> getUnitData(UnitDataID id) const;
+	std::shared_ptr<UnitData> getUnitData(UnitDataType id) const;
 
 	//Disable copy/move constructor and operator=.
 	ResourceLoader(const ResourceLoader &) = delete;

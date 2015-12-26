@@ -530,9 +530,6 @@
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitData.h">
       <Filter>src\BabyWars\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Resource\UnitDataID.h">
-      <Filter>src\BabyWars\Resource</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\GameLogic\BaseGameLogic.h">
       <Filter>src\BabyEngine\GameLogic</Filter>
     </ClInclude>
@@ -847,6 +844,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToAnimation.h">
       <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Resource\UnitDataType.h">
+      <Filter>src\BabyWars\Resource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

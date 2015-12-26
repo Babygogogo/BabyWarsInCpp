@@ -1,11 +1,11 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
-<UnitData ID="2" Type="Tank">
+<UnitData Type="Tank">
 	<Movement Range="6" Type="Track"/>
 	<Animation>
-		<Animation State="Idle" Color="Orange">
+		<Animation State="Idle" Color="Orange" LoopCount="99999">
 			<Frame Name="Unit_Tank_Idle_Orange_Frame01.png" DelaySec="99999"/>
 		</Animation>
-		<Animation State="Idle" Color="Blue">
+		<Animation State="Idle" Color="Blue" LoopCount="99999">
 			<Frame Name="Unit_Tank_Idle_Blue_Frame01.png" DelaySec="99999"/>
 		</Animation>
 	</Animation>

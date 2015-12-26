@@ -4,11 +4,16 @@
 #include <memory>
 #include <string>
 
-#include "UnitDataID.h"
+#include "UnitDataType.h"
 
 //Forward declarations.
-namespace cocos2d {
+namespace cocos2d
+{
 	class Animation;
+}
+namespace tinyxml2
+{
+	class XMLElement;
 }
 
 class UnitData
@@ -17,11 +22,10 @@ public:
 	UnitData();
 	~UnitData();
 
-	//Warning: You must finish loading textures before calling this function.
-	void initialize(const char * xmlPath);
+	//Warning: You must have loaded textures before calling this function.
+	void init(const tinyxml2::XMLElement * xmlElement);
 
-	UnitDataID getID() const;
-	std::string getType() const;
+	const UnitDataType & getType() const;
 
 	int getMovementRange() const;
 	const std::string & getMovementType() const;
