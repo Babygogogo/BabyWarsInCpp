@@ -212,7 +212,7 @@
                 <key>sourceSize</key>
                 <string>{48,48}</string>
             </dict>
-            <key>Unit_Blue_Battleship_01.png</key>
+            <key>Unit_Battleship_Idle_Blue_Frame01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{159,3},{48,46}}</string>
@@ -225,49 +225,10 @@
                 <key>sourceSize</key>
                 <string>{48,48}</string>
             </dict>
-            <key>Unit_Blue_Bomber_01.png</key>
+            <key>Unit_Battleship_Idle_Orange_Frame01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{159,53},{48,46}}</string>
-                <key>offset</key>
-                <string>{0,1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{48,46}}</string>
-                <key>sourceSize</key>
-                <string>{48,48}</string>
-            </dict>
-            <key>Unit_Blue_Infantry_01.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{263,3},{40,48}}</string>
-                <key>offset</key>
-                <string>{1,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{5,0},{40,48}}</string>
-                <key>sourceSize</key>
-                <string>{48,48}</string>
-            </dict>
-            <key>Unit_Blue_Tank_01.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{401,47},{40,36}}</string>
-                <key>offset</key>
-                <string>{1,-3}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{5,9},{40,36}}</string>
-                <key>sourceSize</key>
-                <string>{48,48}</string>
-            </dict>
-            <key>Unit_Orange_Battleship_01.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{211,3},{48,46}}</string>
                 <key>offset</key>
                 <string>{0,-1}</string>
                 <key>rotated</key>
@@ -277,7 +238,20 @@
                 <key>sourceSize</key>
                 <string>{48,48}</string>
             </dict>
-            <key>Unit_Orange_Bomber_01.png</key>
+            <key>Unit_Bomber_Idle_Blue_Frame01.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{211,3},{48,46}}</string>
+                <key>offset</key>
+                <string>{0,1}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{48,46}}</string>
+                <key>sourceSize</key>
+                <string>{48,48}</string>
+            </dict>
+            <key>Unit_Bomber_Idle_Orange_Frame01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{107,55},{48,48}}</string>
@@ -290,7 +264,20 @@
                 <key>sourceSize</key>
                 <string>{48,48}</string>
             </dict>
-            <key>Unit_Orange_Infantry_01.png</key>
+            <key>Unit_Infantry_Idle_Blue_Frame01.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{263,3},{40,48}}</string>
+                <key>offset</key>
+                <string>{1,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{5,0},{40,48}}</string>
+                <key>sourceSize</key>
+                <string>{48,48}</string>
+            </dict>
+            <key>Unit_Infantry_Idle_Orange_Frame01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{211,53},{42,48}}</string>
@@ -303,7 +290,20 @@
                 <key>sourceSize</key>
                 <string>{48,48}</string>
             </dict>
-            <key>Unit_Orange_Tank_01.png</key>
+            <key>Unit_Tank_Idle_Blue_Frame01.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{401,47},{40,36}}</string>
+                <key>offset</key>
+                <string>{1,-3}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{5,9},{40,36}}</string>
+                <key>sourceSize</key>
+                <string>{48,48}</string>
+            </dict>
+            <key>Unit_Tank_Idle_Orange_Frame01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{445,83},{36,36}}</string>
@@ -326,7 +326,7 @@
             <key>size</key>
             <string>{497,122}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:5a36e905003a2ee0f036cfe1ac3998eb:d90e1e66fa9e584ee8b61a755a4299d4:f46617b9879efc77edf243fcb535d10c$</string>
+            <string>$TexturePacker:SmartUpdate:22c0b745cfb860942a89830cea40aa9e:faf2b245c144d40fd99ebf8ec06a92ca:f46617b9879efc77edf243fcb535d10c$</string>
             <key>textureFileName</key>
             <string>Texture.png</string>
         </dict>

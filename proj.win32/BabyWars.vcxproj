@@ -167,6 +167,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyEngine\UserInterface\BaseGameView.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\UserInterface\BaseHumanView.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\SetSceneNodePropertiesWithXML.cpp" />
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToAnimation.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToFiniteTimeAction.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToButton.cpp" />
     <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToFadeTo.cpp" />
@@ -206,6 +207,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyWars\GameLogic\BabyWarsGameLogic.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\ResourceLoader.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\TileData.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Resource\UnitAnimation.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Resource\UnitData.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\BeginTurnEffectLabelScript.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Script\BeginTurnEffectScript.cpp" />
@@ -249,6 +251,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyWars\Utilities\UnitStateFactory.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Utilities\WaitingUnitState.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToActorUnit.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToColorTypeCode.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToUnitStateTypeCode.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="main.cpp" />
@@ -285,6 +288,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyEngine\UserInterface\GameViewID.h" />
     <ClInclude Include="..\Classes\BabyEngine\UserInterface\BaseGameView.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\SetSceneNodePropertiesWithXML.h" />
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToAnimation.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToFiniteTimeAction.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToButton.h" />
     <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.h" />
@@ -327,6 +331,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyWars\Resource\ResourceLoader.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\TileData.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\TileDataID.h" />
+    <ClInclude Include="..\Classes\BabyWars\Resource\UnitAnimation.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitData.h" />
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitDataID.h" />
     <ClInclude Include="..\Classes\BabyWars\Script\BeginTurnEffectLabelScript.h" />
@@ -355,6 +360,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyWars\Utilities\ActiveUnitState.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\AdjacentDirection.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\BeginningTurnPhase.h" />
+    <ClInclude Include="..\Classes\BabyWars\Utilities\ColorTypeCode.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\EndTurnPhase.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\GameCommand.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\GridIndex.h" />
@@ -379,6 +385,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyWars\Utilities\UnitStateTypeCode.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\WaitingUnitState.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToActorUnit.h" />
+    <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToColorTypeCode.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToUnitStateTypeCode.h" />
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
     <ClInclude Include="main.h" />

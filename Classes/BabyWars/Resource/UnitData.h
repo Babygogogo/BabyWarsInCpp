@@ -28,8 +28,6 @@ public:
 
 	cocos2d::Animation * getAnimation() const;
 	float getAnimationMovingSpeedGridPerSec() const;
-	float getDefaultScaleFactorX() const;
-	float getDefaultScaleFactorY() const;
 
 private:
 	//Implementation stuff.

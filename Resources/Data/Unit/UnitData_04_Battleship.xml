@@ -2,11 +2,14 @@
 <UnitData ID="4" Type="Battleship">
 	<Movement Range="5" Type="Sailing"/>
 	<Animation>
-		<Normal>
-			<Frame Name="Unit_Orange_Battleship_01.png" DelaySec="99999"/>
-		</Normal>
-		<MovingSpeed Value="6">
-			<!-- The value is a float which indicates how many grids the unit can move across in a second. -->
-		</MovingSpeed>
+		<Animation State="Idle" Color="Orange">
+			<Frame Name="Unit_Battleship_Idle_Orange_Frame01.png" DelaySec="99999"/>
+		</Animation>
+		<Animation State="Idle" Color="Blue">
+			<Frame Name="Unit_Battleship_Idle_Blue_Frame01.png" DelaySec="99999"/>
+		</Animation>
 	</Animation>
+	<MovingSpeed Value="6">
+		<!-- The value is a float which indicates how many grids the unit can move across in a second. -->
+	</MovingSpeed>
 </UnitData>

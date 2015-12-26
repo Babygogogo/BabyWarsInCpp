@@ -3,6 +3,9 @@
 
 #include "UnitData.h"
 #include "ResourceLoader.h"
+#include "UnitAnimation.h"
+#include "../Utilities/UnitStateTypeCode.h"
+#include "../Utilities/ColorTypeCode.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -10,47 +13,18 @@
 //////////////////////////////////////////////////////////////////////////
 struct UnitData::UnitDataImpl
 {
-	UnitDataImpl();
-	~UnitDataImpl();
-
-	cocos2d::Vector<cocos2d::AnimationFrame*> loadAnimationFrames(tinyxml2::XMLElement * animationElement) const;
+	UnitDataImpl() = default;
+	~UnitDataImpl() = default;
 
 	UnitDataID m_ID{ 0 };
 	std::string m_Type;
-	cocos2d::Animation * m_NormalAnimation{ cocos2d::Animation::create() };
-	float m_DefaultScaleFactorX{}, m_DefaultScaleFactorY{};
+
+	UnitAnimation m_Animation;
 	float m_MovingSpeedGridPerSec{};
 
 	int m_Movement{};
 	std::string m_MovementType;
 };
-
-UnitData::UnitDataImpl::UnitDataImpl()
-{
-	m_NormalAnimation->setDelayPerUnit(1);
-	m_NormalAnimation->retain();
-}
-
-UnitData::UnitDataImpl::~UnitDataImpl()
-{
-	m_NormalAnimation->release();
-}
-
-cocos2d::Vector<cocos2d::AnimationFrame*> UnitData::UnitDataImpl::loadAnimationFrames(tinyxml2::XMLElement * animationElement) const
-{
-	auto animationFrames = cocos2d::Vector<cocos2d::AnimationFrame*>();
-	const auto spriteFrameCache = cocos2d::SpriteFrameCache::getInstance();
-
-	for (auto frameElement = animationElement->FirstChildElement("Frame"); frameElement; frameElement = frameElement->NextSiblingElement()) {
-		//Load a frame of the animation.
-		auto spriteFrame = spriteFrameCache->getSpriteFrameByName(frameElement->Attribute("Name"));
-		auto delaySec = frameElement->FloatAttribute("DelaySec");
-		animationFrames.pushBack(cocos2d::AnimationFrame::create(spriteFrame, delaySec, cocos2d::ValueMap()));
-	}
-	assert(animationFrames.size() > 0 && "UnitData::initialize() the animation is empty.");
-
-	return animationFrames;
-}
 
 //////////////////////////////////////////////////////////////////////////
 //Implementation of UnitData.
@@ -81,17 +55,10 @@ void UnitData::initialize(const char * xmlPath)
 	pimpl->m_MovementType = movementElement->Attribute("Type");
 
 	//Load animations.
-	auto animationsElement = rootElement->FirstChildElement("Animation");
-	pimpl->m_NormalAnimation->setFrames(pimpl->loadAnimationFrames(animationsElement->FirstChildElement("Normal")));
+	pimpl->m_Animation.loadAnimation(rootElement->FirstChildElement("Animation"));
 
 	//Load other animation data.
-	pimpl->m_MovingSpeedGridPerSec = animationsElement->FirstChildElement("MovingSpeed")->FloatAttribute("Value");
-
-	//Calculate the design scale factor.
-	auto spriteFrameSize = pimpl->m_NormalAnimation->getFrames().at(0)->getSpriteFrame()->getOriginalSize();
-	auto designGridSize = SingletonContainer::getInstance()->get<ResourceLoader>()->getDesignGridSize();
-	pimpl->m_DefaultScaleFactorX = designGridSize.width / spriteFrameSize.width;
-	pimpl->m_DefaultScaleFactorY = designGridSize.height / spriteFrameSize.height;
+	pimpl->m_MovingSpeedGridPerSec = rootElement->FirstChildElement("MovingSpeed")->FloatAttribute("Value");
 }
 
 UnitDataID UnitData::getID() const
@@ -116,20 +83,10 @@ const std::string & UnitData::getMovementType() const
 
 cocos2d::Animation * UnitData::getAnimation() const
 {
-	return pimpl->m_NormalAnimation;
+	return pimpl->m_Animation.getAnimation(UnitStateTypeCode::Idle, ColorTypeCode::Orange);
 }
 
 float UnitData::getAnimationMovingSpeedGridPerSec() const
 {
 	return pimpl->m_MovingSpeedGridPerSec;
-}
-
-float UnitData::getDefaultScaleFactorX() const
-{
-	return pimpl->m_DefaultScaleFactorX;
-}
-
-float UnitData::getDefaultScaleFactorY() const
-{
-	return pimpl->m_DefaultScaleFactorY;
 }

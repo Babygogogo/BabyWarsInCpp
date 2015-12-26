@@ -441,6 +441,15 @@
     <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToUnitStateTypeCode.cpp">
       <Filter>src\BabyWars\Utilities\XMLSerialization</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Resource\UnitAnimation.cpp">
+      <Filter>src\BabyWars\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToColorTypeCode.cpp">
+      <Filter>src\BabyWars\Utilities\XMLSerialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToAnimation.cpp">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -826,6 +835,18 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToUnitStateTypeCode.h">
       <Filter>src\BabyWars\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Resource\UnitAnimation.h">
+      <Filter>src\BabyWars\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\ColorTypeCode.h">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToColorTypeCode.h">
+      <Filter>src\BabyWars\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToAnimation.h">
+      <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

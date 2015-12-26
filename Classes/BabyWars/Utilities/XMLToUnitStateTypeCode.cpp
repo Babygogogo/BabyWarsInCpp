@@ -1,4 +1,3 @@
-#include <string>
 #include <cassert>
 
 #include "cocos2d/external/tinyxml2/tinyxml2.h"
@@ -8,7 +7,12 @@
 
 UnitStateTypeCode utilities::XMLToUnitStateTypeCode(const tinyxml2::XMLElement * xmlElement)
 {
-	const auto codeString = std::string(xmlElement->Attribute("Value"));
+	assert(xmlElement && "utilities::XMLToUnitStateTypeCode() the xml element is nullptr.");
+	return StringToUnitStateTypeCode(std::string(xmlElement->Attribute("Value")));
+}
+
+UnitStateTypeCode utilities::StringToUnitStateTypeCode(const std::string & codeString)
+{
 	if (codeString == "Invalid") {
 		return UnitStateTypeCode::Invalid;
 	}
@@ -28,6 +32,6 @@ UnitStateTypeCode utilities::XMLToUnitStateTypeCode(const tinyxml2::XMLElement *
 		return UnitStateTypeCode::Waiting;
 	}
 
-	assert("utilities::XMLToUnitStateTypeCode() the type code is unrecognized.");
+	assert("utilities::StringToUnitStateTypeCode() the code string is unrecognized.");
 	return UnitStateTypeCode::Invalid;
 }
