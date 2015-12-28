@@ -4,7 +4,7 @@
 #include <mutex>
 #include <functional>
 
-#include "cocos2d/external/tinyxml2/tinyxml2.h"
+#include "../cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "BaseGameLogic.h"
 #include "../Actor/Actor.h"

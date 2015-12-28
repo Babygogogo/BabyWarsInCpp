@@ -11,109 +11,67 @@
       <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\BabyEngine">
-      <UniqueIdentifier>{bd6deed9-c8ff-469e-88d4-f117d5833878}</UniqueIdentifier>
+      <UniqueIdentifier>{70274410-37b8-4637-989e-0228353280b0}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\BabyEngine\Actor">
-      <UniqueIdentifier>{6457fc25-146b-4b27-8f30-a0b36c3d4228}</UniqueIdentifier>
+      <UniqueIdentifier>{8d8b1b51-48a4-4357-8095-b455ced56298}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\BabyEngine\Event">
-      <UniqueIdentifier>{116807ac-e8f6-4a15-97d2-4f8c2ee36083}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\BabyEngine\Graphic2D">
-      <UniqueIdentifier>{3f12408d-454b-4032-bc1f-0e2d05249480}</UniqueIdentifier>
+      <UniqueIdentifier>{6f7156da-acd9-442f-9de4-55afbbac26db}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\BabyEngine\GameLogic">
-      <UniqueIdentifier>{9dc9bba8-f129-4eac-b27b-71e836f8488b}</UniqueIdentifier>
+      <UniqueIdentifier>{f71b3eb3-d3ab-42a1-b78e-ddec227bd0e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyEngine\Graphic2D">
+      <UniqueIdentifier>{316a412b-8a79-4e47-ab06-84b35b9d693e}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\BabyEngine\Process">
-      <UniqueIdentifier>{5256a001-f175-4c23-801e-116d96bdc276}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\BabyWars">
-      <UniqueIdentifier>{ee05c75d-9afb-41ed-955d-2c8becc4ccf0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\BabyWars\Resource">
-      <UniqueIdentifier>{70db2d60-0cd9-40b2-af29-66ff802fac5a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\BabyWars\Script">
-      <UniqueIdentifier>{0c297649-88d8-4607-9845-df3df3e91f4c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\BabyEngine\Utilities">
-      <UniqueIdentifier>{7b5e476a-9b3b-4f4e-9cb0-fcd28bf93b08}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\BabyWars\Actor">
-      <UniqueIdentifier>{73e738e2-851b-4c54-943a-601d224c4e12}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\BabyWars\GameLogic">
-      <UniqueIdentifier>{ad5435e6-c13b-4ee3-a56a-1e635876d212}</UniqueIdentifier>
+      <UniqueIdentifier>{677be8fb-b8e7-4252-8478-6be208599f00}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\BabyEngine\UserInterface">
-      <UniqueIdentifier>{d9ea6089-61ae-49be-9407-e9a670a29e3c}</UniqueIdentifier>
+      <UniqueIdentifier>{85ae71fa-8ba3-4615-b102-01b56366d858}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\BabyWars\UserInterface">
-      <UniqueIdentifier>{f74b2f6e-a635-452f-94eb-ea7534f88d59}</UniqueIdentifier>
+    <Filter Include="src\BabyWars">
+      <UniqueIdentifier>{e32eac2f-be29-4c7e-bcee-eb001120f611}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\BabyWars\Graphic2D">
-      <UniqueIdentifier>{4184babd-512d-4940-b385-57bedee3084a}</UniqueIdentifier>
+    <Filter Include="src\BabyWars\Actor">
+      <UniqueIdentifier>{865a7065-5597-406b-8f0d-26c4996c1f53}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\BabyWars\Event">
-      <UniqueIdentifier>{bf174404-3ec6-4387-85c2-0c2378cffa49}</UniqueIdentifier>
+      <UniqueIdentifier>{67383954-e3e0-4fc7-8dc2-29ec170b476d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyEngine\Utilities">
+      <UniqueIdentifier>{ac7e6306-a006-40f8-87d0-ad76ee690f9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyWars\GameLogic">
+      <UniqueIdentifier>{ea28499c-9275-4926-9e1b-2534debdc48f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyWars\Resource">
+      <UniqueIdentifier>{ad57a79b-c826-419c-84a0-8e62be5ace2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyWars\Script">
+      <UniqueIdentifier>{25557429-e023-484e-930a-e49551c4e2f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyWars\UserInterface">
+      <UniqueIdentifier>{fb859221-4d0b-402e-adbe-657ffd2a55ab}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\BabyWars\Utilities">
-      <UniqueIdentifier>{0eb5e7b7-a957-4bb1-a894-69a75149623c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\BabyEngine\Actor\RenderComponent">
-      <UniqueIdentifier>{e3a6b3f9-f0db-443a-906d-567da2cfaadf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\BabyEngine\Utilities\XMLSerialization">
-      <UniqueIdentifier>{4c00a287-a0a0-4ab4-86b7-c41f6fb20b8c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\BabyWars\Utilities\UnitState">
-      <UniqueIdentifier>{3d8871af-a093-418c-a2a2-d0c39032eacb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\BabyEngine\Utilities\XMLSerialization\SceneNode">
-      <UniqueIdentifier>{7eca0ee7-43cd-406f-b237-79f71d2d6461}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\BabyEngine\Utilities\XMLSerialization\BasicTypes">
-      <UniqueIdentifier>{02e6a97d-ba46-4344-a086-6c41d7f14230}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\BabyEngine\Utilities\XMLSerialization\Action">
-      <UniqueIdentifier>{18030660-c91b-453b-ab4d-f6d5114daaed}</UniqueIdentifier>
+      <UniqueIdentifier>{45a3ee61-4e7d-4486-ad81-7f80b2859a1e}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\BabyWars\Script\WarScene">
-      <UniqueIdentifier>{5dc2af1a-d61c-4a9d-8b60-53fcdc24b79b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\BabyWars\Script\WarScene\HUD">
-      <UniqueIdentifier>{90caf99d-aea8-4f55-944a-74d2db264f5c}</UniqueIdentifier>
+      <UniqueIdentifier>{f2bc3f52-2a7f-4712-b1ac-607c92f57e20}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\BabyWars\Script\WarScene\Field">
-      <UniqueIdentifier>{d8bb75c6-696a-4d30-9760-15279f153c6e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\BabyWars\Script\WarScene\Field\TileMap">
-      <UniqueIdentifier>{7666c323-a436-4a2e-913d-5070abd944af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\BabyWars\Script\WarScene\Field\UnitMap">
-      <UniqueIdentifier>{9205871e-aabf-4bae-9e29-b104772aa444}</UniqueIdentifier>
+      <UniqueIdentifier>{b74a3023-f546-46b8-9242-05d9c7341e35}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\BabyWars\Script\WarScene\Field\MovingArea">
-      <UniqueIdentifier>{ea6fa4b1-f319-4c26-a629-de66ba9f925a}</UniqueIdentifier>
+      <UniqueIdentifier>{b9d402fb-6e08-4a1d-8005-a61a23ea1a0c}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\BabyWars\Script\WarScene\Field\MovingPath">
-      <UniqueIdentifier>{921c3a5e-82aa-42a9-93ae-cd83caad90ed}</UniqueIdentifier>
+      <UniqueIdentifier>{17ba1660-b24a-441c-ab62-24cafa3c21e8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\BabyWars\Script\WarScene\PlayerManager">
-      <UniqueIdentifier>{5ccc5e84-04a5-4171-909e-08e7272728e6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\BabyWars\Script\WarScene\TurnManager">
-      <UniqueIdentifier>{34425d66-04aa-42fd-880d-76a7a4ff5225}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\BabyWars\Utilities\TurnPhase">
-      <UniqueIdentifier>{9353b8a3-4141-4bec-8cdd-505abce3ccbf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\BabyWars\Utilities\XMLSerialization">
-      <UniqueIdentifier>{67f2e8c7-dfbe-44d4-9b70-2b285f41e113}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\BabyWars\Utilities\XMLSerialization\Actor">
-      <UniqueIdentifier>{39477e40-7e5a-4125-9f85-3238f1d5038f}</UniqueIdentifier>
+    <Filter Include="src\BabyWars\Script\WarScene\HUD">
+      <UniqueIdentifier>{37c85790-6f87-4c2c-9397-f218747e1e1b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -126,10 +84,19 @@
     <ClCompile Include="..\Classes\HelloWorldScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\ActionComponent.cpp">
+      <Filter>src\BabyEngine\Actor</Filter>
+    </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Actor\Actor.cpp">
       <Filter>src\BabyEngine\Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Actor\ActorComponent.cpp">
+      <Filter>src\BabyEngine\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\BaseActorFactory.cpp">
+      <Filter>src\BabyEngine\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\BaseRenderComponent.cpp">
       <Filter>src\BabyEngine\Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Actor\BaseScriptComponent.cpp">
@@ -138,8 +105,35 @@
     <ClCompile Include="..\Classes\BabyEngine\Actor\FiniteTimeActionComponent.cpp">
       <Filter>src\BabyEngine\Actor</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.cpp">
+      <Filter>src\BabyEngine\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.cpp">
+      <Filter>src\BabyEngine\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Actor\TransformComponent.cpp">
+      <Filter>src\BabyEngine\Actor</Filter>
+    </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Event\EventDispatcher.cpp">
       <Filter>src\BabyEngine\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Event\EvtDataInputDrag.cpp">
+      <Filter>src\BabyEngine\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Event\EvtDataInputTouch.cpp">
+      <Filter>src\BabyEngine\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Event\EvtDataRequestDestroyActor.cpp">
+      <Filter>src\BabyEngine\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\GameLogic\BaseGameLogic.cpp">
+      <Filter>src\BabyEngine\GameLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Graphic2D\BaseController.cpp">
+      <Filter>src\BabyEngine\Graphic2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Graphic2D\TouchAndDragController.cpp">
+      <Filter>src\BabyEngine\Graphic2D</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Process\BaseProcess.cpp">
       <Filter>src\BabyEngine\Process</Filter>
@@ -147,11 +141,128 @@
     <ClCompile Include="..\Classes\BabyEngine\Process\ProcessRunner.cpp">
       <Filter>src\BabyEngine\Process</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\UserInterface\BaseGameView.cpp">
+      <Filter>src\BabyEngine\UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\UserInterface\BaseHumanView.cpp">
+      <Filter>src\BabyEngine\UserInterface</Filter>
+    </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Utilities\RelativePosition.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\SetSceneNodePropertiesWithXML.cpp">
       <Filter>src\BabyEngine\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyEngine\Utilities\SingletonContainer.cpp">
       <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToAnimation.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToButton.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToFadeTo.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToFiniteTimeAction.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToLabel.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToLayer.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToListView.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToMenu.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToMenuItemImage.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToNode.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToParticleExplosion.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToRect.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToScale9Sprite.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToScene.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSceneNode.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSceneNodeAddChildCallback.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSize.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSprite.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToVec2.cpp">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Actor\BabyWarsActorFactory.cpp">
+      <Filter>src\BabyWars\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataAllUnitsUnfocused.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataBeginTurn.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataBeginTurnEffectDisappeared.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataDragScene.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataGameCommandGenerated.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataLoadWarSceneEnd.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPathEnd.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataRequestChangeTurnPhase.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataRequestChangeUnitState.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataShowMovingAreaEnd.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataTurnPhaseChanged.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataUnitIndexChangeEnd.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataUnitStateChangeEnd.cpp">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\GameLogic\BabyWarsGameLogic.cpp">
+      <Filter>src\BabyWars\GameLogic</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Resource\ResourceLoader.cpp">
       <Filter>src\BabyWars\Resource</Filter>
@@ -159,188 +270,116 @@
     <ClCompile Include="..\Classes\BabyWars\Resource\TileData.cpp">
       <Filter>src\BabyWars\Resource</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Resource\UnitAnimation.cpp">
+      <Filter>src\BabyWars\Resource</Filter>
+    </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Resource\UnitData.cpp">
       <Filter>src\BabyWars\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\GameLogic\BaseGameLogic.cpp">
-      <Filter>src\BabyEngine\GameLogic</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Script\PlayerManagerScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Actor\BaseActorFactory.cpp">
-      <Filter>src\BabyEngine\Actor</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Script\PlayerScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Actor\BabyWarsActorFactory.cpp">
-      <Filter>src\BabyWars\Actor</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Script\TileMapScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\GameLogic\BabyWarsGameLogic.cpp">
-      <Filter>src\BabyWars\GameLogic</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Script\TileScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Event\EvtDataRequestDestroyActor.cpp">
-      <Filter>src\BabyEngine\Event</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Script\TurnManagerScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\UserInterface\BaseHumanView.cpp">
-      <Filter>src\BabyEngine\UserInterface</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Script\UnitMapScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\UserInterface\BaseGameView.cpp">
-      <Filter>src\BabyEngine\UserInterface</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Script\UnitScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\WarFieldScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\WarSceneScript.cpp">
+      <Filter>src\BabyWars\Script</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\UserInterface\BabyWarsHumanView.cpp">
       <Filter>src\BabyWars\UserInterface</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataDragScene.cpp">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\MovingArea.cpp">
+    <ClCompile Include="..\Classes\BabyWars\Utilities\ActiveUnitState.cpp">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\MovingPath.cpp">
+    <ClCompile Include="..\Classes\BabyWars\Utilities\BeginningTurnPhase.cpp">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\EndTurnPhase.cpp">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Utilities\GridIndex.cpp">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Actor\TransformComponent.cpp">
-      <Filter>src\BabyEngine\Actor</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\IdleUnitState.cpp">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.cpp">
-      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.cpp">
-      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Graphic2D\BaseController.cpp">
-      <Filter>src\BabyEngine\Graphic2D</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Event\EvtDataInputTouch.cpp">
-      <Filter>src\BabyEngine\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Event\EvtDataInputDrag.cpp">
-      <Filter>src\BabyEngine\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Graphic2D\TouchAndDragController.cpp">
-      <Filter>src\BabyEngine\Graphic2D</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPathEnd.cpp">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataShowMovingAreaEnd.cpp">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataUnitStateChangeEnd.cpp">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataUnitIndexChangeEnd.cpp">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataRequestChangeUnitState.cpp">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Actor\BaseRenderComponent.cpp">
-      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\UnitStateFactory.cpp">
-      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\InvalidTurnPhase.cpp">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Utilities\InvalidUnitState.cpp">
-      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\IdleUnitState.cpp">
-      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\MainTurnPhase.cpp">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\ActiveUnitState.cpp">
-      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\Matrix2DDimension.cpp">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\MovingUnitState.cpp">
-      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\MovingArea.cpp">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Utilities\MovingEndUnitState.cpp">
-      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\WaitingUnitState.cpp">
-      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\MovingPath.cpp">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\MovingUnitState.cpp">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\StandbyTurnPhase.cpp">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\TurnPhaseFactory.cpp">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Utilities\UnitState.cpp">
-      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataLoadWarSceneEnd.cpp">
-      <Filter>src\BabyWars\Event</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\UnitStateFactory.cpp">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataBeginTurn.cpp">
-      <Filter>src\BabyWars\Event</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\WaitingUnitState.cpp">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToButton.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToActorUnit.cpp">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\SetSceneNodePropertiesWithXML.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToColorTypeCode.cpp">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToLabel.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToUnitStateTypeCode.cpp">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToLayer.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Script\MovingAreaGridScript.cpp">
+      <Filter>src\BabyWars\Script\WarScene\Field\MovingArea</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToListView.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Script\MovingAreaScript.cpp">
+      <Filter>src\BabyWars\Script\WarScene\Field\MovingArea</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToMenu.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Script\MovingPathGridScript.cpp">
+      <Filter>src\BabyWars\Script\WarScene\Field\MovingPath</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToMenuItemImage.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToNode.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToParticleExplosion.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSceneNode.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToScene.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToScale9Sprite.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSprite.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToRect.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSize.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToVec2.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToSceneNodeAddChildCallback.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Actor\ActionComponent.cpp">
-      <Filter>src\BabyEngine\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToFadeTo.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\Action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToFiniteTimeAction.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\Action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataGameCommandGenerated.cpp">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\WarSceneScript.cpp">
-      <Filter>src\BabyWars\Script\WarScene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\WarSceneHUDScript.cpp">
-      <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Script\MovingPathScript.cpp">
+      <Filter>src\BabyWars\Script\WarScene\Field\MovingPath</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Script\BeginTurnEffectLabelScript.cpp">
       <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
@@ -360,95 +399,14 @@
     <ClCompile Include="..\Classes\BabyWars\Script\MoneyInfoPanelScript.cpp">
       <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\WarFieldScript.cpp">
-      <Filter>src\BabyWars\Script\WarScene\Field</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\TileMapScript.cpp">
-      <Filter>src\BabyWars\Script\WarScene\Field\TileMap</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\TileScript.cpp">
-      <Filter>src\BabyWars\Script\WarScene\Field\TileMap</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\UnitMapScript.cpp">
-      <Filter>src\BabyWars\Script\WarScene\Field\UnitMap</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\UnitScript.cpp">
-      <Filter>src\BabyWars\Script\WarScene\Field\UnitMap</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Script\TerrainInfoPanelScript.cpp">
       <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\MovingAreaGridScript.cpp">
-      <Filter>src\BabyWars\Script\WarScene\Field\MovingArea</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\MovingAreaScript.cpp">
-      <Filter>src\BabyWars\Script\WarScene\Field\MovingArea</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\MovingPathGridScript.cpp">
-      <Filter>src\BabyWars\Script\WarScene\Field\MovingPath</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\MovingPathScript.cpp">
-      <Filter>src\BabyWars\Script\WarScene\Field\MovingPath</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\PlayerManagerScript.cpp">
-      <Filter>src\BabyWars\Script\WarScene\PlayerManager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\PlayerScript.cpp">
-      <Filter>src\BabyWars\Script\WarScene\PlayerManager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\TurnManagerScript.cpp">
-      <Filter>src\BabyWars\Script\WarScene\TurnManager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataBeginTurnEffectDisappeared.cpp">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataAllUnitsUnfocused.cpp">
-      <Filter>src\BabyWars\Event</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Script\TurnAndPlayerLabelScript.cpp">
       <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\InvalidTurnPhase.cpp">
-      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\TurnPhaseFactory.cpp">
-      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\BeginningTurnPhase.cpp">
-      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataTurnPhaseChanged.cpp">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Event\EvtDataRequestChangeTurnPhase.cpp">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\StandbyTurnPhase.cpp">
-      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\MainTurnPhase.cpp">
-      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\EndTurnPhase.cpp">
-      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\Matrix2DDimension.cpp">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToActorUnit.cpp">
-      <Filter>src\BabyWars\Utilities\XMLSerialization\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToUnitStateTypeCode.cpp">
-      <Filter>src\BabyWars\Utilities\XMLSerialization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Resource\UnitAnimation.cpp">
-      <Filter>src\BabyWars\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToColorTypeCode.cpp">
-      <Filter>src\BabyWars\Utilities\XMLSerialization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyEngine\Utilities\XMLToAnimation.cpp">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
+    <ClCompile Include="..\Classes\BabyWars\Script\WarSceneHUDScript.cpp">
+      <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -461,6 +419,9 @@
     <ClInclude Include="..\Classes\HelloWorldScene.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\ActionComponent.h">
+      <Filter>src\BabyEngine\Actor</Filter>
+    </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Actor\Actor.h">
       <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
@@ -470,13 +431,28 @@
     <ClInclude Include="..\Classes\BabyEngine\Actor\ActorID.h">
       <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\BaseActorFactory.h">
+      <Filter>src\BabyEngine\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\BaseRenderComponent.h">
+      <Filter>src\BabyEngine\Actor</Filter>
+    </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Actor\BaseScriptComponent.h">
       <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Actor\FiniteTimeActionComponent.h">
       <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.h">
+      <Filter>src\BabyEngine\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.h">
+      <Filter>src\BabyEngine\Actor</Filter>
+    </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Actor\SoundPlayer.h">
+      <Filter>src\BabyEngine\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Actor\TransformComponent.h">
       <Filter>src\BabyEngine\Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Event\BaseEventData.h">
@@ -491,6 +467,12 @@
     <ClInclude Include="..\Classes\BabyEngine\Event\EvtDataGeneric.h">
       <Filter>src\BabyEngine\Event</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Event\EvtDataInputDrag.h">
+      <Filter>src\BabyEngine\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Event\EvtDataInputTouch.h">
+      <Filter>src\BabyEngine\Event</Filter>
+    </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Event\EvtDataRequestDestroyActor.h">
       <Filter>src\BabyEngine\Event</Filter>
     </ClInclude>
@@ -500,11 +482,29 @@
     <ClInclude Include="..\Classes\BabyEngine\Event\IEventDispatcher.h">
       <Filter>src\BabyEngine\Event</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\GameLogic\BaseGameLogic.h">
+      <Filter>src\BabyEngine\GameLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Graphic2D\BaseController.h">
+      <Filter>src\BabyEngine\Graphic2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Graphic2D\TouchAndDragController.h">
+      <Filter>src\BabyEngine\Graphic2D</Filter>
+    </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Process\BaseProcess.h">
       <Filter>src\BabyEngine\Process</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Process\ProcessRunner.h">
       <Filter>src\BabyEngine\Process</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\UserInterface\BaseGameView.h">
+      <Filter>src\BabyEngine\UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\UserInterface\BaseHumanView.h">
+      <Filter>src\BabyEngine\UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\UserInterface\GameViewID.h">
+      <Filter>src\BabyEngine\UserInterface</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Utilities\GenericFactory.h">
       <Filter>src\BabyEngine\Utilities</Filter>
@@ -512,11 +512,122 @@
     <ClInclude Include="..\Classes\BabyEngine\Utilities\RelativePosition.h">
       <Filter>src\BabyEngine\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\SetSceneNodePropertiesWithXML.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Utilities\SingletonContainer.h">
       <Filter>src\BabyEngine\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyEngine\Utilities\StringToVector.h">
       <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToAnimation.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToButton.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToFadeTo.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToFiniteTimeAction.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToLabel.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToLayer.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToListView.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToMenu.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToMenuItemImage.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToNode.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToParticleExplosion.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToRect.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToScale9Sprite.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToScene.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSceneNode.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSceneNodeAddChildCallback.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSize.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSprite.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToVec2.h">
+      <Filter>src\BabyEngine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Actor\BabyWarsActorFactory.h">
+      <Filter>src\BabyWars\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataAllUnitsUnfocused.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataBeginTurn.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataBeginTurnEffectDisappeared.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataDragScene.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataGameCommandGenerated.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataLoadWarSceneEnd.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPathEnd.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataRequestChangeTurnPhase.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataRequestChangeUnitState.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataShowMovingAreaEnd.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataTurnPhaseChanged.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataUnitIndexChangeEnd.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataUnitStateChangeEnd.h">
+      <Filter>src\BabyWars\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\GameLogic\BabyWarsGameLogic.h">
+      <Filter>src\BabyWars\GameLogic</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Resource\ResourceLoader.h">
       <Filter>src\BabyWars\Resource</Filter>
@@ -527,46 +638,76 @@
     <ClInclude Include="..\Classes\BabyWars\Resource\TileDataID.h">
       <Filter>src\BabyWars\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Resource\UnitAnimation.h">
+      <Filter>src\BabyWars\Resource</Filter>
+    </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitData.h">
       <Filter>src\BabyWars\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\GameLogic\BaseGameLogic.h">
-      <Filter>src\BabyEngine\GameLogic</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Resource\UnitDataType.h">
+      <Filter>src\BabyWars\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Actor\BaseActorFactory.h">
-      <Filter>src\BabyEngine\Actor</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Script\PlayerManagerScript.h">
+      <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Actor\BabyWarsActorFactory.h">
-      <Filter>src\BabyWars\Actor</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Script\PlayerScript.h">
+      <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\GameLogic\BabyWarsGameLogic.h">
-      <Filter>src\BabyWars\GameLogic</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Script\TileMapScript.h">
+      <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\UserInterface\BaseHumanView.h">
-      <Filter>src\BabyEngine\UserInterface</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Script\TileScript.h">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\TurnManagerScript.h">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\UnitMapScript.h">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\UnitScript.h">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\WarFieldScript.h">
+      <Filter>src\BabyWars\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\WarSceneScript.h">
+      <Filter>src\BabyWars\Script</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\UserInterface\BabyWarsHumanView.h">
       <Filter>src\BabyWars\UserInterface</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\UserInterface\GameViewID.h">
-      <Filter>src\BabyEngine\UserInterface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\UserInterface\BaseGameView.h">
-      <Filter>src\BabyEngine\UserInterface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataDragScene.h">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\MovingArea.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\MovingPath.h">
+    <ClInclude Include="..\Classes\BabyWars\Utilities\ActiveUnitState.h">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Utilities\AdjacentDirection.h">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\BeginningTurnPhase.h">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\ColorTypeCode.h">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\EndTurnPhase.h">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\GameCommand.h">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Utilities\GridIndex.h">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\IdleUnitState.h">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\InvalidTurnPhase.h">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\InvalidUnitState.h">
+      <Filter>src\BabyWars\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\MainTurnPhase.h">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Utilities\Matrix2D.h">
@@ -575,158 +716,68 @@
     <ClInclude Include="..\Classes\BabyWars\Utilities\Matrix2DDimension.h">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Actor\TransformComponent.h">
-      <Filter>src\BabyEngine\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Actor\SceneRenderComponent.h">
-      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Actor\GeneralRenderComponent.h">
-      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Graphic2D\BaseController.h">
-      <Filter>src\BabyEngine\Graphic2D</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Event\EvtDataInputTouch.h">
-      <Filter>src\BabyEngine\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Event\EvtDataInputDrag.h">
-      <Filter>src\BabyEngine\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Graphic2D\TouchAndDragController.h">
-      <Filter>src\BabyEngine\Graphic2D</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataMakeMovingPathEnd.h">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataShowMovingAreaEnd.h">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataUnitStateChangeEnd.h">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataUnitIndexChangeEnd.h">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\GameCommand.h">
+    <ClInclude Include="..\Classes\BabyWars\Utilities\MovingArea.h">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataRequestChangeUnitState.h">
-      <Filter>src\BabyWars\Event</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\MovingEndUnitState.h">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Actor\BaseRenderComponent.h">
-      <Filter>src\BabyEngine\Actor\RenderComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\UnitState.h">
-      <Filter>src\BabyWars\Utilities\UnitState</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\InvalidUnitState.h">
-      <Filter>src\BabyWars\Utilities\UnitState</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\UnitStateTypeCode.h">
-      <Filter>src\BabyWars\Utilities\UnitState</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\UnitStateFactory.h">
-      <Filter>src\BabyWars\Utilities\UnitState</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\IdleUnitState.h">
-      <Filter>src\BabyWars\Utilities\UnitState</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\ActiveUnitState.h">
-      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\MovingPath.h">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Utilities\MovingUnitState.h">
-      <Filter>src\BabyWars\Utilities\UnitState</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\MovingEndUnitState.h">
-      <Filter>src\BabyWars\Utilities\UnitState</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\WaitingUnitState.h">
-      <Filter>src\BabyWars\Utilities\UnitState</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Actor\ActionComponent.h">
-      <Filter>src\BabyEngine\Actor</Filter>
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Utilities\PlayerID.h">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataLoadWarSceneEnd.h">
-      <Filter>src\BabyWars\Event</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\StandbyTurnPhase.h">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataBeginTurn.h">
-      <Filter>src\BabyWars\Event</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\TurnIndex.h">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToButton.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\TurnPhase.h">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\SetSceneNodePropertiesWithXML.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\TurnPhaseFactory.h">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToLabel.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\TurnPhaseTypeCode.h">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToLayer.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\UnitState.h">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToListView.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\UnitStateFactory.h">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToMenu.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\UnitStateTypeCode.h">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToMenuItemImage.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\WaitingUnitState.h">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToNode.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToActorUnit.h">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToParticleExplosion.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToColorTypeCode.h">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSceneNode.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToUnitStateTypeCode.h">
+      <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToScene.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Script\MovingAreaGridScript.h">
+      <Filter>src\BabyWars\Script\WarScene\Field\MovingArea</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToScale9Sprite.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Script\MovingAreaScript.h">
+      <Filter>src\BabyWars\Script\WarScene\Field\MovingArea</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSprite.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Script\MovingPathGridScript.h">
+      <Filter>src\BabyWars\Script\WarScene\Field\MovingPath</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToTransitionScene.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToColor3B.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToRect.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSize.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToVec2.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToSceneNodeAddChildCallback.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\SceneNode</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToFadeTo.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\Action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToFiniteTimeAction.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\Action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataGameCommandGenerated.h">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\WarSceneScript.h">
-      <Filter>src\BabyWars\Script\WarScene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\WarSceneHUDScript.h">
-      <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Script\MovingPathScript.h">
+      <Filter>src\BabyWars\Script\WarScene\Field\MovingPath</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Script\BeginTurnEffectLabelScript.h">
       <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
@@ -746,107 +797,14 @@
     <ClInclude Include="..\Classes\BabyWars\Script\MoneyInfoPanelScript.h">
       <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\WarFieldScript.h">
-      <Filter>src\BabyWars\Script\WarScene\Field</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\TileMapScript.h">
-      <Filter>src\BabyWars\Script\WarScene\Field\TileMap</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\TileScript.h">
-      <Filter>src\BabyWars\Script\WarScene\Field\TileMap</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\UnitMapScript.h">
-      <Filter>src\BabyWars\Script\WarScene\Field\UnitMap</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\UnitScript.h">
-      <Filter>src\BabyWars\Script\WarScene\Field\UnitMap</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Script\TerrainInfoPanelScript.h">
       <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\MovingAreaGridScript.h">
-      <Filter>src\BabyWars\Script\WarScene\Field\MovingArea</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\MovingAreaScript.h">
-      <Filter>src\BabyWars\Script\WarScene\Field\MovingArea</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\MovingPathGridScript.h">
-      <Filter>src\BabyWars\Script\WarScene\Field\MovingPath</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\MovingPathScript.h">
-      <Filter>src\BabyWars\Script\WarScene\Field\MovingPath</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\PlayerManagerScript.h">
-      <Filter>src\BabyWars\Script\WarScene\PlayerManager</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\PlayerScript.h">
-      <Filter>src\BabyWars\Script\WarScene\PlayerManager</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\TurnManagerScript.h">
-      <Filter>src\BabyWars\Script\WarScene\TurnManager</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataBeginTurnEffectDisappeared.h">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataAllUnitsUnfocused.h">
-      <Filter>src\BabyWars\Event</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Script\TurnAndPlayerLabelScript.h">
       <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\TurnPhase.h">
-      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\TurnPhaseTypeCode.h">
-      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\InvalidTurnPhase.h">
-      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\TurnPhaseFactory.h">
-      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\BeginningTurnPhase.h">
-      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\TurnIndex.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataTurnPhaseChanged.h">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Event\EvtDataRequestChangeTurnPhase.h">
-      <Filter>src\BabyWars\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\StandbyTurnPhase.h">
-      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\MainTurnPhase.h">
-      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\EndTurnPhase.h">
-      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToActorUnit.h">
-      <Filter>src\BabyWars\Utilities\XMLSerialization\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToUnitStateTypeCode.h">
-      <Filter>src\BabyWars\Utilities\XMLSerialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Resource\UnitAnimation.h">
-      <Filter>src\BabyWars\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\ColorTypeCode.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToColorTypeCode.h">
-      <Filter>src\BabyWars\Utilities\XMLSerialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyEngine\Utilities\XMLToAnimation.h">
-      <Filter>src\BabyEngine\Utilities\XMLSerialization\BasicTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Resource\UnitDataType.h">
-      <Filter>src\BabyWars\Resource</Filter>
+    <ClInclude Include="..\Classes\BabyWars\Script\WarSceneHUDScript.h">
+      <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

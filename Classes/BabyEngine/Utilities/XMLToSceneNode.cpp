@@ -3,7 +3,7 @@
 
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
-#include "cocos2d/external/tinyxml2/tinyxml2.h"
+#include "../cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "XMLToSceneNode.h"
 #include "XMLToButton.h"

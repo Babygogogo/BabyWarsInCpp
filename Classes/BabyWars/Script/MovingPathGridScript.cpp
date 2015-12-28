@@ -1,5 +1,5 @@
 #include "cocos2d.h"
-#include "cocos2d/external/tinyxml2/tinyxml2.h"
+#include "../cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
@@ -51,8 +51,9 @@ std::string MovingPathGridScript::MovingPathGridScriptImpl::s_SpriteFrameNameLin
 
 const std::string & MovingPathGridScript::MovingPathGridScriptImpl::getSpriteFrameName(AdjacentDirection previous, AdjacentDirection next) const
 {
-	if (previous == next)
+	if (previous == next) {
 		return s_SpriteFrameNameEmpty;
+	}
 
 	switch (previous)
 	{

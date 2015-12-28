@@ -1,5 +1,5 @@
 #include "ui/UIListView.h"
-#include "cocos2d/external/tinyxml2/tinyxml2.h"
+#include "../cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "XMLToListView.h"
 

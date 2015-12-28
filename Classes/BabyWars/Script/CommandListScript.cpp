@@ -1,6 +1,6 @@
 #include <vector>
 
-#include "cocos2d/external/tinyxml2/tinyxml2.h"
+#include "../cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/GameLogic/BaseGameLogic.h"
 #include "../../BabyEngine/Actor/Actor.h"

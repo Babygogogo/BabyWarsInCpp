@@ -1,5 +1,7 @@
+#include <fstream>
+
 #include "AppDelegate.h"
-#include "cocos2d/external/tinyxml2/tinyxml2.h"
+#include "../cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "BabyEngine/Event/EventDispatcher.h"
 #include "BabyEngine/Graphic2D/TouchAndDragController.h"
@@ -16,7 +18,7 @@ USING_NS_CC;
 //////////////////////////////////////////////////////////////////////////
 struct AppDelegate::AppDelegateImpl
 {
-	AppDelegateImpl() {};
+	AppDelegateImpl() = default;
 	~AppDelegateImpl();
 
 	void initGame();
@@ -79,12 +81,18 @@ void AppDelegate::AppDelegateImpl::update(float deltaSec)
 //////////////////////////////////////////////////////////////////////////
 //Implementation of AppDelegate.
 //////////////////////////////////////////////////////////////////////////
+//static cocos2d::Size designResolutionSize = cocos2d::Size(480, 320);
 static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
 static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
 static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
 
 AppDelegate::AppDelegate() : pimpl{ std::make_unique<AppDelegateImpl>() }
 {
+	//std::fstream asdf;
+	//asdf.open("AAAAAA.txt", std::ios_base::out);
+	//if (asdf) {
+	//	asdf << "asdf" << std::endl;
+	//}
 }
 
 AppDelegate::~AppDelegate()
@@ -114,14 +122,14 @@ bool AppDelegate::applicationDidFinishLaunching()
 	//Read game settings from xml.
 	auto resourceLoader = SingletonContainer::getInstance()->set<ResourceLoader>(std::make_unique<ResourceLoader>());
 	resourceLoader->loadGameSettings("GameSettings.xml");
-	const auto designResolution = resourceLoader->getDesignResolution();
+	const auto designResolutionSize = resourceLoader->getDesignResolution();
 
 	// initialize director
 	auto director = Director::getInstance();
 	auto glview = director->getOpenGLView();
 	if (!glview) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-		glview = GLViewImpl::createWithRect("BabyWars", Rect(0, 0, designResolution.width, designResolution.height));
+		glview = GLViewImpl::createWithRect("BabyWars", Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
 #else
 		glview = GLViewImpl::create("BabyWars");
 #endif
@@ -135,22 +143,22 @@ bool AppDelegate::applicationDidFinishLaunching()
 	director->setAnimationInterval(1.0 / resourceLoader->getFramesPerSecond());
 
 	// Set the design resolution
-	glview->setDesignResolutionSize(designResolution.width, designResolution.height, ResolutionPolicy::NO_BORDER);
+	glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
 	//Size frameSize = glview->getFrameSize();
 	//// if the frame's height is larger than the height of medium size.
 	//if (frameSize.height > mediumResolutionSize.height)
 	//{
-	//	director->setContentScaleFactor(MIN(largeResolutionSize.height / designResolution.height, largeResolutionSize.width / designResolution.width));
+	//    director->setContentScaleFactor(MIN(largeResolutionSize.height/designResolutionSize.height, largeResolutionSize.width/designResolutionSize.width));
 	//}
 	//// if the frame's height is larger than the height of small size.
 	//else if (frameSize.height > smallResolutionSize.height)
 	//{
-	//	director->setContentScaleFactor(MIN(mediumResolutionSize.height / designResolution.height, mediumResolutionSize.width / designResolution.width));
+	//    director->setContentScaleFactor(MIN(mediumResolutionSize.height/designResolutionSize.height, mediumResolutionSize.width/designResolutionSize.width));
 	//}
 	//// if the frame's height is smaller than the height of medium size.
 	//else
 	//{
-	//	director->setContentScaleFactor(MIN(smallResolutionSize.height / designResolution.height, smallResolutionSize.width / designResolution.width));
+	//    director->setContentScaleFactor(MIN(smallResolutionSize.height/designResolutionSize.height, smallResolutionSize.width/designResolutionSize.width));
 	//}
 
 	register_all_packages();

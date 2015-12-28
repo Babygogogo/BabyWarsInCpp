@@ -1,7 +1,7 @@
 #include <list>
 
 #include "cocos2d.h"
-#include "cocos2d/external/tinyxml2/tinyxml2.h"
+#include "../cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "../../BabyEngine/Actor/Actor.h"
 #include "../../BabyEngine/Actor/BaseRenderComponent.h"
@@ -52,7 +52,7 @@ struct MovingPathScript::MovingPathScriptImpl
 	std::string m_MovingPathGridActorPath;
 
 	bool m_IsMakingPath{ false };
-	std::vector<std::weak_ptr<Actor>> m_ChildrenGridActorIDs;
+	std::vector<std::weak_ptr<Actor>> m_ChildrenGridActors;
 	MovingPath m_MovingPath;
 	std::weak_ptr<const MovingArea> m_MovingArea;
 
@@ -151,18 +151,17 @@ void MovingPathScript::MovingPathScriptImpl::updateAndShowPath(const GridIndex &
 void MovingPathScript::MovingPathScriptImpl::clearPath()
 {
 	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
-	for (const auto & weakChild : m_ChildrenGridActorIDs) {
-		if (weakChild.expired()) {
-			continue;
-		}
+	auto ownerActor = m_OwnerActor.lock();
 
-		auto strongChild = weakChild.lock();
-		eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(strongChild->getID()));
-		strongChild->getRenderComponent()->getSceneNode()->removeFromParent();
+	for (const auto & weakChild : m_ChildrenGridActors) {
+		if (auto strongChild = weakChild.lock()) {
+			ownerActor->removeChild(*strongChild);
+			eventDispatcher->vQueueEvent(std::make_unique<EvtDataRequestDestroyActor>(strongChild->getID()));
+		}
 	}
 
 	m_MovingPath.clear();
-	m_ChildrenGridActorIDs.clear();
+	m_ChildrenGridActors.clear();
 }
 
 MovingPath MovingPathScript::MovingPathScriptImpl::createPath(const MovingPath & oldPath, const GridIndex & destination, const MovingArea & area) const
@@ -208,19 +207,24 @@ MovingPath MovingPathScript::MovingPathScriptImpl::createPath(const MovingPath &
 
 void MovingPathScript::MovingPathScriptImpl::setChildrenGridActors(const MovingPath & path, Actor & self)
 {
+	if (path.getLength() <= 1) {
+		return;
+	}
+
 	auto gameLogic = SingletonContainer::getInstance()->get<BaseGameLogic>();
-	auto selfSceneNode = self.getRenderComponent()->getSceneNode();
 
 	for (const auto & pathNode : path.getUnderlyingPath()) {
 		const auto & index = pathNode.m_GridIndex;
 
 		auto previousDirection = AdjacentDirection::INVALID;
-		if (path.hasPreviousOf(index))
+		if (path.hasPreviousOf(index)) {
 			previousDirection = path.getPreviousNodeOf(index).m_GridIndex.getAdjacentDirectionOf(index);
+		}
 
 		auto nextDirection = AdjacentDirection::INVALID;
-		if (path.hasNextOf(index))
+		if (path.hasNextOf(index)) {
 			nextDirection = path.getNextNodeOf(index).m_GridIndex.getAdjacentDirectionOf(index);
+		}
 
 		//Create the grid actor and attach it to self.
 		auto gridActor = gameLogic->createActorAndChildren(m_MovingPathGridActorPath.c_str());
@@ -229,8 +233,7 @@ void MovingPathScript::MovingPathScriptImpl::setChildrenGridActors(const MovingP
 		gridScript->setPositionWithGridIndex(index);
 
 		self.addChild(*gridActor);
-		m_ChildrenGridActorIDs.emplace_back(gridActor);
-		//selfSceneNode->addChild(gridActor->getRenderComponent()->getSceneNode());
+		m_ChildrenGridActors.emplace_back(gridActor);
 	}
 }
 

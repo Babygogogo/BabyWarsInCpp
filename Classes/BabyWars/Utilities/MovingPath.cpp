@@ -94,7 +94,7 @@ MovingPath::PathNode MovingPath::getBackNode() const
 
 MovingPath::PathNode MovingPath::getPreviousNodeOf(const GridIndex & index) const
 {
-	auto findIter = std::find_if(m_Path.begin(), m_Path.end(), [index](const MovingPath::PathNode & node) {
+	auto findIter = std::find_if(m_Path.begin(), m_Path.end(), [index](const auto & node) {
 		return node.m_GridIndex == index;
 	});
 
@@ -105,12 +105,13 @@ MovingPath::PathNode MovingPath::getPreviousNodeOf(const GridIndex & index) cons
 
 MovingPath::PathNode MovingPath::getNextNodeOf(const GridIndex & index) const
 {
-	auto findIter = std::find_if(m_Path.begin(), m_Path.end(), [index](const MovingPath::PathNode & node) {
+	auto findIter = std::find_if(m_Path.begin(), m_Path.end(), [index](const auto & node) {
 		return node.m_GridIndex == index;
 	});
 
 	assert(findIter != m_Path.end() && "MovingPath::getNextNodeOf() the next node doesn't exist.");
-	assert((++findIter) != m_Path.end() && "MovingPath::getNextNodeOf() the next node doesn't exist.");
+	++findIter;
+	assert((findIter) != m_Path.end() && "MovingPath::getNextNodeOf() the next node doesn't exist.");
 
 	return *findIter;
 }

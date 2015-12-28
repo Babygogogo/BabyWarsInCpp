@@ -1,7 +1,7 @@
 #include <cassert>
 
 #include "cocos2d.h"
-#include "cocos2d/external/tinyxml2/tinyxml2.h"
+#include "../cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "GeneralRenderComponent.h"
 #include "../Utilities/XMLToSceneNode.h"

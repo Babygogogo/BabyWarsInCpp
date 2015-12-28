@@ -1,5 +1,5 @@
 #include "ui/UIScale9Sprite.h"
-#include "cocos2d/external/tinyxml2/tinyxml2.h"
+#include "../cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "XMLToScale9Sprite.h"
 #include "XMLToRect.h"

@@ -190,3 +190,6 @@ ModelManifest.xml
 /cocos2d
 /proj.win32/Debug.win32
 /proj.win32/BabyWars.VC.opendb
+/proj.win32/Release.win32
+/proj.win10/App/Generated Files
+/proj.win10/BabyWars.VC.opendb
