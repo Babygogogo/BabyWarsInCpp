@@ -3,6 +3,8 @@
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../Event/EvtDataRequestChangeTurnPhase.h"
+#include "../Script/UnitScript.h"
+#include "UnitStateTypeCode.h"
 #include "TurnPhaseTypeCode.h"
 #include "EndTurnPhase.h"
 #include "GameCommand.h"
@@ -26,4 +28,10 @@ void EndTurnPhase::vOnEnterPhase(TurnManagerScript & turnManagerScript) const
 std::vector<GameCommand> EndTurnPhase::vGenerateGameCommands() const
 {
 	return{};
+}
+
+void EndTurnPhase::vUpdateUnit(UnitScript & unitScript) const
+{
+	unitScript.setCanRespondToTouch(false);
+	unitScript.setStateAndAppearanceAndQueueEvent(UnitStateTypeCode::Idle);
 }

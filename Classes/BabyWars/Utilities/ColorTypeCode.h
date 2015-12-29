@@ -1,14 +1,8 @@
 #ifndef __COLOR_TYPE_CODE__
 #define __COLOR_TYPE_CODE__
 
-enum class ColorTypeCode
-{
-	Invalid,
-	Orange,
-	Blue,
-	Green,
-	Yellow,
-	Grey
-};
+#include <string>
+
+using ColorTypeCode = std::string;
 
 #endif // !__COLOR_TYPE_CODE__

@@ -31,6 +31,9 @@ public:
 	void setGridIndexAndPosition(const GridIndex & gridIndex);
 	GridIndex getGridIndex() const;
 
+	void setCanRespondToTouch(bool canRespond);
+	bool canRespondToTouch() const;
+
 	bool canSetState(UnitStateTypeCode stateCode) const;
 	UnitStateTypeCode getStateCode() const;
 	void setStateAndAppearanceAndQueueEvent(UnitStateTypeCode stateCode);

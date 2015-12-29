@@ -2,43 +2,87 @@
 <UnitMap Name="TestUnitMap" ColumnCount="32" RowCount="27">
 	<Units>
 		<Unit ActorPath="Actors\Units\Actor_Infantry.xml">
+			<Color Value="Orange"/>
 			<GridIndex Row="0" Column="5"/>
-			<PlayerID Value="1"/>
+			<PlayerID Value="P1"/>
 			<State Value="Idle"/>
 		</Unit>
 		<Unit ActorPath="Actors\Units\Actor_Tank.xml">
+			<Color Value="Orange"/>
 			<GridIndex Row="3" Column="9"/>
-			<PlayerID Value="1"/>
+			<PlayerID Value="P1"/>
 			<State Value="Idle"/>
 		</Unit>
 		<Unit ActorPath="Actors\Units\Actor_Bomber.xml">
+			<Color Value="Orange"/>
 			<GridIndex Row="7" Column="4"/>
-			<PlayerID Value="1"/>
+			<PlayerID Value="P1"/>
 			<State Value="Idle"/>
 		</Unit>
 		<Unit ActorPath="Actors\Units\Actor_Battleship.xml">
-			<GridIndex Row="7" Column="12"/>
-			<PlayerID Value="1"/>
-			<State Value="Idle"/>
-		</Unit>
-		<Unit ActorPath="Actors\Units\Actor_Battleship.xml">
+			<Color Value="Orange"/>
 			<GridIndex Row="7" Column="9"/>
-			<PlayerID Value="1"/>
+			<PlayerID Value="P1"/>
+			<State Value="Idle"/>
+		</Unit>
+		<Unit ActorPath="Actors\Units\Actor_Battleship.xml">
+			<Color Value="Orange"/>
+			<GridIndex Row="7" Column="12"/>
+			<PlayerID Value="P1"/>
+			<State Value="Idle"/>
+		</Unit>
+		<Unit ActorPath="Actors\Units\Actor_Battleship.xml">
+			<Color Value="Blue"/>
+			<GridIndex Row="8" Column="15"/>
+			<PlayerID Value="P2"/>
 			<State Value="Idle"/>
 		</Unit>
 		<Unit ActorPath="Actors\Units\Actor_Tank.xml">
-			<GridIndex Row="15" Column="22"/>
-			<PlayerID Value="1"/>
+			<Color Value="Blue"/>
+			<GridIndex Row="8" Column="19"/>
+			<PlayerID Value="P2"/>
 			<State Value="Idle"/>
 		</Unit>
 		<Unit ActorPath="Actors\Units\Actor_Tank.xml">
+			<Color Value="Orange"/>
 			<GridIndex Row="12" Column="16"/>
-			<PlayerID Value="1"/>
+			<PlayerID Value="P1"/>
+			<State Value="Idle"/>
+		</Unit>
+		<Unit ActorPath="Actors\Units\Actor_Bomber.xml">
+			<Color Value="Orange"/>
+			<GridIndex Row="13" Column="8"/>
+			<PlayerID Value="P1"/>
 			<State Value="Idle"/>
 		</Unit>
 		<Unit ActorPath="Actors\Units\Actor_Tank.xml">
+			<Color Value="Orange"/>
 			<GridIndex Row="15" Column="18"/>
-			<PlayerID Value="1"/>
+			<PlayerID Value="P1"/>
+			<State Value="Idle"/>
+		</Unit>
+		<Unit ActorPath="Actors\Units\Actor_Tank.xml">
+			<Color Value="Orange"/>
+			<GridIndex Row="15" Column="22"/>
+			<PlayerID Value="P1"/>
+			<State Value="Idle"/>
+		</Unit>
+		<Unit ActorPath="Actors\Units\Actor_Tank.xml">
+			<Color Value="Blue"/>
+			<GridIndex Row="15" Column="24"/>
+			<PlayerID Value="P2"/>
+			<State Value="Idle"/>
+		</Unit>
+		<Unit ActorPath="Actors\Units\Actor_Bomber.xml">
+			<Color Value="Blue"/>
+			<GridIndex Row="16" Column="15"/>
+			<PlayerID Value="P2"/>
+			<State Value="Idle"/>
+		</Unit>
+		<Unit ActorPath="Actors\Units\Actor_Bomber.xml">
+			<Color Value="Blue"/>
+			<GridIndex Row="18" Column="8"/>
+			<PlayerID Value="P2"/>
 			<State Value="Idle"/>
 		</Unit>
 	</Units>

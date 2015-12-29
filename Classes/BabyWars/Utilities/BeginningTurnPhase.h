@@ -22,6 +22,8 @@ private:
 	virtual void vOnEnterPhase(TurnManagerScript & turnManagerScript) const override;
 
 	virtual std::vector<GameCommand> vGenerateGameCommands() const override;
+
+	virtual void vUpdateUnit(UnitScript & unitScript) const override;
 };
 
 #endif // !__BEGINNING_TURN_PHASE__

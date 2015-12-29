@@ -3,7 +3,8 @@
 
 #include <memory>
 
-#include "UnitDataType.h"
+#include "../Utilities/UnitStateTypeCode.h"
+#include "../Utilities/ColorTypeCode.h"
 
 //Forward declaration.
 namespace tinyxml2
@@ -15,7 +16,6 @@ namespace cocos2d
 	class Animation;
 }
 enum class UnitStateTypeCode;
-enum class ColorTypeCode;
 
 class UnitAnimation
 {

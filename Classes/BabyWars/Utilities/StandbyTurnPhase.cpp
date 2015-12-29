@@ -3,6 +3,7 @@
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../Event/EvtDataRequestChangeTurnPhase.h"
+#include "../Script/UnitScript.h"
 #include "TurnPhaseTypeCode.h"
 #include "StandbyTurnPhase.h"
 #include "GameCommand.h"
@@ -26,4 +27,9 @@ void StandbyTurnPhase::vOnEnterPhase(TurnManagerScript & turnManagerScript) cons
 std::vector<GameCommand> StandbyTurnPhase::vGenerateGameCommands() const
 {
 	return{};
+}
+
+void StandbyTurnPhase::vUpdateUnit(UnitScript & unitScript) const
+{
+	unitScript.setCanRespondToTouch(false);
 }

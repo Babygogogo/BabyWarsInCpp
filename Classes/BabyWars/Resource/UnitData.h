@@ -5,6 +5,7 @@
 #include <string>
 
 #include "UnitDataType.h"
+#include "../Utilities/ColorTypeCode.h"
 
 //Forward declarations.
 namespace cocos2d
@@ -30,7 +31,7 @@ public:
 	int getMovementRange() const;
 	const std::string & getMovementType() const;
 
-	cocos2d::Animation * getAnimation() const;
+	cocos2d::Animation * getAnimation(const ColorTypeCode & color) const;
 	float getAnimationMovingSpeedGridPerSec() const;
 
 private:

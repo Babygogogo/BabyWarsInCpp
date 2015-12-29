@@ -6,6 +6,7 @@
 //Forward declaration.
 class TurnManagerScript;
 class GameCommand;
+class UnitScript;
 enum class TurnPhaseTypeCode;
 
 class TurnPhase
@@ -19,6 +20,8 @@ public:
 	virtual void vOnEnterPhase(TurnManagerScript & turnManagerScript) const = 0;
 
 	virtual std::vector<GameCommand> vGenerateGameCommands() const = 0;
+
+	virtual void vUpdateUnit(UnitScript & unitScript) const = 0;
 };
 
 #endif // !__TURN_PHASE__

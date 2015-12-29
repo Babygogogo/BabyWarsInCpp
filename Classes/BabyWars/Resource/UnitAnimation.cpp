@@ -2,8 +2,8 @@
 #include "../cocos2d/external/tinyxml2/tinyxml2.h"
 
 #include "UnitAnimation.h"
-#include "../Utilities/XMLToColorTypeCode.h"
 #include "../Utilities/XMLToUnitStateTypeCode.h"
+#include "../Utilities/XMLToColorTypeCode.h"
 #include "../../BabyEngine/Utilities/XMLToAnimation.h"
 
 //////////////////////////////////////////////////////////////////////////

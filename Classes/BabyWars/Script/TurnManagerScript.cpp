@@ -12,6 +12,7 @@
 #include "../Utilities/TurnPhase.h"
 #include "../Utilities/TurnPhaseFactory.h"
 #include "../Utilities/TurnPhaseTypeCode.h"
+#include "../Utilities/XMLToPlayerID.h"
 #include "PlayerManagerScript.h"
 #include "TurnManagerScript.h"
 
@@ -77,7 +78,8 @@ void TurnManagerScript::TurnManagerScriptImpl::setPhaseAndQueueEvent(TurnPhaseTy
 
 void TurnManagerScript::TurnManagerScriptImpl::queueEventTurnPhaseChanged() const
 {
-	SingletonContainer::getInstance()->get<IEventDispatcher>()->vQueueEvent(std::make_unique<EvtDataTurnPhaseChanged>(m_SelfScript, m_TurnPhase));
+	//The EvtDataTurnPhaseChanged should be triggered ASAP instead of being queued, because a phase may immediately change to a new phase before the event in queue being dispatched.
+	SingletonContainer::getInstance()->get<IEventDispatcher>()->vTrigger(std::make_unique<EvtDataTurnPhaseChanged>(m_SelfScript, m_TurnPhase));
 }
 
 bool TurnManagerScript::TurnManagerScriptImpl::isTurnIndexValid() const
@@ -158,7 +160,7 @@ void TurnManagerScript::loadTurn(const tinyxml2::XMLElement * xmlElement)
 
 	const auto currentTurnElement = xmlElement->FirstChildElement("CurrentTurn");
 	pimpl->m_CurrentTurnIndex = currentTurnElement->IntAttribute("TurnIndex");
-	pimpl->m_CurrentPlayerID = currentTurnElement->IntAttribute("PlayerID");
+	pimpl->m_CurrentPlayerID = utilities::XMLToPlayerID(currentTurnElement->FirstChildElement("PlayerID"));
 	pimpl->m_TurnPhase = utilities::createTurnPhaseWithXML(currentTurnElement);
 }
 

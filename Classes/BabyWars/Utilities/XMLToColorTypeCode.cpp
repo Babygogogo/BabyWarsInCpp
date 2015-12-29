@@ -13,25 +13,26 @@ ColorTypeCode utilities::XMLToColorTypeCode(const tinyxml2::XMLElement * xmlElem
 
 ColorTypeCode utilities::StringToColorTypeCode(const std::string & codeString)
 {
-	if (codeString == "Invalid") {
-		return ColorTypeCode::Invalid;
-	}
-	else if (codeString == "Orange") {
-		return ColorTypeCode::Orange;
-	}
-	else if (codeString == "Blue") {
-		return ColorTypeCode::Blue;
-	}
-	else if (codeString == "Green") {
-		return ColorTypeCode::Green;
-	}
-	else if (codeString == "Yellow") {
-		return ColorTypeCode::Yellow;
-	}
-	else if (codeString == "Grey") {
-		return ColorTypeCode::Grey;
-	}
+	//if (codeString == "Invalid") {
+	//	return ColorTypeCode::Invalid;
+	//}
+	//else if (codeString == "Orange") {
+	//	return ColorTypeCode::Orange;
+	//}
+	//else if (codeString == "Blue") {
+	//	return ColorTypeCode::Blue;
+	//}
+	//else if (codeString == "Green") {
+	//	return ColorTypeCode::Green;
+	//}
+	//else if (codeString == "Yellow") {
+	//	return ColorTypeCode::Yellow;
+	//}
+	//else if (codeString == "Grey") {
+	//	return ColorTypeCode::Grey;
+	//}
 
-	assert("utilities::StringToColorTypeCode() the code string is unrecognized.");
-	return ColorTypeCode::Invalid;
+	//assert("utilities::StringToColorTypeCode() the code string is unrecognized.");
+
+	return codeString;
 }

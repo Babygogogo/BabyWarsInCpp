@@ -68,9 +68,9 @@ const std::string & UnitData::getMovementType() const
 	return pimpl->m_MovementType;
 }
 
-cocos2d::Animation * UnitData::getAnimation() const
+cocos2d::Animation * UnitData::getAnimation(const ColorTypeCode & color) const
 {
-	return pimpl->m_Animation.getAnimation(UnitStateTypeCode::Idle, ColorTypeCode::Orange);
+	return pimpl->m_Animation.getAnimation(UnitStateTypeCode::Idle, color);
 }
 
 float UnitData::getAnimationMovingSpeedGridPerSec() const

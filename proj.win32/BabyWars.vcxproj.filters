@@ -73,6 +73,33 @@
     <Filter Include="src\BabyWars\Script\WarScene\HUD">
       <UniqueIdentifier>{37c85790-6f87-4c2c-9397-f218747e1e1b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\BabyWars\Utilities\XMLSerialization">
+      <UniqueIdentifier>{d59bf32b-159c-4fd3-b11e-b88a1de8391c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyWars\Utilities\UnitState">
+      <UniqueIdentifier>{eac75b50-8ade-45a2-a6dc-1ec20219a6cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyWars\Utilities\TurnPhase">
+      <UniqueIdentifier>{b44c1b4f-4185-425e-bec3-b4b4b806f692}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyWars\Script\WarScene\Field\UnitMap">
+      <UniqueIdentifier>{cab1e110-471e-4685-bf13-8b340442493b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyWars\Script\WarScene\Field\TileMap">
+      <UniqueIdentifier>{fbc509da-f107-438e-8aaa-1a06cb42fa8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyWars\Script\WarScene\HUD\BeginTurnEffect">
+      <UniqueIdentifier>{dc52ad99-bf77-4815-90b2-858da24c6a36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyWars\Script\WarScene\PlayerManager">
+      <UniqueIdentifier>{98d09ebb-686f-4227-8e7d-61efd1ead254}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyWars\Utilities\BasicTypes">
+      <UniqueIdentifier>{96b76c35-dbcb-48c1-b1d3-295194fc4afb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BabyWars\Utilities\XMLSerialization\BasicTypes">
+      <UniqueIdentifier>{e56fb391-30b2-44ff-b30b-ca0aae9550d8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -276,58 +303,10 @@
     <ClCompile Include="..\Classes\BabyWars\Resource\UnitData.cpp">
       <Filter>src\BabyWars\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\PlayerManagerScript.cpp">
-      <Filter>src\BabyWars\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\PlayerScript.cpp">
-      <Filter>src\BabyWars\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\TileMapScript.cpp">
-      <Filter>src\BabyWars\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\TileScript.cpp">
-      <Filter>src\BabyWars\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\TurnManagerScript.cpp">
-      <Filter>src\BabyWars\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\UnitMapScript.cpp">
-      <Filter>src\BabyWars\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\UnitScript.cpp">
-      <Filter>src\BabyWars\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\WarFieldScript.cpp">
-      <Filter>src\BabyWars\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\WarSceneScript.cpp">
-      <Filter>src\BabyWars\Script</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\UserInterface\BabyWarsHumanView.cpp">
       <Filter>src\BabyWars\UserInterface</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\ActiveUnitState.cpp">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\BeginningTurnPhase.cpp">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\EndTurnPhase.cpp">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Utilities\GridIndex.cpp">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\IdleUnitState.cpp">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\InvalidTurnPhase.cpp">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\InvalidUnitState.cpp">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\MainTurnPhase.cpp">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Utilities\Matrix2DDimension.cpp">
@@ -336,37 +315,7 @@
     <ClCompile Include="..\Classes\BabyWars\Utilities\MovingArea.cpp">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\MovingEndUnitState.cpp">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Utilities\MovingPath.cpp">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\MovingUnitState.cpp">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\StandbyTurnPhase.cpp">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\TurnPhaseFactory.cpp">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\UnitState.cpp">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\UnitStateFactory.cpp">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\WaitingUnitState.cpp">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToActorUnit.cpp">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToColorTypeCode.cpp">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToUnitStateTypeCode.cpp">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Script\MovingAreaGridScript.cpp">
@@ -380,12 +329,6 @@
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Script\MovingPathScript.cpp">
       <Filter>src\BabyWars\Script\WarScene\Field\MovingPath</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\BeginTurnEffectLabelScript.cpp">
-      <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\BabyWars\Script\BeginTurnEffectScript.cpp">
-      <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Script\CommandListItemScript.cpp">
       <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
@@ -407,6 +350,96 @@
     </ClCompile>
     <ClCompile Include="..\Classes\BabyWars\Script\WarSceneHUDScript.cpp">
       <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToActorUnit.cpp">
+      <Filter>src\BabyWars\Utilities\XMLSerialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToUnitStateTypeCode.cpp">
+      <Filter>src\BabyWars\Utilities\XMLSerialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\EndTurnPhase.cpp">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\InvalidTurnPhase.cpp">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\IdleUnitState.cpp">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\InvalidUnitState.cpp">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\MovingEndUnitState.cpp">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\MovingUnitState.cpp">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\ActiveUnitState.cpp">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\BeginningTurnPhase.cpp">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\StandbyTurnPhase.cpp">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\TurnPhaseFactory.cpp">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\MainTurnPhase.cpp">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\UnitState.cpp">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\UnitStateFactory.cpp">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\WaitingUnitState.cpp">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\UnitMapScript.cpp">
+      <Filter>src\BabyWars\Script\WarScene\Field\UnitMap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\UnitScript.cpp">
+      <Filter>src\BabyWars\Script\WarScene\Field\UnitMap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\TileMapScript.cpp">
+      <Filter>src\BabyWars\Script\WarScene\Field\TileMap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\TileScript.cpp">
+      <Filter>src\BabyWars\Script\WarScene\Field\TileMap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\WarFieldScript.cpp">
+      <Filter>src\BabyWars\Script\WarScene\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\WarSceneScript.cpp">
+      <Filter>src\BabyWars\Script\WarScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\TurnManagerScript.cpp">
+      <Filter>src\BabyWars\Script\WarScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToColorTypeCode.cpp">
+      <Filter>src\BabyWars\Utilities\XMLSerialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\BeginTurnEffectLabelScript.cpp">
+      <Filter>src\BabyWars\Script\WarScene\HUD\BeginTurnEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\BeginTurnEffectScript.cpp">
+      <Filter>src\BabyWars\Script\WarScene\HUD\BeginTurnEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\PlayerManagerScript.cpp">
+      <Filter>src\BabyWars\Script\WarScene\PlayerManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Script\PlayerScript.cpp">
+      <Filter>src\BabyWars\Script\WarScene\PlayerManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToPlayerID.cpp">
+      <Filter>src\BabyWars\Utilities\XMLSerialization\BasicTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToMoney.cpp">
+      <Filter>src\BabyWars\Utilities\XMLSerialization\BasicTypes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -647,67 +680,19 @@
     <ClInclude Include="..\Classes\BabyWars\Resource\UnitDataType.h">
       <Filter>src\BabyWars\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\PlayerManagerScript.h">
-      <Filter>src\BabyWars\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\PlayerScript.h">
-      <Filter>src\BabyWars\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\TileMapScript.h">
-      <Filter>src\BabyWars\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\TileScript.h">
-      <Filter>src\BabyWars\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\TurnManagerScript.h">
-      <Filter>src\BabyWars\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\UnitMapScript.h">
-      <Filter>src\BabyWars\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\UnitScript.h">
-      <Filter>src\BabyWars\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\WarFieldScript.h">
-      <Filter>src\BabyWars\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\WarSceneScript.h">
-      <Filter>src\BabyWars\Script</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\UserInterface\BabyWarsHumanView.h">
       <Filter>src\BabyWars\UserInterface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\ActiveUnitState.h">
-      <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Utilities\AdjacentDirection.h">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\BeginningTurnPhase.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Utilities\ColorTypeCode.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\EndTurnPhase.h">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Utilities\GameCommand.h">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Utilities\GridIndex.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\IdleUnitState.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\InvalidTurnPhase.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\InvalidUnitState.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\MainTurnPhase.h">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Utilities\Matrix2D.h">
@@ -719,52 +704,7 @@
     <ClInclude Include="..\Classes\BabyWars\Utilities\MovingArea.h">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\MovingEndUnitState.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Utilities\MovingPath.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\MovingUnitState.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\PlayerID.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\StandbyTurnPhase.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\TurnIndex.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\TurnPhase.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\TurnPhaseFactory.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\TurnPhaseTypeCode.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\UnitState.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\UnitStateFactory.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\UnitStateTypeCode.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\WaitingUnitState.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToActorUnit.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToColorTypeCode.h">
-      <Filter>src\BabyWars\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToUnitStateTypeCode.h">
       <Filter>src\BabyWars\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Script\MovingAreaGridScript.h">
@@ -778,12 +718,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Script\MovingPathScript.h">
       <Filter>src\BabyWars\Script\WarScene\Field\MovingPath</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\BeginTurnEffectLabelScript.h">
-      <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BabyWars\Script\BeginTurnEffectScript.h">
-      <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Script\CommandListItemScript.h">
       <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
@@ -805,6 +739,114 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BabyWars\Script\WarSceneHUDScript.h">
       <Filter>src\BabyWars\Script\WarScene\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToActorUnit.h">
+      <Filter>src\BabyWars\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToUnitStateTypeCode.h">
+      <Filter>src\BabyWars\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\EndTurnPhase.h">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\InvalidTurnPhase.h">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\IdleUnitState.h">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\InvalidUnitState.h">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\MovingEndUnitState.h">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\MovingUnitState.h">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\ActiveUnitState.h">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\BeginningTurnPhase.h">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\StandbyTurnPhase.h">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\TurnPhase.h">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\TurnPhaseFactory.h">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\TurnPhaseTypeCode.h">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\MainTurnPhase.h">
+      <Filter>src\BabyWars\Utilities\TurnPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\UnitState.h">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\UnitStateFactory.h">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\UnitStateTypeCode.h">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\WaitingUnitState.h">
+      <Filter>src\BabyWars\Utilities\UnitState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\UnitMapScript.h">
+      <Filter>src\BabyWars\Script\WarScene\Field\UnitMap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\UnitScript.h">
+      <Filter>src\BabyWars\Script\WarScene\Field\UnitMap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\TileMapScript.h">
+      <Filter>src\BabyWars\Script\WarScene\Field\TileMap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\TileScript.h">
+      <Filter>src\BabyWars\Script\WarScene\Field\TileMap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\WarFieldScript.h">
+      <Filter>src\BabyWars\Script\WarScene\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\WarSceneScript.h">
+      <Filter>src\BabyWars\Script\WarScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\TurnManagerScript.h">
+      <Filter>src\BabyWars\Script\WarScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToColorTypeCode.h">
+      <Filter>src\BabyWars\Utilities\XMLSerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\BeginTurnEffectLabelScript.h">
+      <Filter>src\BabyWars\Script\WarScene\HUD\BeginTurnEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\BeginTurnEffectScript.h">
+      <Filter>src\BabyWars\Script\WarScene\HUD\BeginTurnEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\PlayerManagerScript.h">
+      <Filter>src\BabyWars\Script\WarScene\PlayerManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Script\PlayerScript.h">
+      <Filter>src\BabyWars\Script\WarScene\PlayerManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\PlayerID.h">
+      <Filter>src\BabyWars\Utilities\BasicTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\TurnIndex.h">
+      <Filter>src\BabyWars\Utilities\BasicTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\Money.h">
+      <Filter>src\BabyWars\Utilities\BasicTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToPlayerID.h">
+      <Filter>src\BabyWars\Utilities\XMLSerialization\BasicTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToMoney.h">
+      <Filter>src\BabyWars\Utilities\XMLSerialization\BasicTypes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

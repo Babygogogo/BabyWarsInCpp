@@ -1,6 +1,7 @@
 <!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
 <PlayerList>
-	<Player ID="1" Name="Player1">
+	<Player>
+		<ID Value="P1"/>
 		<Money Value="10000"/>
 	</Player>
 </PlayerList>

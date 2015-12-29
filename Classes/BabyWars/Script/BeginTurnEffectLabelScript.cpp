@@ -27,7 +27,7 @@ void BeginTurnEffectLabelScript::BeginTurnEffectLabelScriptImpl::onTurnPhaseChan
 	assert(turnManager && "BeginTurnEffectLabelScriptImpl::onTurnPhaseChanged() the turn manager script is nullptr.");
 
 	auto label = static_cast<cocos2d::Label*>(m_RenderComponent->getSceneNode());
-	const auto text = std::string("Turn: ") + std::to_string(turnManager->getCurrentTurnIndex()) + "  Player: " + std::to_string(turnManager->getCurrentPlayerID());
+	const auto text = std::string("Turn: ") + std::to_string(turnManager->getCurrentTurnIndex()) + "  Player: " + turnManager->getCurrentPlayerID();
 	label->setString(text);
 }
 

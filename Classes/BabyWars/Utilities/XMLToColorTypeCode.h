@@ -1,14 +1,13 @@
 #ifndef __XML_TO_COLOR_TYPE_CODE__
 #define __XML_TO_COLOR_TYPE_CODE__
 
-#include <string>
+#include "ColorTypeCode.h"
 
 //Forward declaration.
 namespace tinyxml2
 {
 	class XMLElement;
 }
-enum class ColorTypeCode;
 
 namespace utilities
 {

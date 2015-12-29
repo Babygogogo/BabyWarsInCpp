@@ -1,8 +1,10 @@
 #ifndef __PLAYER_ID__
 #define __PLAYER_ID__
 
-using PlayerID = int;
+#include <string>
 
-const PlayerID INVALID_PLAYER_ID = 0;
+using PlayerID = std::string;
+
+const PlayerID INVALID_PLAYER_ID{};
 
 #endif // !__PLAYER_ID__

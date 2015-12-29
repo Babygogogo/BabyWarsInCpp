@@ -252,6 +252,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BabyWars\Utilities\WaitingUnitState.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToActorUnit.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToColorTypeCode.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToMoney.cpp" />
+    <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToPlayerID.cpp" />
     <ClCompile Include="..\Classes\BabyWars\Utilities\XMLToUnitStateTypeCode.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="main.cpp" />
@@ -370,6 +372,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyWars\Utilities\MainTurnPhase.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\Matrix2D.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\Matrix2DDimension.h" />
+    <ClInclude Include="..\Classes\BabyWars\Utilities\Money.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\MovingArea.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\MovingEndUnitState.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\MovingPath.h" />
@@ -386,6 +389,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\BabyWars\Utilities\WaitingUnitState.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToActorUnit.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToColorTypeCode.h" />
+    <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToMoney.h" />
+    <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToPlayerID.h" />
     <ClInclude Include="..\Classes\BabyWars\Utilities\XMLToUnitStateTypeCode.h" />
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
     <ClInclude Include="main.h" />

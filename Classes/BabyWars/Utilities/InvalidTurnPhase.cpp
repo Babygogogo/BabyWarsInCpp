@@ -25,3 +25,8 @@ std::vector<GameCommand> InvalidTurnPhase::vGenerateGameCommands() const
 	assert("InvalidTurnPhase::vGenerateGameCommands() the turn phase is invalid.");
 	return{};
 }
+
+void InvalidTurnPhase::vUpdateUnit(UnitScript & unitScript) const
+{
+	assert("InvalidTurnPhase::vUpdateUnit() the turn phase is invalid.");
+}

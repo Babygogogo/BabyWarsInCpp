@@ -1,5 +1,7 @@
 #include "../cocos2d/external/tinyxml2/tinyxml2.h"
 
+#include "../Utilities/XMLToPlayerID.h"
+#include "../Utilities/XMLToMoney.h"
 #include "PlayerScript.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -11,8 +13,7 @@ struct PlayerScript::PlayerScriptImpl
 	~PlayerScriptImpl() = default;
 
 	PlayerID m_ID{ INVALID_PLAYER_ID };
-	std::string m_Name;
-	int m_Money{};
+	Money m_Money{ INVALID_MONEY };
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -30,9 +31,8 @@ void PlayerScript::loadPlayer(const tinyxml2::XMLElement * xmlElement)
 {
 	assert(xmlElement && "PlayerScript::loadPlayer() the xml element is nullptr.");
 
-	pimpl->m_ID = xmlElement->IntAttribute("ID");
-	pimpl->m_Name = xmlElement->Attribute("Name");
-	pimpl->m_Money = xmlElement->IntAttribute("Money");
+	pimpl->m_ID = utilities::XMLToPlayerID(xmlElement->FirstChildElement("ID"));
+	pimpl->m_Money = utilities::XMLToMoney(xmlElement->FirstChildElement("Money"));
 }
 
 PlayerID PlayerScript::getID() const

@@ -32,7 +32,7 @@
 			<Components>
 				<GeneralRenderComponent>
 					<SceneNode Type="Label">
-						<CreateWithSystemFont FontSize="20" FontName="Verdana-Bold" Text=""/>
+						<CreateWithSystemFont FontSize="16" FontName="Verdana-Bold" Text=""/>
 					</SceneNode>
 					<SceneNodeProperties>
 						<Color R="0" G="0" B="0"/>

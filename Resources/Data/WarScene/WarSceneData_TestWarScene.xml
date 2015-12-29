@@ -5,10 +5,18 @@
 		<UnitMap Value="Data\UnitMap\UnitMapData_TestUnitMap.xml"/>
 	</DataPath>
 	<PlayerManager>
-		<Player ID="1" Name="Player1" Money="10000">
+		<Player>
+			<ID Value="P1"/>
+			<Money Value="10000"/>
+		</Player>
+		<Player>
+			<ID Value="P2"/>
+			<Money Value="10000"/>
 		</Player>
 	</PlayerManager>
 	<TurnManager>
-		<CurrentTurn TurnIndex="1" TurnPhase="Beginning" PlayerID="1"/>
+		<CurrentTurn TurnIndex="1" TurnPhase="Beginning">
+			<PlayerID Value="P1"/>
+		</CurrentTurn>
 	</TurnManager>
 </WarScene>

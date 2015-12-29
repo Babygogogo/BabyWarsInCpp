@@ -1,4 +1,5 @@
 #include "../Script/TurnManagerScript.h"
+#include "../Script/UnitScript.h"
 #include "TurnPhaseTypeCode.h"
 #include "BeginningTurnPhase.h"
 #include "GameCommand.h"
@@ -21,4 +22,9 @@ void BeginningTurnPhase::vOnEnterPhase(TurnManagerScript & turnManagerScript) co
 std::vector<GameCommand> BeginningTurnPhase::vGenerateGameCommands() const
 {
 	return{};
+}
+
+void BeginningTurnPhase::vUpdateUnit(UnitScript & unitScript) const
+{
+	unitScript.setCanRespondToTouch(false);
 }

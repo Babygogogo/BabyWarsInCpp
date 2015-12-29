@@ -8,6 +8,7 @@
 #include "../../BabyEngine/Event/IEventDispatcher.h"
 #include "../../BabyEngine/Utilities/SingletonContainer.h"
 //#include "../Event/EvtDataRequestChangeUnitState.h"
+#include "../Event/EvtDataTurnPhaseChanged.h"
 #include "../Event/EvtDataUnitStateChangeEnd.h"
 #include "../Event/EvtDataUnitIndexChangeEnd.h"
 #include "../Event/EvtDataGameCommandGenerated.h"
@@ -20,6 +21,11 @@
 #include "../Utilities/UnitStateFactory.h"
 #include "../Utilities/GameCommand.h"
 #include "../Utilities/XMLToUnitStateTypeCode.h"
+#include "../Utilities/XMLToColorTypeCode.h"
+#include "../Utilities/XMLToPlayerID.h"
+#include "../Utilities/TurnPhase.h"
+#include "../Utilities/TurnPhaseTypeCode.h"
+#include "TurnManagerScript.h"
 #include "UnitScript.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -31,8 +37,12 @@ struct UnitScript::UnitScriptImpl
 	~UnitScriptImpl();
 
 	//void onRequestChangeUnitState(const EvtDataRequestChangeUnitState & e);
+	void onTurnPhaseChanged(const EvtDataTurnPhaseChanged & e);
 
 	void loadUnitDataFromXML(const tinyxml2::XMLElement * xmlElement);
+	void loadColorFromXML(const tinyxml2::XMLElement * xmlElement);
+	void loadPlayerIDFromXML(const tinyxml2::XMLElement * xmlElement);
+
 	void initAppearance();
 
 	bool canSetState(UnitStateTypeCode stateCode) const;
@@ -49,6 +59,9 @@ struct UnitScript::UnitScriptImpl
 	GridIndex m_GridIndexBeforeMoving;
 	std::shared_ptr<UnitData> m_UnitData;
 	std::shared_ptr<UnitState> m_State;
+	ColorTypeCode m_Color;
+	PlayerID m_PlayerID;
+	bool m_CanRespondToTouch{ false };
 
 	std::weak_ptr<UnitScript> m_Script;
 	std::shared_ptr<BaseRenderComponent> m_RenderComponent;
@@ -77,11 +90,38 @@ UnitScript::UnitScriptImpl::~UnitScriptImpl()
 //	}
 //}
 
+void UnitScript::UnitScriptImpl::onTurnPhaseChanged(const EvtDataTurnPhaseChanged & e)
+{
+	const auto turnManager = e.getTurnManagerScript();
+	assert(turnManager && "UnitScriptImpl::onTurnPhaseChanged() the turn manager is expired.");
+
+	if (turnManager->getCurrentPlayerID() != m_PlayerID) {
+		m_CanRespondToTouch = false;
+		return;
+	}
+
+	const auto turnPhase = e.getCurrentTurnPhase();
+	assert(turnPhase && "UnitScriptImpl::onTurnPhaseChanged() the turn phase is expired.");
+	turnPhase->vUpdateUnit(*m_Script.lock());
+}
+
 void UnitScript::UnitScriptImpl::loadUnitDataFromXML(const tinyxml2::XMLElement * xmlElement)
 {
 	assert(xmlElement && "UnitScriptImpl::loadUnitDataFromXML() the xml element is nullptr.");
 	m_UnitData = SingletonContainer::getInstance()->get<ResourceLoader>()->getUnitData(xmlElement->Attribute("Type"));
 	assert(m_UnitData && "UnitScriptImpl::loadUnitDataFromXML() can't get the unit data with the id that specified in the xml, possibly because the id is invalid.");
+}
+
+void UnitScript::UnitScriptImpl::loadColorFromXML(const tinyxml2::XMLElement * xmlElement)
+{
+	assert(xmlElement && "UnitScriptImpl::loadColorFromXML() the xml element is nullptr.");
+	m_Color = utilities::XMLToColorTypeCode(xmlElement);
+}
+
+void UnitScript::UnitScriptImpl::loadPlayerIDFromXML(const tinyxml2::XMLElement * xmlElement)
+{
+	assert(xmlElement && "UnitScriptImpl::loadPlayerIDFromXML() the xml element is nullptr.");
+	m_PlayerID = utilities::XMLToPlayerID(xmlElement);
 }
 
 void UnitScript::UnitScriptImpl::initAppearance()
@@ -90,7 +130,7 @@ void UnitScript::UnitScriptImpl::initAppearance()
 
 	//#TODO: This only shows the first frame of the animation. Update the code to show the whole animation.
 	auto sceneNode = static_cast<cocos2d::Sprite*>(m_RenderComponent->getSceneNode());
-	sceneNode->setSpriteFrame(m_UnitData->getAnimation()->getFrames().at(0)->getSpriteFrame());
+	sceneNode->setSpriteFrame(m_UnitData->getAnimation(m_Color)->getFrames().at(0)->getSpriteFrame());
 }
 
 bool UnitScript::UnitScriptImpl::canSetState(UnitStateTypeCode stateCode) const
@@ -163,7 +203,12 @@ UnitScript::~UnitScript()
 
 bool UnitScript::onInputTouch(const EvtDataInputTouch & touch, const std::shared_ptr<UnitScript> & touchedUnit)
 {
-	return pimpl->m_State->vUpdateUnitOnTouch(*this, touchedUnit);
+	if (!pimpl->m_CanRespondToTouch) {
+		return false;
+	}
+	else {
+		return pimpl->m_State->vUpdateUnitOnTouch(*this, touchedUnit);
+	}
 }
 
 void UnitScript::loadUnit(const tinyxml2::XMLElement * xmlElement)
@@ -171,6 +216,8 @@ void UnitScript::loadUnit(const tinyxml2::XMLElement * xmlElement)
 	//////////////////////////////////////////////////////////////////////////
 	//Load and set the unit data.
 	//pimpl->loadUnitDataFromXML(xmlElement->FirstChildElement("UnitData"));
+	pimpl->loadColorFromXML(xmlElement->FirstChildElement("Color"));
+	pimpl->loadPlayerIDFromXML(xmlElement->FirstChildElement("PlayerID"));
 	pimpl->initAppearance();
 
 	setStateAndAppearanceAndQueueEvent(utilities::XMLToUnitStateTypeCode(xmlElement->FirstChildElement("State")));
@@ -200,6 +247,16 @@ void UnitScript::setGridIndexAndPosition(const GridIndex & gridIndex)
 GridIndex UnitScript::getGridIndex() const
 {
 	return pimpl->m_GridIndex;
+}
+
+void UnitScript::setCanRespondToTouch(bool canRespond)
+{
+	pimpl->m_CanRespondToTouch = canRespond;
+}
+
+bool UnitScript::canRespondToTouch() const
+{
+	return pimpl->m_CanRespondToTouch;
 }
 
 bool UnitScript::canSetState(UnitStateTypeCode stateCode) const
@@ -273,10 +330,13 @@ void UnitScript::vPostInit()
 	pimpl->m_ActionComponent = getComponent<ActionComponent>();
 	assert(pimpl->m_ActionComponent && "UnitScript::vPostInit() the actor has no action component.");
 
-	//auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
+	auto eventDispatcher = SingletonContainer::getInstance()->get<IEventDispatcher>();
 	//eventDispatcher->vAddListener(EvtDataRequestChangeUnitState::s_EventType, pimpl, [this](const auto & e) {
 	//	pimpl->onRequestChangeUnitState(static_cast<const EvtDataRequestChangeUnitState &>(e));
 	//});
+	eventDispatcher->vAddListener(EvtDataTurnPhaseChanged::s_EventType, pimpl, [this](const auto & e) {
+		pimpl->onTurnPhaseChanged(static_cast<const EvtDataTurnPhaseChanged &>(e));
+	});
 }
 
 const std::string UnitScript::Type = "UnitScript";
